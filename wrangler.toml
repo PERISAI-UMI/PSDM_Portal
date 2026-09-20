@@ -1,0 +1,24 @@
+# ============================================================
+# Cloudflare Workers Deployment Configuration for PSDM.web 2.0
+# ============================================================
+name = "psdm-web-edge"
+main = "src/server/index.ts"
+compatibility_date = "2024-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Static Assets for React 19 Frontend (Cloudflare Pages / Workers Assets)
+[site]
+bucket = "./dist"
+
+# Environment Variables for Edge Serverless Runtime
+[vars]
+B2_BUCKET_NAME = "psdm-evidence-bucket"
+B2_ENDPOINT = "https://s3.us-east-005.backblazeb2.com"
+B2_REGION = "us-east-005"
+
+# Note: Secret variables should be injected via `wrangler secret put <KEY>`:
+# - TURSO_DATABASE_URL
+# - TURSO_AUTH_TOKEN
+# - SESSION_SECRET
+# - B2_APPLICATION_KEY_ID
+# - B2_APPLICATION_KEY

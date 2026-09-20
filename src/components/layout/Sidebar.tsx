@@ -1,0 +1,429 @@
+import React from 'react';
+import {
+  LayoutDashboard,
+  Calendar,
+  FileText,
+  Users,
+  Database,
+  User,
+  HelpCircle,
+  Activity,
+  LogOut,
+  X,
+  Plus,
+  ShieldCheck,
+  Building2,
+  ChevronRight,
+  UserCheck,
+} from 'lucide-react';
+import type { AuthUser } from '../../types/index.ts';
+
+interface SidebarProps {
+  user: AuthUser;
+  isOpenMobile: boolean;
+  onCloseMobile: () => void;
+  onOpenCreateActivity?: () => void;
+  onOpenMasterData?: () => void;
+  onOpenMemberList?: () => void;
+  onOpenProfile?: () => void;
+  onOpenHelp?: () => void;
+  onOpenAudit?: () => void;
+  onOpenPermissionForm?: () => void;
+  onSwitchUser: (prn: string) => void;
+  onLogout: () => void;
+  activeSection?: string;
+  onSelectSection?: (sectionId: string) => void;
+  counts?: {
+    activitiesCount: number;
+    pendingPermissionsCount: number;
+  };
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({
+  user,
+  isOpenMobile,
+  onCloseMobile,
+  onOpenCreateActivity,
+  onOpenMasterData,
+  onOpenMemberList,
+  onOpenProfile,
+  onOpenHelp,
+  onOpenAudit,
+  onOpenPermissionForm,
+  onSwitchUser,
+  onLogout,
+  activeSection = 'dashboard',
+  onSelectSection,
+  counts = { activitiesCount: 0, pendingPermissionsCount: 0 },
+}) => {
+  const getRoleBadge = () => {
+    switch (user.role) {
+      case 'SUPER_ADMIN':
+        return { label: 'Super Admin', color: 'bg-slate-900 text-white' };
+      case 'ADMIN':
+        return { label: 'Admin PJ', color: 'bg-slate-800 text-slate-100' };
+      case 'PENGURUS':
+      default:
+        return { label: 'Pengurus', color: 'bg-slate-100 text-slate-700 border border-slate-200' };
+    }
+  };
+
+  const roleInfo = getRoleBadge();
+
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return name.slice(0, 2).toUpperCase();
+  };
+
+  const handleNavClick = (sectionId: string, action?: () => void) => {
+    if (action) {
+      action();
+    } else if (onSelectSection) {
+      onSelectSection(sectionId);
+    }
+    onCloseMobile();
+  };
+
+  const sidebarContent = (
+    <div className="flex flex-col h-full bg-white text-slate-800 border-r border-slate-200 select-none">
+      {/* Brand Header */}
+      <div className="p-4.5 border-b border-slate-200 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs tracking-wider shadow-2xs">
+            PS
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-900 text-sm tracking-tight">Portal PSDM</span>
+              <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${roleInfo.color}`}>
+                {roleInfo.label}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 truncate max-w-[140px]">
+              {user.departmentName || user.departmentId || 'Departemen PSDM'}
+            </p>
+          </div>
+        </div>
+
+        {/* Mobile Close Button */}
+        <button
+          type="button"
+          onClick={onCloseMobile}
+          className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+          aria-label="Tutup menu sidebar"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Primary Action Button based on Role */}
+      <div className="p-3 border-b border-slate-100">
+        {user.role === 'SUPER_ADMIN' && onOpenCreateActivity && (
+          <button
+            type="button"
+            onClick={() => handleNavClick('create-activity', onOpenCreateActivity)}
+            className="w-full py-2.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Buat Kegiatan Baru</span>
+          </button>
+        )}
+
+        {user.role === 'PENGURUS' && onOpenPermissionForm && (
+          <button
+            type="button"
+            onClick={() => handleNavClick('permission-form', onOpenPermissionForm)}
+            className="w-full py-2.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Ajukan Izin / Sakit</span>
+          </button>
+        )}
+
+        {user.role === 'ADMIN' && (
+          <div className="px-3 py-2 bg-slate-50 rounded-lg border border-slate-200/80 text-xs">
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
+              Wilayah Pembinaan:
+            </span>
+            <span className="font-semibold text-slate-900 mt-0.5 block truncate">
+              {user.departmentName || user.departmentId || 'Riset & Teknologi'}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Navigation Links (Scrollable) */}
+      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-5">
+        {/* Navigation Group 1: Menu Utama */}
+        <div>
+          <span className="px-2 text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-1.5">
+            Menu Utama
+          </span>
+          <nav className="space-y-0.5">
+            <button
+              type="button"
+              onClick={() => handleNavClick('dashboard')}
+              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
+                activeSection === 'dashboard'
+                  ? 'bg-slate-100 text-slate-900 font-semibold'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <LayoutDashboard className="w-4 h-4 text-slate-500" />
+                <span>Dasbor Utama</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleNavClick('activities')}
+              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
+                activeSection === 'activities'
+                  ? 'bg-slate-100 text-slate-900 font-semibold'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Calendar className="w-4 h-4 text-slate-500" />
+                <span>Kegiatan & Proker</span>
+              </div>
+              {counts.activitiesCount > 0 && (
+                <span className="text-[11px] font-medium bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded">
+                  {counts.activitiesCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleNavClick('permissions')}
+              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
+                activeSection === 'permissions'
+                  ? 'bg-slate-100 text-slate-900 font-semibold'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <FileText className="w-4 h-4 text-slate-500" />
+                <span>
+                  {user.role === 'PENGURUS' ? 'Riwayat Perizinan' : 'Validasi Perizinan'}
+                </span>
+              </div>
+              {counts.pendingPermissionsCount > 0 && (
+                <span className="text-[11px] font-semibold bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded">
+                  {counts.pendingPermissionsCount}
+                </span>
+              )}
+            </button>
+
+            {/* Member Directory: for SuperAdmin and Admin */}
+            {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && onOpenMemberList && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('members', onOpenMemberList)}
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Users className="w-4 h-4 text-slate-500" />
+                  <span>Data & Direktori Anggota</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+            )}
+
+            {/* Master & Mapping PJ: only for SuperAdmin */}
+            {user.role === 'SUPER_ADMIN' && onOpenMasterData && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('master-data', onOpenMasterData)}
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Database className="w-4 h-4 text-slate-500" />
+                  <span>Master & Mapping PJ</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+            )}
+          </nav>
+        </div>
+
+        {/* Navigation Group 2: Pengaturan Akun & Sistem */}
+        <div>
+          <span className="px-2 text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-1.5">
+            Akun & Bantuan
+          </span>
+          <nav className="space-y-0.5">
+            {onOpenProfile && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('profile', onOpenProfile)}
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <User className="w-4 h-4 text-slate-500" />
+                  <span>Edit Profil & Password</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+            )}
+
+            {onOpenHelp && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('help', onOpenHelp)}
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <HelpCircle className="w-4 h-4 text-slate-500" />
+                  <span>Panduan Alur Kerja</span>
+                </div>
+              </button>
+            )}
+
+            {onOpenAudit && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('audit', onOpenAudit)}
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Activity className="w-4 h-4 text-slate-500" />
+                  <span>Diagnostik Sistem</span>
+                </div>
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+              </button>
+            )}
+          </nav>
+        </div>
+
+        {/* Simulation Selector in Sidebar */}
+        <div className="pt-2 border-t border-slate-100">
+          <span className="px-2 text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-2">
+            Simulasi Peran Akses
+          </span>
+          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={() => {
+                onSwitchUser('PSDM-001');
+                onCloseMobile();
+              }}
+              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
+                user.role === 'SUPER_ADMIN'
+                  ? 'bg-slate-900 text-white font-semibold'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Kadep (Super Admin)</span>
+              </div>
+              {user.role === 'SUPER_ADMIN' && <span className="text-[10px]">Aktif</span>}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                onSwitchUser('PSDM-002');
+                onCloseMobile();
+              }}
+              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
+                user.role === 'ADMIN'
+                  ? 'bg-slate-900 text-white font-semibold'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <UserCheck className="w-3.5 h-3.5" />
+                <span>Staf PJ (Admin)</span>
+              </div>
+              {user.role === 'ADMIN' && <span className="text-[10px]">Aktif</span>}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                onSwitchUser('RISTEK-001');
+                onCloseMobile();
+              }}
+              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
+                user.prn === 'RISTEK-001'
+                  ? 'bg-slate-900 text-white font-semibold'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Pengurus Departemen</span>
+              </div>
+              {user.prn === 'RISTEK-001' && <span className="text-[10px]">Aktif</span>}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Single Source of Truth: User Profile Card & Logout */}
+      <div className="p-3 border-t border-slate-200 bg-slate-50/70">
+        <div className="flex items-center justify-between gap-2">
+          <button
+            type="button"
+            onClick={() => handleNavClick('profile', onOpenProfile)}
+            title="Kelola profil & ubah kata sandi Anda"
+            className="flex items-center gap-2.5 min-w-0 text-left hover:bg-slate-100/80 p-1 rounded-lg transition-colors flex-1"
+          >
+            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
+              {getInitials(user.namaLengkap)}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-semibold text-slate-900 truncate">
+                {user.namaLengkap}
+              </div>
+              <div className="text-[10px] font-mono text-slate-500 truncate">
+                {user.prn} • {roleInfo.label}
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={onLogout}
+            title="Keluar dari sistem"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors shrink-0"
+            aria-label="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Persistent Sidebar */}
+      <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 shadow-xs">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Drawer Backdrop & Sidebar */}
+      {isOpenMobile && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+            onClick={onCloseMobile}
+            aria-hidden="true"
+          />
+
+          {/* Off-canvas Panel */}
+          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl z-10 animate-in slide-in-from-left duration-200">
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};

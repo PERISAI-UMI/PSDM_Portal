@@ -1,0 +1,240 @@
+import { Hono } from 'hono';
+import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
+import { eq, and, like, or } from 'drizzle-orm';
+import type { AppEnv } from '../types.ts';
+import {
+  users,
+  departments,
+  programStudi,
+  userRoleEnum,
+  tingkatJabatanEnum,
+} from '../../db/schema/index.ts';
+import { authMiddleware, requireRole } from '../middleware/auth.ts';
+import { hashPassword } from '../crypto.ts';
+
+export const usersRouter = new Hono<AppEnv>();
+
+usersRouter.use('*', authMiddleware);
+
+const createUserSchema = z.object({
+  prn: z.string().min(3, 'PRN / Username minimal 3 karakter'),
+  password: z.string().min(8, 'Password default minimal 8 karakter'),
+  role: z.enum(userRoleEnum).default('PENGURUS'),
+  generasi: z.number().int().positive(),
+  departmentId: z.string().min(1, 'Departemen wajib dipilih'),
+  jabatan: z.string().min(2, 'Jabatan wajib diisi'),
+  tingkatJabatan: z.enum(tingkatJabatanEnum),
+  namaLengkap: z.string().min(2, 'Nama lengkap wajib diisi'),
+  tempatLahir: z.string().min(2, 'Tempat lahir wajib diisi'),
+  tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format tanggal lahir YYYY-MM-DD'),
+  alamat: z.string().min(5, 'Alamat wajib diisi'),
+  noTelp: z.string().min(9, 'Nomor telepon tidak valid'),
+  email: z.string().email('Format email tidak valid'),
+  nim: z.string().min(5, 'NIM wajib diisi'),
+  programStudiId: z.string().min(1, 'Program studi wajib dipilih'),
+  angkatan: z.number().int().min(2000).max(2100),
+  linkedinUrl: z.string().url().optional().nullable(),
+  instagramUsername: z.string().optional().nullable(),
+});
+
+const updateUserSelfSchema = z.object({
+  alamat: z.string().min(5).optional(),
+  noTelp: z.string().min(9).optional(),
+  tempatLahir: z.string().min(2).optional(),
+  linkedinUrl: z.string().url().optional().nullable(),
+  instagramUsername: z.string().optional().nullable(),
+});
+
+const updateUserAdminSchema = createUserSchema.partial().omit({ prn: true });
+
+// GET /api/users (SUPER_ADMIN & ADMIN)
+usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN']), async (c) => {
+  const db = c.get('db');
+  const departmentId = c.req.query('departmentId');
+  const role = c.req.query('role');
+  const search = c.req.query('search');
+
+  let conditions = [];
+
+  if (departmentId) {
+    conditions.push(eq(users.departmentId, departmentId));
+  }
+  if (role && userRoleEnum.includes(role as any)) {
+    conditions.push(eq(users.role, role as any));
+  }
+  if (search) {
+    conditions.push(
+      or(
+        like(users.namaLengkap, `%${search}%`),
+        like(users.prn, `%${search}%`),
+        like(users.nim, `%${search}%`)
+      )
+    );
+  }
+
+  const query = db
+    .select({
+      id: users.id,
+      prn: users.prn,
+      role: users.role,
+      generasi: users.generasi,
+      departmentId: users.departmentId,
+      departmentName: departments.nama,
+      jabatan: users.jabatan,
+      tingkatJabatan: users.tingkatJabatan,
+      namaLengkap: users.namaLengkap,
+      tempatLahir: users.tempatLahir,
+      tanggalLahir: users.tanggalLahir,
+      alamat: users.alamat,
+      noTelp: users.noTelp,
+      email: users.email,
+      nim: users.nim,
+      programStudiId: users.programStudiId,
+      programStudiName: programStudi.nama,
+      angkatan: users.angkatan,
+      linkedinUrl: users.linkedinUrl,
+      instagramUsername: users.instagramUsername,
+    })
+    .from(users)
+    .innerJoin(departments, eq(users.departmentId, departments.id))
+    .innerJoin(programStudi, eq(users.programStudiId, programStudi.id));
+
+  const list = conditions.length > 0 ? await query.where(and(...conditions)).all() : await query.all();
+
+  return c.json({ success: true, data: list });
+});
+
+// GET /api/users/:id
+usersRouter.get('/:id', async (c) => {
+  const id = c.req.param('id');
+  const currentUser = c.get('user');
+  const db = c.get('db');
+
+  // RBAC: Pengurus hanya bisa akses profil sendiri. ADMIN dan SUPER_ADMIN bisa akses siapa saja
+  if (currentUser.role === 'PENGURUS' && currentUser.id !== id) {
+    return c.json({ success: false, message: 'Forbidden: Anda hanya dapat mengakses profil Anda sendiri' }, 403);
+  }
+
+  const userRecord = await db
+    .select({
+      id: users.id,
+      prn: users.prn,
+      role: users.role,
+      generasi: users.generasi,
+      departmentId: users.departmentId,
+      departmentName: departments.nama,
+      jabatan: users.jabatan,
+      tingkatJabatan: users.tingkatJabatan,
+      namaLengkap: users.namaLengkap,
+      tempatLahir: users.tempatLahir,
+      tanggalLahir: users.tanggalLahir,
+      alamat: users.alamat,
+      noTelp: users.noTelp,
+      email: users.email,
+      nim: users.nim,
+      programStudiId: users.programStudiId,
+      programStudiName: programStudi.nama,
+      angkatan: users.angkatan,
+      linkedinUrl: users.linkedinUrl,
+      instagramUsername: users.instagramUsername,
+    })
+    .from(users)
+    .innerJoin(departments, eq(users.departmentId, departments.id))
+    .innerJoin(programStudi, eq(users.programStudiId, programStudi.id))
+    .where(eq(users.id, id))
+    .limit(1);
+
+  if (!userRecord || userRecord.length === 0) {
+    return c.json({ success: false, message: 'User tidak ditemukan' }, 404);
+  }
+
+  return c.json({ success: true, data: userRecord[0] });
+});
+
+// POST /api/users (SUPER_ADMIN ONLY)
+usersRouter.post('/', requireRole(['SUPER_ADMIN']), zValidator('json', createUserSchema), async (c) => {
+  const data = c.req.valid('json');
+  const db = c.get('db');
+
+  // Cek duplikasi PRN / NIM / Email
+  const existing = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(or(eq(users.prn, data.prn), eq(users.nim, data.nim), eq(users.email, data.email)))
+    .limit(1);
+
+  if (existing && existing.length > 0) {
+    return c.json({ success: false, message: 'PRN, NIM, atau Email sudah terdaftar' }, 400);
+  }
+
+  const id = crypto.randomUUID();
+  const passwordHash = await hashPassword(data.password);
+
+  const { password: _, ...userData } = data;
+
+  await db.insert(users).values({
+    ...userData,
+    id,
+    passwordHash,
+  });
+
+  return c.json({ success: true, message: 'User anggota berhasil ditambahkan', data: { id, prn: data.prn } }, 201);
+});
+
+// PUT /api/users/:id (SUPER_ADMIN atau User Sendiri)
+usersRouter.put('/:id', async (c) => {
+  const id = c.req.param('id');
+  const currentUser = c.get('user');
+  const db = c.get('db');
+
+  // Jika ADMIN (bukan SUPER_ADMIN) mencoba mengubah user orang lain -> Forbidden
+  if (currentUser.role === 'ADMIN' && currentUser.id !== id) {
+    return c.json({ success: false, message: 'Forbidden: Admin PSDM memiliki hak akses read-only pada data anggota' }, 403);
+  }
+
+  if (currentUser.role === 'SUPER_ADMIN') {
+    const jsonBody = await c.req.json();
+    const parsed = updateUserAdminSchema.safeParse(jsonBody);
+    if (!parsed.success) {
+      return c.json({ success: false, errors: parsed.error.format() }, 400);
+    }
+
+    const updateData: Record<string, unknown> = { ...parsed.data };
+    if (parsed.data.password) {
+      updateData.passwordHash = await hashPassword(parsed.data.password);
+      delete updateData.password;
+    }
+
+    await db.update(users).set(updateData).where(eq(users.id, id));
+    return c.json({ success: true, message: 'Profil user berhasil diperbarui oleh Super Admin' });
+  }
+
+  // Jika user mengupdate profilnya sendiri
+  if (currentUser.id === id) {
+    const jsonBody = await c.req.json();
+    const parsed = updateUserSelfSchema.safeParse(jsonBody);
+    if (!parsed.success) {
+      return c.json({ success: false, errors: parsed.error.format() }, 400);
+    }
+
+    await db.update(users).set(parsed.data).where(eq(users.id, id));
+    return c.json({ success: true, message: 'Profil mandiri berhasil diperbarui' });
+  }
+
+  return c.json({ success: false, message: 'Forbidden' }, 403);
+});
+
+// DELETE /api/users/:id (SUPER_ADMIN ONLY)
+usersRouter.delete('/:id', requireRole(['SUPER_ADMIN']), async (c) => {
+  const id = c.req.param('id');
+  const currentUser = c.get('user');
+  const db = c.get('db');
+
+  if (currentUser.id === id) {
+    return c.json({ success: false, message: 'Tidak dapat menghapus akun Anda sendiri' }, 400);
+  }
+
+  await db.delete(users).where(eq(users.id, id));
+  return c.json({ success: true, message: 'User anggota berhasil dihapus' });
+});
