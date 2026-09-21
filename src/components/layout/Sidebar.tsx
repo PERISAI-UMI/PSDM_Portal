@@ -88,20 +88,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-white text-slate-800 border-r border-slate-200 select-none">
-      {/* Brand Header */}
-      <div className="p-4.5 border-b border-slate-200 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs tracking-wider shadow-2xs">
+      {/* Brand Header: perfectly aligned with h-14 Header */}
+      <div className="h-14 px-4 border-b border-slate-200/80 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs tracking-wider shadow-2xs shrink-0">
             PS
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-900 text-sm tracking-tight">Portal PSDM</span>
-              <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${roleInfo.color}`}>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold text-slate-900 text-sm tracking-tight shrink-0">Portal PSDM</span>
+              <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${roleInfo.color}`}>
                 {roleInfo.label}
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 truncate max-w-[140px]">
+            <p className="text-[11px] text-slate-500 truncate" title={user.departmentName || 'Departemen PSDM'}>
               {user.departmentName || 'Departemen PSDM'}
             </p>
           </div>
