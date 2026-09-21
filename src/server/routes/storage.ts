@@ -197,11 +197,10 @@ storageRouter.post('/upload', authMiddleware, async (c) => {
 });
 
 /**
- * GET /api/storage/file/*
- * Proxy streaming berkas lampiran dari Backblaze B2 secara terotorisasi.
+ * Handler umum streaming berkas bukti dari Backblaze B2 secara terotorisasi.
  * Menyelesaikan masalah 401 Unauthorized karena bucket B2 bersifat private.
  */
-storageRouter.get('/file/*', async (c) => {
+async function handleStorageFileStream(c: any) {
   const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID;
   const appKey = c.env?.B2_APPLICATION_KEY || process.env.B2_APPLICATION_KEY;
   const targetBucketName = c.env?.B2_BUCKET_NAME || process.env.B2_BUCKET_NAME || 'PSDM-B2';
@@ -212,17 +211,15 @@ storageRouter.get('/file/*', async (c) => {
 
   // Ekstrak nama berkas dari path URL
   const fullPath = c.req.path;
-  const prefix = '/api/storage/file/';
-  let rawKey = '';
-  if (fullPath.startsWith(prefix)) {
-    rawKey = fullPath.slice(prefix.length);
-  } else {
-    const match = fullPath.match(/\/file\/(.+)$/);
-    rawKey = match ? match[1] : '';
+  let rawKey = fullPath.replace(/^\/api\/storage\/(file|view|preview|evidence)\//, '');
+  if (rawKey === fullPath) {
+    const match = fullPath.match(/\/(file|view|preview|evidence)\/(.+)$/);
+    rawKey = match ? match[2] : (c.req.query('key') || '');
   }
 
-  if (!rawKey) {
-    rawKey = c.req.query('key') || '';
+  // Jika URL adalah /api/storage/evidence/xxx, pastikan rawKey memiliki evidence/xxx
+  if (fullPath.includes('/evidence/') && !rawKey.startsWith('evidence/')) {
+    rawKey = `evidence/${rawKey}`;
   }
 
   const decodedKey = decodeURIComponent(rawKey).trim().replace(/^\/+/, '');
@@ -233,6 +230,7 @@ storageRouter.get('/file/*', async (c) => {
   try {
     let creds = await getB2Credentials(keyId, appKey, targetBucketName);
 
+    // 1. Coba request dengan key yang diberikan
     let b2Res = await fetch(`${creds.downloadUrl}/file/${targetBucketName}/${decodedKey}`, {
       headers: {
         Authorization: creds.authToken,
@@ -247,6 +245,19 @@ storageRouter.get('/file/*', async (c) => {
           Authorization: creds.authToken,
         },
       });
+    }
+
+    // 2. Jika 404 dan belum ber-prefix evidence/, coba dengan prefix evidence/
+    if (b2Res.status === 404 && !decodedKey.startsWith('evidence/')) {
+      const fallbackKey = `evidence/${decodedKey}`;
+      const fallbackRes = await fetch(`${creds.downloadUrl}/file/${targetBucketName}/${fallbackKey}`, {
+        headers: {
+          Authorization: creds.authToken,
+        },
+      });
+      if (fallbackRes.ok) {
+        b2Res = fallbackRes;
+      }
     }
 
     if (!b2Res.ok) {
@@ -272,4 +283,9 @@ storageRouter.get('/file/*', async (c) => {
     const errorMsg = err instanceof Error ? err.message : 'Gagal mengambil berkas dari storage';
     return c.text(errorMsg, 500);
   }
-});
+}
+
+storageRouter.get('/file/*', handleStorageFileStream);
+storageRouter.get('/view/*', handleStorageFileStream);
+storageRouter.get('/preview/*', handleStorageFileStream);
+storageRouter.get('/evidence/*', handleStorageFileStream);

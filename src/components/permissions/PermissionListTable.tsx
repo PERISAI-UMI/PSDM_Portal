@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, X, ExternalLink, Clock, ShieldAlert, Search, Filter } from 'lucide-react';
+import { Check, X, ExternalLink, Clock, ShieldAlert, Search, Filter, Eye } from 'lucide-react';
 import type { PermissionRecord, AuthUser, PermissionStatus } from '../../types/index.ts';
 import { getEvidenceViewUrl } from '../../utils/storage.ts';
 
@@ -178,24 +178,22 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         {p.jenisIzin}
                       </span>
                       {p.evidenceUrl ? (
-                        <a
-                          href={getEvidenceViewUrl(p.evidenceUrl)}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={(e) => {
-                            e.preventDefault();
+                        <button
+                          type="button"
+                          onClick={() => {
                             setPreviewPermission(p);
                             setImgLoaded(false);
                             setImgError(false);
                             setZoom(false);
                           }}
-                          className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-700 hover:text-slate-900 underline cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors cursor-pointer shadow-2xs"
+                          title="Lihat bukti izin"
                         >
-                          <ExternalLink className="w-3 h-3" />
-                          Dokumen Lampiran
-                        </a>
+                          <Eye className="w-3.5 h-3.5 text-indigo-600" />
+                          Bukti
+                        </button>
                       ) : (
-                        <span className="text-[11px] text-slate-400 italic">Tanpa Lampiran</span>
+                        <span className="text-[11px] text-slate-400 italic">Tanpa Bukti</span>
                       )}
                     </div>
 
@@ -247,7 +245,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                     <th className="py-3 px-4">Nama & Departemen</th>
                     <th className="py-3 px-4">Kegiatan Proker</th>
                     <th className="py-3 px-4">Jenis & Alasan</th>
-                    <th className="py-3 px-4">Dokumen</th>
+                    <th className="py-3 px-4">Bukti</th>
                     <th className="py-3 px-4">Status</th>
                     <th className="py-3 px-4 text-right">Tindakan</th>
                   </tr>
@@ -277,22 +275,20 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         </td>
                         <td className="py-3.5 px-4">
                           {p.evidenceUrl ? (
-                            <a
-                              href={getEvidenceViewUrl(p.evidenceUrl)}
-                              target="_blank"
-                              rel="noreferrer"
-                              onClick={(e) => {
-                                e.preventDefault();
+                            <button
+                              type="button"
+                              onClick={() => {
                                 setPreviewPermission(p);
                                 setImgLoaded(false);
                                 setImgError(false);
                                 setZoom(false);
                               }}
-                              className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-700 hover:text-slate-900 underline cursor-pointer"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors cursor-pointer shadow-2xs"
+                              title="Lihat bukti izin"
                             >
-                              <ExternalLink className="w-3 h-3" />
-                              Lampiran
-                            </a>
+                              <Eye className="w-3.5 h-3.5 text-indigo-600" />
+                              Bukti
+                            </button>
                           ) : (
                             <span className="text-[11px] text-slate-400 italic">Tidak ada</span>
                           )}
