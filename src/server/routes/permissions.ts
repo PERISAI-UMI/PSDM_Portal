@@ -22,7 +22,9 @@ const requestPermissionSchema = z.object({
   activityId: z.string().min(1, 'Kegiatan wajib dipilih'),
   jenisIzin: z.string().min(2, 'Jenis izin wajib diisi (e.g. SAKIT, TUGAS_AKADEMIK, KELUARGA)'),
   alasan: z.string().min(5, 'Alasan izin minimal 5 karakter'),
-  evidenceUrl: z.union([z.string().url('URL bukti izin tidak valid'), z.literal(''), z.null()]).optional(),
+  evidenceUrl: z
+    .union([z.string().url('URL bukti izin tidak valid'), z.string().startsWith('/'), z.literal(''), z.null()])
+    .optional(),
 });
 
 const reviewPermissionSchema = z.object({

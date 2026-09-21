@@ -4,9 +4,6 @@ import { authMiddleware } from '../middleware/auth.ts';
 
 export const storageRouter = new Hono<AppEnv>();
 
-// Hanya user terautentikasi yang dapat mengunggah berkas
-storageRouter.use('*', authMiddleware);
-
 interface B2AuthorizeResponse {
   accountId: string;
   authorizationToken: string;
@@ -107,7 +104,7 @@ async function getB2Credentials(
  * Menerima berkas lampiran (multipart/form-data) dan mengunggah langsung ke Backblaze B2
  * Dilengkapi caching otorisasi untuk performa tinggi saat banyak pengurus upload bersamaan
  */
-storageRouter.post('/upload', async (c) => {
+storageRouter.post('/upload', authMiddleware, async (c) => {
   const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID;
   const appKey = c.env?.B2_APPLICATION_KEY || process.env.B2_APPLICATION_KEY;
   const targetBucketName = c.env?.B2_BUCKET_NAME || process.env.B2_BUCKET_NAME || 'PSDM-B2';
@@ -179,13 +176,14 @@ storageRouter.post('/upload', async (c) => {
       return c.json({ success: false, message: `Gagal mengunggah berkas ke Backblaze B2: ${errText}` }, 502);
     }
 
-    const publicUrl = `${creds.downloadUrl}/file/${targetBucketName}/${cleanFileName}`;
+    // Gunakan URL endpoint proxy internal agar berkas private B2 selalu dapat ditampilkan tanpa error 401
+    const proxyUrl = `/api/storage/file/${cleanFileName}`;
 
     return c.json({
       success: true,
       message: 'Berkas berhasil diunggah ke Backblaze B2',
       data: {
-        url: publicUrl,
+        url: proxyUrl,
         fileName: cleanFileName,
         originalName: file.name,
         size: fileBytes.byteLength,
@@ -195,5 +193,83 @@ storageRouter.post('/upload', async (c) => {
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : 'Kesalahan upload storage';
     return c.json({ success: false, message: errorMsg }, 500);
+  }
+});
+
+/**
+ * GET /api/storage/file/*
+ * Proxy streaming berkas lampiran dari Backblaze B2 secara terotorisasi.
+ * Menyelesaikan masalah 401 Unauthorized karena bucket B2 bersifat private.
+ */
+storageRouter.get('/file/*', async (c) => {
+  const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID;
+  const appKey = c.env?.B2_APPLICATION_KEY || process.env.B2_APPLICATION_KEY;
+  const targetBucketName = c.env?.B2_BUCKET_NAME || process.env.B2_BUCKET_NAME || 'PSDM-B2';
+
+  if (!keyId || !appKey) {
+    return c.text('Kredensial Backblaze B2 belum dikonfigurasi', 500);
+  }
+
+  // Ekstrak nama berkas dari path URL
+  const fullPath = c.req.path;
+  const prefix = '/api/storage/file/';
+  let rawKey = '';
+  if (fullPath.startsWith(prefix)) {
+    rawKey = fullPath.slice(prefix.length);
+  } else {
+    const match = fullPath.match(/\/file\/(.+)$/);
+    rawKey = match ? match[1] : '';
+  }
+
+  if (!rawKey) {
+    rawKey = c.req.query('key') || '';
+  }
+
+  const decodedKey = decodeURIComponent(rawKey).trim().replace(/^\/+/, '');
+  if (!decodedKey || decodedKey.includes('..')) {
+    return c.text('Nama berkas tidak valid', 400);
+  }
+
+  try {
+    let creds = await getB2Credentials(keyId, appKey, targetBucketName);
+
+    let b2Res = await fetch(`${creds.downloadUrl}/file/${targetBucketName}/${decodedKey}`, {
+      headers: {
+        Authorization: creds.authToken,
+      },
+    });
+
+    // Jika token kedaluwarsa (401), perbarui kredensial sekali dan coba lagi
+    if (b2Res.status === 401) {
+      creds = await getB2Credentials(keyId, appKey, targetBucketName, true);
+      b2Res = await fetch(`${creds.downloadUrl}/file/${targetBucketName}/${decodedKey}`, {
+        headers: {
+          Authorization: creds.authToken,
+        },
+      });
+    }
+
+    if (!b2Res.ok) {
+      return c.text(`Berkas tidak ditemukan (${b2Res.status})`, b2Res.status as any);
+    }
+
+    const contentType = b2Res.headers.get('content-type') || 'application/octet-stream';
+    const contentLength = b2Res.headers.get('content-length');
+
+    const headers = new Headers();
+    headers.set('Content-Type', contentType);
+    headers.set('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+    headers.set('Content-Disposition', 'inline');
+    if (contentLength) {
+      headers.set('Content-Length', contentLength);
+    }
+
+    return new Response(b2Res.body, {
+      status: 200,
+      headers,
+    });
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Gagal mengambil berkas dari storage';
+    return c.text(errorMsg, 500);
   }
 });

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, X, ExternalLink, Clock, ShieldAlert, Search, Filter } from 'lucide-react';
 import type { PermissionRecord, AuthUser, PermissionStatus } from '../../types/index.ts';
+import { getEvidenceViewUrl } from '../../utils/storage.ts';
 
 interface PermissionListTableProps {
   permissions: PermissionRecord[];
@@ -15,6 +16,20 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
+  const [previewPermission, setPreviewPermission] = useState<PermissionRecord | null>(null);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const [zoom, setZoom] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && previewPermission) {
+        setPreviewPermission(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [previewPermission]);
 
   const canReviewPermission = (p: PermissionRecord): boolean => {
     if (!onReview) return false;
@@ -164,10 +179,17 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                       </span>
                       {p.evidenceUrl ? (
                         <a
-                          href={p.evidenceUrl}
+                          href={getEvidenceViewUrl(p.evidenceUrl)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-700 hover:text-slate-900 underline"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPreviewPermission(p);
+                            setImgLoaded(false);
+                            setImgError(false);
+                            setZoom(false);
+                          }}
+                          className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-700 hover:text-slate-900 underline cursor-pointer"
                         >
                           <ExternalLink className="w-3 h-3" />
                           Dokumen Lampiran
@@ -256,10 +278,17 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         <td className="py-3.5 px-4">
                           {p.evidenceUrl ? (
                             <a
-                              href={p.evidenceUrl}
+                              href={getEvidenceViewUrl(p.evidenceUrl)}
                               target="_blank"
                               rel="noreferrer"
-                              className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-700 hover:text-slate-900 underline"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setPreviewPermission(p);
+                                setImgLoaded(false);
+                                setImgError(false);
+                                setZoom(false);
+                              }}
+                              className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-700 hover:text-slate-900 underline cursor-pointer"
                             >
                               <ExternalLink className="w-3 h-3" />
                               Lampiran
@@ -329,6 +358,142 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
             </div>
           </div>
         </>
+      )}
+
+      {/* Interactive Evidence Preview Modal */}
+      {previewPermission && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-xs p-3 sm:p-6"
+          onClick={() => setPreviewPermission(null)}
+        >
+          <div
+            className="bg-white w-full max-w-2xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200/80 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-slate-50/70">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  Bukti Lampiran Izin
+                </h3>
+                <p className="text-[11px] text-slate-500">
+                  {previewPermission.userName} • {previewPermission.activityName} ({previewPermission.jenisIzin})
+                </p>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <a
+                  href={getEvidenceViewUrl(previewPermission.evidenceUrl)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 rounded-lg transition-colors flex items-center gap-1 text-xs"
+                  title="Buka berkas di tab baru"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span className="hidden sm:inline text-[11px] font-medium">Buka Tab Baru</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setPreviewPermission(null)}
+                  className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-lg transition-colors"
+                  title="Tutup"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Image Display Area */}
+            <div className="relative flex-1 overflow-auto bg-slate-900/5 p-4 flex items-center justify-center min-h-[280px] max-h-[65vh]">
+              {!imgLoaded && !imgError && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-slate-50/50">
+                  <div className="w-6 h-6 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+                  <span className="text-xs text-slate-500">Memuat lampiran dari storage...</span>
+                </div>
+              )}
+
+              {imgError ? (
+                <div className="text-center p-6 space-y-2 max-w-sm">
+                  <p className="text-xs font-semibold text-rose-700">Berkas tidak dapat ditampilkan sebagai gambar</p>
+                  <p className="text-[11px] text-slate-500">
+                    Format berkas mungkin berupa dokumen atau link dapat diakses langsung.
+                  </p>
+                  <a
+                    href={getEvidenceViewUrl(previewPermission.evidenceUrl)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-slate-900 rounded-lg hover:bg-slate-800"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Buka Berkas
+                  </a>
+                </div>
+              ) : (
+                <img
+                  src={getEvidenceViewUrl(previewPermission.evidenceUrl)}
+                  alt={`Bukti izin ${previewPermission.userName}`}
+                  className={`max-h-[60vh] max-w-full object-contain rounded-lg transition-transform duration-200 ${
+                    zoom ? 'scale-150 cursor-zoom-out' : 'cursor-zoom-in'
+                  } ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  onLoad={() => setImgLoaded(true)}
+                  onError={() => {
+                    setImgLoaded(true);
+                    setImgError(true);
+                  }}
+                  onClick={() => setZoom(!zoom)}
+                />
+              )}
+            </div>
+
+            {/* Modal Footer / Details */}
+            <div className="px-5 py-3 border-t border-slate-100 bg-white flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+              <div className="space-y-0.5">
+                <div className="text-slate-500 text-[11px]">
+                  <span className="font-semibold text-slate-700">Alasan: </span>
+                  {previewPermission.alasan}
+                </div>
+                <div className="text-[10px] text-slate-400">
+                  Klik gambar untuk memperbesar (zoom)
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 justify-end">
+                {canReviewPermission(previewPermission) && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await onReview?.(previewPermission.id, 'APPROVED');
+                        setPreviewPermission(null);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs flex items-center gap-1 transition-colors shadow-2xs"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      Setujui
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await onReview?.(previewPermission.id, 'REJECTED');
+                        setPreviewPermission(null);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-xs flex items-center gap-1 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      Tolak
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setPreviewPermission(null)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

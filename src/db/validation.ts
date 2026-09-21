@@ -87,7 +87,10 @@ export const permissionSchema = z.object({
   activityId: z.string().min(1, 'Kegiatan wajib dipilih'),
   jenisIzin: z.string().min(2, 'Jenis izin wajib diisi'),
   alasan: z.string().min(5, 'Alasan izin minimal 5 karakter'),
-  evidenceUrl: z.string().url('URL bukti izin tidak valid').optional().nullable(),
+  evidenceUrl: z
+    .union([z.string().url('URL bukti izin tidak valid'), z.string().startsWith('/')])
+    .optional()
+    .nullable(),
   status: z.enum(permissionStatusEnum).default('PENDING'),
   reviewedBy: z.string().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
