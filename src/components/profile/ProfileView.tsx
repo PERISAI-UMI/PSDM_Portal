@@ -10,6 +10,12 @@ import {
   Globe,
   Instagram,
   ArrowLeft,
+  Calendar,
+  Mail,
+  Phone,
+  GraduationCap,
+  MapPin,
+  Save,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
@@ -138,222 +144,291 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
     }
   };
 
+  const getRoleBadge = (role: string) => {
+    switch (role) {
+      case 'SUPER_ADMIN':
+        return { label: 'Kepala Departemen PSDM', badge: 'Super Admin' };
+      case 'ADMIN':
+        return { label: 'Staf PSDM', badge: 'Admin PJ' };
+      case 'PENGURUS':
+      default:
+        return { label: 'Pengurus Organisasi', badge: 'Pengurus' };
+    }
+  };
+
+  const roleMeta = getRoleBadge(currentUser.role);
+
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="pb-5 border-b border-slate-200/80">
-        {onBackToDashboard && (
-          <button
-            type="button"
-            onClick={onBackToDashboard}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 mb-2.5 transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Kembali ke Dasbor</span>
-          </button>
-        )}
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-          Profil & Akun
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Informasi identitas personal, data keanggotaan, dan keamanan akun.
-        </p>
+      {/* 1. Page Header (Standard Layout) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
+        <div>
+          {onBackToDashboard && (
+            <button
+              type="button"
+              onClick={onBackToDashboard}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 mb-2 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Kembali ke Dasbor</span>
+            </button>
+          )}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Profil & Pengaturan Akun
+            </h1>
+            <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-900 text-white">
+              {roleMeta.badge}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Kelola data biodata anggota, informasi keorganisasian, serta keamanan akses akun Anda.
+          </p>
+        </div>
+
+        {/* User Badges */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono">
+            PRN: <span className="font-bold text-slate-900">{currentUser.prn}</span>
+          </div>
+          <div className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono">
+            NIM: <span className="font-bold text-slate-900">{currentUser.nim}</span>
+          </div>
+        </div>
       </div>
 
-      {/* Main Container */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
-        {/* User Summary Strip */}
-        <div className="p-4 sm:p-6 bg-slate-50 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-2xs shrink-0">
-              {currentUser.namaLengkap.slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-slate-900 text-base">{currentUser.namaLengkap}</span>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">
-                  {currentUser.role}
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mt-0.5">
-                <span className="flex items-center gap-1">
-                  <Building2 className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{currentUser.jabatan}</span>
-                </span>
-                <span>•</span>
-                <span>{currentUser.departmentName || 'Organisasi'}</span>
-              </div>
-            </div>
+      {/* 2. Key Metadata Banner (Full-width grid) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
+            <User className="w-3.5 h-3.5 text-slate-400" />
+            <span>Nama Lengkap</span>
           </div>
-
-          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-            <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">
-              PRN: <strong className="text-slate-900">{currentUser.prn}</strong>
-            </span>
-            <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">
-              NIM: <strong className="text-slate-900">{currentUser.nim}</strong>
-            </span>
+          <div className="text-sm font-bold text-slate-900 truncate">
+            {currentUser.namaLengkap}
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex border-b border-slate-200 px-4 sm:px-6 text-xs font-semibold">
-          <button
-            type="button"
-            onClick={() => setActiveTab('profile')}
-            className={`py-3 px-4 border-b-2 transition-colors flex items-center gap-2 cursor-pointer ${
-              activeTab === 'profile'
-                ? 'border-slate-900 text-slate-900 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            <User className="w-3.5 h-3.5" />
-            <span>Biodata Profil</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('security')}
-            className={`py-3 px-4 border-b-2 transition-colors flex items-center gap-2 cursor-pointer ${
-              activeTab === 'security'
-                ? 'border-slate-900 text-slate-900 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            <KeyRound className="w-3.5 h-3.5" />
-            <span>Keamanan & Sandi</span>
-          </button>
+        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
+            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+            <span>Departemen</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 truncate">
+            {currentUser.departmentName || 'PSDM'}
+          </div>
         </div>
 
-        <div className="p-4 sm:p-6">
-          {/* Tab 1: Profil & Biodata */}
-          {activeTab === 'profile' && (
-            <form onSubmit={handleSaveProfile} className="space-y-4 max-w-3xl">
-              {profileSuccess && (
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{profileSuccess}</span>
-                </div>
-              )}
+        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
+            <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+            <span>Jabatan / Peran</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 truncate">
+            {currentUser.jabatan}
+          </div>
+        </div>
 
-              {profileError && (
-                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                  <span>{profileError}</span>
-                </div>
-              )}
+        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
+            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <span>Angkatan & Generasi</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 truncate">
+            {currentUser.angkatan ? `Angkatan ${currentUser.angkatan}` : '-'} • Gen {currentUser.generasi}
+          </div>
+        </div>
+      </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nama Lengkap *
-                  </label>
-                  <input
-                    type="text"
-                    value={namaLengkap}
-                    onChange={(e) => setNamaLengkap(e.target.value)}
-                    required
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                </div>
+      {/* 3. Section Navigation Tabs */}
+      <div className="flex items-center gap-2 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-px">
+        <button
+          type="button"
+          onClick={() => setActiveTab('profile')}
+          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'profile'
+              ? 'border-slate-900 text-slate-900 font-bold'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <User className="w-4 h-4" />
+          <span>Biodata Profil</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('security')}
+          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'security'
+              ? 'border-slate-900 text-slate-900 font-bold'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <KeyRound className="w-4 h-4" />
+          <span>Keamanan & Sandi</span>
+        </button>
+      </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Email *
-                  </label>
+      {/* 4. Main Form Area - Maximized Full-Width Layout */}
+      {activeTab === 'profile' && (
+        <form onSubmit={handleSaveProfile} className="space-y-6">
+          {profileSuccess && (
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{profileSuccess}</span>
+            </div>
+          )}
+
+          {profileError && (
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{profileError}</span>
+            </div>
+          )}
+
+          {/* Section A: Identitas & Kontak */}
+          <div className="space-y-4">
+            <div className="border-b border-slate-200/80 pb-2">
+              <h2 className="text-sm font-bold text-slate-900">Identitas Diri & Kontak</h2>
+              <p className="text-xs text-slate-500">Informasi personal dan nomor yang dapat dihubungi</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Nama Lengkap *
+                </label>
+                <input
+                  type="text"
+                  value={namaLengkap}
+                  onChange={(e) => setNamaLengkap(e.target.value)}
+                  required
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Alamat Email *
+                </label>
+                <div className="relative">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nomor WhatsApp / Telepon *
-                  </label>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Nomor WhatsApp / Telepon *
+                </label>
+                <div className="relative">
                   <input
                     type="tel"
                     value={noTelp}
                     onChange={(e) => setNoTelp(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
+                  <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    NIM (Nomor Induk Mahasiswa) *
-                  </label>
+          {/* Section B: Data Akademik & Kelahiran */}
+          <div className="space-y-4 pt-2">
+            <div className="border-b border-slate-200/80 pb-2">
+              <h2 className="text-sm font-bold text-slate-900">Data Akademik & Tempat Lahir</h2>
+              <p className="text-xs text-slate-500">Nomor induk mahasiswa dan keterangan kelahiran</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  NIM (Nomor Induk Mahasiswa) *
+                </label>
+                <input
+                  type="text"
+                  value={nim}
+                  onChange={(e) => setNim(e.target.value)}
+                  required
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Tahun Angkatan *
+                </label>
+                <input
+                  type="number"
+                  value={angkatan}
+                  onChange={(e) => setAngkatan(Number(e.target.value))}
+                  min={2000}
+                  max={2100}
+                  required
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Tempat Lahir
+                </label>
+                <input
+                  type="text"
+                  value={tempatLahir}
+                  onChange={(e) => setTempatLahir(e.target.value)}
+                  placeholder="Kota kelahiran"
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Tanggal Lahir
+                </label>
+                <input
+                  type="date"
+                  value={tanggalLahir}
+                  onChange={(e) => setTanggalLahir(e.target.value)}
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section C: Media Sosial & Domisili */}
+          <div className="space-y-4 pt-2">
+            <div className="border-b border-slate-200/80 pb-2">
+              <h2 className="text-sm font-bold text-slate-900">Media Sosial & Domisili</h2>
+              <p className="text-xs text-slate-500">Tautan jejaring profesional dan alamat tempat tinggal</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Instagram (Username)
+                </label>
+                <div className="relative">
                   <input
                     type="text"
-                    value={nim}
-                    onChange={(e) => setNim(e.target.value)}
-                    required
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    value={instagramUsername}
+                    onChange={(e) => setInstagramUsername(e.target.value)}
+                    placeholder="username (tanpa @)"
+                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Tahun Angkatan *
-                  </label>
-                  <input
-                    type="number"
-                    value={angkatan}
-                    onChange={(e) => setAngkatan(Number(e.target.value))}
-                    min={2000}
-                    max={2100}
-                    required
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Tempat Lahir
-                  </label>
-                  <input
-                    type="text"
-                    value={tempatLahir}
-                    onChange={(e) => setTempatLahir(e.target.value)}
-                    placeholder="Kota kelahiran"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Tanggal Lahir
-                  </label>
-                  <input
-                    type="date"
-                    value={tanggalLahir}
-                    onChange={(e) => setTanggalLahir(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Instagram (Username)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={instagramUsername}
-                      onChange={(e) => setInstagramUsername(e.target.value)}
-                      placeholder="username (tanpa @)"
-                      className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                    />
-                    <Instagram className="w-4 h-4 text-slate-400 absolute left-2.5 top-3" />
-                  </div>
+                  <Instagram className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   LinkedIn URL
                 </label>
                 <div className="relative">
@@ -362,135 +437,157 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
                     placeholder="https://linkedin.com/in/username"
-                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
-                  <Globe className="w-4 h-4 text-slate-400 absolute left-2.5 top-3" />
+                  <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <div className="md:col-span-2">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Alamat Domisili
                 </label>
-                <textarea
-                  value={alamat}
-                  onChange={(e) => setAlamat(e.target.value)}
-                  rows={3}
-                  placeholder="Alamat domisili saat ini..."
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                />
+                <div className="relative">
+                  <textarea
+                    value={alamat}
+                    onChange={(e) => setAlamat(e.target.value)}
+                    rows={3}
+                    placeholder="Alamat domisili / tempat tinggal saat ini..."
+                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  />
+                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                </div>
               </div>
+            </div>
+          </div>
 
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-end">
-                <button
-                  type="submit"
-                  disabled={savingProfile}
-                  className="px-5 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
-                >
-                  {savingProfile ? 'Menyimpan...' : 'Simpan Pembaruan Profil'}
-                </button>
-              </div>
-            </form>
+          {/* Action Bar */}
+          <div className="pt-4 border-t border-slate-200/80 flex items-center justify-end gap-3">
+            {onBackToDashboard && (
+              <button
+                type="button"
+                onClick={onBackToDashboard}
+                className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+              >
+                Batal
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={savingProfile}
+              className="px-6 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>{savingProfile ? 'Menyimpan...' : 'Simpan Pembaruan Profil'}</span>
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* 5. Security & Password Tab */}
+      {activeTab === 'security' && (
+        <form onSubmit={handleSavePassword} className="space-y-6 max-w-2xl">
+          {passwordSuccess && (
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{passwordSuccess}</span>
+            </div>
           )}
 
-          {/* Tab 2: Ganti Kata Sandi */}
-          {activeTab === 'security' && (
-            <form onSubmit={handleSavePassword} className="space-y-4 max-w-xl">
-              {passwordSuccess && (
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{passwordSuccess}</span>
-                </div>
-              )}
+          {passwordError && (
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{passwordError}</span>
+            </div>
+          )}
 
-              {passwordError && (
-                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                  <span>{passwordError}</span>
-                </div>
-              )}
+          <div className="border-b border-slate-200/80 pb-2">
+            <h2 className="text-sm font-bold text-slate-900">Ubah Kata Sandi</h2>
+            <p className="text-xs text-slate-500">Pastikan menggunakan kombinasi kata sandi yang aman dan tidak mudah ditebak</p>
+          </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Kata Sandi Saat Ini *
-                </label>
-                <div className="relative">
-                  <input
-                    type={showCurrentPass ? 'text' : 'password'}
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Masukkan kata sandi saat ini"
-                    required
-                    className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowCurrentPass(!showCurrentPass)}
-                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
-                  >
-                    {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Kata Sandi Baru *
-                </label>
-                <div className="relative">
-                  <input
-                    type={showNewPass ? 'text' : 'password'}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Minimal 6 karakter"
-                    required
-                    minLength={6}
-                    className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPass(!showNewPass)}
-                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
-                  >
-                    {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Konfirmasi Kata Sandi Baru *
-                </label>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Kata Sandi Saat Ini *
+              </label>
+              <div className="relative">
                 <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Ulangi kata sandi baru"
+                  type={showCurrentPass ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Masukkan kata sandi saat ini"
                   required
-                  className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border text-slate-900 focus:outline-none focus:ring-2 ${
-                    confirmPassword && newPassword !== confirmPassword
-                      ? 'border-rose-300 focus:ring-rose-200'
-                      : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
-                  }`}
+                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                 />
-                {confirmPassword && newPassword !== confirmPassword && (
-                  <p className="text-[11px] text-rose-600 mt-1">Konfirmasi kata sandi tidak cocok.</p>
-                )}
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-end">
                 <button
-                  type="submit"
-                  disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
-                  className="px-5 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+                  type="button"
+                  onClick={() => setShowCurrentPass(!showCurrentPass)}
+                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
-                  {savingPassword ? 'Menyimpan...' : 'Perbarui Kata Sandi'}
+                  {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-            </form>
-          )}
-        </div>
-      </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Kata Sandi Baru *
+              </label>
+              <div className="relative">
+                <input
+                  type={showNewPass ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Minimal 6 karakter"
+                  required
+                  minLength={6}
+                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPass(!showNewPass)}
+                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                >
+                  {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Konfirmasi Kata Sandi Baru *
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Ulangi kata sandi baru"
+                required
+                className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${
+                  confirmPassword && newPassword !== confirmPassword
+                    ? 'border-rose-300 focus:ring-rose-200'
+                    : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
+                }`}
+              />
+              {confirmPassword && newPassword !== confirmPassword && (
+                <p className="text-[11px] text-rose-600 mt-1.5">Konfirmasi kata sandi tidak cocok.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-200/80 flex items-center justify-end gap-3">
+            <button
+              type="submit"
+              disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
+              className="px-6 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
+            >
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>{savingPassword ? 'Menyimpan...' : 'Perbarui Kata Sandi'}</span>
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };
