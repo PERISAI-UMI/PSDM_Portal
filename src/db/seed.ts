@@ -42,10 +42,12 @@ const FAK_ID_FIKOM = 'fak-seed-001';
 const PRODI_ID_1   = 'prodi-seed-001';
 const PRODI_ID_2   = 'prodi-seed-002';
 
-const DEPT_PSDM    = 'dept-seed-001';
-const DEPT_RISTEK  = 'dept-seed-002';
-const DEPT_HUMAS   = 'dept-seed-003';
-const DEPT_MEDKOM  = 'dept-seed-004';
+const DEPT_PSDM      = 'dept-seed-001';
+const DEPT_RISTEK    = 'dept-seed-002';
+const DEPT_HUMAS     = 'dept-seed-003';
+const DEPT_MEDIA     = 'dept-seed-004';
+const DEPT_PENALARAN = 'dept-seed-005';
+const DEPT_KOMPRES   = 'dept-seed-006';
 
 const PASSWORD     = 'password123';
 
@@ -195,16 +197,24 @@ async function seed() {
 
   // ── 2. Departemen ──────────────────────────────────────────
   const deptsData = [
-    { id: DEPT_PSDM, nama: 'PSDM' },
-    { id: DEPT_RISTEK, nama: 'Riset & Teknologi' },
-    { id: DEPT_HUMAS, nama: 'Hubungan Masyarakat' },
-    { id: DEPT_MEDKOM, nama: 'Media & Komunikasi' },
+    { id: DEPT_PSDM, nama: 'Pengembangan Sumber Daya Manusia (PSDM)' },
+    { id: DEPT_MEDIA, nama: 'Media' },
+    { id: DEPT_PENALARAN, nama: 'Penalaran' },
+    { id: DEPT_HUMAS, nama: 'Hubungan Masyarakat (HUMAS)' },
+    { id: DEPT_KOMPRES, nama: 'Kompetisi dan Prestasi (KOMPRES)' },
+    { id: DEPT_RISTEK, nama: 'Riset dan Teknologi (RISTEK)' },
   ];
 
   for (const d of deptsData) {
-    await db.insert(departments).values(d).onConflictDoNothing();
+    await db
+      .insert(departments)
+      .values(d)
+      .onConflictDoUpdate({
+        target: departments.id,
+        set: { nama: d.nama },
+      });
   }
-  console.log('✓  Departemen organisasi tersinkronisasi');
+  console.log(`✓  Departemen organisasi (${deptsData.length}) tersinkronisasi`);
 
   // ── 3. Hash password ──────────────────────────────────────
   const passwordHash = await hashPassword(PASSWORD);
