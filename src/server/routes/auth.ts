@@ -4,7 +4,7 @@ import { setCookie, deleteCookie } from 'hono/cookie';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
-import { users, sessions } from '../../db/schema/index.ts';
+import { users, sessions, departments, programStudi } from '../../db/schema/index.ts';
 import { hashPassword, verifyPassword, generateSessionToken } from '../crypto.ts';
 import { authMiddleware, SESSION_COOKIE_NAME } from '../middleware/auth.ts';
 
@@ -26,8 +26,32 @@ authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
   const db = c.get('db');
 
   const foundUsers = await db
-    .select()
+    .select({
+      id: users.id,
+      prn: users.prn,
+      passwordHash: users.passwordHash,
+      role: users.role,
+      generasi: users.generasi,
+      departmentId: users.departmentId,
+      departmentName: departments.nama,
+      jabatan: users.jabatan,
+      tingkatJabatan: users.tingkatJabatan,
+      namaLengkap: users.namaLengkap,
+      tempatLahir: users.tempatLahir,
+      tanggalLahir: users.tanggalLahir,
+      alamat: users.alamat,
+      noTelp: users.noTelp,
+      email: users.email,
+      nim: users.nim,
+      programStudiId: users.programStudiId,
+      programStudiName: programStudi.nama,
+      angkatan: users.angkatan,
+      linkedinUrl: users.linkedinUrl,
+      instagramUsername: users.instagramUsername,
+    })
     .from(users)
+    .leftJoin(departments, eq(users.departmentId, departments.id))
+    .leftJoin(programStudi, eq(users.programStudiId, programStudi.id))
     .where(eq(users.prn, prn))
     .limit(1);
 

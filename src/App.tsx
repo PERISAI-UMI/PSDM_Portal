@@ -79,6 +79,21 @@ function MainAppContent() {
     setProdi(master.programStudi);
     setDepartments(master.departments);
     setPjMappings(master.pjMappings);
+
+    // Hydrate currentUser departmentName & programStudiName if missing
+    const dept = master.departments.find((d) => d.id === user.departmentId);
+    const prodiItem = master.programStudi.find((p) => p.id === user.programStudiId);
+    if (dept || prodiItem) {
+      setCurrentUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              departmentName: dept?.nama || prev.departmentName,
+              programStudiName: prodiItem?.nama || prev.programStudiName,
+            }
+          : prev
+      );
+    }
   };
 
   const handleLogin = async (prn: string, password?: string) => {

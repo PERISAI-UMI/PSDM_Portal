@@ -102,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-slate-500 truncate max-w-[140px]">
-              {user.departmentName || user.departmentId || 'Departemen PSDM'}
+              {user.departmentName || 'Departemen PSDM'}
             </p>
           </div>
         </div>
@@ -148,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               Wilayah Pembinaan:
             </span>
             <span className="font-semibold text-slate-900 mt-0.5 block truncate">
-              {user.departmentName || user.departmentId || 'Riset & Teknologi'}
+              {user.departmentName || 'Riset & Teknologi'}
             </span>
           </div>
         )}

@@ -37,7 +37,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
     if (departments.length > 0) {
       return departments.map((d) => ({ id: d.id, name: d.nama }));
     }
-    const unique = Array.from(new Set(users.map((u) => u.departmentName || u.departmentId || 'Umum')));
+    const unique = Array.from(new Set(users.map((u) => u.departmentName || 'Umum')));
     return unique.map((d) => ({ id: d, name: d }));
   }, [departments, users]);
 
@@ -286,7 +286,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                     <div className="flex items-center gap-2 text-slate-700">
                       <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span className="font-medium truncate">
-                        {user.departmentName || user.departmentId || 'Departemen PSDM'}
+                        {user.departmentName || 'Departemen PSDM'}
                       </span>
                     </div>
 
@@ -402,7 +402,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                       </td>
 
                       <td className="py-3 px-4 font-medium text-slate-700">
-                        {user.departmentName || user.departmentId || '-'}
+                        {user.departmentName || '-'}
                       </td>
 
                       <td className="py-3 px-4 text-slate-600">

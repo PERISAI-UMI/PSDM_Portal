@@ -2,7 +2,14 @@ import { createMiddleware } from 'hono/factory';
 import { getCookie, deleteCookie } from 'hono/cookie';
 import { eq, and, gt } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
-import { sessions, users, pjDepartments, type UserRole } from '../../db/schema/index.ts';
+import {
+  sessions,
+  users,
+  pjDepartments,
+  departments,
+  programStudi,
+  type UserRole,
+} from '../../db/schema/index.ts';
 
 export const SESSION_COOKIE_NAME = 'psdm_session';
 
@@ -37,10 +44,33 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
 
   const currentSession = activeSessions[0];
 
-  // Query user terkait
+  // Query user terkait lengkap dengan nama departemen dan program studi
   const foundUsers = await db
-    .select()
+    .select({
+      id: users.id,
+      prn: users.prn,
+      role: users.role,
+      generasi: users.generasi,
+      departmentId: users.departmentId,
+      departmentName: departments.nama,
+      jabatan: users.jabatan,
+      tingkatJabatan: users.tingkatJabatan,
+      namaLengkap: users.namaLengkap,
+      tempatLahir: users.tempatLahir,
+      tanggalLahir: users.tanggalLahir,
+      alamat: users.alamat,
+      noTelp: users.noTelp,
+      email: users.email,
+      nim: users.nim,
+      programStudiId: users.programStudiId,
+      programStudiName: programStudi.nama,
+      angkatan: users.angkatan,
+      linkedinUrl: users.linkedinUrl,
+      instagramUsername: users.instagramUsername,
+    })
     .from(users)
+    .leftJoin(departments, eq(users.departmentId, departments.id))
+    .leftJoin(programStudi, eq(users.programStudiId, programStudi.id))
     .where(eq(users.id, currentSession.userId))
     .limit(1);
 
@@ -49,8 +79,7 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
     return c.json({ success: false, message: 'Unauthorized: Akun pengguna tidak ditemukan' }, 401);
   }
 
-  const foundUser = foundUsers[0];
-  const { passwordHash: _, ...safeUser } = foundUser;
+  const safeUser = foundUsers[0];
 
   // Jika ADMIN, sertakan data pjDepartments untuk verifikasi RBAC departemen binaan
   let userPjs: typeof pjDepartments.$inferSelect[] = [];

@@ -264,7 +264,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-xs text-slate-900 truncate">
-                          {p.userName || p.userId}
+                          {p.userName || p.userPrn || 'Anggota'}
                         </span>
                         <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 border border-amber-200">
                           {p.jenisIzin}
