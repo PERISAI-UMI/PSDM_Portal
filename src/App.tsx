@@ -377,6 +377,37 @@ function MainAppContent() {
               currentUser={currentUser}
               users={allUsers}
               departments={departments}
+              programStudi={prodi}
+              onCreateMember={async (newUser) => {
+                try {
+                  await api.createUser(newUser);
+                  await reloadData(currentUser);
+                  showToast('Anggota baru berhasil ditambahkan!', 'success');
+                } catch (err: any) {
+                  showToast(err?.message || 'Gagal menambahkan anggota', 'error');
+                  throw err;
+                }
+              }}
+              onUpdateMember={async (id, updates) => {
+                try {
+                  await api.updateUser(id, updates);
+                  await reloadData(currentUser);
+                  showToast('Data anggota berhasil diperbarui!', 'success');
+                } catch (err: any) {
+                  showToast(err?.message || 'Gagal memperbarui data anggota', 'error');
+                  throw err;
+                }
+              }}
+              onDeleteMember={async (id) => {
+                try {
+                  await api.deleteUser(id);
+                  await reloadData(currentUser);
+                  showToast('Anggota berhasil dihapus!', 'success');
+                } catch (err: any) {
+                  showToast(err?.message || 'Gagal menghapus anggota', 'error');
+                  throw err;
+                }
+              }}
             />
           )}
 

@@ -13,24 +13,45 @@ import {
   Globe,
   Instagram,
   Linkedin,
+  Plus,
+  Edit2,
+  Trash2,
 } from 'lucide-react';
-import type { AuthUser, DepartmentItem } from '../../types/index.ts';
+import type { AuthUser, DepartmentItem, ProgramStudiItem } from '../../types/index.ts';
+import { MemberFormModal } from './MemberFormModal.tsx';
+import { ConfirmModal } from '../ui/ConfirmModal.tsx';
 
 interface MembersViewProps {
   currentUser: AuthUser;
   users: AuthUser[];
   departments?: DepartmentItem[];
+  programStudi?: ProgramStudiItem[];
+  onCreateMember?: (newUser: Omit<AuthUser, 'id'>) => Promise<void>;
+  onUpdateMember?: (id: string, updates: Partial<AuthUser>) => Promise<void>;
+  onDeleteMember?: (id: string) => Promise<void>;
 }
 
 export const MembersView: React.FC<MembersViewProps> = ({
   currentUser,
   users,
   departments = [],
+  programStudi = [],
+  onCreateMember,
+  onUpdateMember,
+  onDeleteMember,
 }) => {
+  const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
+
   const [search, setSearch] = useState('');
   const [selectedDept, setSelectedDept] = useState('ALL');
   const [selectedRole, setSelectedRole] = useState<'ALL' | 'SUPER_ADMIN' | 'ADMIN' | 'PENGURUS'>('ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+
+  // Modal States
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState<AuthUser | null>(null);
+  const [deletingMember, setDeletingMember] = useState<AuthUser | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Available departments
   const departmentOptions = useMemo(() => {
@@ -87,6 +108,36 @@ export const MembersView: React.FC<MembersViewProps> = ({
     }
   };
 
+  const handleFormSubmit = async (formData: any) => {
+    try {
+      setIsSubmitting(true);
+      if (editingMember) {
+        if (onUpdateMember) {
+          await onUpdateMember(editingMember.id, formData);
+        }
+      } else {
+        if (onCreateMember) {
+          await onCreateMember(formData);
+        }
+      }
+      setIsFormModalOpen(false);
+      setEditingMember(null);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingMember || !onDeleteMember) return;
+    try {
+      setIsSubmitting(true);
+      await onDeleteMember(deletingMember.id);
+      setDeletingMember(null);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -102,34 +153,51 @@ export const MembersView: React.FC<MembersViewProps> = ({
           </div>
         </div>
 
-        {/* View Mode Toggle */}
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => setViewMode('grid')}
-            className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
-              viewMode === 'grid'
-                ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-500 hover:text-slate-900'
-            }`}
-            title="Tampilan Kartu"
-          >
-            <LayoutGrid className="w-4 h-4" />
-            <span className="hidden sm:inline">Kartu</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('table')}
-            className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
-              viewMode === 'table'
-                ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-500 hover:text-slate-900'
-            }`}
-            title="Tampilan Tabel"
-          >
-            <List className="w-4 h-4" />
-            <span className="hidden sm:inline">Tabel</span>
-          </button>
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          {/* Super Admin Action: Tambah Anggota */}
+          {isSuperAdmin && onCreateMember && (
+            <button
+              type="button"
+              onClick={() => {
+                setEditingMember(null);
+                setIsFormModalOpen(true);
+              }}
+              className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Tambah Anggota</span>
+            </button>
+          )}
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-white text-slate-900 shadow-2xs'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+              title="Tampilan Kartu"
+            >
+              <LayoutGrid className="w-4 h-4" />
+              <span className="hidden sm:inline">Kartu</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('table')}
+              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
+                viewMode === 'table'
+                  ? 'bg-white text-slate-900 shadow-2xs'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+              title="Tampilan Tabel"
+            >
+              <List className="w-4 h-4" />
+              <span className="hidden sm:inline">Tabel</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -165,7 +233,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {adminCount}
           </div>
-          <p className="text-[11px] text-blue-600 font-medium mt-0.5">Penanggung jawab departemen</p>
+          <p className="text-[11px] text-blue-600 font-medium mt-0.5">Penanggung jawab wilayah</p>
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
@@ -237,7 +305,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
               setSelectedDept('ALL');
               setSelectedRole('ALL');
             }}
-            className="mt-3 px-3 py-1.5 text-xs text-slate-600 font-medium hover:text-slate-900 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+            className="mt-3 px-3 py-1.5 text-xs text-slate-600 font-medium hover:text-slate-900 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
           >
             Reset Filter
           </button>
@@ -306,7 +374,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                   </div>
                 </div>
 
-                {/* Footer Badges / Links */}
+                {/* Footer Badges, Socials & Actions */}
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                   <span className="text-[11px] font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-200/60">
                     {user.jabatan || 'Pengurus'}
@@ -335,6 +403,32 @@ export const MembersView: React.FC<MembersViewProps> = ({
                         <Linkedin className="w-3.5 h-3.5" />
                       </a>
                     )}
+
+                    {/* Super Admin Edit / Delete Buttons */}
+                    {isSuperAdmin && onUpdateMember && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingMember(user);
+                          setIsFormModalOpen(true);
+                        }}
+                        className="p-1 rounded text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer ml-1"
+                        title="Ubah Anggota"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
+                    {isSuperAdmin && onDeleteMember && currentUser.id !== user.id && (
+                      <button
+                        type="button"
+                        onClick={() => setDeletingMember(user)}
+                        className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                        title="Hapus Anggota"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -354,6 +448,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                   <th className="py-3 px-4">Departemen</th>
                   <th className="py-3 px-4">Program Studi</th>
                   <th className="py-3 px-4">Kontak</th>
+                  {isSuperAdmin && <th className="py-3 px-4 text-right">Aksi</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -419,6 +514,37 @@ export const MembersView: React.FC<MembersViewProps> = ({
                           </span>
                         )}
                       </td>
+
+                      {isSuperAdmin && (
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            {onUpdateMember && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingMember(user);
+                                  setIsFormModalOpen(true);
+                                }}
+                                className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+                                title="Ubah Anggota"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+
+                            {onDeleteMember && currentUser.id !== user.id && (
+                              <button
+                                type="button"
+                                onClick={() => setDeletingMember(user)}
+                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
+                                title="Hapus Anggota"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   );
                 })}
@@ -426,6 +552,35 @@ export const MembersView: React.FC<MembersViewProps> = ({
             </table>
           </div>
         </div>
+      )}
+
+      {/* Form Modal (Create / Edit) */}
+      {isFormModalOpen && (
+        <MemberFormModal
+          isOpen={isFormModalOpen}
+          onClose={() => {
+            setIsFormModalOpen(false);
+            setEditingMember(null);
+          }}
+          onSubmit={handleFormSubmit}
+          member={editingMember}
+          departments={departments}
+          programStudi={programStudi}
+          isSubmitting={isSubmitting}
+        />
+      )}
+
+      {/* Confirm Delete Modal */}
+      {deletingMember && (
+        <ConfirmModal
+          isOpen={Boolean(deletingMember)}
+          onClose={() => setDeletingMember(null)}
+          onConfirm={handleDeleteConfirm}
+          title="Hapus Anggota"
+          message={`Apakah Anda yakin ingin menghapus akun anggota "${deletingMember.namaLengkap}" (${deletingMember.prn})? Data yang dihapus tidak dapat dipulihkan.`}
+          confirmLabel="Hapus Anggota"
+          isDanger
+        />
       )}
     </div>
   );

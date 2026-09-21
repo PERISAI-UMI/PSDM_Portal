@@ -1,0 +1,498 @@
+import React, { useState } from 'react';
+import {
+  X,
+  User,
+  Building2,
+  GraduationCap,
+  Mail,
+  Phone,
+  Calendar,
+  Lock,
+  Globe,
+  Instagram,
+  Save,
+  AlertCircle,
+} from 'lucide-react';
+import type { AuthUser, DepartmentItem, ProgramStudiItem, UserRole, TingkatJabatan } from '../../types/index.ts';
+
+interface MemberFormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: any) => Promise<void>;
+  member?: AuthUser | null;
+  departments: DepartmentItem[];
+  programStudi: ProgramStudiItem[];
+  isSubmitting?: boolean;
+}
+
+export const MemberFormModal: React.FC<MemberFormModalProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  member,
+  departments,
+  programStudi,
+  isSubmitting = false,
+}) => {
+  const isEditing = Boolean(member);
+
+  const [prn, setPrn] = useState(member?.prn || '');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState<UserRole>(member?.role || 'PENGURUS');
+  const [generasi, setGenerasi] = useState<number>(member?.generasi || 12);
+  const [departmentId, setDepartmentId] = useState(member?.departmentId || departments[0]?.id || '');
+  const [jabatan, setJabatan] = useState(member?.jabatan || '');
+  const [tingkatJabatan, setTingkatJabatan] = useState<TingkatJabatan>(member?.tingkatJabatan || 'STAFF');
+  const [namaLengkap, setNamaLengkap] = useState(member?.namaLengkap || '');
+  const [tempatLahir, setTempatLahir] = useState(member?.tempatLahir || '');
+  const [tanggalLahir, setTanggalLahir] = useState(member?.tanggalLahir || '2002-01-01');
+  const [alamat, setAlamat] = useState(member?.alamat || '');
+  const [noTelp, setNoTelp] = useState(member?.noTelp || '');
+  const [email, setEmail] = useState(member?.email || '');
+  const [nim, setNim] = useState(member?.nim || '');
+  const [programStudiId, setProgramStudiId] = useState(member?.programStudiId || programStudi[0]?.id || '');
+  const [angkatan, setAngkatan] = useState<number>(member?.angkatan || new Date().getFullYear() - 2);
+  const [linkedinUrl, setLinkedinUrl] = useState(member?.linkedinUrl || '');
+  const [instagramUsername, setInstagramUsername] = useState(member?.instagramUsername || '');
+
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+
+    if (!isEditing && !prn.trim()) {
+      setErrorMsg('PRN wajib diisi');
+      return;
+    }
+    if (!isEditing && (!password || password.length < 8)) {
+      setErrorMsg('Password default wajib diisi minimal 8 karakter');
+      return;
+    }
+    if (!namaLengkap.trim()) {
+      setErrorMsg('Nama lengkap wajib diisi');
+      return;
+    }
+    if (!email.trim() || !email.includes('@')) {
+      setErrorMsg('Format email tidak valid');
+      return;
+    }
+    if (!nim.trim()) {
+      setErrorMsg('NIM wajib diisi');
+      return;
+    }
+    if (!departmentId) {
+      setErrorMsg('Departemen wajib dipilih');
+      return;
+    }
+    if (!programStudiId) {
+      setErrorMsg('Program Studi wajib dipilih');
+      return;
+    }
+    if (!jabatan.trim()) {
+      setErrorMsg('Jabatan wajib diisi');
+      return;
+    }
+
+    try {
+      const payload: Record<string, unknown> = {
+        role,
+        generasi: Number(generasi),
+        departmentId,
+        jabatan: jabatan.trim(),
+        tingkatJabatan,
+        namaLengkap: namaLengkap.trim(),
+        tempatLahir: tempatLahir.trim() || 'Indonesia',
+        tanggalLahir,
+        alamat: alamat.trim() || 'Kampus',
+        noTelp: noTelp.trim() || '081234567890',
+        email: email.trim(),
+        nim: nim.trim(),
+        programStudiId,
+        angkatan: Number(angkatan),
+        linkedinUrl: linkedinUrl.trim() || null,
+        instagramUsername: instagramUsername.trim().replace(/^@/, '') || null,
+      };
+
+      if (!isEditing) {
+        payload.prn = prn.trim().toUpperCase();
+        payload.password = password;
+      } else if (password) {
+        payload.password = password;
+      }
+
+      await onSubmit(payload);
+      onClose();
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Gagal menyimpan data anggota');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-xs overflow-y-auto">
+      <div className="bg-white w-full max-w-2xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200/80 my-8 max-h-[90vh] flex flex-col">
+        {/* Modal Header */}
+        <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 shrink-0">
+          <div>
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+              {isEditing ? 'Ubah Data Anggota' : 'Tambah Anggota Baru'}
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {isEditing
+                ? `Perbarui informasi data keanggotaan untuk ${member?.namaLengkap}`
+                : 'Daftarkan fungsionaris atau anggota baru ke dalam pangkalan data organisasi.'}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Modal Body */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto py-4 space-y-5 pr-1">
+          {errorMsg && (
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
+          {/* Section: Akun & Identifikasi */}
+          <div>
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+              Kredensial & Identifikasi
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  PRN / ID Anggota *
+                </label>
+                <input
+                  type="text"
+                  value={prn}
+                  onChange={(e) => setPrn(e.target.value.toUpperCase())}
+                  disabled={isEditing}
+                  placeholder="Contoh: PRN0099"
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white disabled:bg-slate-100 disabled:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-900 uppercase font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  {isEditing ? 'Kata Sandi Baru (Opsional)' : 'Kata Sandi Default *'}
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={isEditing ? 'Biarkan kosong jika tidak diubah' : 'Minimal 8 karakter'}
+                    required={!isEditing}
+                    minLength={password ? 8 : undefined}
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                  />
+                  <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Data Pribadi */}
+          <div>
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+              Data Pribadi
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Nama Lengkap *
+                </label>
+                <input
+                  type="text"
+                  value={namaLengkap}
+                  onChange={(e) => setNamaLengkap(e.target.value)}
+                  placeholder="Nama sesuai KTM"
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Email *
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="email@domain.com"
+                    required
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                  />
+                  <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Nomor Telepon / WhatsApp *
+                </label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    value={noTelp}
+                    onChange={(e) => setNoTelp(e.target.value)}
+                    placeholder="08xxxxxxxxxx"
+                    required
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                  />
+                  <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  NIM *
+                </label>
+                <input
+                  type="text"
+                  value={nim}
+                  onChange={(e) => setNim(e.target.value)}
+                  placeholder="Nomor Induk Mahasiswa"
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Tempat Lahir
+                </label>
+                <input
+                  type="text"
+                  value={tempatLahir}
+                  onChange={(e) => setTempatLahir(e.target.value)}
+                  placeholder="Kota kelahiran"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Tanggal Lahir
+                </label>
+                <input
+                  type="date"
+                  value={tanggalLahir}
+                  onChange={(e) => setTanggalLahir(e.target.value)}
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Organisasi & Akademik */}
+          <div>
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+              Keorganisasian & Akademik
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Departemen *
+                </label>
+                <select
+                  value={departmentId}
+                  onChange={(e) => setDepartmentId(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                >
+                  {departments.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.nama}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Program Studi *
+                </label>
+                <select
+                  value={programStudiId}
+                  onChange={(e) => setProgramStudiId(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                >
+                  {programStudi.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.nama}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Jabatan *
+                </label>
+                <input
+                  type="text"
+                  value={jabatan}
+                  onChange={(e) => setJabatan(e.target.value)}
+                  placeholder="Contoh: Anggota Divisi / Staf"
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Tingkat Jabatan *
+                </label>
+                <select
+                  value={tingkatJabatan}
+                  onChange={(e) => setTingkatJabatan(e.target.value as TingkatJabatan)}
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                >
+                  <option value="STAFF">STAFF (Anggota Biasa)</option>
+                  <option value="KADEP">KADEP (Kepala / Ketua Bidang)</option>
+                  <option value="BPH_INTI">BPH_INTI (Pimpinan Inti)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Role Sistem *
+                </label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as UserRole)}
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                >
+                  <option value="PENGURUS">Pengurus (Standar)</option>
+                  <option value="ADMIN">Admin PJ (Staf PSDM)</option>
+                  <option value="SUPER_ADMIN">Super Admin (Kepala PSDM)</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Angkatan
+                  </label>
+                  <input
+                    type="number"
+                    value={angkatan}
+                    onChange={(e) => setAngkatan(Number(e.target.value))}
+                    min={2000}
+                    max={2100}
+                    required
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Generasi
+                  </label>
+                  <input
+                    type="number"
+                    value={generasi}
+                    onChange={(e) => setGenerasi(Number(e.target.value))}
+                    min={1}
+                    max={100}
+                    required
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Sosial Media & Alamat */}
+          <div>
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+              Sosial Media & Alamat
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Instagram
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={instagramUsername}
+                    onChange={(e) => setInstagramUsername(e.target.value)}
+                    placeholder="username (tanpa @)"
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                  />
+                  <Instagram className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  LinkedIn URL
+                </label>
+                <div className="relative">
+                  <input
+                    type="url"
+                    value={linkedinUrl}
+                    onChange={(e) => setLinkedinUrl(e.target.value)}
+                    placeholder="https://linkedin.com/in/..."
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                  />
+                  <Globe className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Alamat Domisili
+                </label>
+                <textarea
+                  value={alamat}
+                  onChange={(e) => setAlamat(e.target.value)}
+                  rows={2}
+                  placeholder="Alamat tempat tinggal saat ini"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Actions */}
+          <div className="pt-4 border-t border-slate-200/80 flex items-center justify-end gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>{isSubmitting ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Tambah Anggota'}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
