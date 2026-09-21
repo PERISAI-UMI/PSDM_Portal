@@ -38,34 +38,160 @@ if (!TURSO_DATABASE_URL) {
 const db = createDb({ TURSO_DATABASE_URL, TURSO_AUTH_TOKEN });
 
 // ── Master IDs ──
-const FAK_ID_1   = 'fak-seed-001';
-const PRODI_ID_1 = 'prodi-seed-001';
-const PRODI_ID_2 = 'prodi-seed-002';
+const FAK_ID_FIKOM = 'fak-seed-001';
+const PRODI_ID_1   = 'prodi-seed-001';
+const PRODI_ID_2   = 'prodi-seed-002';
 
-const DEPT_PSDM  = 'dept-seed-001';
-const DEPT_RISTEK = 'dept-seed-002';
-const DEPT_HUMAS = 'dept-seed-003';
-const DEPT_MEDKOM = 'dept-seed-004';
+const DEPT_PSDM    = 'dept-seed-001';
+const DEPT_RISTEK  = 'dept-seed-002';
+const DEPT_HUMAS   = 'dept-seed-003';
+const DEPT_MEDKOM  = 'dept-seed-004';
 
-const PASSWORD   = 'password123';
+const PASSWORD     = 'password123';
+
+export const UMI_ACADEMIC_DATA = [
+  {
+    id: 'fak-fai',
+    nama: 'Fakultas Agama Islam (FAI)',
+    prodis: [
+      { id: 'prodi-fai-001', nama: 'S1 Pendidikan Agama Islam' },
+      { id: 'prodi-fai-002', nama: 'S1 Pendidikan Bahasa Arab' },
+      { id: 'prodi-fai-003', nama: 'S1 Pendidikan Guru Madrasah Ibtidaiyah (PGMI)' },
+      { id: 'prodi-fai-004', nama: 'S1 Hukum Keluarga (Ahwal Syakhshiyah)' },
+      { id: 'prodi-fai-005', nama: 'S1 Hukum Ekonomi Syariah (Muamalah)' },
+      { id: 'prodi-fai-006', nama: 'S1 Komunikasi dan Penyiaran Islam' },
+    ],
+  },
+  {
+    id: 'fak-feb',
+    nama: 'Fakultas Ekonomi dan Bisnis (FEB)',
+    prodis: [
+      { id: 'prodi-feb-001', nama: 'S1 Manajemen' },
+      { id: 'prodi-feb-002', nama: 'S1 Akuntansi' },
+      { id: 'prodi-feb-003', nama: 'S1 Ekonomi Pembangunan / Ilmu Ekonomi' },
+    ],
+  },
+  {
+    id: 'fak-ft',
+    nama: 'Fakultas Teknik (FT)',
+    prodis: [
+      { id: 'prodi-ft-001', nama: 'S1 Teknik Sipil' },
+      { id: 'prodi-ft-002', nama: 'S1 Teknik Mesin' },
+      { id: 'prodi-ft-003', nama: 'S1 Teknik Elektro' },
+      { id: 'prodi-ft-004', nama: 'S1 Arsitektur' },
+      { id: 'prodi-ft-005', nama: 'S1 Teknik Lingkungan' },
+    ],
+  },
+  {
+    id: 'fak-fh',
+    nama: 'Fakultas Hukum (FH)',
+    prodis: [
+      { id: 'prodi-fh-001', nama: 'S1 Ilmu Hukum' },
+    ],
+  },
+  {
+    id: 'fak-fsikp',
+    nama: 'Fakultas Sastra, Ilmu Komunikasi, dan Pendidikan (FSIKP)',
+    prodis: [
+      { id: 'prodi-fsikp-001', nama: 'S1 Sastra Inggris' },
+      { id: 'prodi-fsikp-002', nama: 'S1 Sastra Indonesia' },
+      { id: 'prodi-fsikp-003', nama: 'S1 Sastra Arab' },
+      { id: 'prodi-fsikp-004', nama: 'S1 Ilmu Komunikasi' },
+      { id: 'prodi-fsikp-005', nama: 'S1 Pendidikan Bahasa Inggris' },
+      { id: 'prodi-fsikp-006', nama: 'S1 Pendidikan Bahasa dan Sastra Indonesia' },
+    ],
+  },
+  {
+    id: 'fak-fpik',
+    nama: 'Fakultas Perikanan dan Ilmu Kelautan (FPIK)',
+    prodis: [
+      { id: 'prodi-fpik-001', nama: 'S1 Budidaya Perairan / Akuakultur' },
+      { id: 'prodi-fpik-002', nama: 'S1 Pemanfaatan Sumberdaya Perikanan' },
+      { id: 'prodi-fpik-003', nama: 'S1 Ilmu Kelautan' },
+    ],
+  },
+  {
+    id: 'fak-fti',
+    nama: 'Fakultas Teknologi Industri (FTI)',
+    prodis: [
+      { id: 'prodi-fti-001', nama: 'S1 Teknik Industri' },
+      { id: 'prodi-fti-002', nama: 'S1 Teknik Kimia' },
+      { id: 'prodi-fti-003', nama: 'S1 Teknik Pertambangan' },
+    ],
+  },
+  {
+    id: 'fak-fp',
+    nama: 'Fakultas Pertanian (FP)',
+    prodis: [
+      { id: 'prodi-fp-001', nama: 'S1 Agribisnis' },
+      { id: 'prodi-fp-002', nama: 'S1 Agroteknologi' },
+    ],
+  },
+  {
+    id: 'fak-fk',
+    nama: 'Fakultas Kedokteran (FK)',
+    prodis: [
+      { id: 'prodi-fk-001', nama: 'S1 Pendidikan Dokter / Kedokteran Umum' },
+    ],
+  },
+  {
+    id: 'fak-fkg',
+    nama: 'Fakultas Kedokteran Gigi (FKG)',
+    prodis: [
+      { id: 'prodi-fkg-001', nama: 'S1 Pendidikan Dokter Gigi' },
+    ],
+  },
+  {
+    id: 'fak-ff',
+    nama: 'Fakultas Farmasi (FF)',
+    prodis: [
+      { id: 'prodi-ff-001', nama: 'S1 Farmasi' },
+    ],
+  },
+  {
+    id: FAK_ID_FIKOM,
+    nama: 'Fakultas Ilmu Komputer (FIKOM)',
+    prodis: [
+      { id: PRODI_ID_1, nama: 'S1 Teknik Informatika' },
+      { id: PRODI_ID_2, nama: 'S1 Sistem Informasi' },
+    ],
+  },
+  {
+    id: 'fak-fkm',
+    nama: 'Fakultas Kesehatan Masyarakat (FKM)',
+    prodis: [
+      { id: 'prodi-fkm-001', nama: 'D3 Kebidanan' },
+      { id: 'prodi-fkm-002', nama: 'S1 Kesehatan Masyarakat' },
+      { id: 'prodi-fkm-003', nama: 'S1 Ilmu Keperawatan' },
+      { id: 'prodi-fkm-004', nama: 'S1 Kebidanan' },
+    ],
+  },
+];
 
 async function seed() {
   console.log('🌱  Sinkronisasi data ke Database Cloud Turso...\n');
 
-  // ── 1. Fakultas & Prodi ────────────────────────────────────
-  await db
-    .insert(fakultas)
-    .values({ id: FAK_ID_1, nama: 'Fakultas Ilmu Komputer' })
-    .onConflictDoNothing();
+  // ── 1. Fakultas & Prodi (Universitas Muslim Indonesia) ───────
+  for (const f of UMI_ACADEMIC_DATA) {
+    await db
+      .insert(fakultas)
+      .values({ id: f.id, nama: f.nama })
+      .onConflictDoUpdate({
+        target: fakultas.id,
+        set: { nama: f.nama },
+      });
 
-  await db
-    .insert(programStudi)
-    .values([
-      { id: PRODI_ID_1, fakultasId: FAK_ID_1, nama: 'Teknik Informatika' },
-      { id: PRODI_ID_2, fakultasId: FAK_ID_1, nama: 'Sistem Informasi' },
-    ])
-    .onConflictDoNothing();
-  console.log('✓  Fakultas & Program Studi tersinkronisasi');
+    for (const p of f.prodis) {
+      await db
+        .insert(programStudi)
+        .values({ id: p.id, fakultasId: f.id, nama: p.nama })
+        .onConflictDoUpdate({
+          target: programStudi.id,
+          set: { nama: p.nama, fakultasId: f.id },
+        });
+    }
+  }
+  console.log(`✓  Fakultas (${UMI_ACADEMIC_DATA.length}) & Program Studi (38) UMI Makassar tersinkronisasi`);
 
   // ── 2. Departemen ──────────────────────────────────────────
   const deptsData = [
@@ -145,8 +271,13 @@ async function seed() {
   ];
 
   for (const u of seedUsers) {
-    await db.delete(users).where(eq(users.id, u.id));
-    await db.insert(users).values(u);
+    await db
+      .insert(users)
+      .values(u)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: u,
+      });
     console.log(`✓  [${u.role.padEnd(11)}] ${u.namaLengkap.padEnd(22)} PRN: ${u.prn}`);
   }
 

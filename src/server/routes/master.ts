@@ -61,6 +61,28 @@ masterRouter.delete('/fakultas/:id', requireRole(['SUPER_ADMIN']), async (c) => 
   const id = c.req.param('id');
   const db = c.get('db');
 
+  // Cek apakah ada prodi di bawah fakultas ini yang digunakan oleh anggota
+  const prodis = await db.select().from(programStudi).where(eq(programStudi.fakultasId, id)).all();
+  const prodiIds = new Set(prodis.map((p) => p.id));
+  
+  if (prodiIds.size > 0) {
+    const allUsers = await db.select({ programStudiId: users.programStudiId }).from(users).all();
+    const isUsed = allUsers.some((u) => prodiIds.has(u.programStudiId));
+    if (isUsed) {
+      return c.json(
+        {
+          success: false,
+          message: 'Fakultas tidak dapat dihapus karena terdapat program studi yang masih digunakan oleh anggota.',
+        },
+        400
+      );
+    }
+    // Hapus program studi terkait
+    for (const p of prodis) {
+      await db.delete(programStudi).where(eq(programStudi.id, p.id));
+    }
+  }
+
   await db.delete(fakultas).where(eq(fakultas.id, id));
   return c.json({ success: true, message: 'Fakultas berhasil dihapus' });
 });
@@ -116,6 +138,17 @@ masterRouter.delete('/program-studi/:id', requireRole(['SUPER_ADMIN']), async (c
   const id = c.req.param('id');
   const db = c.get('db');
 
+  const assignedUsers = await db.select().from(users).where(eq(users.programStudiId, id)).limit(1);
+  if (assignedUsers.length > 0) {
+    return c.json(
+      {
+        success: false,
+        message: 'Program studi tidak dapat dihapus karena masih digunakan oleh anggota pengurus.',
+      },
+      400
+    );
+  }
+
   await db.delete(programStudi).where(eq(programStudi.id, id));
   return c.json({ success: true, message: 'Program studi berhasil dihapus' });
 });
@@ -163,6 +196,21 @@ masterRouter.put(
 masterRouter.delete('/departments/:id', requireRole(['SUPER_ADMIN']), async (c) => {
   const id = c.req.param('id');
   const db = c.get('db');
+
+  // Cek apakah ada anggota yang terdaftar di departemen ini
+  const assignedUsers = await db.select().from(users).where(eq(users.departmentId, id)).limit(1);
+  if (assignedUsers.length > 0) {
+    return c.json(
+      {
+        success: false,
+        message: 'Departemen tidak dapat dihapus karena masih digunakan oleh anggota pengurus.',
+      },
+      400
+    );
+  }
+
+  // Bersihkan penugasan PJ jika ada
+  await db.delete(pjDepartments).where(eq(pjDepartments.departmentId, id));
 
   await db.delete(departments).where(eq(departments.id, id));
   return c.json({ success: true, message: 'Departemen berhasil dihapus' });

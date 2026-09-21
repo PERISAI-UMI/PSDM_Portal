@@ -252,6 +252,19 @@ export const api = {
     return res.data;
   },
 
+  async updateFakultas(id: string, nama: string): Promise<void> {
+    await request(`/api/master/fakultas/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ nama }),
+    });
+  },
+
+  async deleteFakultas(id: string): Promise<void> {
+    await request(`/api/master/fakultas/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
   async addProdi(fakultasId: string, nama: string): Promise<ProgramStudiItem> {
     const res = await request<{ success: boolean; data: ProgramStudiItem }>(
       '/api/master/program-studi',
@@ -263,12 +276,38 @@ export const api = {
     return res.data;
   },
 
+  async updateProdi(id: string, fakultasId: string, nama: string): Promise<void> {
+    await request(`/api/master/program-studi/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ fakultasId, nama }),
+    });
+  },
+
+  async deleteProdi(id: string): Promise<void> {
+    await request(`/api/master/program-studi/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
   async addDepartment(nama: string): Promise<DepartmentItem> {
     const res = await request<{ success: boolean; data: DepartmentItem }>('/api/master/departments', {
       method: 'POST',
       body: JSON.stringify({ nama }),
     });
     return res.data;
+  },
+
+  async updateDepartment(id: string, nama: string): Promise<void> {
+    await request(`/api/master/departments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ nama }),
+    });
+  },
+
+  async deleteDepartment(id: string): Promise<void> {
+    await request(`/api/master/departments/${id}`, {
+      method: 'DELETE',
+    });
   },
 
   async assignPjDepartment(adminId: string, departmentId: string): Promise<void> {

@@ -297,15 +297,60 @@ function MainAppContent() {
                 await reloadData(currentUser);
                 showToast('Fakultas baru berhasil ditambahkan!', 'success');
               }}
+              onUpdateFakultas={async (id, nama) => {
+                await api.updateFakultas(id, nama);
+                await reloadData(currentUser);
+                showToast('Fakultas berhasil diperbarui!', 'success');
+              }}
+              onDeleteFakultas={async (id) => {
+                try {
+                  await api.deleteFakultas(id);
+                  await reloadData(currentUser);
+                  showToast('Fakultas berhasil dihapus!', 'success');
+                } catch (err: any) {
+                  showToast(err?.message || 'Gagal menghapus fakultas', 'error');
+                  throw err;
+                }
+              }}
               onAddProdi={async (fId, nama) => {
                 await api.addProdi(fId, nama);
                 await reloadData(currentUser);
                 showToast('Program studi baru berhasil ditambahkan!', 'success');
               }}
+              onUpdateProdi={async (id, fId, nama) => {
+                await api.updateProdi(id, fId, nama);
+                await reloadData(currentUser);
+                showToast('Program studi berhasil diperbarui!', 'success');
+              }}
+              onDeleteProdi={async (id) => {
+                try {
+                  await api.deleteProdi(id);
+                  await reloadData(currentUser);
+                  showToast('Program studi berhasil dihapus!', 'success');
+                } catch (err: any) {
+                  showToast(err?.message || 'Gagal menghapus program studi', 'error');
+                  throw err;
+                }
+              }}
               onAddDept={async (nama) => {
                 await api.addDepartment(nama);
                 await reloadData(currentUser);
                 showToast('Departemen baru berhasil ditambahkan!', 'success');
+              }}
+              onUpdateDept={async (id, nama) => {
+                await api.updateDepartment(id, nama);
+                await reloadData(currentUser);
+                showToast('Departemen berhasil diperbarui!', 'success');
+              }}
+              onDeleteDept={async (id) => {
+                try {
+                  await api.deleteDepartment(id);
+                  await reloadData(currentUser);
+                  showToast('Departemen berhasil dihapus!', 'success');
+                } catch (err: any) {
+                  showToast(err?.message || 'Gagal menghapus departemen', 'error');
+                  throw err;
+                }
               }}
               onAssignPj={handleAssignPj}
               onRemovePj={handleRemovePj}
