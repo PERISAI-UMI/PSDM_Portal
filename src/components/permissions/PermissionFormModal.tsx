@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { X, UploadCloud, FileText, CheckCircle } from 'lucide-react';
+import { UploadCloud, X, CheckCircle, FileText } from 'lucide-react';
 import type { ActivityItem, AuthUser } from '../../types/index.ts';
+import { api } from '../../services/api.ts';
+import { compressImageFile, formatFileSize } from '../../utils/imageCompressor.ts';
 
 interface PermissionFormModalProps {
   isOpen: boolean;
@@ -16,14 +18,12 @@ interface PermissionFormModalProps {
   }) => Promise<void>;
 }
 
-import { api } from '../../services/api.ts';
-
 export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
   isOpen,
   onClose,
   activities,
   defaultActivity,
-  currentUser,
+  currentUser: _currentUser,
   onSubmit,
 }) => {
   const [activityId, setActivityId] = useState(defaultActivity?.id || activities[0]?.id || '');
@@ -31,6 +31,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
   const [alasan, setAlasan] = useState('');
   const [evidenceUrl, setEvidenceUrl] = useState('');
   const [fileName, setFileName] = useState('');
+  const [compressInfo, setCompressInfo] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -44,9 +45,27 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
     try {
       setUploading(true);
       setUploadError(null);
+      setCompressInfo(null);
       setFileName(file.name);
 
-      const result = await api.uploadEvidenceFile(file);
+      // Kompresi gambar di sisi klien (85% kualitas, max 1600px) sebelum diunggah ke Backblaze B2
+      let fileToUpload = file;
+      if (file.type.startsWith('image/')) {
+        const compression = await compressImageFile(file, {
+          quality: 0.85,
+          maxWidth: 1600,
+          maxHeight: 1600,
+          format: 'image/webp',
+        });
+        fileToUpload = compression.file;
+        if (compression.ratio > 0) {
+          setCompressInfo(
+            `Dikompresi: ${formatFileSize(compression.originalSize)} → ${formatFileSize(compression.compressedSize)} (hemat ${compression.ratio}%)`
+          );
+        }
+      }
+
+      const result = await api.uploadEvidenceFile(fileToUpload);
       setEvidenceUrl(result.url);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Gagal mengunggah berkas bukti';
@@ -151,7 +170,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
                 disabled={uploading}
                 onChange={handleFileUpload}
                 className="hidden"
-                accept=".pdf,.png,.jpg,.jpeg"
+                accept=".pdf,.png,.jpg,.jpeg,.webp"
               />
             </label>
 
@@ -162,9 +181,16 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
             )}
 
             {evidenceUrl && !uploading && (
-              <div className="mt-1.5 flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
-                <CheckCircle className="w-3.5 h-3.5" />
-                <span>Lampiran tersimpan di Object Storage</span>
+              <div className="mt-1.5 space-y-0.5">
+                <div className="flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  <span>Bukti tersimpan di Object Storage</span>
+                </div>
+                {compressInfo && (
+                  <div className="text-[10px] text-slate-500 pl-4.5 font-mono">
+                    {compressInfo}
+                  </div>
+                )}
               </div>
             )}
           </div>
