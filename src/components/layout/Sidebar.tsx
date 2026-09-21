@@ -107,11 +107,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* Mobile Close Button */}
+        {/* Mobile / Tablet Close Button */}
         <button
           type="button"
           onClick={onCloseMobile}
-          className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+          className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
           aria-label="Tutup menu sidebar"
         >
           <X className="w-5 h-5" />
@@ -396,14 +396,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* Desktop Persistent Sidebar */}
-      <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 shadow-xs">
+      {/* Desktop Persistent Sidebar (>= 1024px) */}
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 z-30 shadow-xs">
         {sidebarContent}
       </aside>
 
-      {/* Mobile Drawer Backdrop & Sidebar */}
+      {/* Mobile & Tablet Drawer Backdrop & Sidebar (< 1024px) */}
       {isOpenMobile && (
-        <div className="fixed inset-0 z-50 md:hidden flex">
+        <div className="fixed inset-0 z-50 lg:hidden flex">
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"

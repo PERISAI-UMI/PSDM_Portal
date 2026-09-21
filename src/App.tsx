@@ -312,8 +312,8 @@ function MainAppContent() {
         }}
       />
 
-      {/* Main Content Area (Offset for Desktop Sidebar) */}
-      <div className="flex-1 flex flex-col md:pl-64 min-w-0">
+      {/* Main Content Area (Offset for Desktop Sidebar >= 1024px) */}
+      <div className="flex-1 flex flex-col lg:pl-64 min-w-0">
         <Header
           user={currentUser}
           onLogout={handleLogout}
@@ -322,7 +322,7 @@ function MainAppContent() {
           onToggleSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}
         />
 
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 overflow-x-hidden">
           {/* 1. Activities Layout */}
           {activeSection === 'activities' && (
             <ActivitiesView

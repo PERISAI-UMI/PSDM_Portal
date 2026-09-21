@@ -36,8 +36,8 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 h-14">
       <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-        {/* Mobile View */}
-        <div className="flex items-center gap-2.5 md:hidden">
+        {/* Mobile & Tablet View (< 1024px) */}
+        <div className="flex items-center gap-2.5 lg:hidden">
           {onToggleSidebar && (
             <button
               type="button"
@@ -54,8 +54,8 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </div>
 
-        {/* Desktop View Left */}
-        <div className="hidden md:flex items-center gap-2 text-xs">
+        {/* Desktop View Left (>= 1024px) */}
+        <div className="hidden lg:flex items-center gap-2 text-xs">
           <span className="font-semibold text-slate-900">Portal PSDM</span>
           <span className="text-slate-300">/</span>
           <span className="text-slate-500 font-medium">
@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </div>
 
-        {/* Desktop View Right */}
+        {/* Actions Right */}
         <div className="flex items-center gap-2 ml-auto">
           {/* System Diagnostics Button (Super Admin Only) */}
           {onOpenAudit && user.role === 'SUPER_ADMIN' && (
@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onOpenProfile}
-              className="md:hidden p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
+              className="lg:hidden p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
               title="Profil"
             >
               <User className="w-4 h-4" />

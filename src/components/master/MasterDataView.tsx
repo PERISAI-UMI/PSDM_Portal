@@ -235,8 +235,8 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-200/80">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-slate-200/80">
         <div>
           <button
             type="button"
@@ -246,27 +246,27 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Kembali ke Dasbor</span>
           </button>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
               Master Data & Manajemen Struktur
             </h1>
             <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-900 text-white">
               Super Admin
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
             Kelola penuh (CRUD: Tambah, Ubah, Hapus) untuk Departemen, Fakultas, Jurusan / Program Studi, serta Penugasan PJ.
           </p>
         </div>
       </div>
 
-      {/* 4 Dedicated Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-px">
+      {/* 4 Dedicated Tabs - Horizontally scrollable on mobile */}
+      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-px -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
         {/* Tab 1: Departemen */}
         <button
           type="button"
           onClick={() => setActiveTab('dept')}
-          className={`pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'dept'
               ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -283,7 +283,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('fakultas')}
-          className={`pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'fakultas'
               ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -300,7 +300,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('prodi')}
-          className={`pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'prodi'
               ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -317,7 +317,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('pj')}
-          className={`pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'pj'
               ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -399,7 +399,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                 {filteredDepartments.map((d, idx) => (
                   <div
                     key={d.id}
-                    className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50 transition-all"
+                    className="p-3 sm:p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50 transition-all gap-2"
                   >
                     <div className="flex items-center gap-2.5 min-w-0 pr-2">
                       <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
@@ -416,7 +416,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                       <button
                         type="button"
                         onClick={() => openEditModal({ type: 'dept', id: d.id, name: d.nama })}
-                        className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                        className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
                         title="Edit Departemen"
                       >
                         <Pencil className="w-3.5 h-3.5" />
@@ -424,7 +424,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                       <button
                         type="button"
                         onClick={() => setDeletingTarget({ type: 'dept', id: d.id, name: d.nama })}
-                        className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
+                        className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
                         title="Hapus Departemen"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -508,7 +508,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   return (
                     <div
                       key={f.id}
-                      className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50 transition-all"
+                      className="p-3 sm:p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 hover:bg-slate-50 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0 pr-2">
                         <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
@@ -524,14 +524,14 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1.5 shrink-0">
+                      <div className="flex items-center justify-end gap-1.5 shrink-0 self-end sm:self-auto">
                         <button
                           type="button"
                           onClick={() => {
                             setProdiFakultasFilter(f.id);
                             setActiveTab('prodi');
                           }}
-                          className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1.5 min-h-[36px] text-[11px] font-medium text-slate-700 bg-white hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors cursor-pointer flex items-center gap-1"
                           title="Lihat jurusan di fakultas ini"
                         >
                           <Layers className="w-3 h-3" />
@@ -540,7 +540,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         <button
                           type="button"
                           onClick={() => openEditModal({ type: 'fakultas', id: f.id, name: f.nama })}
-                          className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                          className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
                           title="Edit Fakultas"
                         >
                           <Pencil className="w-3.5 h-3.5" />
@@ -548,7 +548,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         <button
                           type="button"
                           onClick={() => setDeletingTarget({ type: 'fakultas', id: f.id, name: f.nama })}
-                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
+                          className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
                           title="Hapus Fakultas"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -672,7 +672,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   return (
                     <div
                       key={p.id}
-                      className="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50 transition-all"
+                      className="p-3 sm:p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-50 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0 pr-2">
                         <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
@@ -690,7 +690,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1 shrink-0">
+                      <div className="flex items-center justify-end gap-1 shrink-0 self-end sm:self-auto">
                         <button
                           type="button"
                           onClick={() =>
@@ -701,7 +701,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                               fakultasId: p.fakultasId,
                             })
                           }
-                          className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                          className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
                           title="Edit Jurusan / Pindah Fakultas"
                         >
                           <Pencil className="w-3.5 h-3.5" />
@@ -715,7 +715,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                               name: p.nama,
                             })
                           }
-                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
+                          className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
                           title="Hapus Jurusan"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -857,7 +857,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     <button
                       type="button"
                       onClick={() => onRemovePj(m.adminId, m.departmentId)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                      className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer shrink-0"
                       title="Hapus Penugasan"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -872,8 +872,8 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
       {/* ────────────────── REUSABLE EDIT MODAL ────────────────── */}
       {editingTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Pencil className="w-4 h-4 text-slate-900" />
@@ -950,8 +950,8 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
       {/* ────────────────── REUSABLE DELETE MODAL ────────────────── */}
       {deletingTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-sm max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="p-5 text-center space-y-3">
               <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
                 <AlertTriangle className="w-5 h-5" />
