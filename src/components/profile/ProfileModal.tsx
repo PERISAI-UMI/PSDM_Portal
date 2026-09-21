@@ -158,10 +158,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-                Pengaturan Akun & Profil
+                Profil & Akun
               </h2>
               <p className="text-xs text-slate-500">
-                Kelola informasi biodata mandiri dan perbarui keamanan kata sandi Anda.
+                Informasi identitas dan keamanan akun.
               </p>
             </div>
           </div>
@@ -204,7 +204,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             }`}
           >
             <User className="w-3.5 h-3.5" />
-            <span>Biodata & Profil</span>
+            <span>Profil</span>
           </button>
           <button
             type="button"
@@ -216,7 +216,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             }`}
           >
             <KeyRound className="w-3.5 h-3.5" />
-            <span>Ganti Kata Sandi</span>
+            <span>Keamanan</span>
           </button>
         </div>
 
@@ -253,7 +253,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Email Organisasi / Aktif *
+                  Email *
                 </label>
                 <div className="relative">
                   <input
@@ -269,7 +269,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Nomor WhatsApp / HP *
+                  Nomor Telepon *
                 </label>
                 <div className="relative">
                   <input
@@ -285,7 +285,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  NIM (Nomor Induk Mahasiswa)
+                  NIM
                 </label>
                 <input
                   type="text"
@@ -297,7 +297,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Tahun Angkatan Kuliah
+                  Angkatan
                 </label>
                 <input
                   type="number"
@@ -317,7 +317,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   type="text"
                   value={tempatLahir}
                   onChange={(e) => setTempatLahir(e.target.value)}
-                  placeholder="Contoh: Jakarta"
+                  placeholder="Tempat lahir"
                   className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
                 />
               </div>
@@ -338,14 +338,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Instagram (Username)
+                  Instagram
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     value={instagramUsername}
                     onChange={(e) => setInstagramUsername(e.target.value)}
-                    placeholder="username_anda"
+                    placeholder="username"
                     className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
                   />
                   <Instagram className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
@@ -355,7 +355,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                LinkedIn URL Profile
+                LinkedIn
               </label>
               <div className="relative">
                 <input
@@ -371,14 +371,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Alamat Domisili / Kos
+                Alamat Domisili
               </label>
               <div className="relative">
                 <textarea
                   value={alamat}
                   onChange={(e) => setAlamat(e.target.value)}
                   rows={2}
-                  placeholder="Alamat domisili saat ini..."
+                  placeholder="Alamat saat ini..."
                   className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
                 />
               </div>
@@ -397,7 +397,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 disabled={savingProfile}
                 className="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg min-h-[38px] transition-colors shadow-2xs disabled:opacity-50"
               >
-                {savingProfile ? 'Menyimpan...' : 'Simpan Perubahan Profil'}
+                {savingProfile ? 'Menyimpan...' : 'Simpan Profil'}
               </button>
             </div>
           </form>
@@ -406,15 +406,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         {/* Tab 2: Ganti Kata Sandi */}
         {activeTab === 'security' && (
           <form onSubmit={handleSavePassword} className="flex-1 overflow-y-auto pr-1 space-y-4">
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600">
-              <div className="font-semibold text-slate-900 flex items-center gap-1.5 mb-1">
-                <ShieldCheck className="w-4 h-4 text-slate-700" />
-                <span>Standar Keamanan Kata Sandi</span>
-              </div>
-              <p className="leading-relaxed">
-                Kata sandi baru minimal harus 6 karakter. Pastikan Anda mengingat kata sandi baru untuk akses masuk berikutnya menggunakan PRN Anda.
-              </p>
-            </div>
 
             {passwordSuccess && (
               <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
@@ -439,7 +430,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   type={showCurrentPass ? 'text' : 'password'}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Masukkan kata sandi lama Anda"
+                  placeholder="Kata sandi saat ini"
                   required
                   className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
                 />
@@ -455,7 +446,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Kata Sandi Baru * (Minimal 6 karakter)
+                Kata Sandi Baru *
               </label>
               <div className="relative">
                 <input

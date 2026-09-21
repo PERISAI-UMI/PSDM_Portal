@@ -117,24 +117,24 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
           {/* Agenda / Description */}
           <div>
             <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-              Deskripsi & Agenda Kegiatan
+              Deskripsi
             </div>
-            <div className="text-xs sm:text-sm text-slate-700 bg-white p-3.5 rounded-xl border border-slate-200/70 leading-relaxed whitespace-pre-wrap">
-              {activity.deskripsi || 'Tidak ada deskripsi rinci untuk kegiatan ini.'}
+            <div className="text-xs sm:text-sm text-slate-700 bg-white p-3 rounded-xl border border-slate-200/70 leading-relaxed whitespace-pre-wrap">
+              {activity.deskripsi || 'Tidak ada deskripsi untuk kegiatan ini.'}
             </div>
           </div>
 
           {/* Attendance Stats Progress */}
           <div>
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-              <span>Statistik Kehadiran Peserta</span>
-              <span className="text-slate-900 font-bold lowercase">
-                {hadirPercentage}% tingkat hadir ({summary.HADIR}/{total} orang)
+              <span>Kehadiran</span>
+              <span className="text-slate-900 font-bold">
+                {hadirPercentage}% ({summary.HADIR}/{total})
               </span>
             </div>
 
             {/* Visual Multi-Segment Bar */}
-            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex">
+            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
               {total > 0 && (
                 <>
                   <div
@@ -162,7 +162,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             </div>
 
             {/* Legend Breakdown Grid */}
-            <div className="grid grid-cols-4 gap-2 mt-3 text-center">
+            <div className="grid grid-cols-4 gap-2 mt-2.5 text-center">
               <div className="p-2 rounded-lg bg-emerald-50/60 border border-emerald-100">
                 <div className="text-[10px] text-emerald-700 font-medium">Hadir</div>
                 <div className="text-sm font-bold text-emerald-800 tabular-nums">{summary.HADIR}</div>
@@ -184,7 +184,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
+        <div className="pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             {userRole === 'SUPER_ADMIN' && onTogglePublish && (
               <button
@@ -192,7 +192,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                 onClick={() => {
                   onTogglePublish(activity.id, activity.isPublished);
                 }}
-                className="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
               >
                 {activity.isPublished ? 'Jadikan Draft' : 'Publikasikan'}
               </button>
@@ -205,10 +205,10 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                   onClose();
                   onDelete(activity.id);
                 }}
-                className="px-3 py-2 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>Hapus Proker</span>
+                <span>Hapus</span>
               </button>
             )}
           </div>
@@ -221,10 +221,10 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                   onClose();
                   onOpenAttendance(activity);
                 }}
-                className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs"
+                className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
               >
                 <UserCheck className="w-3.5 h-3.5" />
-                <span>Buka Presensi Lapangan</span>
+                <span>Presensi</span>
               </button>
             )}
 
@@ -235,17 +235,17 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                   onClose();
                   onRequestPermission(activity);
                 }}
-                className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs"
+                className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Ajukan Izin / Sakit</span>
+                <span>Ajukan Izin</span>
               </button>
             )}
 
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+              className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
             >
               Tutup
             </button>

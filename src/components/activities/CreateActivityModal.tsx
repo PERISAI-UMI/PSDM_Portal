@@ -51,12 +51,12 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <CalendarPlus className="w-5 h-5 text-slate-800" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">Tambah Kegiatan Proker Baru</h2>
+            <h2 className="text-base font-bold text-slate-900">Tambah Kegiatan</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 min-h-[40px] min-w-[40px] flex items-center justify-center"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -69,9 +69,9 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               type="text"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
-              placeholder="Contoh: Rapat Pleno Akbar Tengah Periode"
+              placeholder="Nama kegiatan proker"
               required
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[42px]"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
             />
           </div>
 
@@ -80,60 +80,60 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
             <select
               value={jenis}
               onChange={(e) => setJenis(e.target.value)}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[42px]"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
             >
-              <option value="RAPAT_PLENO">Rapat Pleno (Wajib Seluruh Pengurus)</option>
-              <option value="UPGRADING">Upgrading / Pelatihan Internal</option>
+              <option value="RAPAT_PLENO">Rapat Pleno</option>
+              <option value="UPGRADING">Upgrading</option>
               <option value="PROKER_DEPARTEMEN">Proker Departemen</option>
-              <option value="BRIEFING_INTERNAL">Briefing Internal BPH & Kadep</option>
+              <option value="BRIEFING_INTERNAL">Briefing Internal</option>
               <option value="EVALUASI_BULANAN">Evaluasi Bulanan</option>
             </select>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Mulai *</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Mulai *</label>
               <input
                 type="datetime-local"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 required
-                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 min-h-[42px]"
+                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 min-h-[40px]"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Selesai *</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Selesai *</label>
               <input
                 type="datetime-local"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 required
-                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 min-h-[42px]"
+                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 min-h-[40px]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi / Agenda</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi</label>
             <textarea
               value={deskripsi}
               onChange={(e) => setDeskripsi(e.target.value)}
               rows={3}
-              placeholder="Jelaskan tujuan dan agenda kegiatan..."
+              placeholder="Deskripsi atau agenda kegiatan..."
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900"
             />
           </div>
 
-          <div className="flex items-start gap-2.5 pt-1">
+          <div className="flex items-center gap-2.5 pt-1">
             <input
               type="checkbox"
               id="isPublished"
               checked={isPublished}
               onChange={(e) => setIsPublished(e.target.checked)}
-              className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 w-4 h-4 mt-0.5"
+              className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 w-4 h-4 cursor-pointer"
             />
-            <label htmlFor="isPublished" className="text-xs font-medium text-slate-700 cursor-pointer leading-relaxed">
-              Publikasikan ke kalender pengurus sekarang (jika tidak dicentang, akan tersimpan sebagai draft)
+            <label htmlFor="isPublished" className="text-xs font-medium text-slate-700 cursor-pointer">
+              Publikasikan ke kalender
             </label>
           </div>
 

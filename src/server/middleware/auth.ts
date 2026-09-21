@@ -11,7 +11,12 @@ export const SESSION_COOKIE_NAME = 'psdm_session';
  * Memvalidasi token sesi dari cookie HTTP-only ke tabel `sessions` Turso libSQL
  */
 export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
-  const token = getCookie(c, SESSION_COOKIE_NAME);
+  const authHeader = c.req.header('Authorization');
+  const bearerToken = authHeader?.startsWith('Bearer ')
+    ? authHeader.substring(7).trim()
+    : undefined;
+  const token = getCookie(c, SESSION_COOKIE_NAME) || bearerToken;
+
   if (!token) {
     return c.json({ success: false, message: 'Unauthorized: Sesi tidak ditemukan' }, 401);
   }

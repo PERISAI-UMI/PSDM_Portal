@@ -5,7 +5,7 @@ import type { PermissionRecord, AuthUser, PermissionStatus } from '../../types/i
 interface PermissionListTableProps {
   permissions: PermissionRecord[];
   currentUser: AuthUser;
-  onReview: (permissionId: string, status: PermissionStatus) => Promise<void>;
+  onReview?: (permissionId: string, status: PermissionStatus) => Promise<void>;
 }
 
 export const PermissionListTable: React.FC<PermissionListTableProps> = ({
@@ -17,6 +17,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
 
   const canReviewPermission = (p: PermissionRecord): boolean => {
+    if (!onReview) return false;
     if (p.status !== 'PENDING') return false;
     if (currentUser.role === 'SUPER_ADMIN') return true;
     if (currentUser.role === 'ADMIN') {
@@ -186,7 +187,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                     <div className="grid grid-cols-2 gap-2 pt-1">
                       <button
                         type="button"
-                        onClick={() => onReview(p.id, 'APPROVED')}
+                        onClick={() => onReview?.(p.id, 'APPROVED')}
                         className="min-h-[40px] py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
                       >
                         <Check className="w-3.5 h-3.5" />
@@ -194,7 +195,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                       </button>
                       <button
                         type="button"
-                        onClick={() => onReview(p.id, 'REJECTED')}
+                        onClick={() => onReview?.(p.id, 'REJECTED')}
                         className="min-h-[40px] py-2 px-3 rounded-lg bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
                       >
                         <X className="w-3.5 h-3.5" />
@@ -292,7 +293,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                             <div className="inline-flex items-center gap-1.5">
                               <button
                                 type="button"
-                                onClick={() => onReview(p.id, 'APPROVED')}
+                                onClick={() => onReview?.(p.id, 'APPROVED')}
                                 className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center gap-1 transition-colors shadow-2xs"
                               >
                                 <Check className="w-3 h-3" />
@@ -300,7 +301,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                               </button>
                               <button
                                 type="button"
-                                onClick={() => onReview(p.id, 'REJECTED')}
+                                onClick={() => onReview?.(p.id, 'REJECTED')}
                                 className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors"
                               >
                                 <X className="w-3 h-3" />

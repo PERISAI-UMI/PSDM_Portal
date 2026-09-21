@@ -149,7 +149,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           type="button"
           onClick={() => onViewDetail?.(activity)}
           className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors shrink-0"
-          title="Lihat Detail Agenda"
+          title="Detail Kegiatan"
         >
           <Eye className="w-4 h-4" />
         </button>
@@ -161,7 +161,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
           >
             <UserCheck className="w-3.5 h-3.5" />
-            <span>Presensi Peserta</span>
+            <span>Presensi</span>
           </button>
         )}
 
@@ -172,7 +172,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>Ajukan Izin / Sakit</span>
+            <span>Ajukan Izin</span>
           </button>
         )}
 
@@ -181,7 +181,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             type="button"
             onClick={() => onDelete(activity.id)}
             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
-            title="Hapus Kegiatan"
+            title="Hapus"
           >
             <Trash2 className="w-4 h-4" />
           </button>

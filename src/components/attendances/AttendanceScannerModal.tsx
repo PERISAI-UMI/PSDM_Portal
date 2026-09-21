@@ -83,7 +83,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <UserCheck className="w-5 h-5 text-slate-900" />
-              <h2 className="text-base sm:text-lg font-bold text-slate-900">Pencatatan Presensi Lapangan</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">Presensi Kegiatan</h2>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
               Kegiatan: <span className="font-semibold text-slate-700">{activity.nama}</span>
@@ -118,7 +118,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
             className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50 min-h-[42px] shadow-xs"
           >
             <Check className="w-4 h-4" />
-            Set Semua yang Difilter: HADIR
+            Tandai Semua Hadir
           </button>
         </div>
 
@@ -218,7 +218,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
           <div className="flex items-center gap-1.5 text-center sm:text-left">
             <ShieldCheck className="w-4 h-4 text-slate-700 shrink-0" />
             <span>
-              Operator:{' '}
+              Pencatat:{' '}
               <strong className="text-slate-800 font-semibold">{currentAdmin.namaLengkap}</strong>
             </span>
           </div>

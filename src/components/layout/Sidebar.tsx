@@ -6,7 +6,6 @@ import {
   Users,
   Database,
   User,
-  HelpCircle,
   Activity,
   LogOut,
   X,
@@ -26,10 +25,8 @@ interface SidebarProps {
   onOpenMasterData?: () => void;
   onOpenMemberList?: () => void;
   onOpenProfile?: () => void;
-  onOpenHelp?: () => void;
   onOpenAudit?: () => void;
   onOpenPermissionForm?: () => void;
-  onSwitchUser: (prn: string) => void;
   onLogout: () => void;
   activeSection?: string;
   onSelectSection?: (sectionId: string) => void;
@@ -47,10 +44,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenMasterData,
   onOpenMemberList,
   onOpenProfile,
-  onOpenHelp,
   onOpenAudit,
   onOpenPermissionForm,
-  onSwitchUser,
   onLogout,
   activeSection = 'dashboard',
   onSelectSection,
@@ -126,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="w-full py-2.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
           >
             <Plus className="w-4 h-4" />
-            <span>Buat Kegiatan Baru</span>
+            <span>Buat Kegiatan</span>
           </button>
         )}
 
@@ -137,7 +132,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="w-full py-2.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
           >
             <FileText className="w-4 h-4" />
-            <span>Ajukan Izin / Sakit</span>
+            <span>Ajukan Izin</span>
           </button>
         )}
 
@@ -172,7 +167,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <div className="flex items-center gap-2.5">
                 <LayoutDashboard className="w-4 h-4 text-slate-500" />
-                <span>Dasbor Utama</span>
+                <span>Dasbor</span>
               </div>
             </button>
 
@@ -187,7 +182,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <div className="flex items-center gap-2.5">
                 <Calendar className="w-4 h-4 text-slate-500" />
-                <span>Kegiatan & Proker</span>
+                <span>Kegiatan</span>
               </div>
               {counts.activitiesCount > 0 && (
                 <span className="text-[11px] font-medium bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded">
@@ -208,7 +203,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="flex items-center gap-2.5">
                 <FileText className="w-4 h-4 text-slate-500" />
                 <span>
-                  {user.role === 'PENGURUS' ? 'Riwayat Perizinan' : 'Validasi Perizinan'}
+                  {user.role === 'PENGURUS' ? 'Perizinan' : 'Verifikasi Izin'}
                 </span>
               </div>
               {counts.pendingPermissionsCount > 0 && (
@@ -218,80 +213,71 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </button>
 
-            {/* Member Directory: for SuperAdmin and Admin */}
-            {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && onOpenMemberList && (
-              <button
-                type="button"
-                onClick={() => handleNavClick('members', onOpenMemberList)}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Users className="w-4 h-4 text-slate-500" />
-                  <span>Data & Direktori Anggota</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-              </button>
-            )}
+            {/* Member Directory: Available for all users */}
+            <button
+              type="button"
+              onClick={() => handleNavClick('members')}
+              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
+                activeSection === 'members'
+                  ? 'bg-slate-100 text-slate-900 font-semibold'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Users className="w-4 h-4 text-slate-500" />
+                <span>Anggota</span>
+              </div>
+            </button>
 
-            {/* Master & Mapping PJ: only for SuperAdmin */}
-            {user.role === 'SUPER_ADMIN' && onOpenMasterData && (
+            {/* Master Data: only for SuperAdmin */}
+            {user.role === 'SUPER_ADMIN' && (
               <button
                 type="button"
-                onClick={() => handleNavClick('master-data', onOpenMasterData)}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                onClick={() => handleNavClick('master-data')}
+                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
+                  activeSection === 'master-data'
+                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
               >
                 <div className="flex items-center gap-2.5">
                   <Database className="w-4 h-4 text-slate-500" />
-                  <span>Master & Mapping PJ</span>
+                  <span>Master Data</span>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
             )}
           </nav>
         </div>
 
-        {/* Navigation Group 2: Pengaturan Akun & Sistem */}
+        {/* Navigation Group 2: Pengaturan & Sistem */}
         <div>
-          <span className="px-2 text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-1.5">
-            Akun & Bantuan
+          <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+            Pengaturan
           </span>
           <nav className="space-y-0.5">
             {onOpenProfile && (
               <button
                 type="button"
                 onClick={() => handleNavClick('profile', onOpenProfile)}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <User className="w-4 h-4 text-slate-500" />
-                  <span>Edit Profil & Password</span>
+                  <span>Profil</span>
                 </div>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
             )}
 
-            {onOpenHelp && (
-              <button
-                type="button"
-                onClick={() => handleNavClick('help', onOpenHelp)}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-              >
-                <div className="flex items-center gap-2.5">
-                  <HelpCircle className="w-4 h-4 text-slate-500" />
-                  <span>Panduan Alur Kerja</span>
-                </div>
-              </button>
-            )}
-
-            {onOpenAudit && (
+            {onOpenAudit && user.role === 'SUPER_ADMIN' && (
               <button
                 type="button"
                 onClick={() => handleNavClick('audit', onOpenAudit)}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Activity className="w-4 h-4 text-slate-500" />
-                  <span>Diagnostik Sistem</span>
+                  <span>Diagnostik</span>
                 </div>
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
               </button>
@@ -299,70 +285,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </nav>
         </div>
 
-        {/* Simulation Selector in Sidebar */}
-        <div className="pt-2 border-t border-slate-100">
-          <span className="px-2 text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-2">
-            Simulasi Peran Akses
-          </span>
-          <div className="space-y-1">
-            <button
-              type="button"
-              onClick={() => {
-                onSwitchUser('PSDM-001');
-                onCloseMobile();
-              }}
-              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                user.role === 'SUPER_ADMIN'
-                  ? 'bg-slate-900 text-white font-semibold'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Kadep (Super Admin)</span>
-              </div>
-              {user.role === 'SUPER_ADMIN' && <span className="text-[10px]">Aktif</span>}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                onSwitchUser('PSDM-002');
-                onCloseMobile();
-              }}
-              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                user.role === 'ADMIN'
-                  ? 'bg-slate-900 text-white font-semibold'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Staf PJ (Admin)</span>
-              </div>
-              {user.role === 'ADMIN' && <span className="text-[10px]">Aktif</span>}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                onSwitchUser('RISTEK-001');
-                onCloseMobile();
-              }}
-              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                user.prn === 'RISTEK-001'
-                  ? 'bg-slate-900 text-white font-semibold'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Building2 className="w-3.5 h-3.5" />
-                <span>Pengurus Departemen</span>
-              </div>
-              {user.prn === 'RISTEK-001' && <span className="text-[10px]">Aktif</span>}
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Single Source of Truth: User Profile Card & Logout */}

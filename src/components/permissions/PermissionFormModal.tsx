@@ -16,6 +16,8 @@ interface PermissionFormModalProps {
   }) => Promise<void>;
 }
 
+import { api } from '../../services/api.ts';
+
 export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
   isOpen,
   onClose,
@@ -29,25 +31,35 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
   const [alasan, setAlasan] = useState('');
   const [evidenceUrl, setEvidenceUrl] = useState('');
   const [fileName, setFileName] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSimulateUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      setUploadError(null);
       setFileName(file.name);
-      // In a real S3 upload, browser performs PUT to presigned URL:
-      // https://s3.us-east-005.backblazeb2.com/psdm-evidence/evidence/...
-      setEvidenceUrl(
-        `https://s3.us-east-005.backblazeb2.com/psdm-evidence/evidence/${Date.now()}-${file.name}`
-      );
+
+      const result = await api.uploadEvidenceFile(file);
+      setEvidenceUrl(result.url);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gagal mengunggah berkas bukti';
+      setUploadError(msg);
+      setEvidenceUrl('');
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!activityId || !alasan.trim()) return;
+    if (!activityId || !alasan.trim() || uploading) return;
     setLoading(true);
     await onSubmit({
       activityId,
@@ -62,15 +74,15 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
       <div className="bg-white w-full max-w-md rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] overflow-y-auto">
-        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <FileText className="w-5 h-5 text-slate-900" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">Form Pengajuan Izin / Sakit</h2>
+            <h2 className="text-base font-bold text-slate-900">Pengajuan Izin</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 min-h-[40px] min-w-[40px] flex items-center justify-center"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -78,12 +90,12 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-3.5">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Kegiatan Proker *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Kegiatan *</label>
             <select
               value={activityId}
               onChange={(e) => setActivityId(e.target.value)}
               required
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900 min-h-[42px] bg-white"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white"
             >
               {activities.map((act) => (
                 <option key={act.id} value={act.id}>
@@ -94,26 +106,26 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Kategori Izin *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Jenis Izin *</label>
             <select
               value={jenisIzin}
               onChange={(e) => setJenisIzin(e.target.value)}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900 min-h-[42px] bg-white"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white"
             >
-              <option value="SAKIT">Sakit (Wajib Surat Dokter / Resep)</option>
-              <option value="TUGAS_AKADEMIK">Tugas Akademik / Ujian / Lomba</option>
-              <option value="KEPERLUAN_KELUARGA">Keperluan Keluarga Mendesak</option>
+              <option value="SAKIT">Sakit</option>
+              <option value="TUGAS_AKADEMIK">Tugas Akademik</option>
+              <option value="KEPERLUAN_KELUARGA">Keperluan Keluarga</option>
               <option value="LAINNYA">Lainnya</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Alasan Lengkap *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Alasan *</label>
             <textarea
               value={alasan}
               onChange={(e) => setAlasan(e.target.value)}
               rows={3}
-              placeholder="Berikan alasan yang jelas dan dapat dipertanggungjawabkan..."
+              placeholder="Keterangan izin..."
               required
               minLength={5}
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900"
@@ -123,22 +135,36 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
           {/* Upload Bukti */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Upload Bukti (Surat Dokter / Bukti Surat Tugas)
+              Lampiran Bukti
             </label>
-            <label className="border-2 border-dashed border-slate-200 hover:border-slate-400 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center cursor-pointer transition-colors text-center bg-slate-50/50 min-h-[80px]">
-              <UploadCloud className="w-6 h-6 text-slate-400 mb-1" />
+            <label className="border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-colors text-center bg-slate-50/50 min-h-[72px]">
+              <UploadCloud className="w-5 h-5 text-slate-400 mb-1" />
               <span className="text-xs font-medium text-slate-700 break-all px-2">
-                {fileName ? fileName : 'Pilih file surat/bukti (JPG, PNG, PDF)'}
+                {uploading
+                  ? 'Mengunggah ke Backblaze B2...'
+                  : fileName
+                  ? fileName
+                  : 'Pilih dokumen (PDF, JPG, PNG)'}
               </span>
-              <span className="text-[10px] text-slate-400 mt-0.5">
-                Upload langsung ke Backblaze B2 Storage
-              </span>
-              <input type="file" onChange={handleSimulateUpload} className="hidden" />
+              <input
+                type="file"
+                disabled={uploading}
+                onChange={handleFileUpload}
+                className="hidden"
+                accept=".pdf,.png,.jpg,.jpeg"
+              />
             </label>
-            {evidenceUrl && (
-              <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-emerald-600 font-medium">
+
+            {uploadError && (
+              <div className="mt-1.5 text-[11px] text-rose-600 font-medium">
+                {uploadError}
+              </div>
+            )}
+
+            {evidenceUrl && !uploading && (
+              <div className="mt-1.5 flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
                 <CheckCircle className="w-3.5 h-3.5" />
-                Bukti terlampir siap diunggah
+                <span>Lampiran tersimpan di Object Storage</span>
               </div>
             )}
           </div>
@@ -147,16 +173,16 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg min-h-[42px]"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg min-h-[38px] cursor-pointer"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[42px] shadow-xs"
+              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[38px] shadow-xs cursor-pointer"
             >
-              {loading ? 'Mengirim...' : 'Kirim Permohonan Izin'}
+              {loading ? 'Mengirim...' : 'Kirim'}
             </button>
           </div>
         </form>

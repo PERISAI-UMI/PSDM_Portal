@@ -17,18 +17,20 @@ import { LoginForm } from './components/auth/LoginForm.tsx';
 import { SuperAdminView } from './components/dashboard/SuperAdminView.tsx';
 import { AdminView } from './components/dashboard/AdminView.tsx';
 import { PengurusView } from './components/dashboard/PengurusView.tsx';
+import { ActivitiesView } from './components/activities/ActivitiesView.tsx';
+import { PermissionsView } from './components/permissions/PermissionsView.tsx';
+import { MembersView } from './components/members/MembersView.tsx';
 import { CreateActivityModal } from './components/activities/CreateActivityModal.tsx';
 import { AttendanceScannerModal } from './components/attendances/AttendanceScannerModal.tsx';
 import { PermissionFormModal } from './components/permissions/PermissionFormModal.tsx';
-import { MasterDataModal } from './components/master/MasterDataModal.tsx';
-import { MemberListModal } from './components/members/MemberListModal.tsx';
+import { MasterDataView } from './components/master/MasterDataView.tsx';
 import { AuditModal } from './components/audit/AuditModal.tsx';
 import { ProfileModal } from './components/profile/ProfileModal.tsx';
 import { ActivityDetailModal } from './components/activities/ActivityDetailModal.tsx';
-import { HelpWorkflowModal } from './components/help/HelpWorkflowModal.tsx';
 import { ConfirmModal } from './components/ui/ConfirmModal.tsx';
 import { ToastProvider, useToast } from './components/ui/Toast.tsx';
-import { HelpCircle } from 'lucide-react';
+
+type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data';
 
 function MainAppContent() {
   const { showToast } = useToast();
@@ -49,23 +51,15 @@ function MainAppContent() {
 
   // Modal States
   const [showCreateActivity, setShowCreateActivity] = useState(false);
-  const [showMasterData, setShowMasterData] = useState(false);
-  const [showMemberList, setShowMemberList] = useState(false);
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [showHelpModal, setShowHelpModal] = useState(false);
   const [selectedActivityDetail, setSelectedActivityDetail] = useState<ActivityItem | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [activeScannerActivity, setActiveScannerActivity] = useState<ActivityItem | null>(null);
   const [activePermissionActivity, setActivePermissionActivity] = useState<ActivityItem | null>(null);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<'dashboard' | 'activities' | 'permissions'>('dashboard');
-
-  // Auto-login default user for quick preview test
-  useEffect(() => {
-    handleLogin('PSDM-001');
-  }, []);
+  const [activeSection, setActiveSection] = useState<ActiveSection>('dashboard');
 
   const reloadData = async (user: AuthUser) => {
     const [acts, perms, atts, users, master] = await Promise.all([
@@ -93,28 +87,14 @@ function MainAppContent() {
       setCurrentUser(res.user);
       await reloadData(res.user);
     } else {
-      setLoginError(res.message || 'Login gagal');
+      setLoginError(res.message || 'PRN atau kata sandi tidak sesuai');
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await api.logout();
     setCurrentUser(null);
     showToast('Anda telah keluar dari sistem.', 'info');
-  };
-
-  const handleSwitchUser = async (prn: string) => {
-    const res = await api.login(prn);
-    if (res.success && res.user) {
-      setCurrentUser(res.user);
-      await reloadData(res.user);
-      const roleName =
-        res.user.role === 'SUPER_ADMIN'
-          ? 'Kepala Departemen'
-          : res.user.role === 'ADMIN'
-          ? 'Staf PSDM (PJ Departemen)'
-          : 'Anggota Pengurus';
-      showToast(`Beralih ke peran: ${roleName} (${res.user.namaLengkap})`, 'info');
-    }
   };
 
   // Activity Actions
@@ -226,27 +206,25 @@ function MainAppContent() {
         isOpenMobile={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
         onOpenCreateActivity={() => setShowCreateActivity(true)}
-        onOpenMasterData={() => setShowMasterData(true)}
-        onOpenMemberList={() => setShowMemberList(true)}
+        onOpenMasterData={() => {
+          setActiveSection('master-data');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenMemberList={() => {
+          setActiveSection('members');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
         onOpenProfile={() => setShowProfileModal(true)}
-        onOpenHelp={() => setShowHelpModal(true)}
         onOpenAudit={() => setShowAuditModal(true)}
         onOpenPermissionForm={() => {
           setActivePermissionActivity(null);
           setShowPermissionModal(true);
         }}
-        onSwitchUser={handleSwitchUser}
         onLogout={handleLogout}
         activeSection={activeSection}
         onSelectSection={(sec) => {
-          setActiveSection(sec as any);
-          if (sec === 'activities') {
-            document.getElementById('section-activities')?.scrollIntoView({ behavior: 'smooth' });
-          } else if (sec === 'permissions') {
-            document.getElementById('section-permissions')?.scrollIntoView({ behavior: 'smooth' });
-          } else if (sec === 'dashboard') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
+          setActiveSection(sec as ActiveSection);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         counts={{
           activitiesCount: activities.length,
@@ -259,58 +237,133 @@ function MainAppContent() {
         <Header
           user={currentUser}
           onLogout={handleLogout}
-          onSwitchUser={handleSwitchUser}
           onOpenAudit={() => setShowAuditModal(true)}
           onOpenProfile={() => setShowProfileModal(true)}
-          onOpenHelp={() => setShowHelpModal(true)}
           onToggleSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}
         />
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {currentUser.role === 'SUPER_ADMIN' && (
-            <SuperAdminView
+          {/* 1. Activities Layout */}
+          {activeSection === 'activities' && (
+            <ActivitiesView
               currentUser={currentUser}
               activities={activities}
-              permissions={permissions}
               onOpenCreateActivity={() => setShowCreateActivity(true)}
-              onOpenMasterData={() => setShowMasterData(true)}
-              onOpenMemberList={() => setShowMemberList(true)}
               onOpenAttendance={(act) => setActiveScannerActivity(act)}
               onTogglePublish={handleTogglePublish}
               onDeleteActivity={handleDeleteActivity}
-              onReviewPermission={handleReviewPermission}
-              onOpenAudit={() => setShowAuditModal(true)}
-              onOpenProfile={() => setShowProfileModal(true)}
               onViewDetail={(act) => setSelectedActivityDetail(act)}
-            />
-          )}
-
-          {currentUser.role === 'ADMIN' && (
-            <AdminView
-              currentUser={currentUser}
-              activities={activities}
-              permissions={permissions}
-              onOpenMemberList={() => setShowMemberList(true)}
-              onOpenAttendance={(act) => setActiveScannerActivity(act)}
-              onReviewPermission={handleReviewPermission}
-              onOpenProfile={() => setShowProfileModal(true)}
-              onViewDetail={(act) => setSelectedActivityDetail(act)}
-            />
-          )}
-
-          {currentUser.role === 'PENGURUS' && (
-            <PengurusView
-              currentUser={currentUser}
-              activities={activities}
-              myPermissions={permissions}
-              myAttendances={attendances}
-              onOpenPermissionModal={(act) => {
-                setActivePermissionActivity(act || null);
+              onRequestPermission={(act) => {
+                setActivePermissionActivity(act);
                 setShowPermissionModal(true);
               }}
-              onOpenProfile={() => setShowProfileModal(true)}
-              onViewDetail={(act) => setSelectedActivityDetail(act)}
             />
+          )}
+
+          {/* 2. Permissions Layout */}
+          {activeSection === 'permissions' && (
+            <PermissionsView
+              currentUser={currentUser}
+              permissions={permissions}
+              activities={activities}
+              onReviewPermission={handleReviewPermission}
+              onOpenPermissionModal={() => {
+                setActivePermissionActivity(null);
+                setShowPermissionModal(true);
+              }}
+            />
+          )}
+
+          {/* 3. Members Directory Layout */}
+          {activeSection === 'members' && (
+            <MembersView
+              currentUser={currentUser}
+              users={allUsers}
+              departments={departments}
+            />
+          )}
+
+          {/* 4. Master Data Layout (Super Admin only) */}
+          {activeSection === 'master-data' && currentUser.role === 'SUPER_ADMIN' && (
+            <MasterDataView
+              fakultas={fakultas}
+              programStudi={prodi}
+              departments={departments}
+              pjMappings={pjMappings}
+              admins={allUsers.filter((u) => u.role === 'ADMIN')}
+              onBackToDashboard={() => setActiveSection('dashboard')}
+              onAddFakultas={async (nama) => {
+                await api.addFakultas(nama);
+                await reloadData(currentUser);
+                showToast('Fakultas baru berhasil ditambahkan!', 'success');
+              }}
+              onAddProdi={async (fId, nama) => {
+                await api.addProdi(fId, nama);
+                await reloadData(currentUser);
+                showToast('Program studi baru berhasil ditambahkan!', 'success');
+              }}
+              onAddDept={async (nama) => {
+                await api.addDepartment(nama);
+                await reloadData(currentUser);
+                showToast('Departemen baru berhasil ditambahkan!', 'success');
+              }}
+              onAssignPj={handleAssignPj}
+              onRemovePj={handleRemovePj}
+            />
+          )}
+
+          {/* 5. Dashboard Layout */}
+          {activeSection === 'dashboard' && (
+            <>
+              {currentUser.role === 'SUPER_ADMIN' && (
+                <SuperAdminView
+                  currentUser={currentUser}
+                  activities={activities}
+                  permissions={permissions}
+                  onOpenCreateActivity={() => setShowCreateActivity(true)}
+                  onOpenMasterData={() => setActiveSection('master-data')}
+                  onOpenMemberList={() => setActiveSection('members')}
+                  onOpenAttendance={(act) => setActiveScannerActivity(act)}
+                  onTogglePublish={handleTogglePublish}
+                  onDeleteActivity={handleDeleteActivity}
+                  onReviewPermission={handleReviewPermission}
+                  onOpenAudit={() => setShowAuditModal(true)}
+                  onOpenProfile={() => setShowProfileModal(true)}
+                  onViewDetail={(act) => setSelectedActivityDetail(act)}
+                  onNavigateTo={(sec) => setActiveSection(sec)}
+                />
+              )}
+
+              {currentUser.role === 'ADMIN' && (
+                <AdminView
+                  currentUser={currentUser}
+                  activities={activities}
+                  permissions={permissions}
+                  onOpenMemberList={() => setActiveSection('members')}
+                  onOpenAttendance={(act) => setActiveScannerActivity(act)}
+                  onReviewPermission={handleReviewPermission}
+                  onOpenProfile={() => setShowProfileModal(true)}
+                  onViewDetail={(act) => setSelectedActivityDetail(act)}
+                  onNavigateTo={(sec) => setActiveSection(sec as any)}
+                />
+              )}
+
+              {currentUser.role === 'PENGURUS' && (
+                <PengurusView
+                  currentUser={currentUser}
+                  activities={activities}
+                  myPermissions={permissions}
+                  myAttendances={attendances}
+                  onOpenPermissionModal={(act) => {
+                    setActivePermissionActivity(act || null);
+                    setShowPermissionModal(true);
+                  }}
+                  onOpenProfile={() => setShowProfileModal(true)}
+                  onViewDetail={(act) => setSelectedActivityDetail(act)}
+                  onNavigateTo={(sec) => setActiveSection(sec)}
+                />
+              )}
+            </>
           )}
         </main>
       </div>
@@ -353,44 +406,6 @@ function MainAppContent() {
         />
       )}
 
-      {showMasterData && (
-        <MasterDataModal
-          isOpen={showMasterData}
-          onClose={() => setShowMasterData(false)}
-          fakultas={fakultas}
-          programStudi={prodi}
-          departments={departments}
-          pjMappings={pjMappings}
-          admins={allUsers.filter((u) => u.role === 'ADMIN')}
-          onAddFakultas={async (nama) => {
-            await api.addFakultas(nama);
-            await reloadData(currentUser);
-            showToast('Fakultas baru berhasil ditambahkan!', 'success');
-          }}
-          onAddProdi={async (fId, nama) => {
-            await api.addProdi(fId, nama);
-            await reloadData(currentUser);
-            showToast('Program studi baru berhasil ditambahkan!', 'success');
-          }}
-          onAddDept={async (nama) => {
-            await api.addDepartment(nama);
-            await reloadData(currentUser);
-            showToast('Departemen baru berhasil ditambahkan!', 'success');
-          }}
-          onAssignPj={handleAssignPj}
-          onRemovePj={handleRemovePj}
-        />
-      )}
-
-      {showMemberList && (
-        <MemberListModal
-          isOpen={showMemberList}
-          onClose={() => setShowMemberList(false)}
-          users={allUsers}
-          currentUser={currentUser}
-        />
-      )}
-
       {showAuditModal && (
         <AuditModal
           isOpen={showAuditModal}
@@ -426,15 +441,6 @@ function MainAppContent() {
           }}
           onTogglePublish={handleTogglePublish}
           onDelete={handleDeleteActivity}
-        />
-      )}
-
-      {/* Help & Workflow Guide Modal */}
-      {showHelpModal && (
-        <HelpWorkflowModal
-          isOpen={showHelpModal}
-          onClose={() => setShowHelpModal(false)}
-          onSwitchUser={handleSwitchUser}
         />
       )}
 

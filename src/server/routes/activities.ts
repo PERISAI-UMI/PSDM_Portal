@@ -65,7 +65,31 @@ activitiesRouter.get('/', async (c) => {
 
   const list = conditions.length > 0 ? await query.where(and(...conditions)).all() : await query.all();
 
-  return c.json({ success: true, data: list });
+  const allAtts = await db
+    .select({
+      activityId: attendances.activityId,
+      status: attendances.status,
+    })
+    .from(attendances)
+    .all();
+
+  const summaryMap: Record<string, { HADIR: number; IZIN: number; SAKIT: number; ALPHA: number; TOTAL: number }> = {};
+  for (const att of allAtts) {
+    if (!summaryMap[att.activityId]) {
+      summaryMap[att.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
+    }
+    if (att.status in summaryMap[att.activityId]) {
+      summaryMap[att.activityId][att.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA']++;
+      summaryMap[att.activityId].TOTAL++;
+    }
+  }
+
+  const result = list.map((act) => ({
+    ...act,
+    attendanceSummary: summaryMap[act.id] || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 },
+  }));
+
+  return c.json({ success: true, data: result });
 });
 
 // GET /api/activities/:id (Detail + Statistik Kehadiran)

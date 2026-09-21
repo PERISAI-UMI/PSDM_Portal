@@ -72,6 +72,7 @@ authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
     message: 'Login berhasil',
     data: {
       user: safeUser,
+      token: sessionToken,
     },
   });
 });

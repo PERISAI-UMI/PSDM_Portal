@@ -1,138 +1,87 @@
 import React from 'react';
 import {
   Menu,
-  HelpCircle,
   Activity,
   User,
-  ShieldCheck,
-  Building2,
-  UserCheck,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
 interface HeaderProps {
   user: AuthUser;
   onLogout: () => void;
-  onSwitchUser: (prn: string) => void;
   onOpenAudit?: () => void;
   onOpenProfile?: () => void;
-  onOpenHelp?: () => void;
   onToggleSidebar?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   user,
-  onSwitchUser,
   onOpenAudit,
   onOpenProfile,
-  onOpenHelp,
   onToggleSidebar,
 }) => {
+  const getRoleBadge = () => {
+    switch (user.role) {
+      case 'SUPER_ADMIN':
+        return { label: 'Kepala Departemen', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+      case 'ADMIN':
+        return { label: 'Staf PSDM', color: 'bg-blue-50 text-blue-700 border-blue-200' };
+      default:
+        return { label: 'Pengurus', color: 'bg-slate-100 text-slate-700 border-slate-200' };
+    }
+  };
+
+  const badge = getRoleBadge();
+
   return (
-    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200/80 h-14">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 h-14">
       <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-        {/* Mobile View: Hamburger Button & Minimal App Title */}
+        {/* Mobile View */}
         <div className="flex items-center gap-2.5 md:hidden">
           {onToggleSidebar && (
             <button
               type="button"
               onClick={onToggleSidebar}
-              className="p-2 -ml-1 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-              aria-label="Buka menu navigasi sidebar"
+              className="p-1.5 -ml-1 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Menu"
             >
               <Menu className="w-5 h-5" />
             </button>
           )}
           <span className="font-bold text-slate-900 text-sm">Portal PSDM</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
-            {user.role === 'SUPER_ADMIN' ? 'Kadep' : user.role === 'ADMIN' ? 'Staf PJ' : 'Pengurus'}
+          <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${badge.color}`}>
+            {badge.label}
           </span>
         </div>
 
-        {/* Desktop View Left: Breadcrumb / Section Context (NO duplicate logo) */}
-        <div className="hidden md:flex items-center gap-2.5 text-xs">
-          <span className="font-semibold text-slate-800">Sistem Manajemen PSDM</span>
+        {/* Desktop View Left */}
+        <div className="hidden md:flex items-center gap-2 text-xs">
+          <span className="font-semibold text-slate-900">Portal PSDM</span>
           <span className="text-slate-300">/</span>
-          <span className="text-slate-500">
+          <span className="text-slate-500 font-medium">
             {user.role === 'SUPER_ADMIN'
-              ? 'Panel Eksekutif & Kalender Proker'
+              ? 'Manajemen Proker'
               : user.role === 'ADMIN'
-              ? 'Wilayah Pembinaan & Validasi'
-              : 'Agenda & Presensi Pengurus'}
+              ? 'Presensi & Validasi'
+              : 'Presensi Pribadi'}
           </span>
-          <span className="ml-2 text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">
-            2026/2027
+          <span className={`ml-2 text-[10px] px-2 py-0.5 rounded-full border font-semibold ${badge.color}`}>
+            {user.prn}
           </span>
         </div>
 
-        {/* Desktop View Right: Minimal Quick Controls (NO duplicate user profile) */}
+        {/* Desktop View Right */}
         <div className="flex items-center gap-2 ml-auto">
-          {/* Quick Role Simulation Switcher (Compact & Subtle) */}
-          <div className="flex items-center bg-slate-100/90 p-0.5 rounded-lg border border-slate-200/60 text-xs">
-            <span className="text-[10px] font-medium text-slate-400 px-2 hidden sm:inline">
-              Simulasi:
-            </span>
-            <button
-              type="button"
-              onClick={() => onSwitchUser('PSDM-001')}
-              title="Peran: Kepala Departemen (Super Admin)"
-              className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
-                user.role === 'SUPER_ADMIN'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Kadep
-            </button>
-            <button
-              type="button"
-              onClick={() => onSwitchUser('PSDM-002')}
-              title="Peran: Staf PSDM (PJ Departemen)"
-              className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
-                user.role === 'ADMIN'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Staf PJ
-            </button>
-            <button
-              type="button"
-              onClick={() => onSwitchUser('RISTEK-001')}
-              title="Peran: Anggota Pengurus"
-              className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
-                user.prn === 'RISTEK-001'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Pengurus
-            </button>
-          </div>
-
-          {/* Quick Workflow Guide Trigger */}
-          {onOpenHelp && (
-            <button
-              type="button"
-              onClick={onOpenHelp}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-medium flex items-center gap-1.5 transition-colors"
-              title="Panduan alur presensi, izin, dan hak akses peran"
-            >
-              <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
-              <span className="hidden sm:inline">Panduan</span>
-            </button>
-          )}
-
-          {/* Quiet System Diagnostics Button */}
-          {onOpenAudit && (
+          {/* System Diagnostics Button (Super Admin Only) */}
+          {onOpenAudit && user.role === 'SUPER_ADMIN' && (
             <button
               type="button"
               onClick={onOpenAudit}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-medium flex items-center gap-1.5 transition-colors"
-              title="Diagnostik sistem & integritas"
+              className="px-2.5 py-1 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              title="Diagnostik Sistem"
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              <span className="hidden sm:inline">Diagnostik</span>
+              <Activity className="w-3.5 h-3.5 text-slate-500" />
+              <span>Diagnostik</span>
             </button>
           )}
 
@@ -141,8 +90,8 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onOpenProfile}
-              className="md:hidden p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
-              title="Edit Profil"
+              className="md:hidden p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
+              title="Profil"
             >
               <User className="w-4 h-4" />
             </button>

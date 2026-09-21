@@ -19,7 +19,7 @@ not_found_handling = "single-page-application"
 
 # Environment Variables for Edge Serverless Runtime
 [vars]
-B2_BUCKET_NAME = "psdm-evidence-bucket"
+B2_BUCKET_NAME = "PSDM-B2"
 B2_ENDPOINT = "https://s3.us-west-004.backblazeb2.com"
 B2_REGION = "us-west-004"
 # Set ALLOWED_ORIGIN to your production domain, e.g. https://psdm.example.org

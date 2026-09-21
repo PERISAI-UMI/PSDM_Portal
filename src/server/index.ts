@@ -10,6 +10,7 @@ import { activitiesRouter } from './routes/activities.ts';
 import { attendancesRouter } from './routes/attendances.ts';
 import { permissionsRouter } from './routes/permissions.ts';
 import { diagnosticsRouter } from './routes/diagnostics.ts';
+import { storageRouter } from './routes/storage.ts';
 
 const app = new Hono<AppEnv>();
 
@@ -52,6 +53,7 @@ app.route('/api/users', usersRouter);
 app.route('/api/activities', activitiesRouter);
 app.route('/api/attendances', attendancesRouter);
 app.route('/api/permissions', permissionsRouter);
+app.route('/api/storage', storageRouter);
 app.route('/api/diagnostics', diagnosticsRouter);
 
 // Global Error Handler

@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   fakultas,
@@ -245,7 +245,7 @@ masterRouter.delete(
 
     await db
       .delete(pjDepartments)
-      .where(eq(pjDepartments.adminId, adminId) && eq(pjDepartments.departmentId, departmentId));
+      .where(and(eq(pjDepartments.adminId, adminId), eq(pjDepartments.departmentId, departmentId)));
 
     return c.json({ success: true, message: 'Penugasan PJ Departemen berhasil dihapus' });
   }

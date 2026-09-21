@@ -38,9 +38,9 @@ export const MemberListModal: React.FC<MemberListModalProps> = ({
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-slate-900" />
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900">Database Anggota & Pengurus</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">Daftar Pengurus</h2>
               <p className="text-xs text-slate-500">
-                {currentUser.role === 'ADMIN' ? 'Akses Read-Only Staf PSDM' : 'Kelola Data Pengurus Organisasi'}
+                {currentUser.role === 'ADMIN' ? 'Direktori pengurus internal.' : 'Direktori seluruh anggota organisasi.'}
               </p>
             </div>
           </div>
@@ -60,7 +60,7 @@ export const MemberListModal: React.FC<MemberListModalProps> = ({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari nama, PRN, jabatan..."
+              placeholder="Cari nama, PRN, atau jabatan..."
               className="w-full pl-8 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 min-h-[42px]"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-3" />
