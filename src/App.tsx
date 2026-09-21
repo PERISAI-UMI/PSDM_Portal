@@ -23,7 +23,7 @@ import { MembersView } from './components/members/MembersView.tsx';
 import { CreateActivityModal } from './components/activities/CreateActivityModal.tsx';
 import { AttendanceScannerModal } from './components/attendances/AttendanceScannerModal.tsx';
 import { PermissionFormModal } from './components/permissions/PermissionFormModal.tsx';
-import { MasterDataView } from './components/master/MasterDataView.tsx';
+import { MasterDataView, type MasterDataTab } from './components/master/MasterDataView.tsx';
 import { AuditModal } from './components/audit/AuditModal.tsx';
 import { ProfileModal } from './components/profile/ProfileModal.tsx';
 import { ActivityDetailModal } from './components/activities/ActivityDetailModal.tsx';
@@ -60,6 +60,7 @@ function MainAppContent() {
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<ActiveSection>('dashboard');
+  const [masterDataTab, setMasterDataTab] = useState<MasterDataTab>('dept');
 
   const reloadData = async (user: AuthUser) => {
     const [acts, perms, atts, users, master] = await Promise.all([
@@ -222,6 +223,12 @@ function MainAppContent() {
         }}
         onLogout={handleLogout}
         activeSection={activeSection}
+        activeMasterDataTab={masterDataTab}
+        onOpenMasterDataTab={(tab) => {
+          setMasterDataTab(tab);
+          setActiveSection('master-data');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
         onSelectSection={(sec) => {
           setActiveSection(sec as ActiveSection);
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -286,6 +293,7 @@ function MainAppContent() {
           {/* 4. Master Data Layout (Super Admin only) */}
           {activeSection === 'master-data' && currentUser.role === 'SUPER_ADMIN' && (
             <MasterDataView
+              initialTab={masterDataTab}
               fakultas={fakultas}
               programStudi={prodi}
               departments={departments}

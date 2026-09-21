@@ -138,14 +138,14 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Master Data & PJ</span>
+            <span className="text-xs font-medium text-slate-500">Master Data</span>
             <ShieldCheck className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
           </div>
           <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
-            Departemen & PJ
+            Departemen, Fakultas & Jurusan
           </div>
           <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
-            <span>Kelola master & penugasan</span>
+            <span>Kelola CRUD struktur & penugasan</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>

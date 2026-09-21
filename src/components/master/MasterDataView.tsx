@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Plus,
   Trash2,
@@ -13,6 +13,8 @@ import {
   BookOpen,
   X,
   AlertTriangle,
+  Layers,
+  Filter,
 } from 'lucide-react';
 import type {
   FakultasItem,
@@ -22,12 +24,15 @@ import type {
   AuthUser,
 } from '../../types/index.ts';
 
+export type MasterDataTab = 'dept' | 'fakultas' | 'prodi' | 'pj';
+
 interface MasterDataViewProps {
   fakultas: FakultasItem[];
   programStudi: ProgramStudiItem[];
   departments: DepartmentItem[];
   pjMappings: PjMappingItem[];
   admins: AuthUser[];
+  initialTab?: MasterDataTab;
   onBackToDashboard: () => void;
   onAddFakultas: (nama: string) => Promise<void>;
   onUpdateFakultas: (id: string, nama: string) => Promise<void>;
@@ -59,6 +64,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   departments,
   pjMappings,
   admins,
+  initialTab = 'dept',
   onBackToDashboard,
   onAddFakultas,
   onUpdateFakultas,
@@ -72,7 +78,13 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   onAssignPj,
   onRemovePj,
 }) => {
-  const [activeTab, setActiveTab] = useState<'pj' | 'dept' | 'prodi'>('pj');
+  const [activeTab, setActiveTab] = useState<MasterDataTab>(initialTab);
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   // Form states - Create
   const [selectedAdmin, setSelectedAdmin] = useState(admins[0]?.id || '');
@@ -82,10 +94,12 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   const [newProdiName, setNewProdiName] = useState('');
   const [selectedFakultasForProdi, setSelectedFakultasForProdi] = useState(fakultas[0]?.id || '');
 
-  // Search filter states
-  const [pjSearch, setPjSearch] = useState('');
+  // Search and Filter states
   const [deptSearch, setDeptSearch] = useState('');
-  const [academicSearch, setAcademicSearch] = useState('');
+  const [fakultasSearch, setFakultasSearch] = useState('');
+  const [prodiSearch, setProdiSearch] = useState('');
+  const [prodiFakultasFilter, setProdiFakultasFilter] = useState('');
+  const [pjSearch, setPjSearch] = useState('');
 
   // Edit and Delete Modals
   const [editingTarget, setEditingTarget] = useState<EditTarget | null>(null);
@@ -189,14 +203,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   };
 
   // Filtered lists
-  const filteredPjMappings = pjMappings.filter((m) => {
-    const q = pjSearch.toLowerCase().trim();
-    if (!q) return true;
-    const adminName = (m.adminName || '').toLowerCase();
-    const deptName = (m.departmentName || '').toLowerCase();
-    return adminName.includes(q) || deptName.includes(q);
-  });
-
   const filteredDepartments = departments.filter((d) => {
     const q = deptSearch.toLowerCase().trim();
     if (!q) return true;
@@ -204,13 +210,27 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   });
 
   const filteredFakultas = fakultas.filter((f) => {
-    const q = academicSearch.toLowerCase().trim();
+    const q = fakultasSearch.toLowerCase().trim();
     if (!q) return true;
-    const matchFak = f.nama.toLowerCase().includes(q);
-    const matchProdi = programStudi.some(
-      (p) => p.fakultasId === f.id && p.nama.toLowerCase().includes(q)
-    );
-    return matchFak || matchProdi;
+    return f.nama.toLowerCase().includes(q) || f.id.toLowerCase().includes(q);
+  });
+
+  const filteredProdi = programStudi.filter((p) => {
+    if (prodiFakultasFilter && p.fakultasId !== prodiFakultasFilter) {
+      return false;
+    }
+    const q = prodiSearch.toLowerCase().trim();
+    if (!q) return true;
+    const fakultasNama = fakultas.find((f) => f.id === p.fakultasId)?.nama || '';
+    return p.nama.toLowerCase().includes(q) || fakultasNama.toLowerCase().includes(q);
+  });
+
+  const filteredPjMappings = pjMappings.filter((m) => {
+    const q = pjSearch.toLowerCase().trim();
+    if (!q) return true;
+    const adminName = (m.adminName || '').toLowerCase();
+    const deptName = (m.departmentName || '').toLowerCase();
+    return adminName.includes(q) || deptName.includes(q);
   });
 
   return (
@@ -228,36 +248,21 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           </button>
           <div className="flex items-center gap-2.5">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Master Data & Direktori Akademik
+              Master Data & Manajemen Struktur
             </h1>
             <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-900 text-white">
               Super Admin
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Pengelolaan penuh (CRUD) Departemen Organisasi, Fakultas, Program Studi, serta Penugasan PJ.
+            Kelola penuh (CRUD: Tambah, Ubah, Hapus) untuk Departemen, Fakultas, Jurusan / Program Studi, serta Penugasan PJ.
           </p>
         </div>
       </div>
 
-      {/* Modern Tab Navigation */}
+      {/* 4 Dedicated Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-px">
-        <button
-          type="button"
-          onClick={() => setActiveTab('pj')}
-          className={`pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'pj'
-              ? 'border-slate-900 text-slate-900 font-bold'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <LinkIcon className="w-4 h-4" />
-          <span>Penugasan PJ Departemen</span>
-          <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
-            {pjMappings.length}
-          </span>
-        </button>
-
+        {/* Tab 1: Departemen */}
         <button
           type="button"
           onClick={() => setActiveTab('dept')}
@@ -268,12 +273,30 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           }`}
         >
           <Building2 className="w-4 h-4" />
-          <span>Master Departemen</span>
+          <span>Departemen</span>
           <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
             {departments.length}
           </span>
         </button>
 
+        {/* Tab 2: Fakultas */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('fakultas')}
+          className={`pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'fakultas'
+              ? 'border-slate-900 text-slate-900 font-bold'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>Fakultas</span>
+          <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
+            {fakultas.length}
+          </span>
+        </button>
+
+        {/* Tab 3: Jurusan / Program Studi */}
         <button
           type="button"
           onClick={() => setActiveTab('prodi')}
@@ -284,14 +307,435 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           }`}
         >
           <GraduationCap className="w-4 h-4" />
-          <span>Fakultas & Program Studi</span>
+          <span>Jurusan / Prodi</span>
           <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
-            {fakultas.length} Fak • {programStudi.length} Prodi
+            {programStudi.length}
+          </span>
+        </button>
+
+        {/* Tab 4: Penugasan PJ */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('pj')}
+          className={`pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'pj'
+              ? 'border-slate-900 text-slate-900 font-bold'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <LinkIcon className="w-4 h-4" />
+          <span>Penugasan PJ</span>
+          <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
+            {pjMappings.length}
           </span>
         </button>
       </div>
 
-      {/* Tab 1: Penugasan PJ */}
+      {/* ────────────────── TAB 1: DEPARTEMEN ────────────────── */}
+      {activeTab === 'dept' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* Create Dept Form */}
+          <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
+              <Plus className="w-4 h-4 text-slate-900" />
+              <h2 className="text-sm font-bold text-slate-900">Tambah Departemen Baru</h2>
+            </div>
+
+            <form onSubmit={handleCreateDept} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Nama Departemen
+                </label>
+                <input
+                  type="text"
+                  value={newDeptName}
+                  onChange={(e) => setNewDeptName(e.target.value)}
+                  placeholder="Contoh: Riset & Teknologi"
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || !newDeptName.trim()}
+                className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Departemen'}</span>
+              </button>
+            </form>
+          </div>
+
+          {/* List Departemen with Edit & Delete */}
+          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-slate-900" />
+                <h2 className="text-sm font-bold text-slate-900">Daftar Departemen Terdaftar</h2>
+                <span className="text-xs text-slate-400 font-medium">
+                  ({filteredDepartments.length})
+                </span>
+              </div>
+
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                <input
+                  type="text"
+                  value={deptSearch}
+                  onChange={(e) => setDeptSearch(e.target.value)}
+                  placeholder="Cari departemen..."
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full sm:w-56"
+                />
+              </div>
+            </div>
+
+            {filteredDepartments.length === 0 ? (
+              <div className="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                {deptSearch ? 'Tidak ada departemen yang sesuai kata kunci.' : 'Belum ada departemen yang terdaftar.'}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {filteredDepartments.map((d, idx) => (
+                  <div
+                    key={d.id}
+                    className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50 transition-all"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
+                        #{String(idx + 1).padStart(2, '0')}
+                      </span>
+                      <div className="min-w-0">
+                        <span className="text-xs font-bold text-slate-900 block truncate">
+                          {d.nama}
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400 block truncate">
+                          ID: {d.id.slice(0, 12)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => openEditModal({ type: 'dept', id: d.id, name: d.nama })}
+                        className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                        title="Edit Departemen"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeletingTarget({ type: 'dept', id: d.id, name: d.nama })}
+                        className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
+                        title="Hapus Departemen"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ────────────────── TAB 2: FAKULTAS ────────────────── */}
+      {activeTab === 'fakultas' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* Create Fakultas Form */}
+          <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
+              <Plus className="w-4 h-4 text-slate-900" />
+              <h2 className="text-sm font-bold text-slate-900">Tambah Fakultas Baru</h2>
+            </div>
+
+            <form onSubmit={handleCreateFakultas} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Nama Fakultas
+                </label>
+                <input
+                  type="text"
+                  value={newFakultasName}
+                  onChange={(e) => setNewFakultasName(e.target.value)}
+                  placeholder="Contoh: Fakultas Ilmu Komputer (FIKOM)"
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || !newFakultasName.trim()}
+                className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Fakultas'}</span>
+              </button>
+            </form>
+          </div>
+
+          {/* List Fakultas with Edit & Delete */}
+          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-slate-900" />
+                <h2 className="text-sm font-bold text-slate-900">Daftar Fakultas Terdaftar</h2>
+                <span className="text-xs text-slate-400 font-medium">
+                  ({filteredFakultas.length})
+                </span>
+              </div>
+
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                <input
+                  type="text"
+                  value={fakultasSearch}
+                  onChange={(e) => setFakultasSearch(e.target.value)}
+                  placeholder="Cari fakultas..."
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full sm:w-56"
+                />
+              </div>
+            </div>
+
+            {filteredFakultas.length === 0 ? (
+              <div className="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                {fakultasSearch ? 'Tidak ada fakultas yang cocok.' : 'Belum ada fakultas terdaftar.'}
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {filteredFakultas.map((f, idx) => {
+                  const prodisCount = programStudi.filter((p) => p.fakultasId === f.id).length;
+                  return (
+                    <div
+                      key={f.id}
+                      className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50 transition-all"
+                    >
+                      <div className="flex items-center gap-3 min-w-0 pr-2">
+                        <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
+                          #{String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <div className="min-w-0">
+                          <span className="text-xs font-bold text-slate-900 block truncate">
+                            {f.nama}
+                          </span>
+                          <span className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                            <span className="font-semibold text-slate-700">{prodisCount} Program Studi</span>
+                            <span className="text-slate-300">•</span>
+                            <span className="font-mono text-[10px] text-slate-400">ID: {f.id.slice(0, 10)}</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setProdiFakultasFilter(f.id);
+                            setActiveTab('prodi');
+                          }}
+                          className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors cursor-pointer flex items-center gap-1"
+                          title="Lihat jurusan di fakultas ini"
+                        >
+                          <Layers className="w-3 h-3" />
+                          <span>Jurusan</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openEditModal({ type: 'fakultas', id: f.id, name: f.nama })}
+                          className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                          title="Edit Fakultas"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeletingTarget({ type: 'fakultas', id: f.id, name: f.nama })}
+                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
+                          title="Hapus Fakultas"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ────────────────── TAB 3: JURUSAN / PROGRAM STUDI ────────────────── */}
+      {activeTab === 'prodi' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* Create Prodi Form */}
+          <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
+              <Plus className="w-4 h-4 text-slate-900" />
+              <h2 className="text-sm font-bold text-slate-900">Tambah Jurusan Baru</h2>
+            </div>
+
+            <form onSubmit={handleCreateProdi} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Pilih Fakultas Induk
+                </label>
+                <select
+                  value={selectedFakultasForProdi}
+                  onChange={(e) => setSelectedFakultasForProdi(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                >
+                  {fakultas.map((f) => (
+                    <option key={f.id} value={f.id}>
+                      {f.nama}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Nama Jurusan / Program Studi
+                </label>
+                <input
+                  type="text"
+                  value={newProdiName}
+                  onChange={(e) => setNewProdiName(e.target.value)}
+                  placeholder="Contoh: S1 Teknik Informatika"
+                  required
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || !newProdiName.trim() || fakultas.length === 0}
+                className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Jurusan'}</span>
+              </button>
+            </form>
+          </div>
+
+          {/* List Prodi with Filter, Edit & Delete */}
+          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="flex flex-col gap-3 pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-slate-900" />
+                  <h2 className="text-sm font-bold text-slate-900">Daftar Jurusan / Program Studi</h2>
+                  <span className="text-xs text-slate-400 font-medium">
+                    ({filteredProdi.length})
+                  </span>
+                </div>
+              </div>
+
+              {/* Filters */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                  <input
+                    type="text"
+                    value={prodiSearch}
+                    onChange={(e) => setProdiSearch(e.target.value)}
+                    placeholder="Cari nama jurusan..."
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full"
+                  />
+                </div>
+
+                <div className="relative">
+                  <Filter className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                  <select
+                    value={prodiFakultasFilter}
+                    onChange={(e) => setProdiFakultasFilter(e.target.value)}
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full"
+                  >
+                    <option value="">Semua Fakultas</option>
+                    {fakultas.map((f) => (
+                      <option key={f.id} value={f.id}>
+                        {f.nama}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {filteredProdi.length === 0 ? (
+              <div className="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                {prodiSearch || prodiFakultasFilter ? 'Tidak ada jurusan yang sesuai filter.' : 'Belum ada jurusan terdaftar.'}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {filteredProdi.map((p, idx) => {
+                  const parentFak = fakultas.find((f) => f.id === p.fakultasId);
+                  return (
+                    <div
+                      key={p.id}
+                      className="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50 transition-all"
+                    >
+                      <div className="flex items-center gap-3 min-w-0 pr-2">
+                        <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
+                          #{String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <div className="min-w-0">
+                          <span className="text-xs font-bold text-slate-900 block truncate">
+                            {p.nama}
+                          </span>
+                          <span className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                            <span className="px-2 py-0.2 rounded bg-white text-slate-700 font-semibold border border-slate-200 text-[10px]">
+                              {parentFak?.nama || 'Fakultas'}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            openEditModal({
+                              type: 'prodi',
+                              id: p.id,
+                              name: p.nama,
+                              fakultasId: p.fakultasId,
+                            })
+                          }
+                          className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                          title="Edit Jurusan / Pindah Fakultas"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setDeletingTarget({
+                              type: 'prodi',
+                              id: p.id,
+                              name: p.nama,
+                            })
+                          }
+                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
+                          title="Hapus Jurusan"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ────────────────── TAB 4: PENUGASAN PJ ────────────────── */}
       {activeTab === 'pj' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Form Assign PJ */}
@@ -389,7 +833,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                 {filteredPjMappings.map((m) => (
                   <div
                     key={`${m.adminId}-${m.departmentId}`}
-                    className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/70 transition-colors"
+                    className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
@@ -424,351 +868,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         </div>
       )}
 
-      {/* Tab 2: Master Departemen (Full CRUD) */}
-      {activeTab === 'dept' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          {/* Create Dept Form */}
-          <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
-            <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
-              <Plus className="w-4 h-4 text-slate-900" />
-              <h2 className="text-sm font-bold text-slate-900">Tambah Departemen</h2>
-            </div>
-
-            <form onSubmit={handleCreateDept} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Nama Departemen Baru
-                </label>
-                <input
-                  type="text"
-                  value={newDeptName}
-                  onChange={(e) => setNewDeptName(e.target.value)}
-                  placeholder="Contoh: Riset & Teknologi"
-                  required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting || !newDeptName.trim()}
-                className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Departemen'}</span>
-              </button>
-            </form>
-          </div>
-
-          {/* List Departemen with Edit & Delete */}
-          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-slate-900" />
-                <h2 className="text-sm font-bold text-slate-900">Daftar Departemen Terdaftar</h2>
-                <span className="text-xs text-slate-400 font-medium">
-                  ({filteredDepartments.length})
-                </span>
-              </div>
-
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
-                <input
-                  type="text"
-                  value={deptSearch}
-                  onChange={(e) => setDeptSearch(e.target.value)}
-                  placeholder="Cari nama departemen..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full sm:w-56"
-                />
-              </div>
-            </div>
-
-            {filteredDepartments.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl">
-                {deptSearch ? 'Tidak ada departemen yang sesuai kata kunci.' : 'Belum ada departemen yang terdaftar.'}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {filteredDepartments.map((d, idx) => (
-                  <div
-                    key={d.id}
-                    className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between hover:bg-slate-50/90 transition-all group"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                      <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
-                        #{String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <div className="min-w-0">
-                        <span className="text-xs font-bold text-slate-900 block truncate">
-                          {d.nama}
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-400 block truncate">
-                          ID: {d.id.slice(0, 12)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => openEditModal({ type: 'dept', id: d.id, name: d.nama })}
-                        className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
-                        title="Edit Nama Departemen"
-                      >
-                        <Pencil className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDeletingTarget({ type: 'dept', id: d.id, name: d.nama })}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
-                        title="Hapus Departemen"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Tab 3: Fakultas & Program Studi (Full CRUD) */}
-      {activeTab === 'prodi' && (
-        <div className="space-y-6">
-          {/* Creation Forms Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Form Tambah Fakultas */}
-            <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
-              <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
-                <BookOpen className="w-4 h-4 text-slate-900" />
-                <h2 className="text-sm font-bold text-slate-900">Tambah Fakultas Baru</h2>
-              </div>
-
-              <form onSubmit={handleCreateFakultas} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nama Fakultas
-                  </label>
-                  <input
-                    type="text"
-                    value={newFakultasName}
-                    onChange={(e) => setNewFakultasName(e.target.value)}
-                    placeholder="Contoh: Fakultas Ilmu Komputer (FIKOM)"
-                    required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !newFakultasName.trim()}
-                  className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Fakultas'}</span>
-                </button>
-              </form>
-            </div>
-
-            {/* Form Tambah Prodi */}
-            <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
-              <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
-                <GraduationCap className="w-4 h-4 text-slate-900" />
-                <h2 className="text-sm font-bold text-slate-900">Tambah Program Studi Baru</h2>
-              </div>
-
-              <form onSubmit={handleCreateProdi} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Pilih Fakultas Induk
-                  </label>
-                  <select
-                    value={selectedFakultasForProdi}
-                    onChange={(e) => setSelectedFakultasForProdi(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  >
-                    {fakultas.map((f) => (
-                      <option key={f.id} value={f.id}>
-                        {f.nama}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nama Program Studi / Jurusan
-                  </label>
-                  <input
-                    type="text"
-                    value={newProdiName}
-                    onChange={(e) => setNewProdiName(e.target.value)}
-                    placeholder="Contoh: S1 Teknik Informatika"
-                    required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !newProdiName.trim() || fakultas.length === 0}
-                  className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Program Studi'}</span>
-                </button>
-              </form>
-            </div>
-          </div>
-
-          {/* Directory of Fakultas & Prodi with full Edit/Delete actions */}
-          <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
-              <div>
-                <h2 className="text-sm font-bold text-slate-900">Direktori Akademik Terdaftar</h2>
-                <span className="text-xs text-slate-400 font-medium">
-                  {fakultas.length} Fakultas • {programStudi.length} Program Studi
-                </span>
-              </div>
-
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
-                <input
-                  type="text"
-                  value={academicSearch}
-                  onChange={(e) => setAcademicSearch(e.target.value)}
-                  placeholder="Cari fakultas atau prodi..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full sm:w-64"
-                />
-              </div>
-            </div>
-
-            {filteredFakultas.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl">
-                {academicSearch ? 'Tidak ada fakultas/prodi yang sesuai pencarian.' : 'Belum ada data fakultas.'}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredFakultas.map((f) => {
-                  const prodis = programStudi.filter((p) => p.fakultasId === f.id);
-                  const searchFilteredProdis = academicSearch.trim()
-                    ? prodis.filter((p) =>
-                        p.nama.toLowerCase().includes(academicSearch.toLowerCase().trim())
-                      )
-                    : prodis;
-
-                  return (
-                    <div
-                      key={f.id}
-                      className="p-4 rounded-xl border border-slate-200/80 bg-slate-50/50 space-y-3"
-                    >
-                      {/* Faculty Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <BookOpen className="w-4 h-4 text-slate-700 shrink-0" />
-                          <span className="text-xs font-bold text-slate-900">{f.nama}</span>
-                          <span className="text-[10px] font-semibold text-slate-600 bg-slate-200/70 px-2 py-0.5 rounded-full">
-                            {prodis.length} Prodi
-                          </span>
-                        </div>
-
-                        {/* Faculty Action Buttons */}
-                        <div className="flex items-center gap-1.5 self-end sm:self-auto">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedFakultasForProdi(f.id);
-                              window.scrollTo({ top: 0, behavior: 'smooth' });
-                            }}
-                            className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 rounded-md border border-slate-200 transition-colors cursor-pointer"
-                            title="Tambah prodi ke fakultas ini"
-                          >
-                            <Plus className="w-3 h-3" />
-                            <span>Tambah Prodi</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => openEditModal({ type: 'fakultas', id: f.id, name: f.nama })}
-                            className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-white rounded-md border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
-                            title="Edit Nama Fakultas"
-                          >
-                            <Pencil className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setDeletingTarget({ type: 'fakultas', id: f.id, name: f.nama })}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md border border-transparent hover:border-rose-100 transition-colors cursor-pointer"
-                            title="Hapus Fakultas"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Programs List */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-1">
-                        {prodis.length === 0 ? (
-                          <div className="col-span-full text-[11px] text-slate-400 italic py-1">
-                            Belum ada program studi di fakultas ini.
-                          </div>
-                        ) : (
-                          (academicSearch.trim() ? searchFilteredProdis : prodis).map((p) => (
-                            <div
-                              key={p.id}
-                              className="px-3 py-2 rounded-lg bg-white border border-slate-200 text-slate-800 text-xs font-medium shadow-2xs flex items-center justify-between gap-2 hover:border-slate-300 transition-all group"
-                            >
-                              <div className="flex items-center gap-1.5 min-w-0">
-                                <GraduationCap className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                                <span className="truncate">{p.nama}</span>
-                              </div>
-
-                              <div className="flex items-center gap-0.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    openEditModal({
-                                      type: 'prodi',
-                                      id: p.id,
-                                      name: p.nama,
-                                      fakultasId: p.fakultasId,
-                                    })
-                                  }
-                                  className="p-1 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded transition-colors cursor-pointer"
-                                  title="Edit Program Studi"
-                                >
-                                  <Pencil className="w-3 h-3" />
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setDeletingTarget({
-                                      type: 'prodi',
-                                      id: p.id,
-                                      name: p.nama,
-                                    })
-                                  }
-                                  className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer"
-                                  title="Hapus Program Studi"
-                                >
-                                  <Trash2 className="w-3 h-3" />
-                                </button>
-                              </div>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ── Reusable Edit Modal ── */}
+      {/* ────────────────── REUSABLE EDIT MODAL ────────────────── */}
       {editingTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
@@ -776,9 +876,9 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
               <div className="flex items-center gap-2">
                 <Pencil className="w-4 h-4 text-slate-900" />
                 <h3 className="text-sm font-bold text-slate-900">
-                  {editingTarget.type === 'dept' && 'Edit Departemen'}
-                  {editingTarget.type === 'fakultas' && 'Edit Fakultas'}
-                  {editingTarget.type === 'prodi' && 'Edit Program Studi'}
+                  {editingTarget.type === 'dept' && 'Edit Nama Departemen'}
+                  {editingTarget.type === 'fakultas' && 'Edit Nama Fakultas'}
+                  {editingTarget.type === 'prodi' && 'Edit Jurusan / Program Studi'}
                 </h3>
               </div>
               <button
@@ -813,7 +913,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Nama {editingTarget.type === 'dept' ? 'Departemen' : editingTarget.type === 'fakultas' ? 'Fakultas' : 'Program Studi'}
+                  Nama {editingTarget.type === 'dept' ? 'Departemen' : editingTarget.type === 'fakultas' ? 'Fakultas' : 'Jurusan / Program Studi'}
                 </label>
                 <input
                   type="text"
@@ -846,7 +946,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         </div>
       )}
 
-      {/* ── Reusable Delete Confirmation Modal ── */}
+      {/* ────────────────── REUSABLE DELETE MODAL ────────────────── */}
       {deletingTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-150">
@@ -859,11 +959,11 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   Konfirmasi Hapus Data
                 </h3>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Apakah Anda yakin ingin menghapus {deletingTarget.type === 'dept' ? 'Departemen' : deletingTarget.type === 'fakultas' ? 'Fakultas' : 'Program Studi'}{' '}
+                  Apakah Anda yakin ingin menghapus {deletingTarget.type === 'dept' ? 'Departemen' : deletingTarget.type === 'fakultas' ? 'Fakultas' : 'Jurusan'}{' '}
                   <span className="font-semibold text-slate-900">"{deletingTarget.name}"</span>?
                 </p>
-                <p className="text-[11px] text-amber-600 bg-amber-50 rounded-lg p-2 mt-2 text-left">
-                  ⚠️ Perhatian: Data yang masih digunakan atau berelasi dengan anggota pengurus aktif tidak dapat dihapus secara sembarangan.
+                <p className="text-[11px] text-amber-700 bg-amber-50 rounded-lg p-2 mt-2 text-left">
+                  ⚠️ Perhatian: Data yang masih digunakan atau berelasi dengan anggota pengurus aktif tidak dapat dihapus.
                 </p>
               </div>
 

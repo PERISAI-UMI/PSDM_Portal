@@ -30,6 +30,8 @@ interface SidebarProps {
   onLogout: () => void;
   activeSection?: string;
   onSelectSection?: (sectionId: string) => void;
+  onOpenMasterDataTab?: (tab: 'dept' | 'fakultas' | 'prodi' | 'pj') => void;
+  activeMasterDataTab?: 'dept' | 'fakultas' | 'prodi' | 'pj';
   counts?: {
     activitiesCount: number;
     pendingPermissionsCount: number;
@@ -49,6 +51,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onLogout,
   activeSection = 'dashboard',
   onSelectSection,
+  onOpenMasterDataTab,
+  activeMasterDataTab = 'dept',
   counts = { activitiesCount: 0, pendingPermissionsCount: 0 },
 }) => {
   const getRoleBadge = () => {
@@ -231,20 +235,85 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             {/* Master Data: only for SuperAdmin */}
             {user.role === 'SUPER_ADMIN' && (
-              <button
-                type="button"
-                onClick={() => handleNavClick('master-data')}
-                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
-                  activeSection === 'master-data'
-                    ? 'bg-slate-100 text-slate-900 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <Database className="w-4 h-4 text-slate-500" />
-                  <span>Master Data</span>
-                </div>
-              </button>
+              <div className="space-y-0.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenMasterDataTab) {
+                      onOpenMasterDataTab(activeMasterDataTab || 'dept');
+                    } else {
+                      handleNavClick('master-data');
+                    }
+                  }}
+                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                    activeSection === 'master-data'
+                      ? 'bg-slate-100 text-slate-900 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Database className="w-4 h-4 text-slate-500" />
+                    <span>Master Data</span>
+                  </div>
+                </button>
+
+                {/* Sub-menu Master Data when active */}
+                {activeSection === 'master-data' && (
+                  <div className="pl-5 pr-1 py-1 space-y-1 border-l-2 border-slate-200 ml-4">
+                    <button
+                      type="button"
+                      onClick={() => onOpenMasterDataTab?.('dept')}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeMasterDataTab === 'dept'
+                          ? 'bg-slate-900 text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <Building2 className="w-3.5 h-3.5" />
+                      <span>Departemen</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onOpenMasterDataTab?.('fakultas')}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeMasterDataTab === 'fakultas'
+                          ? 'bg-slate-900 text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>Fakultas</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onOpenMasterDataTab?.('prodi')}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeMasterDataTab === 'prodi'
+                          ? 'bg-slate-900 text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <GraduationCap className="w-3.5 h-3.5" />
+                      <span>Jurusan / Prodi</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onOpenMasterDataTab?.('pj')}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeMasterDataTab === 'pj'
+                          ? 'bg-slate-900 text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <UserCheck className="w-3.5 h-3.5" />
+                      <span>Penugasan PJ</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </nav>
         </div>
