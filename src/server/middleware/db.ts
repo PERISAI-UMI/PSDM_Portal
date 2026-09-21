@@ -7,12 +7,12 @@ import { createDb } from '../../db/index.ts';
  * Menggunakan environment bindings Cloudflare Workers (c.env)
  */
 export const dbMiddleware = createMiddleware<AppEnv>(async (c, next) => {
-  let dbUrl = c.env?.TURSO_DATABASE_URL || process.env.TURSO_DATABASE_URL;
+  const dbUrl = c.env?.TURSO_DATABASE_URL || process.env.TURSO_DATABASE_URL;
   const authToken = c.env?.TURSO_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN;
 
-  // Web-client requires libsql:, https:, wss:, ws: or http: protocol
-  if (!dbUrl || dbUrl.startsWith('file:')) {
-    dbUrl = 'https://psdm-edge-db-demo.turso.io';
+  if (!dbUrl) {
+    console.error('TURSO_DATABASE_URL is not set');
+    return c.json({ success: false, message: 'Database not configured' }, 503);
   }
 
   const db = createDb({

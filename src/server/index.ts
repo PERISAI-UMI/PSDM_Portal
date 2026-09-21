@@ -17,7 +17,13 @@ app.use('*', logger());
 app.use(
   '*',
   cors({
-    origin: (origin) => origin || '*',
+    origin: (origin, c) => {
+      // credentials:true requires explicit origin, never wildcard
+      const allowed = c.env?.ALLOWED_ORIGIN;
+      if (allowed) return origin === allowed ? origin : null;
+      // No ALLOWED_ORIGIN set: reflect the request origin (workers.dev / dev)
+      return origin || null;
+    },
     credentials: true,
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowHeaders: ['Content-Type', 'Authorization'],
@@ -56,6 +62,11 @@ app.onError((err, c) => {
     },
     500
   );
+});
+
+// 404 fallback for unmatched API routes
+app.notFound((c) => {
+  return c.json({ success: false, message: 'Endpoint tidak ditemukan' }, 404);
 });
 
 export default app;

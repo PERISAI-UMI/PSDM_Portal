@@ -9,6 +9,7 @@ export type HonoBindings = {
   TURSO_DATABASE_URL: string;
   TURSO_AUTH_TOKEN?: string;
   SESSION_SECRET?: string;
+  ALLOWED_ORIGIN?: string;
   B2_APPLICATION_KEY_ID?: string;
   B2_APPLICATION_KEY?: string;
   B2_BUCKET_NAME?: string;
