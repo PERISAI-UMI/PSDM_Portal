@@ -56,18 +56,6 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Desktop View Left (>= 1024px) */}
         <div className="hidden lg:flex items-center gap-2 text-xs">
-          <span className="font-semibold text-slate-900">Portal PSDM</span>
-          <span className="text-slate-300">/</span>
-          <span className="text-slate-500 font-medium">
-            {user.role === 'SUPER_ADMIN'
-              ? 'Manajemen Proker'
-              : user.role === 'ADMIN'
-              ? 'Presensi & Validasi'
-              : 'Presensi Pribadi'}
-          </span>
-          <span className={`ml-2 text-[10px] px-2 py-0.5 rounded-full border font-semibold ${badge.color}`}>
-            {user.prn}
-          </span>
         </div>
 
         {/* Actions Right */}
