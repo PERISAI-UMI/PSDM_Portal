@@ -8,6 +8,11 @@ import {
   departments,
   programStudi,
   userRoleEnum,
+  sessions,
+  pjDepartments,
+  activities,
+  attendances,
+  permissions,
 } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
 import { hashPassword } from '../crypto.ts';
@@ -479,6 +484,35 @@ usersRouter.delete('/:id', requireRole(['SUPER_ADMIN']), async (c) => {
     return c.json({ success: false, message: 'Tidak dapat menghapus akun Anda sendiri' }, 400);
   }
 
-  await db.delete(users).where(eq(users.id, id));
-  return c.json({ success: true, message: 'User anggota berhasil dihapus' });
+  try {
+    // 1. Reassign activity creation to current Super Admin so activities aren't orphaned or blocked by FK restrict
+    await db.update(activities).set({ createdBy: currentUser.id }).where(eq(activities.createdBy, id));
+
+    // 2. Reassign attendance recorder to current Super Admin so attendance logs aren't blocked by FK restrict
+    await db.update(attendances).set({ recordedBy: currentUser.id }).where(eq(attendances.recordedBy, id));
+
+    // 3. Clear review reference in permissions
+    await db.update(permissions).set({ reviewedBy: null }).where(eq(permissions.reviewedBy, id));
+
+    // 4. Delete user's own attendances and permissions
+    await db.delete(attendances).where(eq(attendances.userId, id));
+    await db.delete(permissions).where(eq(permissions.userId, id));
+
+    // 5. Delete department assignments and active login sessions
+    await db.delete(pjDepartments).where(eq(pjDepartments.adminId, id));
+    await db.delete(sessions).where(eq(sessions.userId, id));
+
+    // 6. Finally delete the user record
+    await db.delete(users).where(eq(users.id, id));
+
+    return c.json({ success: true, message: 'User anggota berhasil dihapus' });
+  } catch (err: any) {
+    return c.json(
+      {
+        success: false,
+        message: `Gagal menghapus user anggota: ${err?.message || 'Galat relasi database'}`,
+      },
+      500
+    );
+  }
 });
