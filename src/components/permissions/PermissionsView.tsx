@@ -27,24 +27,19 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-2xs">
-              <FileText className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                {currentUser.role === 'PENGURUS'
-                  ? 'Pengajuan & Riwayat Perizinan'
-                  : 'Manajemen & Verifikasi Perizinan'}
-              </h1>
-              <p className="text-xs text-slate-500">
-                {currentUser.role === 'SUPER_ADMIN'
-                  ? 'Verifikasi dan kelola seluruh permohonan izin kehadiran kegiatan lintas departemen.'
-                  : currentUser.role === 'ADMIN'
-                  ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
-                  : 'Pantau status izin kehadiran kegiatan dan ajukan permohonan baru beserta berkas pendukung.'}
-              </p>
-            </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              {currentUser.role === 'PENGURUS'
+                ? 'Pengajuan & Riwayat Perizinan'
+                : 'Manajemen & Verifikasi Perizinan'}
+            </h1>
+            <p className="text-xs text-slate-500">
+              {currentUser.role === 'SUPER_ADMIN'
+                ? 'Verifikasi dan kelola seluruh permohonan izin kehadiran kegiatan lintas departemen.'
+                : currentUser.role === 'ADMIN'
+                ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
+                : 'Pantau status izin kehadiran kegiatan dan ajukan permohonan baru beserta berkas pendukung.'}
+            </p>
           </div>
         </div>
 

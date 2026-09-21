@@ -264,14 +264,9 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
       <div className="bg-white w-full max-w-xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200 max-h-[90vh] flex flex-col">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center">
-              <Activity className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-slate-900">Diagnostik Sistem</h2>
-              <p className="text-[11px] text-slate-500">Pemeriksaan koneksi layanan cloud.</p>
-            </div>
+          <div>
+            <h2 className="text-sm font-bold text-slate-900">Diagnostik Sistem</h2>
+            <p className="text-[11px] text-slate-500">Pemeriksaan koneksi layanan cloud.</p>
           </div>
           <button
             type="button"
