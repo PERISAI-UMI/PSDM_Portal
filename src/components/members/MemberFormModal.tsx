@@ -13,7 +13,7 @@ import {
   Save,
   AlertCircle,
 } from 'lucide-react';
-import type { AuthUser, DepartmentItem, ProgramStudiItem, UserRole, TingkatJabatan } from '../../types/index.ts';
+import type { AuthUser, DepartmentItem, ProgramStudiItem, UserRole } from '../../types/index.ts';
 
 interface MemberFormModalProps {
   isOpen: boolean;
@@ -42,7 +42,6 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
   const [generasi, setGenerasi] = useState<string>(member?.generasi ? String(member.generasi) : '');
   const [departmentId, setDepartmentId] = useState(member?.departmentId || '');
   const [jabatan, setJabatan] = useState(member?.jabatan || '');
-  const [tingkatJabatan, setTingkatJabatan] = useState<TingkatJabatan | ''>(member?.tingkatJabatan || '');
   const [namaLengkap, setNamaLengkap] = useState(member?.namaLengkap || '');
   const [tempatLahir, setTempatLahir] = useState(member?.tempatLahir || '');
   const [tanggalLahir, setTanggalLahir] = useState(member?.tanggalLahir || '');
@@ -99,10 +98,6 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
       setErrorMsg('Jabatan wajib diisi');
       return;
     }
-    if (!tingkatJabatan) {
-      setErrorMsg('Tingkat jabatan wajib dipilih');
-      return;
-    }
     if (!role) {
       setErrorMsg('Role sistem wajib dipilih');
       return;
@@ -114,7 +109,6 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
         generasi: generasi ? Number(generasi) : 12,
         departmentId,
         jabatan: jabatan.trim(),
-        tingkatJabatan: (tingkatJabatan as TingkatJabatan) || 'STAFF',
         namaLengkap: namaLengkap.trim(),
         tempatLahir: tempatLahir.trim() || 'Indonesia',
         tanggalLahir: tanggalLahir || '2002-01-01',
@@ -387,22 +381,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Tingkat Jabatan *
-                </label>
-                <select
-                  value={tingkatJabatan}
-                  onChange={(e) => setTingkatJabatan(e.target.value as TingkatJabatan)}
-                  required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
-                >
-                  <option value="" disabled>-- Pilih Tingkat Jabatan --</option>
-                  <option value="STAFF">STAFF (Anggota Biasa)</option>
-                  <option value="KADEP">KADEP (Kepala / Ketua Bidang)</option>
-                  <option value="BPH_INTI">BPH_INTI (Pimpinan Inti)</option>
-                </select>
-              </div>
+
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">

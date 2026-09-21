@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { userRoleEnum, tingkatJabatanEnum } from './schema/users.ts';
+import { userRoleEnum } from './schema/users.ts';
 import { attendanceStatusEnum } from './schema/attendances.ts';
 import { permissionStatusEnum } from './schema/permissions.ts';
 
@@ -30,7 +30,6 @@ export const userSchema = z.object({
   generasi: z.number().int().positive(),
   departmentId: z.string().min(1, 'Departemen wajib dipilih'),
   jabatan: z.string().min(2, 'Jabatan wajib diisi'),
-  tingkatJabatan: z.enum(tingkatJabatanEnum),
   namaLengkap: z.string().min(2, 'Nama lengkap wajib diisi'),
   tempatLahir: z.string().min(2, 'Tempat lahir wajib diisi'),
   tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format tanggal harus YYYY-MM-DD'),

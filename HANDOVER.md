@@ -56,7 +56,7 @@
 1. **`fakultas`**: `id (PK)`, `nama`, `created_at`
 2. **`program_studi`**: `id (PK)`, `fakultas_id (FK)`, `nama`, `created_at`
 3. **`departments`**: `id (PK)`, `nama`, `created_at`
-4. **`users`**: `id (PK)`, `prn (UK)`, `password_hash`, `role`, `generasi`, `department_id (FK)`, `jabatan`, `tingkat_jabatan`, `nama_lengkap`, `nim (UK)`, `program_studi_id (FK)`, `angkatan`, dll.
+4. **`users`**: `id (PK)`, `prn (UK)`, `password_hash`, `role`, `generasi`, `department_id (FK)`, `jabatan`, `nama_lengkap`, `nim (UK)`, `program_studi_id (FK)`, `angkatan`, dll.
 5. **`pj_departments`**: `admin_id (FK)`, `department_id (FK)`, `assigned_at` (Relasi M:N penugasan Staf PSDM ke departemen binaan)
 6. **`activities`**: `id (PK)`, `nama`, `deskripsi`, `jenis`, `start_date`, `end_date`, `is_published`, `created_by (FK)`
 7. **`attendances`**: `id (PK)`, `activity_id (FK)`, `user_id (FK)`, `status (HADIR/IZIN/SAKIT/ALPHA)`, `recorded_by (FK)`, `recorded_at`

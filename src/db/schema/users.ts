@@ -5,9 +5,6 @@ import { programStudi } from './academic.ts';
 export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS'] as const;
 export type UserRole = (typeof userRoleEnum)[number];
 
-export const tingkatJabatanEnum = ['BPH_INTI', 'KADEP', 'STAFF'] as const;
-export type TingkatJabatan = (typeof tingkatJabatanEnum)[number];
-
 export const users = sqliteTable('users', {
   id: text('id').primaryKey(),
   prn: text('prn').notNull().unique(), // username / Nomor Registrasi
@@ -18,7 +15,6 @@ export const users = sqliteTable('users', {
     .notNull()
     .references(() => departments.id, { onDelete: 'restrict' }),
   jabatan: text('jabatan').notNull(),
-  tingkatJabatan: text('tingkat_jabatan', { enum: tingkatJabatanEnum }).notNull(),
   namaLengkap: text('nama_lengkap').notNull(),
   tempatLahir: text('tempat_lahir').notNull(),
   tanggalLahir: text('tanggal_lahir').notNull(), // ISO DATE (YYYY-MM-DD)

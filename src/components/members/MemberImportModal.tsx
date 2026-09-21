@@ -9,7 +9,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import type { DepartmentItem, ProgramStudiItem, UserRole, TingkatJabatan } from '../../types/index.ts';
+import type { DepartmentItem, ProgramStudiItem, UserRole } from '../../types/index.ts';
 
 interface MemberImportModalProps {
   isOpen: boolean;
@@ -32,7 +32,6 @@ interface ParsedUserRow {
   prodi: string;
   jabatan: string;
   role: string;
-  tingkatJabatan: string;
   noTelp?: string;
   angkatan?: number;
   generasi?: number;
@@ -77,7 +76,6 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
         'Program Studi': programStudi[0]?.nama || 'Teknik Informatika',
         Jabatan: 'Staf Divisi Internal',
         Role: 'PENGURUS',
-        'Tingkat Jabatan': 'STAFF',
         'Nomor Telepon': '081234567891',
         Angkatan: 2022,
         Generasi: 12,
@@ -95,7 +93,6 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
         'Program Studi': programStudi[0]?.nama || 'Teknik Informatika',
         Jabatan: 'Kepala Divisi Publikasi',
         Role: 'PENGURUS',
-        'Tingkat Jabatan': 'KADEP',
         'Nomor Telepon': '081234567892',
         Angkatan: 2022,
         Generasi: 12,
@@ -148,7 +145,6 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
           const prodiInput = String(row['Program Studi'] || row['programStudi'] || row['Prodi'] || '').trim();
           const jabatan = String(row['Jabatan'] || row['jabatan'] || 'Anggota').trim();
           const roleInput = String(row['Role'] || row['role'] || 'PENGURUS').trim().toUpperCase();
-          const tingkatInput = String(row['Tingkat Jabatan'] || row['tingkatJabatan'] || 'STAFF').trim().toUpperCase();
           const noTelp = String(row['Nomor Telepon'] || row['noTelp'] || row['Telepon'] || '081234567890').trim();
           const angkatanVal = Number(row['Angkatan'] || row['angkatan'] || 2022);
           const generasiVal = Number(row['Generasi'] || row['generasi'] || 12);
@@ -177,7 +173,6 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
             prodi: prodiInput,
             jabatan,
             role: roleInput,
-            tingkatJabatan: tingkatInput,
             noTelp,
             angkatan: angkatanVal,
             generasi: generasiVal,
@@ -232,11 +227,6 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
         const validRole: UserRole =
           row.role === 'SUPER_ADMIN' || row.role === 'ADMIN' ? (row.role as UserRole) : 'PENGURUS';
 
-        const validTingkat: TingkatJabatan =
-          row.tingkatJabatan === 'BPH_INTI' || row.tingkatJabatan === 'KADEP'
-            ? (row.tingkatJabatan as TingkatJabatan)
-            : 'STAFF';
-
         return {
           prn: row.prn,
           password: row.password || 'PsdmMember2026!',
@@ -244,7 +234,6 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
           generasi: Number(row.generasi) || 12,
           departmentId: matchedDept.id,
           jabatan: row.jabatan || 'Anggota',
-          tingkatJabatan: validTingkat,
           namaLengkap: row.namaLengkap,
           tempatLahir: row.tempatLahir || 'Indonesia',
           tanggalLahir: /^\d{4}-\d{2}-\d{2}$/.test(row.tanggalLahir || '') ? row.tanggalLahir! : '2002-01-01',

@@ -8,7 +8,6 @@ import {
   departments,
   programStudi,
   userRoleEnum,
-  tingkatJabatanEnum,
 } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
 import { hashPassword } from '../crypto.ts';
@@ -24,7 +23,6 @@ const createUserSchema = z.object({
   generasi: z.number().int().positive(),
   departmentId: z.string().min(1, 'Departemen wajib dipilih'),
   jabatan: z.string().min(2, 'Jabatan wajib diisi'),
-  tingkatJabatan: z.enum(tingkatJabatanEnum),
   namaLengkap: z.string().min(2, 'Nama lengkap wajib diisi'),
   tempatLahir: z.string().min(2, 'Tempat lahir wajib diisi'),
   tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format tanggal lahir YYYY-MM-DD'),
@@ -44,9 +42,9 @@ const updateUserSelfSchema = z.object({
   noTelp: z.string().min(8, 'Nomor telepon tidak valid').optional(),
   nim: z.string().min(3, 'NIM minimal 3 karakter').optional(),
   angkatan: z.number().int().min(2000).max(2100).optional(),
-  alamat: z.string().optional().nullable(),
-  tempatLahir: z.string().optional().nullable(),
-  tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format tanggal lahir YYYY-MM-DD').optional().nullable(),
+  alamat: z.string().optional(),
+  tempatLahir: z.string().optional(),
+  tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format tanggal lahir YYYY-MM-DD').optional(),
   linkedinUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   instagramUsername: z.string().optional().nullable(),
 });
@@ -87,7 +85,6 @@ usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN']), async (c) => {
       departmentId: users.departmentId,
       departmentName: departments.nama,
       jabatan: users.jabatan,
-      tingkatJabatan: users.tingkatJabatan,
       namaLengkap: users.namaLengkap,
       tempatLahir: users.tempatLahir,
       tanggalLahir: users.tanggalLahir,
@@ -130,7 +127,6 @@ usersRouter.get('/:id', async (c) => {
       departmentId: users.departmentId,
       departmentName: departments.nama,
       jabatan: users.jabatan,
-      tingkatJabatan: users.tingkatJabatan,
       namaLengkap: users.namaLengkap,
       tempatLahir: users.tempatLahir,
       tanggalLahir: users.tanggalLahir,
@@ -254,7 +250,6 @@ async function getFullUserById(db: any, userId: string) {
       departmentId: users.departmentId,
       departmentName: departments.nama,
       jabatan: users.jabatan,
-      tingkatJabatan: users.tingkatJabatan,
       namaLengkap: users.namaLengkap,
       tempatLahir: users.tempatLahir,
       tanggalLahir: users.tanggalLahir,

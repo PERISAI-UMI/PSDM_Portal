@@ -35,7 +35,6 @@ authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
       departmentId: users.departmentId,
       departmentName: departments.nama,
       jabatan: users.jabatan,
-      tingkatJabatan: users.tingkatJabatan,
       namaLengkap: users.namaLengkap,
       tempatLahir: users.tempatLahir,
       tanggalLahir: users.tanggalLahir,

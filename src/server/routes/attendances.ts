@@ -108,7 +108,6 @@ attendancesRouter.get(
         departmentId: users.departmentId,
         departmentName: departments.nama,
         jabatan: users.jabatan,
-        tingkatJabatan: users.tingkatJabatan,
       })
       .from(users)
       .innerJoin(departments, eq(users.departmentId, departments.id));

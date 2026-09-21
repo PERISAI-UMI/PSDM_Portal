@@ -1,8 +1,8 @@
-import type { UserRole, TingkatJabatan } from '../db/schema/users.ts';
+import type { UserRole } from '../db/schema/users.ts';
 import type { AttendanceStatus } from '../db/schema/attendances.ts';
 import type { PermissionStatus } from '../db/schema/permissions.ts';
 
-export type { UserRole, TingkatJabatan, AttendanceStatus, PermissionStatus };
+export type { UserRole, AttendanceStatus, PermissionStatus };
 
 export interface AuthUser {
   id: string;
@@ -12,7 +12,6 @@ export interface AuthUser {
   departmentId: string;
   departmentName?: string;
   jabatan: string;
-  tingkatJabatan: TingkatJabatan;
   namaLengkap: string;
   email: string;
   nim: string;
