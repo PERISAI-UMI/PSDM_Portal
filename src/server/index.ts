@@ -58,11 +58,13 @@ app.route('/api/diagnostics', diagnosticsRouter);
 
 // Global Error Handler
 app.onError((err, c) => {
-  console.error('Unhandled Server Error:', err);
+  const causeMsg = (err as any)?.cause?.message;
+  console.error('Unhandled Server Error:', err, causeMsg ? `Cause: ${causeMsg}` : '');
+  const message = causeMsg ? `${err.message} (${causeMsg})` : (err.message || 'Internal Server Error');
   return c.json(
     {
       success: false,
-      message: err.message || 'Internal Server Error',
+      message,
     },
     500
   );

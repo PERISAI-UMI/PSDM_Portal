@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, sql } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   attendances,
@@ -149,51 +149,33 @@ const handleRecordSingleAttendance = async (c: any) => {
   const { activityId, userId, status } = c.req.valid('json');
   const currentAdmin = c.get('user');
   const db = c.get('db');
-
-  // Cek apakah sudah pernah tercatat
-  const existing = await db
-    .select({ id: attendances.id })
-    .from(attendances)
-    .where(and(eq(attendances.activityId, activityId), eq(attendances.userId, userId)))
-    .limit(1);
-
   const now = new Date();
-
-  if (existing && existing.length > 0) {
-    await db
-      .update(attendances)
-      .set({
-        status,
-        recordedBy: currentAdmin.id,
-        recordedAt: now,
-      })
-      .where(eq(attendances.id, existing[0].id));
-
-    return c.json({
-      success: true,
-      message: 'Status kehadiran berhasil diperbarui',
-      data: { id: existing[0].id, status },
-    });
-  }
-
   const newId = crypto.randomUUID();
-  await db.insert(attendances).values({
-    id: newId,
-    activityId,
-    userId,
-    status,
-    recordedBy: currentAdmin.id,
-    recordedAt: now,
-  });
 
-  return c.json(
-    {
-      success: true,
-      message: 'Status kehadiran berhasil dicatat',
-      data: { id: newId, status },
-    },
-    201
-  );
+  await db
+    .insert(attendances)
+    .values({
+      id: newId,
+      activityId,
+      userId,
+      status,
+      recordedBy: currentAdmin.id,
+      recordedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: [attendances.activityId, attendances.userId],
+      set: {
+        status: sql`excluded.status`,
+        recordedBy: sql`excluded.recorded_by`,
+        recordedAt: sql`excluded.recorded_at`,
+      },
+    });
+
+  return c.json({
+    success: true,
+    message: 'Status kehadiran berhasil disimpan',
+    data: { id: newId, status },
+  });
 };
 
 attendancesRouter.post(
@@ -221,37 +203,46 @@ attendancesRouter.post(
     const db = c.get('db');
     const now = new Date();
 
-    for (const item of items) {
-      const existing = await db
-        .select({ id: attendances.id })
-        .from(attendances)
-        .where(and(eq(attendances.activityId, activityId), eq(attendances.userId, item.userId)))
-        .limit(1);
+    if (!items || items.length === 0) {
+      return c.json({ success: true, message: 'Tidak ada data untuk disimpan' });
+    }
 
-      if (existing && existing.length > 0) {
-        await db
-          .update(attendances)
-          .set({
+    // Deduplikasi userId jika terdapat entri ganda di payload
+    const uniqueMap = new Map<string, (typeof items)[0]>();
+    for (const item of items) {
+      uniqueMap.set(item.userId, item);
+    }
+    const uniqueItems = Array.from(uniqueMap.values());
+
+    // Eksekusi batch upsert (1 network roundtrip untuk efisiensi edge)
+    const chunkSize = 50;
+    for (let i = 0; i < uniqueItems.length; i += chunkSize) {
+      const chunk = uniqueItems.slice(i, i + chunkSize);
+      await db
+        .insert(attendances)
+        .values(
+          chunk.map((item) => ({
+            id: crypto.randomUUID(),
+            activityId,
+            userId: item.userId,
             status: item.status,
             recordedBy: currentAdmin.id,
             recordedAt: now,
-          })
-          .where(eq(attendances.id, existing[0].id));
-      } else {
-        await db.insert(attendances).values({
-          id: crypto.randomUUID(),
-          activityId,
-          userId: item.userId,
-          status: item.status,
-          recordedBy: currentAdmin.id,
-          recordedAt: now,
+          }))
+        )
+        .onConflictDoUpdate({
+          target: [attendances.activityId, attendances.userId],
+          set: {
+            status: sql`excluded.status`,
+            recordedBy: sql`excluded.recorded_by`,
+            recordedAt: sql`excluded.recorded_at`,
+          },
         });
-      }
     }
 
     return c.json({
       success: true,
-      message: `${items.length} data absensi berhasil disimpan`,
+      message: `${uniqueItems.length} data absensi berhasil disimpan`,
     });
   }
 );

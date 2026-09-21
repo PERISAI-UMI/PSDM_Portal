@@ -1,12 +1,12 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { setCookie, deleteCookie } from 'hono/cookie';
+import { setCookie, getCookie, deleteCookie } from 'hono/cookie';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import { users, sessions, departments, programStudi } from '../../db/schema/index.ts';
 import { hashPassword, verifyPassword, generateSessionToken } from '../crypto.ts';
-import { authMiddleware, SESSION_COOKIE_NAME } from '../middleware/auth.ts';
+import { authMiddleware, SESSION_COOKIE_NAME, invalidateSessionCache } from '../middleware/auth.ts';
 
 export const authRouter = new Hono<AppEnv>();
 
@@ -102,13 +102,20 @@ authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
   });
 });
 
-// POST /api/auth/logout
-authRouter.post('/logout', authMiddleware, async (c) => {
-  const session = c.get('session');
+// POST /api/auth/logout (Selalu berhasil membersihkan sesi dan cookie tanpa melempar 401)
+authRouter.post('/logout', async (c) => {
+  const token = getCookie(c, SESSION_COOKIE_NAME) || c.req.header('Authorization')?.replace('Bearer ', '').trim();
   const db = c.get('db');
 
-  if (session) {
-    await db.delete(sessions).where(eq(sessions.id, session.id));
+  if (token) {
+    invalidateSessionCache(token);
+    if (db) {
+      try {
+        await db.delete(sessions).where(eq(sessions.token, token));
+      } catch {
+        // Abaikan jika record sesi sudah terhapus
+      }
+    }
   }
 
   deleteCookie(c, SESSION_COOKIE_NAME, { path: '/' });

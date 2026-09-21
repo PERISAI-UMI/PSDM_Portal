@@ -13,9 +13,27 @@ import {
 
 export const SESSION_COOKIE_NAME = 'psdm_session';
 
+// Short-lived in-memory session cache (15 detik) untuk meredam lonjakan query paralel saat page load
+interface CachedSessionUser {
+  user: any;
+  session: typeof sessions.$inferSelect;
+  cachedAt: number;
+}
+
+const sessionMicroCache = new Map<string, CachedSessionUser>();
+const SESSION_CACHE_TTL_MS = 15_000;
+
+export function invalidateSessionCache(token?: string) {
+  if (token) {
+    sessionMicroCache.delete(token);
+  } else {
+    sessionMicroCache.clear();
+  }
+}
+
 /**
  * Middleware Autentikasi Session Cookie
- * Memvalidasi token sesi dari cookie HTTP-only ke tabel `sessions` Turso libSQL
+ * Menggunakan single joined query dan in-memory micro-cache untuk meredam query storm.
  */
 export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
   const authHeader = c.req.header('Authorization');
@@ -28,57 +46,62 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
     return c.json({ success: false, message: 'Unauthorized: Sesi tidak ditemukan' }, 401);
   }
 
+  // Cek in-memory micro-cache
+  const cached = sessionMicroCache.get(token);
+  const nowMs = Date.now();
+  if (cached && (nowMs - cached.cachedAt) < SESSION_CACHE_TTL_MS) {
+    if (new Date(cached.session.expiresAt).getTime() > nowMs) {
+      c.set('user', cached.user);
+      c.set('session', cached.session);
+      return next();
+    } else {
+      sessionMicroCache.delete(token);
+    }
+  }
+
   const db = c.get('db');
 
-  // Query sesi yang masih aktif
-  const activeSessions = await db
-    .select()
+  // Single Joined Query: sessions + users + departments + programStudi
+  const rows = await db
+    .select({
+      session: sessions,
+      user: {
+        id: users.id,
+        prn: users.prn,
+        role: users.role,
+        generasi: users.generasi,
+        departmentId: users.departmentId,
+        departmentName: departments.nama,
+        jabatan: users.jabatan,
+        namaLengkap: users.namaLengkap,
+        tempatLahir: users.tempatLahir,
+        tanggalLahir: users.tanggalLahir,
+        alamat: users.alamat,
+        noTelp: users.noTelp,
+        email: users.email,
+        nim: users.nim,
+        programStudiId: users.programStudiId,
+        programStudiName: programStudi.nama,
+        angkatan: users.angkatan,
+        linkedinUrl: users.linkedinUrl,
+        instagramUsername: users.instagramUsername,
+      },
+    })
     .from(sessions)
+    .innerJoin(users, eq(sessions.userId, users.id))
+    .leftJoin(departments, eq(users.departmentId, departments.id))
+    .leftJoin(programStudi, eq(users.programStudiId, programStudi.id))
     .where(and(eq(sessions.token, token), gt(sessions.expiresAt, new Date())))
     .limit(1);
 
-  if (!activeSessions || activeSessions.length === 0) {
+  if (!rows || rows.length === 0) {
+    sessionMicroCache.delete(token);
     deleteCookie(c, SESSION_COOKIE_NAME, { path: '/' });
     return c.json({ success: false, message: 'Unauthorized: Sesi telah kedaluwarsa atau tidak valid' }, 401);
   }
 
-  const currentSession = activeSessions[0];
-
-  // Query user terkait lengkap dengan nama departemen dan program studi
-  const foundUsers = await db
-    .select({
-      id: users.id,
-      prn: users.prn,
-      role: users.role,
-      generasi: users.generasi,
-      departmentId: users.departmentId,
-      departmentName: departments.nama,
-      jabatan: users.jabatan,
-      namaLengkap: users.namaLengkap,
-      tempatLahir: users.tempatLahir,
-      tanggalLahir: users.tanggalLahir,
-      alamat: users.alamat,
-      noTelp: users.noTelp,
-      email: users.email,
-      nim: users.nim,
-      programStudiId: users.programStudiId,
-      programStudiName: programStudi.nama,
-      angkatan: users.angkatan,
-      linkedinUrl: users.linkedinUrl,
-      instagramUsername: users.instagramUsername,
-    })
-    .from(users)
-    .leftJoin(departments, eq(users.departmentId, departments.id))
-    .leftJoin(programStudi, eq(users.programStudiId, programStudi.id))
-    .where(eq(users.id, currentSession.userId))
-    .limit(1);
-
-  if (!foundUsers || foundUsers.length === 0) {
-    deleteCookie(c, SESSION_COOKIE_NAME, { path: '/' });
-    return c.json({ success: false, message: 'Unauthorized: Akun pengguna tidak ditemukan' }, 401);
-  }
-
-  const safeUser = foundUsers[0];
+  const currentSession = rows[0].session;
+  const safeUser = rows[0].user;
 
   // Jika ADMIN, sertakan data pjDepartments untuk verifikasi RBAC departemen binaan
   let userPjs: typeof pjDepartments.$inferSelect[] = [];
@@ -89,7 +112,16 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
       .where(eq(pjDepartments.adminId, safeUser.id));
   }
 
-  c.set('user', { ...safeUser, pjDepartments: userPjs });
+  const fullUser = { ...safeUser, pjDepartments: userPjs };
+
+  // Simpan ke micro-cache
+  sessionMicroCache.set(token, {
+    user: fullUser,
+    session: currentSession,
+    cachedAt: nowMs,
+  });
+
+  c.set('user', fullUser);
   c.set('session', currentSession);
 
   await next();

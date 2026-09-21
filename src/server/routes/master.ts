@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, inArray } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   fakultas,
@@ -62,13 +62,17 @@ masterRouter.delete('/fakultas/:id', requireRole(['SUPER_ADMIN']), async (c) => 
   const db = c.get('db');
 
   // Cek apakah ada prodi di bawah fakultas ini yang digunakan oleh anggota
-  const prodis = await db.select().from(programStudi).where(eq(programStudi.fakultasId, id)).all();
-  const prodiIds = new Set(prodis.map((p) => p.id));
+  const prodis = await db.select({ id: programStudi.id }).from(programStudi).where(eq(programStudi.fakultasId, id)).all();
+  const prodiIds = prodis.map((p) => p.id);
   
-  if (prodiIds.size > 0) {
-    const allUsers = await db.select({ programStudiId: users.programStudiId }).from(users).all();
-    const isUsed = allUsers.some((u) => prodiIds.has(u.programStudiId));
-    if (isUsed) {
+  if (prodiIds.length > 0) {
+    const assignedUser = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(inArray(users.programStudiId, prodiIds))
+      .limit(1);
+
+    if (assignedUser.length > 0) {
       return c.json(
         {
           success: false,
@@ -77,10 +81,8 @@ masterRouter.delete('/fakultas/:id', requireRole(['SUPER_ADMIN']), async (c) => 
         400
       );
     }
-    // Hapus program studi terkait
-    for (const p of prodis) {
-      await db.delete(programStudi).where(eq(programStudi.id, p.id));
-    }
+    // Hapus seluruh program studi terkait dalam 1 query atomik tanpa loop
+    await db.delete(programStudi).where(eq(programStudi.fakultasId, id));
   }
 
   await db.delete(fakultas).where(eq(fakultas.id, id));

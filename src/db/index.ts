@@ -7,17 +7,26 @@ export interface DatabaseEnv {
   TURSO_AUTH_TOKEN?: string;
 }
 
+let cachedDb: { key: string; instance: LibSQLDatabase<typeof schema> } | null = null;
+
 /**
  * Factory to create edge-safe Turso client and Drizzle instance
- * Optimized for Cloudflare Workers / Edge runtimes with per-request or global reuse.
+ * Optimized for Cloudflare Workers / Edge runtimes with isolate-level instance reuse.
  */
 export function createDb(env: DatabaseEnv): LibSQLDatabase<typeof schema> {
+  const cacheKey = `${env.TURSO_DATABASE_URL}:${env.TURSO_AUTH_TOKEN || ''}`;
+  if (cachedDb && cachedDb.key === cacheKey) {
+    return cachedDb.instance;
+  }
+
   const client: Client = createClient({
     url: env.TURSO_DATABASE_URL,
     authToken: env.TURSO_AUTH_TOKEN,
   });
 
-  return drizzle(client, { schema });
+  const instance = drizzle(client, { schema });
+  cachedDb = { key: cacheKey, instance };
+  return instance;
 }
 
 export type AppDatabase = LibSQLDatabase<typeof schema>;

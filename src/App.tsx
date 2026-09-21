@@ -581,6 +581,7 @@ function MainAppContent() {
           onClose={() => setActiveScannerActivity(null)}
           activity={activeScannerActivity}
           currentAdmin={currentUser}
+          users={allUsers}
           onSuccess={() => {
             reloadData(currentUser);
             showToast('Presensi peserta berhasil diperbarui!', 'success');

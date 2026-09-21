@@ -9,6 +9,7 @@ interface AttendanceScannerModalProps {
   activity: ActivityItem | null;
   currentAdmin: AuthUser;
   onSuccess: () => void;
+  users?: AuthUser[];
 }
 
 export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
@@ -17,8 +18,9 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   activity,
   currentAdmin,
   onSuccess,
+  users: initialUsers,
 }) => {
-  const [usersList, setUsersList] = useState<AuthUser[]>([]);
+  const [usersList, setUsersList] = useState<AuthUser[]>(initialUsers || []);
   const [search, setSearch] = useState('');
   const [attendancesMap, setAttendancesMap] = useState<Record<string, AttendanceStatus>>({});
   const [saving, setSaving] = useState(false);
@@ -30,9 +32,12 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   }, [isOpen, activity]);
 
   const loadData = async () => {
-    const allUsers = await api.getUsers();
-    // Filter pengurus yang relevan
-    setUsersList(allUsers);
+    if (initialUsers && initialUsers.length > 0) {
+      setUsersList(initialUsers);
+    } else {
+      const allUsers = await api.getUsers();
+      setUsersList(allUsers);
+    }
 
     if (activity) {
       const atts = await api.getAttendances(currentAdmin, activity.id);
@@ -47,25 +52,39 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   if (!isOpen || !activity) return null;
 
   const handleSetStatus = async (userId: string, status: AttendanceStatus) => {
+    const prevStatus = attendancesMap[userId];
     setAttendancesMap((prev) => ({ ...prev, [userId]: status }));
-    await api.recordAttendance(activity.id, userId, status, currentAdmin.id);
-    onSuccess();
+    try {
+      await api.recordAttendance(activity.id, userId, status, currentAdmin.id);
+      onSuccess();
+    } catch (err: any) {
+      console.error('Failed to record attendance:', err);
+      setAttendancesMap((prev) => ({ ...prev, [userId]: prevStatus }));
+      alert(err.message || 'Gagal mengubah status presensi.');
+    }
   };
 
   const handleMarkAllHadir = async () => {
+    if (filteredUsers.length === 0) return;
     setSaving(true);
-    const items = filteredUsers.map((u) => ({
-      userId: u.id,
-      status: 'HADIR' as AttendanceStatus,
-    }));
-    await api.recordBatchAttendance(activity.id, items, currentAdmin.id);
-    const newMap = { ...attendancesMap };
-    items.forEach((it) => {
-      newMap[it.userId] = 'HADIR';
-    });
-    setAttendancesMap(newMap);
-    setSaving(false);
-    onSuccess();
+    try {
+      const items = filteredUsers.map((u) => ({
+        userId: u.id,
+        status: 'HADIR' as AttendanceStatus,
+      }));
+      await api.recordBatchAttendance(activity.id, items, currentAdmin.id);
+      const newMap = { ...attendancesMap };
+      items.forEach((it) => {
+        newMap[it.userId] = 'HADIR';
+      });
+      setAttendancesMap(newMap);
+      onSuccess();
+    } catch (err: any) {
+      console.error('Failed to batch record attendances:', err);
+      alert(err.message || 'Gagal memperbarui presensi massal.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const filteredUsers = usersList.filter(

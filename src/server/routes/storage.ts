@@ -25,10 +25,87 @@ interface B2GetUploadUrlResponse {
   authorizationToken: string;
 }
 
+interface B2AuthCache {
+  apiUrl: string;
+  downloadUrl: string;
+  authToken: string;
+  bucketId: string;
+  expiresAt: number;
+}
+
+// In-memory cache authorization B2 untuk mencegah rate limiting (429) saat banyak upload bersamaan
+let cachedB2Auth: B2AuthCache | null = null;
+
+async function getB2Credentials(
+  keyId: string,
+  appKey: string,
+  targetBucketName: string,
+  forceRefresh = false
+): Promise<B2AuthCache> {
+  const now = Date.now();
+  if (!forceRefresh && cachedB2Auth && cachedB2Auth.expiresAt > now) {
+    return cachedB2Auth;
+  }
+
+  // 1. Authorize Account ke Backblaze B2
+  const basicAuth = btoa(`${keyId}:${appKey}`);
+  const authRes = await fetch('https://api.backblazeb2.com/b2api/v2/b2_authorize_account', {
+    method: 'GET',
+    headers: {
+      Authorization: `Basic ${basicAuth}`,
+    },
+  });
+
+  if (!authRes.ok) {
+    const errText = await authRes.text();
+    throw new Error(`Otorisasi Backblaze B2 gagal: ${errText}`);
+  }
+
+  const authData = (await authRes.json()) as B2AuthorizeResponse;
+  const { apiUrl, downloadUrl, authorizationToken: authToken } = authData;
+
+  // 2. Dapatkan Bucket ID
+  let bucketId = authData.allowed.bucketId;
+  if (!bucketId) {
+    const listBucketsRes = await fetch(`${apiUrl}/b2api/v2/b2_list_buckets`, {
+      method: 'POST',
+      headers: {
+        Authorization: authToken,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        accountId: authData.accountId,
+        bucketName: targetBucketName,
+      }),
+    });
+
+    if (listBucketsRes.ok) {
+      const listData = (await listBucketsRes.json()) as { buckets: Array<{ bucketId: string; bucketName: string }> };
+      const found = listData.buckets.find((b) => b.bucketName === targetBucketName);
+      if (found) bucketId = found.bucketId;
+    }
+  }
+
+  if (!bucketId) {
+    throw new Error(`Bucket ${targetBucketName} tidak ditemukan di akun Backblaze B2`);
+  }
+
+  // Cache credentials selama 12 jam (token B2 valid 24 jam)
+  cachedB2Auth = {
+    apiUrl,
+    downloadUrl,
+    authToken,
+    bucketId,
+    expiresAt: now + 12 * 60 * 60 * 1000,
+  };
+
+  return cachedB2Auth;
+}
+
 /**
  * POST /api/storage/upload
  * Menerima berkas lampiran (multipart/form-data) dan mengunggah langsung ke Backblaze B2
- * Menggunakan Backblaze B2 Native JSON API yang 100% kompatibel dengan Cloudflare Workers V8
+ * Dilengkapi caching otorisasi untuk performa tinggi saat banyak pengurus upload bersamaan
  */
 storageRouter.post('/upload', async (c) => {
   const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID;
@@ -47,59 +124,31 @@ storageRouter.post('/upload', async (c) => {
       return c.json({ success: false, message: 'File bukti izin tidak ditemukan dalam form data' }, 400);
     }
 
-    // 1. Authorize Account ke Backblaze B2
-    const basicAuth = btoa(`${keyId}:${appKey}`);
-    const authRes = await fetch('https://api.backblazeb2.com/b2api/v2/b2_authorize_account', {
-      method: 'GET',
-      headers: {
-        Authorization: `Basic ${basicAuth}`,
-      },
-    });
+    // Ambil kredensial B2 dari cache
+    let creds = await getB2Credentials(keyId, appKey, targetBucketName);
 
-    if (!authRes.ok) {
-      const errText = await authRes.text();
-      return c.json({ success: false, message: `Otorisasi Backblaze B2 gagal: ${errText}` }, 502);
-    }
-
-    const authData = (await authRes.json()) as B2AuthorizeResponse;
-    const { apiUrl, downloadUrl, authorizationToken: authToken } = authData;
-
-    // 2. Dapatkan Bucket ID
-    let bucketId = authData.allowed.bucketId;
-    if (!bucketId) {
-      // Cari bucket ID dari list buckets
-      const listBucketsRes = await fetch(`${apiUrl}/b2api/v2/b2_list_buckets`, {
-        method: 'POST',
-        headers: {
-          Authorization: authToken,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          accountId: authData.accountId,
-          bucketName: targetBucketName,
-        }),
-      });
-
-      if (listBucketsRes.ok) {
-        const listData = (await listBucketsRes.json()) as { buckets: Array<{ bucketId: string; bucketName: string }> };
-        const found = listData.buckets.find((b) => b.bucketName === targetBucketName);
-        if (found) bucketId = found.bucketId;
-      }
-    }
-
-    if (!bucketId) {
-      return c.json({ success: false, message: `Bucket ${targetBucketName} tidak ditemukan di akun Backblaze B2` }, 404);
-    }
-
-    // 3. Dapatkan Upload URL untuk Bucket
-    const getUploadUrlRes = await fetch(`${apiUrl}/b2api/v2/b2_get_upload_url`, {
+    // Dapatkan Upload URL untuk Bucket
+    let getUploadUrlRes = await fetch(`${creds.apiUrl}/b2api/v2/b2_get_upload_url`, {
       method: 'POST',
       headers: {
-        Authorization: authToken,
+        Authorization: creds.authToken,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ bucketId }),
+      body: JSON.stringify({ bucketId: creds.bucketId }),
     });
+
+    // Jika token kedaluwarsa (401), refresh kredensial sekali dan coba lagi
+    if (getUploadUrlRes.status === 401) {
+      creds = await getB2Credentials(keyId, appKey, targetBucketName, true);
+      getUploadUrlRes = await fetch(`${creds.apiUrl}/b2api/v2/b2_get_upload_url`, {
+        method: 'POST',
+        headers: {
+          Authorization: creds.authToken,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ bucketId: creds.bucketId }),
+      });
+    }
 
     if (!getUploadUrlRes.ok) {
       const errText = await getUploadUrlRes.text();
@@ -108,7 +157,7 @@ storageRouter.post('/upload', async (c) => {
 
     const uploadUrlData = (await getUploadUrlRes.json()) as B2GetUploadUrlResponse;
 
-    // 4. Upload File ke Backblaze B2
+    // Upload File ke Backblaze B2
     const fileBytes = await file.arrayBuffer();
     const ext = file.name.split('.').pop() || 'dat';
     const cleanFileName = `evidence/${Date.now()}-${crypto.randomUUID()}.${ext}`;
@@ -130,7 +179,7 @@ storageRouter.post('/upload', async (c) => {
       return c.json({ success: false, message: `Gagal mengunggah berkas ke Backblaze B2: ${errText}` }, 502);
     }
 
-    const publicUrl = `${downloadUrl}/file/${targetBucketName}/${cleanFileName}`;
+    const publicUrl = `${creds.downloadUrl}/file/${targetBucketName}/${cleanFileName}`;
 
     return c.json({
       success: true,

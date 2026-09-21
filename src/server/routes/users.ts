@@ -359,16 +359,26 @@ usersRouter.post('/batch-import', requireRole(['SUPER_ADMIN']), zValidator('json
       }
     }
 
-    // 4. Eksekusi Update untuk anggota yang sudah ada
+    // 4. Eksekusi Update untuk anggota yang sudah ada (diproses secara chunked untuk efisiensi edge)
     if (itemsToUpdate.length > 0) {
-      for (const item of itemsToUpdate) {
-        try {
-          await db.update(users).set(item.data).where(eq(users.id, item.id));
-          updatedCount++;
-        } catch (updateErr: any) {
-          skippedCount++;
-          errors.push({ prn: item.prn, reason: updateErr?.message || 'Gagal memperbarui data anggota' });
-        }
+      const UPDATE_CHUNK_SIZE = 10;
+      for (let i = 0; i < itemsToUpdate.length; i += UPDATE_CHUNK_SIZE) {
+        const chunk = itemsToUpdate.slice(i, i + UPDATE_CHUNK_SIZE);
+        const results = await Promise.allSettled(
+          chunk.map((item) => db.update(users).set(item.data).where(eq(users.id, item.id)))
+        );
+        results.forEach((res, idx) => {
+          const item = chunk[idx];
+          if (res.status === 'fulfilled') {
+            updatedCount++;
+          } else {
+            skippedCount++;
+            errors.push({
+              prn: item.prn,
+              reason: (res as PromiseRejectedResult).reason?.message || 'Gagal memperbarui data anggota',
+            });
+          }
+        });
       }
     }
 

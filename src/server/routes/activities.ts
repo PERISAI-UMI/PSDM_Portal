@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, and, gte, lte, desc, sql } from 'drizzle-orm';
+import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import { activities, attendances, users } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
@@ -65,22 +65,31 @@ activitiesRouter.get('/', async (c) => {
 
   const list = conditions.length > 0 ? await query.where(and(...conditions)).all() : await query.all();
 
-  const allAtts = await db
+  if (list.length === 0) {
+    return c.json({ success: true, data: [] });
+  }
+
+  const activityIds = list.map((act) => act.id);
+  const stats = await db
     .select({
       activityId: attendances.activityId,
       status: attendances.status,
+      count: sql<number>`count(*)`.as('count'),
     })
     .from(attendances)
+    .where(inArray(attendances.activityId, activityIds))
+    .groupBy(attendances.activityId, attendances.status)
     .all();
 
   const summaryMap: Record<string, { HADIR: number; IZIN: number; SAKIT: number; ALPHA: number; TOTAL: number }> = {};
-  for (const att of allAtts) {
-    if (!summaryMap[att.activityId]) {
-      summaryMap[att.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
+  for (const item of stats) {
+    if (!summaryMap[item.activityId]) {
+      summaryMap[item.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
     }
-    if (att.status in summaryMap[att.activityId]) {
-      summaryMap[att.activityId][att.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA']++;
-      summaryMap[att.activityId].TOTAL++;
+    if (item.status in summaryMap[item.activityId]) {
+      const cnt = Number(item.count) || 0;
+      summaryMap[item.activityId][item.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA'] = cnt;
+      summaryMap[item.activityId].TOTAL += cnt;
     }
   }
 

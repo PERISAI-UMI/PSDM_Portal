@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, and, desc, inArray } from 'drizzle-orm';
+import { eq, and, desc, inArray, sql } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   permissions,
@@ -231,35 +231,28 @@ permissionsRouter.patch(
       })
       .where(eq(permissions.id, id));
 
-    // Sinkronisasi status absensi jika izin disetujui (APPROVED)
+    // Sinkronisasi status absensi jika izin disetujui (APPROVED) secara atomik
     if (status === 'APPROVED') {
       const attendanceStatus = perm.jenisIzin.toUpperCase().includes('SAKIT') ? 'SAKIT' : 'IZIN';
 
-      const existingAtt = await db
-        .select({ id: attendances.id })
-        .from(attendances)
-        .where(and(eq(attendances.activityId, perm.activityId), eq(attendances.userId, perm.userId)))
-        .limit(1);
-
-      if (existingAtt && existingAtt.length > 0) {
-        await db
-          .update(attendances)
-          .set({
-            status: attendanceStatus,
-            recordedBy: reviewer.id,
-            recordedAt: now,
-          })
-          .where(eq(attendances.id, existingAtt[0].id));
-      } else {
-        await db.insert(attendances).values({
+      await db
+        .insert(attendances)
+        .values({
           id: crypto.randomUUID(),
           activityId: perm.activityId,
           userId: perm.userId,
           status: attendanceStatus,
           recordedBy: reviewer.id,
           recordedAt: now,
+        })
+        .onConflictDoUpdate({
+          target: [attendances.activityId, attendances.userId],
+          set: {
+            status: sql`excluded.status`,
+            recordedBy: sql`excluded.recorded_by`,
+            recordedAt: sql`excluded.recorded_at`,
+          },
         });
-      }
     }
 
     return c.json({
