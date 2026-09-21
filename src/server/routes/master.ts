@@ -248,11 +248,14 @@ masterRouter.get('/pj-departments', requireRole(['SUPER_ADMIN', 'ADMIN']), async
   const mappings = await db
     .select({
       adminId: pjDepartments.adminId,
+      adminName: users.namaLengkap,
+      adminPrn: users.prn,
       departmentId: pjDepartments.departmentId,
       departmentName: departments.nama,
       assignedAt: pjDepartments.assignedAt,
     })
     .from(pjDepartments)
+    .innerJoin(users, eq(pjDepartments.adminId, users.id))
     .innerJoin(departments, eq(pjDepartments.departmentId, departments.id))
     .where(eq(pjDepartments.adminId, user.id))
     .all();

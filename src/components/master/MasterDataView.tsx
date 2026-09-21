@@ -409,9 +409,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         <span className="text-xs font-bold text-slate-900 block truncate">
                           {d.nama}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-400 block truncate">
-                          ID: {d.id.slice(0, 12)}
-                        </span>
                       </div>
                     </div>
 
@@ -523,8 +520,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                           </span>
                           <span className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
                             <span className="font-semibold text-slate-700">{prodisCount} Program Studi</span>
-                            <span className="text-slate-300">•</span>
-                            <span className="font-mono text-[10px] text-slate-400">ID: {f.id.slice(0, 10)}</span>
                           </span>
                         </div>
                       </div>
@@ -840,8 +835,15 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         {(m.adminName || 'PJ').slice(0, 2).toUpperCase()}
                       </div>
                       <div>
-                        <div className="font-bold text-xs sm:text-sm text-slate-900">
-                          {m.adminName || 'Admin PSDM'}
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-xs sm:text-sm text-slate-900">
+                            {m.adminName || 'Admin PSDM'}
+                          </span>
+                          {m.adminPrn && (
+                            <span className="font-mono text-[10px] font-semibold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                              {m.adminPrn}
+                            </span>
+                          )}
                         </div>
                         <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
                           <span>Membina:</span>
