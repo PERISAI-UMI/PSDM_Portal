@@ -80,13 +80,15 @@ authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
     userAgent: c.req.header('user-agent') || null,
   });
 
-  // Set HTTP-Only Cookie
+  // Set HTTP-Only Cookie (Industry Standard: 7 Days Sliding Window)
+  const isProd = process.env.NODE_ENV === 'production';
   setCookie(c, SESSION_COOKIE_NAME, sessionToken, {
     path: '/',
     httpOnly: true,
-    secure: true,
+    secure: isProd,
     sameSite: 'Lax',
     expires: expiresAt,
+    maxAge: 7 * 24 * 60 * 60,
   });
 
   const { passwordHash: _, ...safeUser } = user;
@@ -122,6 +124,28 @@ authRouter.post('/logout', authMiddleware, async (c) => {
 authRouter.get('/me', authMiddleware, async (c) => {
   const user = c.get('user');
   const session = c.get('session');
+  const db = c.get('db');
+
+  // Sliding Session: Perpanjang 7 hari jika sisa masa aktif < 5 hari
+  const now = Date.now();
+  const timeLeft = session.expiresAt.getTime() - now;
+  const FIVE_DAYS_MS = 5 * 24 * 60 * 60 * 1000;
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
+  if (timeLeft < FIVE_DAYS_MS) {
+    const newExpiresAt = new Date(now + SEVEN_DAYS_MS);
+    await db.update(sessions).set({ expiresAt: newExpiresAt }).where(eq(sessions.id, session.id));
+
+    const isProd = process.env.NODE_ENV === 'production';
+    setCookie(c, SESSION_COOKIE_NAME, session.token, {
+      path: '/',
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'Lax',
+      expires: newExpiresAt,
+      maxAge: 7 * 24 * 60 * 60,
+    });
+  }
 
   return c.json({
     success: true,

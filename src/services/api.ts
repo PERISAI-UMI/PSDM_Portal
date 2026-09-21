@@ -71,7 +71,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const response = await fetch(endpoint, {
     ...options,
     headers,
-    credentials: 'same-origin',
+    credentials: 'include',
   });
 
   if (!response.ok) {
@@ -121,6 +121,25 @@ export const api = {
       return { success: false, message: res.message || 'PRN atau kata sandi tidak sesuai' };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Gagal menghubungi server';
+      return { success: false, message: msg };
+    }
+  },
+
+  async getMe(): Promise<{ success: boolean; user?: AuthUser; message?: string }> {
+    try {
+      const res = await request<{
+        success: boolean;
+        message?: string;
+        data?: { user: AuthUser; expiresAt: string };
+      }>('/api/auth/me');
+
+      if (res.success && res.data?.user) {
+        setStoredUser(res.data.user);
+        return { success: true, user: res.data.user };
+      }
+      return { success: false, message: res.message || 'Sesi tidak valid' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gagal memvalidasi sesi';
       return { success: false, message: msg };
     }
   },

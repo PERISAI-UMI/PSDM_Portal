@@ -10,7 +10,7 @@ import type {
   DepartmentItem,
   PjMappingItem,
 } from './types/index.ts';
-import { api } from './services/api.ts';
+import { api, getStoredUser } from './services/api.ts';
 import { Header } from './components/layout/Header.tsx';
 import { Sidebar } from './components/layout/Sidebar.tsx';
 import { LoginForm } from './components/auth/LoginForm.tsx';
@@ -34,7 +34,8 @@ type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'm
 
 function MainAppContent() {
   const { showToast } = useToast();
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => getStoredUser());
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // App Data
@@ -95,6 +96,47 @@ function MainAppContent() {
       );
     }
   };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function checkAuthSession() {
+      try {
+        const res = await api.getMe();
+        if (!isMounted) return;
+
+        if (res.success && res.user) {
+          setCurrentUser(res.user);
+          await reloadData(res.user);
+        } else {
+          setCurrentUser(null);
+          await api.logout();
+        }
+      } catch {
+        if (!isMounted) return;
+        const cached = getStoredUser();
+        if (cached) {
+          try {
+            await reloadData(cached);
+          } catch {
+            // Keep cached user offline
+          }
+        } else {
+          setCurrentUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsCheckingAuth(false);
+        }
+      }
+    }
+
+    checkAuthSession();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleLogin = async (prn: string, password?: string) => {
     setLoginError(null);
@@ -202,6 +244,22 @@ function MainAppContent() {
     }
     return res;
   };
+
+  if (isCheckingAuth && !currentUser) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-white text-slate-900 flex items-center justify-center font-extrabold text-base shadow-lg animate-pulse">
+            PS
+          </div>
+          <div className="flex items-center gap-2 text-slate-300 text-xs font-semibold tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span>Memulihkan sesi portal...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!currentUser) {
     return <LoginForm onLogin={handleLogin} error={loginError} />;
