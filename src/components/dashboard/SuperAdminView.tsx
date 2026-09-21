@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Calendar,
-  Plus,
   CheckCircle2,
   Clock,
   ShieldCheck,
@@ -56,31 +55,18 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Dashboard Eksekutif
-            </h1>
-            <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-              Super Admin
-            </span>
-          </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Ringkasan eksekutif kegiatan, presensi, dan perizinan lintas departemen organisasi.
-          </p>
+      <div className="pb-5 border-b border-slate-200/80">
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            Dashboard Eksekutif
+          </h1>
+          <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Super Admin
+          </span>
         </div>
-
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={onOpenCreateActivity}
-            className="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Buat Kegiatan</span>
-          </button>
-        </div>
+        <p className="text-xs text-slate-500 mt-1">
+          Ringkasan eksekutif kegiatan, presensi, dan perizinan lintas departemen organisasi.
+        </p>
       </div>
 
       {/* Metrics Cards */}

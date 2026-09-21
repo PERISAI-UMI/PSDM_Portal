@@ -119,40 +119,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Primary Action Button based on Role */}
-      <div className="p-3 border-b border-slate-100">
-        {user.role === 'SUPER_ADMIN' && onOpenCreateActivity && (
-          <button
-            type="button"
-            onClick={() => handleNavClick('create-activity', onOpenCreateActivity)}
-            className="w-full py-2.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Buat Kegiatan</span>
-          </button>
-        )}
+      {(user.role === 'PENGURUS' || user.role === 'ADMIN') && (
+        <div className="p-3 border-b border-slate-100">
+          {user.role === 'PENGURUS' && onOpenPermissionForm && (
+            <button
+              type="button"
+              onClick={() => handleNavClick('permission-form', onOpenPermissionForm)}
+              className="w-full py-2.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Ajukan Izin</span>
+            </button>
+          )}
 
-        {user.role === 'PENGURUS' && onOpenPermissionForm && (
-          <button
-            type="button"
-            onClick={() => handleNavClick('permission-form', onOpenPermissionForm)}
-            className="w-full py-2.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
-          >
-            <FileText className="w-4 h-4" />
-            <span>Ajukan Izin</span>
-          </button>
-        )}
-
-        {user.role === 'ADMIN' && (
-          <div className="px-3 py-2 bg-slate-50 rounded-lg border border-slate-200/80 text-xs">
-            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
-              Wilayah Pembinaan:
-            </span>
-            <span className="font-semibold text-slate-900 mt-0.5 block truncate">
-              {user.departmentName || 'Riset & Teknologi'}
-            </span>
-          </div>
-        )}
-      </div>
+          {user.role === 'ADMIN' && (
+            <div className="px-3 py-2 bg-slate-50 rounded-lg border border-slate-200/80 text-xs">
+              <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
+                Wilayah Pembinaan:
+              </span>
+              <span className="font-semibold text-slate-900 mt-0.5 block truncate">
+                {user.departmentName || 'Riset & Teknologi'}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Navigation Links (Scrollable) */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-5">
