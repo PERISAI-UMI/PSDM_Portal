@@ -26,11 +26,12 @@ import { PermissionFormModal } from './components/permissions/PermissionFormModa
 import { MasterDataView, type MasterDataTab } from './components/master/MasterDataView.tsx';
 import { AuditModal } from './components/audit/AuditModal.tsx';
 import { ProfileModal } from './components/profile/ProfileModal.tsx';
+import { ProfileView } from './components/profile/ProfileView.tsx';
 import { ActivityDetailModal } from './components/activities/ActivityDetailModal.tsx';
 import { ConfirmModal } from './components/ui/ConfirmModal.tsx';
 import { ToastProvider, useToast } from './components/ui/Toast.tsx';
 
-type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data';
+type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data' | 'profile';
 
 function MainAppContent() {
   const { showToast } = useToast();
@@ -288,7 +289,10 @@ function MainAppContent() {
           setActiveSection('members');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        onOpenProfile={() => setShowProfileModal(true)}
+        onOpenProfile={() => {
+          setActiveSection('profile');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
         onOpenAudit={() => setShowAuditModal(true)}
         onOpenPermissionForm={() => {
           setActivePermissionActivity(null);
@@ -318,11 +322,24 @@ function MainAppContent() {
           user={currentUser}
           onLogout={handleLogout}
           onOpenAudit={() => setShowAuditModal(true)}
-          onOpenProfile={() => setShowProfileModal(true)}
+          onOpenProfile={() => {
+            setActiveSection('profile');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           onToggleSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}
         />
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 overflow-x-hidden">
+          {/* 0. Profile Layout (Full-page layout for all roles) */}
+          {activeSection === 'profile' && (
+            <ProfileView
+              currentUser={currentUser}
+              onUpdateProfile={handleUpdateProfile}
+              onChangePassword={handleChangePassword}
+              onBackToDashboard={() => setActiveSection('dashboard')}
+            />
+          )}
+
           {/* 1. Activities Layout */}
           {activeSection === 'activities' && (
             <ActivitiesView
@@ -454,7 +471,10 @@ function MainAppContent() {
                   onDeleteActivity={handleDeleteActivity}
                   onReviewPermission={handleReviewPermission}
                   onOpenAudit={() => setShowAuditModal(true)}
-                  onOpenProfile={() => setShowProfileModal(true)}
+                  onOpenProfile={() => {
+                    setActiveSection('profile');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   onViewDetail={(act) => setSelectedActivityDetail(act)}
                   onNavigateTo={(sec) => setActiveSection(sec)}
                 />
@@ -468,7 +488,10 @@ function MainAppContent() {
                   onOpenMemberList={() => setActiveSection('members')}
                   onOpenAttendance={(act) => setActiveScannerActivity(act)}
                   onReviewPermission={handleReviewPermission}
-                  onOpenProfile={() => setShowProfileModal(true)}
+                  onOpenProfile={() => {
+                    setActiveSection('profile');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   onViewDetail={(act) => setSelectedActivityDetail(act)}
                   onNavigateTo={(sec) => setActiveSection(sec as any)}
                 />
@@ -484,7 +507,10 @@ function MainAppContent() {
                     setActivePermissionActivity(act || null);
                     setShowPermissionModal(true);
                   }}
-                  onOpenProfile={() => setShowProfileModal(true)}
+                  onOpenProfile={() => {
+                    setActiveSection('profile');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   onViewDetail={(act) => setSelectedActivityDetail(act)}
                   onNavigateTo={(sec) => setActiveSection(sec)}
                 />
