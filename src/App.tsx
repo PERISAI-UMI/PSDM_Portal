@@ -411,10 +411,10 @@ function MainAppContent() {
                 try {
                   const res = await api.batchImportUsers(userList);
                   await reloadData(currentUser);
-                  showToast(
-                    `Import selesai: ${res.importedCount} berhasil${res.skippedCount > 0 ? `, ${res.skippedCount} dilewati` : ''}`,
-                    'success'
-                  );
+                  const toastText = `Import selesai: ${res.importedCount} baru ditambahkan${
+                    res.updatedCount && res.updatedCount > 0 ? `, ${res.updatedCount} diperbarui` : ''
+                  }${res.skippedCount > 0 ? `, ${res.skippedCount} dilewati` : ''}`;
+                  showToast(toastText, 'success');
                   return res;
                 } catch (err: any) {
                   showToast(err?.message || 'Gagal mengimpor anggota', 'error');

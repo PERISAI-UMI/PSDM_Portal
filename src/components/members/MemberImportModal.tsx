@@ -16,6 +16,7 @@ interface MemberImportModalProps {
   onClose: () => void;
   onImport: (users: any[]) => Promise<{
     importedCount: number;
+    updatedCount?: number;
     skippedCount: number;
     errors: { prn: string; reason: string }[];
   }>;
@@ -57,6 +58,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [importResult, setImportResult] = useState<{
     importedCount: number;
+    updatedCount?: number;
     skippedCount: number;
     errors: { prn: string; reason: string }[];
   } | null>(null);
@@ -333,19 +335,63 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
           )}
 
           {importResult && (
-            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm space-y-1">
+            <div className={`p-4 rounded-xl text-xs sm:text-sm space-y-2 border ${
+              importResult.importedCount > 0 || (importResult.updatedCount && importResult.updatedCount > 0)
+                ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                : 'bg-amber-50 border-amber-200 text-amber-900'
+            }`}>
               <div className="flex items-center gap-2 font-bold">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className={`w-4 h-4 shrink-0 ${
+                  importResult.importedCount > 0 || (importResult.updatedCount && importResult.updatedCount > 0)
+                    ? 'text-emerald-600'
+                    : 'text-amber-600'
+                }`} />
                 <span>Proses Import Selesai</span>
               </div>
-              <p className="text-xs text-emerald-700">
-                Berhasil menambahkan <strong>{importResult.importedCount}</strong> anggota baru.{' '}
-                {importResult.skippedCount > 0 && (
+              <p className="text-xs">
+                {importResult.importedCount > 0 && (
                   <span>
-                    ({importResult.skippedCount} dilewati karena duplikasi PRN/NIM/Email atau galat).
+                    Berhasil menambahkan <strong>{importResult.importedCount}</strong> anggota baru.{' '}
+                  </span>
+                )}
+                {importResult.updatedCount !== undefined && importResult.updatedCount > 0 && (
+                  <span>
+                    Berhasil memperbarui <strong>{importResult.updatedCount}</strong> anggota yang sudah ada.{' '}
+                  </span>
+                )}
+                {importResult.importedCount === 0 && (!importResult.updatedCount || importResult.updatedCount === 0) && (
+                  <span>
+                    Tidak ada anggota baru yang ditambahkan.{' '}
+                  </span>
+                )}
+                {importResult.skippedCount > 0 && (
+                  <span className="text-rose-700 font-semibold">
+                    ({importResult.skippedCount} dilewati).
                   </span>
                 )}
               </p>
+
+              {/* Rincian baris yang dilewati / galat */}
+              {importResult.errors && importResult.errors.length > 0 && (
+                <div className="mt-2.5 pt-2.5 border-t border-slate-200/80">
+                  <span className="text-[11px] font-bold text-slate-800 block mb-1.5">
+                    Rincian Baris yang Dilewati ({importResult.errors.length}):
+                  </span>
+                  <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
+                    {importResult.errors.map((err, idx) => (
+                      <div
+                        key={idx}
+                        className="text-[11px] text-slate-700 flex items-start gap-2 bg-white/90 p-2 rounded-lg border border-slate-200 shadow-2xs"
+                      >
+                        <span className="font-mono font-bold text-slate-900 shrink-0 bg-slate-100 px-1.5 py-0.5 rounded">
+                          {err.prn}
+                        </span>
+                        <span className="text-rose-600 font-medium">{err.reason}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

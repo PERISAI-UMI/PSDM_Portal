@@ -213,6 +213,7 @@ export const api = {
 
   async batchImportUsers(userList: Omit<AuthUser, 'id'>[]): Promise<{
     importedCount: number;
+    updatedCount?: number;
     skippedCount: number;
     errors: { prn: string; reason: string }[];
   }> {
@@ -221,6 +222,7 @@ export const api = {
       message: string;
       data: {
         importedCount: number;
+        updatedCount?: number;
         skippedCount: number;
         errors: { prn: string; reason: string }[];
       };

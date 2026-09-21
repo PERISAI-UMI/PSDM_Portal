@@ -33,6 +33,7 @@ interface MembersViewProps {
   onDeleteMember?: (id: string) => Promise<void>;
   onImportMembers?: (users: any[]) => Promise<{
     importedCount: number;
+    updatedCount?: number;
     skippedCount: number;
     errors: { prn: string; reason: string }[];
   }>;

@@ -198,74 +198,54 @@ usersRouter.post('/batch-import', requireRole(['SUPER_ADMIN']), zValidator('json
   const db = c.get('db');
 
   let importedCount = 0;
+  let updatedCount = 0;
   let skippedCount = 0;
   const errors: { prn: string; reason: string }[] = [];
 
   try {
-    // 1. Kumpulkan seluruh identitas unik kandidat untuk deduplikasi 1 round-trip
-    const candidatePrns = Array.from(new Set(userList.map((u) => u.prn.trim().toUpperCase())));
-    const candidateNims = Array.from(new Set(userList.map((u) => u.nim.trim())));
-    const candidateEmails = Array.from(new Set(userList.map((u) => u.email.trim().toLowerCase())));
+    // 1. Ambil seluruh data identitas unik yang ada di database dalam 1 query ringan
+    const allExistingUsers = await db
+      .select({
+        id: users.id,
+        prn: users.prn,
+        nim: users.nim,
+        email: users.email,
+      })
+      .from(users)
+      .all();
 
-    // 2. Query data yang sudah ada di database dalam 1 query saja (98% request reduction ke Turso)
-    const conditions = [];
-    if (candidatePrns.length > 0) conditions.push(inArray(users.prn, candidatePrns));
-    if (candidateNims.length > 0) conditions.push(inArray(users.nim, candidateNims));
-    if (candidateEmails.length > 0) conditions.push(inArray(users.email, candidateEmails));
+    const userByPrn = new Map<string, typeof allExistingUsers[0]>();
+    const userByNim = new Map<string, typeof allExistingUsers[0]>();
+    const userByEmail = new Map<string, typeof allExistingUsers[0]>();
 
-    const existingUsers = conditions.length > 0
-      ? await db
-          .select({
-            prn: users.prn,
-            nim: users.nim,
-            email: users.email,
-          })
-          .from(users)
-          .where(or(...conditions))
-          .all()
-      : [];
+    for (const u of allExistingUsers) {
+      if (u.prn) userByPrn.set(u.prn.trim().toUpperCase(), u);
+      if (u.nim) userByNim.set(u.nim.trim(), u);
+      if (u.email) userByEmail.set(u.email.trim().toLowerCase(), u);
+    }
 
-    const existingPrnSet = new Set(existingUsers.map((u) => u.prn.toUpperCase()));
-    const existingNimSet = new Set(existingUsers.map((u) => u.nim));
-    const existingEmailSet = new Set(existingUsers.map((u) => u.email.toLowerCase()));
-
-    // 3. Filter duplikasi secara in-memory (baik terhadap DB maupun internal baris file)
+    // 2. Pilah baris antara Insert (anggota baru) dan Update (anggota sudah ada)
     const seenBatchPrns = new Set<string>();
     const seenBatchNims = new Set<string>();
     const seenBatchEmails = new Set<string>();
 
-    const validItemsToInsert: Array<typeof userList[0] & { prn: string; email: string; nim: string }> = [];
+    const itemsToInsert: Array<typeof userList[0] & { prn: string; email: string; nim: string }> = [];
+    const itemsToUpdate: Array<{ id: string; prn: string; data: Record<string, unknown> }> = [];
 
     for (const item of userList) {
       const prnUpper = item.prn.trim().toUpperCase();
       const emailLower = item.email.trim().toLowerCase();
       const nimTrim = item.nim.trim();
 
-      if (existingPrnSet.has(prnUpper)) {
-        skippedCount++;
-        errors.push({ prn: item.prn, reason: 'PRN sudah terdaftar di database' });
-        continue;
-      }
+      // Cek duplikasi di dalam file itu sendiri
       if (seenBatchPrns.has(prnUpper)) {
         skippedCount++;
         errors.push({ prn: item.prn, reason: 'Duplikasi PRN di dalam berkas impor' });
         continue;
       }
-
-      if (existingNimSet.has(nimTrim)) {
-        skippedCount++;
-        errors.push({ prn: item.prn, reason: 'NIM sudah terdaftar di database' });
-        continue;
-      }
       if (seenBatchNims.has(nimTrim)) {
         skippedCount++;
         errors.push({ prn: item.prn, reason: 'Duplikasi NIM di dalam berkas impor' });
-        continue;
-      }
-
-      if (existingEmailSet.has(emailLower)) {
-        skippedCount++;
-        errors.push({ prn: item.prn, reason: 'Email sudah terdaftar di database' });
         continue;
       }
       if (seenBatchEmails.has(emailLower)) {
@@ -274,71 +254,134 @@ usersRouter.post('/batch-import', requireRole(['SUPER_ADMIN']), zValidator('json
         continue;
       }
 
-      seenBatchPrns.add(prnUpper);
-      seenBatchNims.add(nimTrim);
-      seenBatchEmails.add(emailLower);
+      const existingByPrn = userByPrn.get(prnUpper);
 
-      validItemsToInsert.push({
-        ...item,
-        prn: prnUpper,
-        email: emailLower,
-        nim: nimTrim,
-      });
-    }
-
-    if (validItemsToInsert.length === 0) {
-      return c.json({
-        success: true,
-        message: `Tidak ada anggota baru yang diimpor (${skippedCount} dilewati).`,
-        data: { importedCount: 0, skippedCount, errors },
-      });
-    }
-
-    // 4. Hash password secara paralel dengan memoization untuk password default yang identik
-    const passwordHashMap = new Map<string, string>();
-    const preparedRows = await Promise.all(
-      validItemsToInsert.map(async (item) => {
-        let hash = passwordHashMap.get(item.password);
-        if (!hash) {
-          hash = await hashPassword(item.password);
-          passwordHashMap.set(item.password, hash);
+      if (existingByPrn) {
+        // Mode UPSERT: Update data anggota jika PRN sudah terdaftar
+        // Pastikan NIM tidak bentrok dengan akun orang lain
+        const existingByNim = userByNim.get(nimTrim);
+        if (existingByNim && existingByNim.id !== existingByPrn.id) {
+          skippedCount++;
+          errors.push({ prn: item.prn, reason: `NIM ${nimTrim} sudah digunakan oleh anggota lain (${existingByNim.prn})` });
+          continue;
         }
-        const id = crypto.randomUUID();
-        const { password: _, ...userData } = item;
-        return {
-          ...userData,
-          id,
-          passwordHash: hash,
-        };
-      })
-    );
 
-    // 5. Multi-row batch insert dengan ukuran chunk aman (25 baris per query)
-    const CHUNK_SIZE = 25;
-    for (let i = 0; i < preparedRows.length; i += CHUNK_SIZE) {
-      const chunk = preparedRows.slice(i, i + CHUNK_SIZE);
-      try {
-        await db.insert(users).values(chunk);
-        importedCount += chunk.length;
-      } catch (chunkErr: any) {
-        // Fallback resilience: jika 1 chunk bermasalah, simpan per baris untuk menyelamatkan baris valid
-        for (const singleRow of chunk) {
-          try {
-            await db.insert(users).values(singleRow);
-            importedCount++;
-          } catch (singleErr: any) {
-            skippedCount++;
-            errors.push({ prn: singleRow.prn, reason: singleErr?.message || 'Gagal menyimpan ke database' });
+        // Pastikan Email tidak bentrok dengan akun orang lain
+        const existingByEmail = userByEmail.get(emailLower);
+        if (existingByEmail && existingByEmail.id !== existingByPrn.id) {
+          skippedCount++;
+          errors.push({ prn: item.prn, reason: `Email ${emailLower} sudah digunakan oleh anggota lain (${existingByEmail.prn})` });
+          continue;
+        }
+
+        seenBatchPrns.add(prnUpper);
+        seenBatchNims.add(nimTrim);
+        seenBatchEmails.add(emailLower);
+
+        const { password: _, prn: __, ...updateFields } = item;
+        itemsToUpdate.push({
+          id: existingByPrn.id,
+          prn: prnUpper,
+          data: {
+            ...updateFields,
+            email: emailLower,
+            nim: nimTrim,
+          },
+        });
+      } else {
+        // Anggota Baru (INSERT)
+        // Pastikan NIM belum dipakai orang lain
+        const existingByNim = userByNim.get(nimTrim);
+        if (existingByNim) {
+          skippedCount++;
+          errors.push({ prn: item.prn, reason: `NIM ${nimTrim} sudah terdaftar pada anggota lain (${existingByNim.prn})` });
+          continue;
+        }
+
+        // Pastikan Email belum dipakai orang lain
+        const existingByEmail = userByEmail.get(emailLower);
+        if (existingByEmail) {
+          skippedCount++;
+          errors.push({ prn: item.prn, reason: `Email ${emailLower} sudah terdaftar pada anggota lain (${existingByEmail.prn})` });
+          continue;
+        }
+
+        seenBatchPrns.add(prnUpper);
+        seenBatchNims.add(nimTrim);
+        seenBatchEmails.add(emailLower);
+
+        itemsToInsert.push({
+          ...item,
+          prn: prnUpper,
+          email: emailLower,
+          nim: nimTrim,
+        });
+      }
+    }
+
+    // 3. Eksekusi Insert untuk anggota baru secara chunked batch
+    if (itemsToInsert.length > 0) {
+      const passwordHashMap = new Map<string, string>();
+      const preparedInsertRows = await Promise.all(
+        itemsToInsert.map(async (item) => {
+          let hash = passwordHashMap.get(item.password);
+          if (!hash) {
+            hash = await hashPassword(item.password);
+            passwordHashMap.set(item.password, hash);
+          }
+          const id = crypto.randomUUID();
+          const { password: _, ...userData } = item;
+          return {
+            ...userData,
+            id,
+            passwordHash: hash,
+          };
+        })
+      );
+
+      const CHUNK_SIZE = 25;
+      for (let i = 0; i < preparedInsertRows.length; i += CHUNK_SIZE) {
+        const chunk = preparedInsertRows.slice(i, i + CHUNK_SIZE);
+        try {
+          await db.insert(users).values(chunk);
+          importedCount += chunk.length;
+        } catch (chunkErr: any) {
+          for (const singleRow of chunk) {
+            try {
+              await db.insert(users).values(singleRow);
+              importedCount++;
+            } catch (singleErr: any) {
+              skippedCount++;
+              errors.push({ prn: singleRow.prn, reason: singleErr?.message || 'Gagal menyimpan ke database' });
+            }
           }
         }
       }
     }
 
+    // 4. Eksekusi Update untuk anggota yang sudah ada
+    if (itemsToUpdate.length > 0) {
+      for (const item of itemsToUpdate) {
+        try {
+          await db.update(users).set(item.data).where(eq(users.id, item.id));
+          updatedCount++;
+        } catch (updateErr: any) {
+          skippedCount++;
+          errors.push({ prn: item.prn, reason: updateErr?.message || 'Gagal memperbarui data anggota' });
+        }
+      }
+    }
+
+    const message = `Proses impor selesai: ${importedCount} anggota baru ditambahkan${
+      updatedCount > 0 ? `, ${updatedCount} anggota diperbarui` : ''
+    }${skippedCount > 0 ? `, ${skippedCount} dilewati` : ''}.`;
+
     return c.json({
       success: true,
-      message: `Berhasil mengimpor ${importedCount} anggota (${skippedCount} dilewati/duplikat).`,
+      message,
       data: {
         importedCount,
+        updatedCount,
         skippedCount,
         errors,
       },
@@ -348,7 +391,7 @@ usersRouter.post('/batch-import', requireRole(['SUPER_ADMIN']), zValidator('json
       {
         success: false,
         message: `Galat saat memproses impor massal: ${globalErr?.message || 'Unknown error'}`,
-        data: { importedCount, skippedCount, errors },
+        data: { importedCount, updatedCount, skippedCount, errors },
       },
       500
     );
