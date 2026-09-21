@@ -195,10 +195,12 @@ export const api = {
       }
     );
 
-    const currentUser = getStoredUser();
-    const updated = res.data || (currentUser ? { ...currentUser, ...updates } : ({} as AuthUser));
-    setStoredUser(updated);
-    return updated;
+    if (!res.success || !res.data) {
+      throw new Error(res.message || 'Gagal menyimpan pembaruan profil ke database');
+    }
+
+    setStoredUser(res.data);
+    return res.data;
   },
 
   async createUser(newUser: Omit<AuthUser, 'id'>): Promise<AuthUser> {

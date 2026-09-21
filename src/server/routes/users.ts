@@ -34,15 +34,20 @@ const createUserSchema = z.object({
   nim: z.string().min(5, 'NIM wajib diisi'),
   programStudiId: z.string().min(1, 'Program studi wajib dipilih'),
   angkatan: z.number().int().min(2000).max(2100),
-  linkedinUrl: z.string().url().optional().nullable(),
+  linkedinUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   instagramUsername: z.string().optional().nullable(),
 });
 
 const updateUserSelfSchema = z.object({
-  alamat: z.string().min(5).optional(),
-  noTelp: z.string().min(9).optional(),
-  tempatLahir: z.string().min(2).optional(),
-  linkedinUrl: z.string().url().optional().nullable(),
+  namaLengkap: z.string().min(2, 'Nama lengkap minimal 2 karakter').optional(),
+  email: z.string().email('Format email tidak valid').optional(),
+  noTelp: z.string().min(8, 'Nomor telepon tidak valid').optional(),
+  nim: z.string().min(3, 'NIM minimal 3 karakter').optional(),
+  angkatan: z.number().int().min(2000).max(2100).optional(),
+  alamat: z.string().optional().nullable(),
+  tempatLahir: z.string().optional().nullable(),
+  tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format tanggal lahir YYYY-MM-DD').optional().nullable(),
+  linkedinUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   instagramUsername: z.string().optional().nullable(),
 });
 
@@ -182,47 +187,124 @@ usersRouter.post('/', requireRole(['SUPER_ADMIN']), zValidator('json', createUse
   return c.json({ success: true, message: 'User anggota berhasil ditambahkan', data: { id, prn: data.prn } }, 201);
 });
 
+// Helper untuk mengambil data profil lengkap user
+async function getFullUserById(db: any, userId: string) {
+  const userRecord = await db
+    .select({
+      id: users.id,
+      prn: users.prn,
+      role: users.role,
+      generasi: users.generasi,
+      departmentId: users.departmentId,
+      departmentName: departments.nama,
+      jabatan: users.jabatan,
+      tingkatJabatan: users.tingkatJabatan,
+      namaLengkap: users.namaLengkap,
+      tempatLahir: users.tempatLahir,
+      tanggalLahir: users.tanggalLahir,
+      alamat: users.alamat,
+      noTelp: users.noTelp,
+      email: users.email,
+      nim: users.nim,
+      programStudiId: users.programStudiId,
+      programStudiName: programStudi.nama,
+      angkatan: users.angkatan,
+      linkedinUrl: users.linkedinUrl,
+      instagramUsername: users.instagramUsername,
+    })
+    .from(users)
+    .innerJoin(departments, eq(users.departmentId, departments.id))
+    .innerJoin(programStudi, eq(users.programStudiId, programStudi.id))
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  return userRecord && userRecord.length > 0 ? userRecord[0] : null;
+}
+
+// PUT /api/users/profile (Update profil user yang sedang login)
+usersRouter.put('/profile', async (c) => {
+  const currentUser = c.get('user');
+  const db = c.get('db');
+
+  const jsonBody = await c.req.json();
+  const parsed = updateUserSelfSchema.safeParse(jsonBody);
+  if (!parsed.success) {
+    return c.json({ success: false, errors: parsed.error.format() }, 400);
+  }
+
+  const updateData = { ...parsed.data };
+  if (updateData.linkedinUrl === '') {
+    updateData.linkedinUrl = null;
+  }
+
+  await db.update(users).set(updateData).where(eq(users.id, currentUser.id));
+
+  const updatedUser = await getFullUserById(db, currentUser.id);
+  return c.json({
+    success: true,
+    message: 'Profil berhasil diperbarui',
+    data: updatedUser,
+  });
+});
+
 // PUT /api/users/:id (SUPER_ADMIN atau User Sendiri)
 usersRouter.put('/:id', async (c) => {
   const id = c.req.param('id');
   const currentUser = c.get('user');
   const db = c.get('db');
 
-  // Jika ADMIN (bukan SUPER_ADMIN) mencoba mengubah user orang lain -> Forbidden
-  if (currentUser.role === 'ADMIN' && currentUser.id !== id) {
-    return c.json({ success: false, message: 'Forbidden: Admin PSDM memiliki hak akses read-only pada data anggota' }, 403);
-  }
+  const targetId = id === 'profile' ? currentUser.id : id;
 
-  if (currentUser.role === 'SUPER_ADMIN') {
-    const jsonBody = await c.req.json();
-    const parsed = updateUserAdminSchema.safeParse(jsonBody);
-    if (!parsed.success) {
-      return c.json({ success: false, errors: parsed.error.format() }, 400);
-    }
-
-    const updateData: Record<string, unknown> = { ...parsed.data };
-    if (parsed.data.password) {
-      updateData.passwordHash = await hashPassword(parsed.data.password);
-      delete updateData.password;
-    }
-
-    await db.update(users).set(updateData).where(eq(users.id, id));
-    return c.json({ success: true, message: 'Profil user berhasil diperbarui oleh Super Admin' });
-  }
-
-  // Jika user mengupdate profilnya sendiri
-  if (currentUser.id === id) {
+  // Jika targetnya adalah user sendiri
+  if (currentUser.id === targetId) {
     const jsonBody = await c.req.json();
     const parsed = updateUserSelfSchema.safeParse(jsonBody);
     if (!parsed.success) {
       return c.json({ success: false, errors: parsed.error.format() }, 400);
     }
 
-    await db.update(users).set(parsed.data).where(eq(users.id, id));
-    return c.json({ success: true, message: 'Profil mandiri berhasil diperbarui' });
+    const updateData = { ...parsed.data };
+    if (updateData.linkedinUrl === '') {
+      updateData.linkedinUrl = null;
+    }
+
+    await db.update(users).set(updateData).where(eq(users.id, targetId));
+    const updatedUser = await getFullUserById(db, targetId);
+    return c.json({
+      success: true,
+      message: 'Profil mandiri berhasil diperbarui',
+      data: updatedUser,
+    });
   }
 
-  return c.json({ success: false, message: 'Forbidden' }, 403);
+  // Jika ADMIN (bukan SUPER_ADMIN) mencoba mengubah user orang lain -> Forbidden
+  if (currentUser.role !== 'SUPER_ADMIN') {
+    return c.json({ success: false, message: 'Forbidden: Hanya Super Admin yang dapat mengubah data anggota lain' }, 403);
+  }
+
+  // Khusus SUPER_ADMIN mengubah anggota lain
+  const jsonBody = await c.req.json();
+  const parsed = updateUserAdminSchema.safeParse(jsonBody);
+  if (!parsed.success) {
+    return c.json({ success: false, errors: parsed.error.format() }, 400);
+  }
+
+  const updateData: Record<string, unknown> = { ...parsed.data };
+  if (parsed.data.password) {
+    updateData.passwordHash = await hashPassword(parsed.data.password);
+    delete updateData.password;
+  }
+  if (updateData.linkedinUrl === '') {
+    updateData.linkedinUrl = null;
+  }
+
+  await db.update(users).set(updateData).where(eq(users.id, targetId));
+  const updatedUser = await getFullUserById(db, targetId);
+  return c.json({
+    success: true,
+    message: 'Profil user berhasil diperbarui oleh Super Admin',
+    data: updatedUser,
+  });
 });
 
 // DELETE /api/users/:id (SUPER_ADMIN ONLY)

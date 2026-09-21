@@ -144,62 +144,71 @@ attendancesRouter.get(
   }
 );
 
-// POST /api/attendances/record (Pencatatan Absensi oleh Admin / Super Admin)
+// POST /api/attendances & POST /api/attendances/record (Pencatatan Absensi oleh Admin / Super Admin)
 // TIDAK BISA ABSEN MANDIRI OLEH PENGURUS
+const handleRecordSingleAttendance = async (c: any) => {
+  const { activityId, userId, status } = c.req.valid('json');
+  const currentAdmin = c.get('user');
+  const db = c.get('db');
+
+  // Cek apakah sudah pernah tercatat
+  const existing = await db
+    .select({ id: attendances.id })
+    .from(attendances)
+    .where(and(eq(attendances.activityId, activityId), eq(attendances.userId, userId)))
+    .limit(1);
+
+  const now = new Date();
+
+  if (existing && existing.length > 0) {
+    await db
+      .update(attendances)
+      .set({
+        status,
+        recordedBy: currentAdmin.id,
+        recordedAt: now,
+      })
+      .where(eq(attendances.id, existing[0].id));
+
+    return c.json({
+      success: true,
+      message: 'Status kehadiran berhasil diperbarui',
+      data: { id: existing[0].id, status },
+    });
+  }
+
+  const newId = crypto.randomUUID();
+  await db.insert(attendances).values({
+    id: newId,
+    activityId,
+    userId,
+    status,
+    recordedBy: currentAdmin.id,
+    recordedAt: now,
+  });
+
+  return c.json(
+    {
+      success: true,
+      message: 'Status kehadiran berhasil dicatat',
+      data: { id: newId, status },
+    },
+    201
+  );
+};
+
+attendancesRouter.post(
+  '/',
+  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  zValidator('json', recordSingleAttendanceSchema),
+  handleRecordSingleAttendance
+);
+
 attendancesRouter.post(
   '/record',
   requireRole(['SUPER_ADMIN', 'ADMIN']),
   zValidator('json', recordSingleAttendanceSchema),
-  async (c) => {
-    const { activityId, userId, status } = c.req.valid('json');
-    const currentAdmin = c.get('user');
-    const db = c.get('db');
-
-    // Cek apakah sudah pernah tercatat
-    const existing = await db
-      .select({ id: attendances.id })
-      .from(attendances)
-      .where(and(eq(attendances.activityId, activityId), eq(attendances.userId, userId)))
-      .limit(1);
-
-    const now = new Date();
-
-    if (existing && existing.length > 0) {
-      await db
-        .update(attendances)
-        .set({
-          status,
-          recordedBy: currentAdmin.id,
-          recordedAt: now,
-        })
-        .where(eq(attendances.id, existing[0].id));
-
-      return c.json({
-        success: true,
-        message: 'Status kehadiran berhasil diperbarui',
-        data: { id: existing[0].id, status },
-      });
-    }
-
-    const newId = crypto.randomUUID();
-    await db.insert(attendances).values({
-      id: newId,
-      activityId,
-      userId,
-      status,
-      recordedBy: currentAdmin.id,
-      recordedAt: now,
-    });
-
-    return c.json(
-      {
-        success: true,
-        message: 'Status kehadiran berhasil dicatat',
-        data: { id: newId, status },
-      },
-      201
-    );
-  }
+  handleRecordSingleAttendance
 );
 
 // POST /api/attendances/batch (Pencatatan Absensi Massal di Lokasi)
