@@ -23,11 +23,10 @@ import {
   pjDepartmentSchema,
 } from '../../db/validation.ts';
 import { api } from '../../services/api.ts';
-import { createPresignedUploadUrl } from '../../server/storage.ts';
 
 interface AuditItem {
   id: string;
-  category: 'SECURITY' | 'SCHEMA_3NF' | 'RBAC' | 'EDGE_HONO' | 'STORAGE';
+  category: 'SECURITY' | 'SCHEMA_3NF' | 'RBAC' | 'EDGE_HONO' | 'STORAGE' | 'CONNECTIVITY';
   title: string;
   description: string;
   status: 'IDLE' | 'RUNNING' | 'PASSED' | 'FAILED';
@@ -99,16 +98,23 @@ const INITIAL_AUDITS: AuditItem[] = [
   },
   {
     id: 'edge-1',
-    category: 'EDGE_HONO',
-    title: 'Kesiapan Runtime Edge Cloudflare Workers (Hono Router)',
-    description: 'Verifikasi route handler /api/health tanpa dependensi native Node C++.',
+    category: 'CONNECTIVITY',
+    title: 'Cloudflare Workers — Live Health Ping',
+    description: 'HTTP GET ke /api/health untuk memastikan Worker aktif dan merespons dari edge.',
+    status: 'IDLE',
+  },
+  {
+    id: 'conn-turso',
+    category: 'CONNECTIVITY',
+    title: 'Turso libSQL — Koneksi Database Produksi',
+    description: 'Query SELECT 1 ke database Turso untuk memverifikasi koneksi dan autentikasi token.',
     status: 'IDLE',
   },
   {
     id: 'storage-1',
-    category: 'STORAGE',
-    title: 'Presigned S3 Upload URL Backblaze B2 / Cloudflare R2',
-    description: 'Generasi presigned URL direct upload untuk bukti perizinan mahasiswa.',
+    category: 'CONNECTIVITY',
+    title: 'Backblaze B2 — Akses Bucket Penyimpanan Bukti',
+    description: 'HeadBucketCommand ke B2 untuk memverifikasi kredensial dan aksesibilitas bucket.',
     status: 'IDLE',
   },
 ];
@@ -214,21 +220,27 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
           const synced = atts.find((a) => a.userId === pengurus.id);
           if (!synced || synced.status !== 'IZIN') throw new Error('Sinkronisasi absensi tidak terjadi');
         } else if (item.id === 'edge-1') {
-          // Verify Web standard APIs availability
-          if (typeof crypto === 'undefined' || typeof crypto.subtle === 'undefined') {
-            throw new Error('WebCrypto API tidak tersedia pada runtime ini');
-          }
+          // Real HTTP ping to the deployed Cloudflare Worker
+          const res = await fetch('/api/health', { credentials: 'same-origin' });
+          if (!res.ok) throw new Error(`Worker mengembalikan HTTP ${res.status}`);
+          const data = await res.json() as any;
+          if (data.status !== 'ok') throw new Error('Worker health endpoint tidak merespons dengan benar');
+        } else if (item.id === 'conn-turso') {
+          // Real Turso DB connectivity check via server-side diagnostics
+          const res = await fetch('/api/diagnostics', { credentials: 'same-origin' });
+          if (!res.ok) throw new Error(`Diagnostics endpoint error: HTTP ${res.status}`);
+          const data = await res.json() as any;
+          const turso = data.data?.turso;
+          if (!turso) throw new Error('Respons diagnostics tidak valid');
+          if (!turso.ok) throw new Error(turso.detail || 'Koneksi Turso gagal');
         } else if (item.id === 'storage-1') {
-          const config = {
-            keyId: '005mockApplicationKeyId',
-            applicationKey: 'K005mockSecretKeyForTestingPurposeOnly12',
-            bucketName: 'psdm-evidence-bucket',
-            region: 'us-east-005',
-          };
-          const presigned = await createPresignedUploadUrl(config, 'surat_dokter.jpg', 'image/jpeg', 3600);
-          if (!presigned.uploadUrl || !presigned.fileKey.startsWith('evidence/')) {
-            throw new Error('Format presigned upload URL S3 tidak valid');
-          }
+          // Real Backblaze B2 connectivity check via server-side diagnostics
+          const res = await fetch('/api/diagnostics', { credentials: 'same-origin' });
+          if (!res.ok) throw new Error(`Diagnostics endpoint error: HTTP ${res.status}`);
+          const data = await res.json() as any;
+          const b2 = data.data?.backblaze;
+          if (!b2) throw new Error('Respons diagnostics tidak valid');
+          if (!b2.ok) throw new Error(b2.detail || 'Koneksi Backblaze B2 gagal');
         }
 
         const durationMs = Math.round((performance.now() - start) * 10) / 10;
