@@ -31,21 +31,30 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
     }
   }, [isOpen, activity]);
 
-  const loadData = async () => {
+  useEffect(() => {
     if (initialUsers && initialUsers.length > 0) {
       setUsersList(initialUsers);
-    } else {
-      const allUsers = await api.getUsers();
-      setUsersList(allUsers);
     }
+  }, [initialUsers]);
 
-    if (activity) {
-      const atts = await api.getAttendances(currentAdmin, activity.id);
-      const map: Record<string, AttendanceStatus> = {};
-      atts.forEach((a) => {
-        map[a.userId] = a.status;
-      });
-      setAttendancesMap(map);
+  const loadData = async () => {
+    try {
+      let list = initialUsers && initialUsers.length > 0 ? initialUsers : [];
+      if (list.length === 0) {
+        list = await api.getUsers();
+        setUsersList(list);
+      }
+
+      if (activity) {
+        const atts = await api.getAttendances(currentAdmin, activity.id);
+        const map: Record<string, AttendanceStatus> = {};
+        atts.forEach((a) => {
+          map[a.userId] = a.status;
+        });
+        setAttendancesMap(map);
+      }
+    } catch (err) {
+      console.error('Failed to load attendance data:', err);
     }
   };
 
@@ -65,22 +74,31 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   };
 
   const handleMarkAllHadir = async () => {
-    if (filteredUsers.length === 0) return;
-    setSaving(true);
-    try {
-      const items = filteredUsers.map((u) => ({
+    const targets = search.trim() ? filteredUsers : usersList;
+    if (targets.length === 0) return;
+
+    // 1. Simpan snapshot untuk rollback jika gagal
+    const prevMap = { ...attendancesMap };
+
+    // 2. OPTIMISTIC UPDATE: Langsung ubah seluruh tombol menjadi HADIR seketika saat ditekan
+    const optimisticMap = { ...attendancesMap };
+    const items = targets.map((u) => {
+      optimisticMap[u.id] = 'HADIR';
+      return {
         userId: u.id,
         status: 'HADIR' as AttendanceStatus,
-      }));
+      };
+    });
+    setAttendancesMap(optimisticMap);
+    setSaving(true);
+
+    try {
       await api.recordBatchAttendance(activity.id, items, currentAdmin.id);
-      const newMap = { ...attendancesMap };
-      items.forEach((it) => {
-        newMap[it.userId] = 'HADIR';
-      });
-      setAttendancesMap(newMap);
       onSuccess();
     } catch (err: any) {
       console.error('Failed to batch record attendances:', err);
+      // Rollback jika terjadi kegagalan jaringan atau server
+      setAttendancesMap(prevMap);
       alert(err.message || 'Gagal memperbarui presensi massal.');
     } finally {
       setSaving(false);
@@ -93,6 +111,9 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
       u.prn.toLowerCase().includes(search.toLowerCase()) ||
       (u.departmentName && u.departmentName.toLowerCase().includes(search.toLowerCase()))
   );
+
+  const hadirCount = usersList.filter((u) => attendancesMap[u.id] === 'HADIR').length;
+  const targetCount = (search.trim() ? filteredUsers : usersList).length;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
@@ -130,15 +151,21 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-3" />
           </div>
 
-          <button
-            type="button"
-            onClick={handleMarkAllHadir}
-            disabled={saving || filteredUsers.length === 0}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50 min-h-[42px] shadow-xs"
-          >
-            <Check className="w-4 h-4" />
-            Tandai Semua Hadir
-          </button>
+          <div className="flex items-center gap-3 justify-between sm:justify-end">
+            <span className="text-xs text-slate-500 font-medium whitespace-nowrap">
+              Hadir: <strong className="text-emerald-700 font-bold">{hadirCount}</strong> / {usersList.length}
+            </span>
+
+            <button
+              type="button"
+              onClick={handleMarkAllHadir}
+              disabled={saving || targetCount === 0}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 min-h-[42px] shadow-xs active:scale-95 cursor-pointer"
+            >
+              <Check className="w-4 h-4" />
+              {saving ? 'Menyimpan...' : `Tandai Semua Hadir (${targetCount})`}
+            </button>
+          </div>
         </div>
 
         {/* List Peserta */}
