@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, UserCheck, Check, Search, ShieldCheck } from 'lucide-react';
+import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw } from 'lucide-react';
 import type { ActivityItem, AuthUser, AttendanceStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 
@@ -62,6 +62,23 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
 
   const handleSetStatus = async (userId: string, status: AttendanceStatus) => {
     const prevStatus = attendancesMap[userId];
+
+    // Toggle off: jika status yang sama diklik lagi, batalkan / reset status pengurus tersebut
+    if (prevStatus === status) {
+      const optimisticMap = { ...attendancesMap };
+      delete optimisticMap[userId];
+      setAttendancesMap(optimisticMap);
+      try {
+        await api.resetAttendance(activity.id, [userId]);
+        onSuccess();
+      } catch (err: any) {
+        console.error('Failed to un-mark attendance:', err);
+        setAttendancesMap((prev) => ({ ...prev, [userId]: prevStatus }));
+        alert(err.message || 'Gagal membatalkan status presensi.');
+      }
+      return;
+    }
+
     setAttendancesMap((prev) => ({ ...prev, [userId]: status }));
     try {
       await api.recordAttendance(activity.id, userId, status, currentAdmin.id);
@@ -105,6 +122,49 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
     }
   };
 
+  const handleResetAttendance = async () => {
+    const targets = search.trim() ? filteredUsers : usersList;
+    if (targets.length === 0) return;
+
+    const countToReset = targets.filter((u) => attendancesMap[u.id]).length;
+    if (countToReset === 0) {
+      alert('Belum ada status presensi yang tercatat untuk di-reset.');
+      return;
+    }
+
+    if (
+      !window.confirm(
+        `Reset presensi untuk ${targets.length} anggota kegiatan ini? Semua status akan kembali menjadi belum absen.`
+      )
+    ) {
+      return;
+    }
+
+    const prevMap = { ...attendancesMap };
+    const optimisticMap = { ...attendancesMap };
+    const targetUserIds = targets.map((u) => {
+      delete optimisticMap[u.id];
+      return u.id;
+    });
+
+    setAttendancesMap(optimisticMap);
+    setSaving(true);
+
+    try {
+      await api.resetAttendance(
+        activity.id,
+        search.trim() ? targetUserIds : undefined
+      );
+      onSuccess();
+    } catch (err: any) {
+      console.error('Failed to reset attendances:', err);
+      setAttendancesMap(prevMap);
+      alert(err.message || 'Gagal mereset presensi.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const filteredUsers = usersList.filter(
     (u) =>
       u.namaLengkap.toLowerCase().includes(search.toLowerCase()) ||
@@ -113,6 +173,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   );
 
   const hadirCount = usersList.filter((u) => attendancesMap[u.id] === 'HADIR').length;
+  const recordedCount = usersList.filter((u) => attendancesMap[u.id]).length;
   const targetCount = (search.trim() ? filteredUsers : usersList).length;
 
   return (
@@ -151,20 +212,33 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-3" />
           </div>
 
-          <div className="flex items-center gap-3 justify-between sm:justify-end">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 justify-between sm:justify-end">
             <span className="text-xs text-slate-500 font-medium whitespace-nowrap">
               Hadir: <strong className="text-emerald-700 font-bold">{hadirCount}</strong> / {usersList.length}
             </span>
 
-            <button
-              type="button"
-              onClick={handleMarkAllHadir}
-              disabled={saving || targetCount === 0}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 min-h-[42px] shadow-xs active:scale-95 cursor-pointer"
-            >
-              <Check className="w-4 h-4" />
-              {saving ? 'Menyimpan...' : `Tandai Semua Hadir (${targetCount})`}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleResetAttendance}
+                disabled={saving || recordedCount === 0}
+                className="px-3.5 py-2.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 border border-slate-200 hover:border-rose-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 min-h-[42px] cursor-pointer active:scale-95 shadow-xs"
+                title="Reset presensi menjadi belum absen"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Reset
+              </button>
+
+              <button
+                type="button"
+                onClick={handleMarkAllHadir}
+                disabled={saving || targetCount === 0}
+                className="px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 min-h-[42px] shadow-xs active:scale-95 cursor-pointer"
+              >
+                <Check className="w-4 h-4" />
+                {saving ? 'Menyimpan...' : `Tandai Semua Hadir (${targetCount})`}
+              </button>
+            </div>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, and, desc, sql } from 'drizzle-orm';
+import { eq, and, desc, sql, inArray } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   attendances,
@@ -246,3 +246,40 @@ attendancesRouter.post(
     });
   }
 );
+
+const resetAttendanceSchema = z.object({
+  activityId: z.string().min(1, 'Activity ID wajib diisi'),
+  userIds: z.array(z.string()).optional(),
+});
+
+// POST /api/attendances/reset (Reset status presensi seluruhnya atau sebagian)
+attendancesRouter.post(
+  '/reset',
+  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  zValidator('json', resetAttendanceSchema),
+  async (c) => {
+    const { activityId, userIds } = c.req.valid('json');
+    const db = c.get('db');
+
+    if (userIds && userIds.length > 0) {
+      await db
+        .delete(attendances)
+        .where(
+          and(
+            eq(attendances.activityId, activityId),
+            inArray(attendances.userId, userIds)
+          )
+        );
+    } else {
+      await db
+        .delete(attendances)
+        .where(eq(attendances.activityId, activityId));
+    }
+
+    return c.json({
+      success: true,
+      message: 'Presensi berhasil di-reset',
+    });
+  }
+);
+

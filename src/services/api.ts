@@ -453,6 +453,16 @@ export const api = {
     });
   },
 
+  async resetAttendance(activityId: string, userIds?: string[]): Promise<void> {
+    await request('/api/attendances/reset', {
+      method: 'POST',
+      body: JSON.stringify({
+        activityId,
+        userIds,
+      }),
+    });
+  },
+
   // ================= PERMISSIONS =================
   async getPermissions(_user: AuthUser): Promise<PermissionRecord[]> {
     try {
