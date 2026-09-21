@@ -37,21 +37,21 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
   const isEditing = Boolean(member);
 
   const [prn, setPrn] = useState(member?.prn || '');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserRole>(member?.role || 'PENGURUS');
-  const [generasi, setGenerasi] = useState<number>(member?.generasi || 12);
-  const [departmentId, setDepartmentId] = useState(member?.departmentId || departments[0]?.id || '');
+  const [password, setPassword] = useState(isEditing ? '' : 'password123');
+  const [role, setRole] = useState<UserRole | ''>(member?.role || '');
+  const [generasi, setGenerasi] = useState<string>(member?.generasi ? String(member.generasi) : '');
+  const [departmentId, setDepartmentId] = useState(member?.departmentId || '');
   const [jabatan, setJabatan] = useState(member?.jabatan || '');
-  const [tingkatJabatan, setTingkatJabatan] = useState<TingkatJabatan>(member?.tingkatJabatan || 'STAFF');
+  const [tingkatJabatan, setTingkatJabatan] = useState<TingkatJabatan | ''>(member?.tingkatJabatan || '');
   const [namaLengkap, setNamaLengkap] = useState(member?.namaLengkap || '');
   const [tempatLahir, setTempatLahir] = useState(member?.tempatLahir || '');
-  const [tanggalLahir, setTanggalLahir] = useState(member?.tanggalLahir || '2002-01-01');
+  const [tanggalLahir, setTanggalLahir] = useState(member?.tanggalLahir || '');
   const [alamat, setAlamat] = useState(member?.alamat || '');
   const [noTelp, setNoTelp] = useState(member?.noTelp || '');
   const [email, setEmail] = useState(member?.email || '');
   const [nim, setNim] = useState(member?.nim || '');
-  const [programStudiId, setProgramStudiId] = useState(member?.programStudiId || programStudi[0]?.id || '');
-  const [angkatan, setAngkatan] = useState<number>(member?.angkatan || new Date().getFullYear() - 2);
+  const [programStudiId, setProgramStudiId] = useState(member?.programStudiId || '');
+  const [angkatan, setAngkatan] = useState<string>(member?.angkatan ? String(member.angkatan) : '');
   const [linkedinUrl, setLinkedinUrl] = useState(member?.linkedinUrl || '');
   const [instagramUsername, setInstagramUsername] = useState(member?.instagramUsername || '');
 
@@ -79,6 +79,10 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
       setErrorMsg('Format email tidak valid');
       return;
     }
+    if (!noTelp.trim()) {
+      setErrorMsg('Nomor telepon / WhatsApp wajib diisi');
+      return;
+    }
     if (!nim.trim()) {
       setErrorMsg('NIM wajib diisi');
       return;
@@ -95,23 +99,31 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
       setErrorMsg('Jabatan wajib diisi');
       return;
     }
+    if (!tingkatJabatan) {
+      setErrorMsg('Tingkat jabatan wajib dipilih');
+      return;
+    }
+    if (!role) {
+      setErrorMsg('Role sistem wajib dipilih');
+      return;
+    }
 
     try {
       const payload: Record<string, unknown> = {
-        role,
-        generasi: Number(generasi),
+        role: (role as UserRole) || 'PENGURUS',
+        generasi: generasi ? Number(generasi) : 12,
         departmentId,
         jabatan: jabatan.trim(),
-        tingkatJabatan,
+        tingkatJabatan: (tingkatJabatan as TingkatJabatan) || 'STAFF',
         namaLengkap: namaLengkap.trim(),
         tempatLahir: tempatLahir.trim() || 'Indonesia',
-        tanggalLahir,
+        tanggalLahir: tanggalLahir || '2002-01-01',
         alamat: alamat.trim() || 'Kampus',
         noTelp: noTelp.trim() || '081234567890',
         email: email.trim(),
         nim: nim.trim(),
         programStudiId,
-        angkatan: Number(angkatan),
+        angkatan: angkatan ? Number(angkatan) : new Date().getFullYear(),
         linkedinUrl: linkedinUrl.trim() || null,
         instagramUsername: instagramUsername.trim().replace(/^@/, '') || null,
       };
@@ -155,7 +167,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto py-4 space-y-5 pr-1">
+        <form onSubmit={handleSubmit} autoComplete="off" className="flex-1 overflow-y-auto py-4 space-y-5 pr-1">
           {errorMsg && (
             <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
@@ -175,6 +187,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 </label>
                 <input
                   type="text"
+                  name="member_prn_code"
+                  autoComplete="off"
                   value={prn}
                   onChange={(e) => setPrn(e.target.value.toUpperCase())}
                   disabled={isEditing}
@@ -191,6 +205,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 <div className="relative">
                   <input
                     type="password"
+                    name="member_pass_init"
+                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={isEditing ? 'Biarkan kosong jika tidak diubah' : 'Minimal 8 karakter'}
@@ -216,6 +232,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 </label>
                 <input
                   type="text"
+                  name="member_full_name"
+                  autoComplete="off"
                   value={namaLengkap}
                   onChange={(e) => setNamaLengkap(e.target.value)}
                   placeholder="Nama sesuai KTM"
@@ -231,6 +249,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 <div className="relative">
                   <input
                     type="email"
+                    name="member_mail_address"
+                    autoComplete="off"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@domain.com"
@@ -248,6 +268,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 <div className="relative">
                   <input
                     type="tel"
+                    name="member_phone_number"
+                    autoComplete="off"
                     value={noTelp}
                     onChange={(e) => setNoTelp(e.target.value)}
                     placeholder="08xxxxxxxxxx"
@@ -264,6 +286,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 </label>
                 <input
                   type="text"
+                  name="member_univ_nim"
+                  autoComplete="off"
                   value={nim}
                   onChange={(e) => setNim(e.target.value)}
                   placeholder="Nomor Induk Mahasiswa"
@@ -278,6 +302,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 </label>
                 <input
                   type="text"
+                  name="member_birth_place"
+                  autoComplete="off"
                   value={tempatLahir}
                   onChange={(e) => setTempatLahir(e.target.value)}
                   placeholder="Kota kelahiran"
@@ -291,6 +317,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 </label>
                 <input
                   type="date"
+                  name="member_birth_date"
+                  autoComplete="off"
                   value={tanggalLahir}
                   onChange={(e) => setTanggalLahir(e.target.value)}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
@@ -315,6 +343,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   required
                   className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
                 >
+                  <option value="" disabled>-- Pilih Departemen --</option>
                   {departments.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.nama}
@@ -333,6 +362,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   required
                   className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
                 >
+                  <option value="" disabled>-- Pilih Program Studi --</option>
                   {programStudi.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.nama}
@@ -347,6 +377,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 </label>
                 <input
                   type="text"
+                  name="member_org_position"
+                  autoComplete="off"
                   value={jabatan}
                   onChange={(e) => setJabatan(e.target.value)}
                   placeholder="Contoh: Anggota Divisi / Staf"
@@ -365,6 +397,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   required
                   className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
                 >
+                  <option value="" disabled>-- Pilih Tingkat Jabatan --</option>
                   <option value="STAFF">STAFF (Anggota Biasa)</option>
                   <option value="KADEP">KADEP (Kepala / Ketua Bidang)</option>
                   <option value="BPH_INTI">BPH_INTI (Pimpinan Inti)</option>
@@ -381,6 +414,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   required
                   className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
                 >
+                  <option value="" disabled>-- Pilih Role Sistem --</option>
                   <option value="PENGURUS">Pengurus (Standar)</option>
                   <option value="ADMIN">Admin PJ (Staf PSDM)</option>
                   <option value="SUPER_ADMIN">Super Admin (Kepala PSDM)</option>
@@ -394,11 +428,13 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   </label>
                   <input
                     type="number"
+                    name="member_batch_year"
+                    autoComplete="off"
                     value={angkatan}
-                    onChange={(e) => setAngkatan(Number(e.target.value))}
+                    onChange={(e) => setAngkatan(e.target.value)}
+                    placeholder="Contoh: 2024"
                     min={2000}
                     max={2100}
-                    required
                     className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
                   />
                 </div>
@@ -408,11 +444,13 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   </label>
                   <input
                     type="number"
+                    name="member_gen_num"
+                    autoComplete="off"
                     value={generasi}
-                    onChange={(e) => setGenerasi(Number(e.target.value))}
+                    onChange={(e) => setGenerasi(e.target.value)}
+                    placeholder="Contoh: 12"
                     min={1}
                     max={100}
-                    required
                     className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
                   />
                 </div>
@@ -433,9 +471,11 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 <div className="relative">
                   <input
                     type="text"
+                    name="member_social_ig"
+                    autoComplete="off"
                     value={instagramUsername}
                     onChange={(e) => setInstagramUsername(e.target.value)}
-                    placeholder="username (tanpa @)"
+                    placeholder="Akun Instagram (tanpa @)"
                     className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
                   />
                   <Instagram className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
@@ -449,6 +489,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                 <div className="relative">
                   <input
                     type="url"
+                    name="member_social_in"
+                    autoComplete="off"
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
                     placeholder="https://linkedin.com/in/..."
@@ -463,6 +505,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   Alamat Domisili
                 </label>
                 <textarea
+                  name="member_home_address"
+                  autoComplete="off"
                   value={alamat}
                   onChange={(e) => setAlamat(e.target.value)}
                   rows={2}
