@@ -1,7 +1,5 @@
-import React from 'react';
 import {
   Menu,
-  Activity,
   User,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
@@ -9,14 +7,12 @@ import type { AuthUser } from '../../types/index.ts';
 interface HeaderProps {
   user: AuthUser;
   onLogout: () => void;
-  onOpenAudit?: () => void;
   onOpenProfile?: () => void;
   onToggleSidebar?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   user,
-  onOpenAudit,
   onOpenProfile,
   onToggleSidebar,
 }) => {
@@ -60,19 +56,6 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Actions Right */}
         <div className="flex items-center gap-2 ml-auto">
-          {/* System Diagnostics Button (Super Admin Only) */}
-          {onOpenAudit && user.role === 'SUPER_ADMIN' && (
-            <button
-              type="button"
-              onClick={onOpenAudit}
-              className="px-2.5 py-1 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
-              title="Diagnostik Sistem"
-            >
-              <Activity className="w-3.5 h-3.5 text-slate-500" />
-              <span>Diagnostik</span>
-            </button>
-          )}
-
           {/* Mobile Profile Trigger */}
           {onOpenProfile && (
             <button

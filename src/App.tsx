@@ -321,7 +321,6 @@ function MainAppContent() {
         <Header
           user={currentUser}
           onLogout={handleLogout}
-          onOpenAudit={() => setShowAuditModal(true)}
           onOpenProfile={() => {
             setActiveSection('profile');
             window.scrollTo({ top: 0, behavior: 'smooth' });
