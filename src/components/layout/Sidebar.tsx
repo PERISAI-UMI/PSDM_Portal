@@ -14,6 +14,8 @@ import {
   Building2,
   ChevronRight,
   UserCheck,
+  BookOpen,
+  GraduationCap,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
