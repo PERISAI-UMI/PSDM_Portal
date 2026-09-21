@@ -16,6 +16,9 @@ import {
   GraduationCap,
   MapPin,
   Save,
+  Shield,
+  ShieldAlert,
+  Lock,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
@@ -484,9 +487,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </form>
       )}
 
-      {/* 5. Security & Password Tab */}
+      {/* 5. Security & Password Tab (Maximized Layout) */}
       {activeTab === 'security' && (
-        <form onSubmit={handleSavePassword} className="space-y-6 max-w-2xl">
+        <div className="space-y-6">
           {passwordSuccess && (
             <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -501,92 +504,132 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             </div>
           )}
 
-          <div className="border-b border-slate-200/80 pb-2">
-            <h2 className="text-sm font-bold text-slate-900">Ubah Kata Sandi</h2>
-            <p className="text-xs text-slate-500">Pastikan menggunakan kombinasi kata sandi yang aman dan tidak mudah ditebak</p>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left Column: Password Update Form (7 cols) */}
+            <form onSubmit={handleSavePassword} className="lg:col-span-7 space-y-5">
+              <div className="border-b border-slate-200/80 pb-2">
+                <h2 className="text-sm font-bold text-slate-900">Formulir Perubahan Kata Sandi</h2>
+                <p className="text-xs text-slate-500">
+                  Perbarui kata sandi secara berkala demi menjaga keamanan data keorganisasian
+                </p>
+              </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Kata Sandi Saat Ini *
-              </label>
-              <div className="relative">
-                <input
-                  type={showCurrentPass ? 'text' : 'password'}
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Masukkan kata sandi saat ini"
-                  required
-                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
-                />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Kata Sandi Saat Ini *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showCurrentPass ? 'text' : 'password'}
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      placeholder="Masukkan kata sandi saat ini"
+                      required
+                      className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPass(!showCurrentPass)}
+                      className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    >
+                      {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Kata Sandi Baru *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showNewPass ? 'text' : 'password'}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="Minimal 6 karakter"
+                        required
+                        minLength={6}
+                        className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPass(!showNewPass)}
+                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      >
+                        {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Konfirmasi Kata Sandi Baru *
+                    </label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Ulangi kata sandi baru"
+                      required
+                      className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${
+                        confirmPassword && newPassword !== confirmPassword
+                          ? 'border-rose-300 focus:ring-rose-200'
+                          : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
+                      }`}
+                    />
+                    {confirmPassword && newPassword !== confirmPassword && (
+                      <p className="text-[11px] text-rose-600 mt-1.5">Konfirmasi kata sandi tidak cocok.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-200/80 flex items-center justify-end gap-3">
                 <button
-                  type="button"
-                  onClick={() => setShowCurrentPass(!showCurrentPass)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  type="submit"
+                  disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
+                  className="px-6 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
                 >
-                  {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  <KeyRound className="w-3.5 h-3.5" />
+                  <span>{savingPassword ? 'Menyimpan...' : 'Perbarui Kata Sandi'}</span>
                 </button>
               </div>
-            </div>
+            </form>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Kata Sandi Baru *
-              </label>
-              <div className="relative">
-                <input
-                  type={showNewPass ? 'text' : 'password'}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Minimal 6 karakter"
-                  required
-                  minLength={6}
-                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNewPass(!showNewPass)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
-                >
-                  {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+            {/* Right Column: Security Guidelines & Policy (5 cols) */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="p-5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3.5">
+                <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
+                  <Shield className="w-4 h-4 text-emerald-600" />
+                  <span>Standar Keamanan Akun PSDM</span>
+                </div>
+                <ul className="text-xs text-slate-600 space-y-2.5">
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                    <span>Gunakan minimal 8 karakter dengan kombinasi huruf, angka, dan simbol.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                    <span>Hindari memakai tanggal lahir, nomor telepon, atau data umum yang mudah ditebak.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                    <span>Kata sandi dienkripsi dengan PBKDF2 SHA-256 standard cloud security.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/80 flex items-start gap-3">
+                <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="text-xs text-amber-800 leading-relaxed">
+                  <strong>Peringatan Keamanan:</strong> Jangan berikan kata sandi atau kode akses Anda kepada siapapun, termasuk sesama pengurus maupun pengelola sistem.
+                </div>
               </div>
             </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Konfirmasi Kata Sandi Baru *
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Ulangi kata sandi baru"
-                required
-                className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${
-                  confirmPassword && newPassword !== confirmPassword
-                    ? 'border-rose-300 focus:ring-rose-200'
-                    : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
-                }`}
-              />
-              {confirmPassword && newPassword !== confirmPassword && (
-                <p className="text-[11px] text-rose-600 mt-1.5">Konfirmasi kata sandi tidak cocok.</p>
-              )}
-            </div>
           </div>
-
-          <div className="pt-4 border-t border-slate-200/80 flex items-center justify-end gap-3">
-            <button
-              type="submit"
-              disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
-              className="px-6 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
-            >
-              <KeyRound className="w-3.5 h-3.5" />
-              <span>{savingPassword ? 'Menyimpan...' : 'Perbarui Kata Sandi'}</span>
-            </button>
-          </div>
-        </form>
+        </div>
       )}
     </div>
   );
