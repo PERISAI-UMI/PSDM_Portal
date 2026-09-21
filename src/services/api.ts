@@ -211,6 +211,27 @@ export const api = {
     return res.data;
   },
 
+  async batchImportUsers(userList: Omit<AuthUser, 'id'>[]): Promise<{
+    importedCount: number;
+    skippedCount: number;
+    errors: { prn: string; reason: string }[];
+  }> {
+    const res = await request<{
+      success: boolean;
+      message: string;
+      data: {
+        importedCount: number;
+        skippedCount: number;
+        errors: { prn: string; reason: string }[];
+      };
+    }>('/api/users/batch-import', {
+      method: 'POST',
+      body: JSON.stringify({ users: userList }),
+    });
+
+    return res.data;
+  },
+
   async updateUser(id: string, updates: Partial<AuthUser>): Promise<void> {
     await request(`/api/users/${id}`, {
       method: 'PUT',

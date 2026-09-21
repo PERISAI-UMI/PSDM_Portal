@@ -408,6 +408,20 @@ function MainAppContent() {
                   throw err;
                 }
               }}
+              onImportMembers={async (userList) => {
+                try {
+                  const res = await api.batchImportUsers(userList);
+                  await reloadData(currentUser);
+                  showToast(
+                    `Import selesai: ${res.importedCount} berhasil${res.skippedCount > 0 ? `, ${res.skippedCount} dilewati` : ''}`,
+                    'success'
+                  );
+                  return res;
+                } catch (err: any) {
+                  showToast(err?.message || 'Gagal mengimpor anggota', 'error');
+                  throw err;
+                }
+              }}
             />
           )}
 

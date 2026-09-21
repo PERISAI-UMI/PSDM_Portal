@@ -187,6 +187,62 @@ usersRouter.post('/', requireRole(['SUPER_ADMIN']), zValidator('json', createUse
   return c.json({ success: true, message: 'User anggota berhasil ditambahkan', data: { id, prn: data.prn } }, 201);
 });
 
+// POST /api/users/batch-import (SUPER_ADMIN ONLY - Import anggota massal dari Excel / CSV)
+const batchImportSchema = z.object({
+  users: z.array(createUserSchema).min(1, 'Daftar anggota tidak boleh kosong'),
+});
+
+usersRouter.post('/batch-import', requireRole(['SUPER_ADMIN']), zValidator('json', batchImportSchema), async (c) => {
+  const { users: userList } = c.req.valid('json');
+  const db = c.get('db');
+
+  let importedCount = 0;
+  let skippedCount = 0;
+  const errors: { prn: string; reason: string }[] = [];
+
+  for (const item of userList) {
+    try {
+      // Cek duplikasi PRN / NIM / Email
+      const existing = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(or(eq(users.prn, item.prn), eq(users.nim, item.nim), eq(users.email, item.email)))
+        .limit(1);
+
+      if (existing && existing.length > 0) {
+        skippedCount++;
+        errors.push({ prn: item.prn, reason: 'PRN, NIM, atau Email sudah terdaftar' });
+        continue;
+      }
+
+      const id = crypto.randomUUID();
+      const passwordHash = await hashPassword(item.password);
+      const { password: _, ...userData } = item;
+
+      await db.insert(users).values({
+        ...userData,
+        id,
+        passwordHash,
+      });
+
+      importedCount++;
+    } catch (err: any) {
+      skippedCount++;
+      errors.push({ prn: item.prn, reason: err?.message || 'Gagal menyimpan ke database' });
+    }
+  }
+
+  return c.json({
+    success: true,
+    message: `Berhasil mengimpor ${importedCount} anggota (${skippedCount} dilewati/duplikat).`,
+    data: {
+      importedCount,
+      skippedCount,
+      errors,
+    },
+  });
+});
+
 // Helper untuk mengambil data profil lengkap user
 async function getFullUserById(db: any, userId: string) {
   const userRecord = await db

@@ -16,9 +16,11 @@ import {
   Plus,
   Edit2,
   Trash2,
+  FileSpreadsheet,
 } from 'lucide-react';
 import type { AuthUser, DepartmentItem, ProgramStudiItem } from '../../types/index.ts';
 import { MemberFormModal } from './MemberFormModal.tsx';
+import { MemberImportModal } from './MemberImportModal.tsx';
 import { ConfirmModal } from '../ui/ConfirmModal.tsx';
 
 interface MembersViewProps {
@@ -29,6 +31,11 @@ interface MembersViewProps {
   onCreateMember?: (newUser: Omit<AuthUser, 'id'>) => Promise<void>;
   onUpdateMember?: (id: string, updates: Partial<AuthUser>) => Promise<void>;
   onDeleteMember?: (id: string) => Promise<void>;
+  onImportMembers?: (users: any[]) => Promise<{
+    importedCount: number;
+    skippedCount: number;
+    errors: { prn: string; reason: string }[];
+  }>;
 }
 
 export const MembersView: React.FC<MembersViewProps> = ({
@@ -39,6 +46,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
   onCreateMember,
   onUpdateMember,
   onDeleteMember,
+  onImportMembers,
 }) => {
   const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
 
@@ -49,6 +57,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
 
   // Modal States
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<AuthUser | null>(null);
   const [deletingMember, setDeletingMember] = useState<AuthUser | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -154,6 +163,18 @@ export const MembersView: React.FC<MembersViewProps> = ({
         </div>
 
         <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          {/* Super Admin Action: Import Anggota */}
+          {isSuperAdmin && onImportMembers && (
+            <button
+              type="button"
+              onClick={() => setIsImportModalOpen(true)}
+              className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              <span>Import Excel / CSV</span>
+            </button>
+          )}
+
           {/* Super Admin Action: Tambah Anggota */}
           {isSuperAdmin && onCreateMember && (
             <button
@@ -580,6 +601,17 @@ export const MembersView: React.FC<MembersViewProps> = ({
           message={`Apakah Anda yakin ingin menghapus akun anggota "${deletingMember.namaLengkap}" (${deletingMember.prn})? Data yang dihapus tidak dapat dipulihkan.`}
           confirmLabel="Hapus Anggota"
           isDanger
+        />
+      )}
+
+      {/* Member Import Modal (Excel / CSV) */}
+      {isImportModalOpen && onImportMembers && (
+        <MemberImportModal
+          isOpen={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          onImport={onImportMembers}
+          departments={departments}
+          programStudi={programStudi}
         />
       )}
     </div>
