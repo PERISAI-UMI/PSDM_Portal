@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Plus, Clock, CheckCircle2, XCircle, ShieldCheck } from 'lucide-react';
+import { FileText, Clock, CheckCircle2, XCircle, ShieldCheck } from 'lucide-react';
 import type { PermissionRecord, AuthUser, PermissionStatus, ActivityItem } from '../../types/index.ts';
 import { PermissionListTable } from './PermissionListTable.tsx';
 
@@ -8,15 +8,13 @@ interface PermissionsViewProps {
   permissions: PermissionRecord[];
   activities: ActivityItem[];
   onReviewPermission: (id: string, status: PermissionStatus) => Promise<void>;
-  onOpenPermissionModal: () => void;
+  onOpenPermissionModal?: () => void;
 }
 
 export const PermissionsView: React.FC<PermissionsViewProps> = ({
   currentUser,
   permissions,
-  activities,
   onReviewPermission,
-  onOpenPermissionModal,
 }) => {
   const pendingCount = permissions.filter((p) => p.status === 'PENDING').length;
   const approvedCount = permissions.filter((p) => p.status === 'APPROVED').length;
@@ -30,7 +28,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               {currentUser.role === 'PENGURUS'
-                ? 'Pengajuan & Riwayat Perizinan'
+                ? 'Riwayat & Status Perizinan'
                 : 'Manajemen & Verifikasi Perizinan'}
             </h1>
             <p className="text-xs text-slate-500">
@@ -38,21 +36,10 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
                 ? 'Verifikasi dan kelola seluruh permohonan izin kehadiran kegiatan lintas departemen.'
                 : currentUser.role === 'ADMIN'
                 ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
-                : 'Pantau status izin kehadiran kegiatan dan ajukan permohonan baru beserta berkas pendukung.'}
+                : 'Pantau status verifikasi izin kehadiran kegiatan Anda.'}
             </p>
           </div>
         </div>
-
-        {currentUser.role === 'PENGURUS' && (
-          <button
-            type="button"
-            onClick={onOpenPermissionModal}
-            className="px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs cursor-pointer self-start sm:self-auto"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Ajukan Izin Baru</span>
-          </button>
-        )}
       </div>
 
       {/* KPI Metrics */}

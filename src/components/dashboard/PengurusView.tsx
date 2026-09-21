@@ -6,7 +6,6 @@ import {
   Clock,
   AlertCircle,
   ArrowRight,
-  Plus,
   UserCheck,
 } from 'lucide-react';
 import type { ActivityItem, PermissionRecord, AttendanceRecord, AuthUser } from '../../types/index.ts';
@@ -63,15 +62,6 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
             Ringkasan kehadiran kegiatan dan perizinan fungsionaris.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => onOpenPermissionModal()}
-          className="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Ajukan Izin</span>
-        </button>
       </div>
 
       {/* Metric Cards */}
@@ -177,17 +167,6 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
                           • {act.jenis.replace('_', ' ')}
                         </p>
                       </div>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onOpenPermissionModal(act);
-                        }}
-                        className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0"
-                      >
-                        Izin
-                      </button>
                     </div>
                   );
                 })

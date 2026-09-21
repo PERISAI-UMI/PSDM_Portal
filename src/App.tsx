@@ -285,10 +285,10 @@ function MainAppContent() {
           setActiveSection('master-data');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        onOpenMemberList={() => {
+        onOpenMemberList={currentUser.role !== 'PENGURUS' ? () => {
           setActiveSection('members');
           window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        } : undefined}
         onOpenProfile={() => {
           setActiveSection('profile');
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -307,6 +307,9 @@ function MainAppContent() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onSelectSection={(sec) => {
+          if (currentUser.role === 'PENGURUS' && sec === 'members') {
+            return;
+          }
           setActiveSection(sec as ActiveSection);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
@@ -371,7 +374,7 @@ function MainAppContent() {
           )}
 
           {/* 3. Members Directory Layout */}
-          {activeSection === 'members' && (
+          {activeSection === 'members' && currentUser.role !== 'PENGURUS' && (
             <MembersView
               currentUser={currentUser}
               users={allUsers}
