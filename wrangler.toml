@@ -1,7 +1,7 @@
 # ============================================================
 # Cloudflare Workers Deployment Configuration for PSDM.web 2.0
 # ============================================================
-name = "psdm-web-edge"
+name = "psdm-portal"
 main = "src/server/index.ts"
 compatibility_date = "2024-04-01"
 compatibility_flags = ["nodejs_compat"]
