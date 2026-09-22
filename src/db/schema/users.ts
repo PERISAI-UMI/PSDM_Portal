@@ -2,7 +2,7 @@ import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { departments } from './departments.ts';
 import { programStudi } from './academic.ts';
 
-export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS'] as const;
+export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as const;
 export type UserRole = (typeof userRoleEnum)[number];
 
 export const users = sqliteTable('users', {

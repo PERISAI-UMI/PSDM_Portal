@@ -227,7 +227,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
         ) || programStudi[0];
 
         const validRole: UserRole =
-          row.role === 'SUPER_ADMIN' || row.role === 'ADMIN' ? (row.role as UserRole) : 'PENGURUS';
+          row.role === 'SUPER_ADMIN' || row.role === 'ADMIN' || row.role === 'INTI' ? (row.role as UserRole) : 'PENGURUS';
 
         return {
           prn: row.prn,

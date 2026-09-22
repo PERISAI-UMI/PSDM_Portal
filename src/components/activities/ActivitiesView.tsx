@@ -72,6 +72,8 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             <p className="text-xs text-slate-500">
               {currentUser.role === 'SUPER_ADMIN'
                 ? 'Kelola jadwal proker, publikasi agenda, dan pencatatan presensi seluruh organisasi.'
+                : currentUser.role === 'INTI'
+                ? 'Pemantauan jadwal program kerja, status publikasi, dan rekapitulasi kehadiran organisasi.'
                 : currentUser.role === 'ADMIN'
                 ? 'Jadwal kegiatan organisasi dan pencatatan presensi departemen binaan.'
                 : 'Daftar agenda kegiatan dan program kerja organisasi yang diselenggarakan.'}
@@ -115,7 +117,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Tampil pada kalender anggota</p>
         </div>
 
-        {currentUser.role === 'SUPER_ADMIN' && (
+        {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'INTI') && (
           <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-slate-500">Draft Internal</span>
@@ -171,7 +173,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           )}
 
           {/* Status Tabs */}
-          {currentUser.role === 'SUPER_ADMIN' && (
+          {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'INTI') && (
             <div className="flex items-center bg-slate-100 p-0.5 rounded-lg text-xs">
               {(
                 [

@@ -532,9 +532,10 @@ function MainAppContent() {
             />
           )}
 
-          {/* 4. Master Data Layout (Super Admin only) */}
-          {activeSection === 'master-data' && currentUser.role === 'SUPER_ADMIN' && (
+          {/* 4. Master Data Layout (Super Admin & INTI) */}
+          {activeSection === 'master-data' && (currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'INTI') && (
             <MasterDataView
+              currentUser={currentUser}
               initialTab={masterDataTab}
               fakultas={fakultas}
               programStudi={prodi}
@@ -610,7 +611,7 @@ function MainAppContent() {
           {/* 5. Dashboard Layout */}
           {activeSection === 'dashboard' && (
             <>
-              {currentUser.role === 'SUPER_ADMIN' && (
+              {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'INTI') && (
                 <SuperAdminView
                   currentUser={currentUser}
                   activities={activities}

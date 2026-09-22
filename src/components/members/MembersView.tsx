@@ -53,7 +53,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
 
   const [search, setSearch] = useState('');
   const [selectedDept, setSelectedDept] = useState('ALL');
-  const [selectedRole, setSelectedRole] = useState<'ALL' | 'SUPER_ADMIN' | 'ADMIN' | 'PENGURUS'>('ALL');
+  const [selectedRole, setSelectedRole] = useState<'ALL' | 'SUPER_ADMIN' | 'ADMIN' | 'PENGURUS' | 'INTI'>('ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   // Modal States
@@ -112,6 +112,8 @@ export const MembersView: React.FC<MembersViewProps> = ({
         return { label: 'Super Admin', className: 'bg-rose-50 text-rose-700 border-rose-200' };
       case 'ADMIN':
         return { label: 'Admin PJ', className: 'bg-blue-50 text-blue-700 border-blue-200' };
+      case 'INTI':
+        return { label: 'Pengurus Inti', className: 'bg-purple-50 text-purple-700 border-purple-200' };
       case 'PENGURUS':
       default:
         return { label: 'Pengurus', className: 'bg-slate-50 text-slate-700 border-slate-200' };
@@ -306,6 +308,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           >
             <option value="ALL">Semua Role</option>
             <option value="SUPER_ADMIN">Super Admin</option>
+            <option value="INTI">Pengurus Inti</option>
             <option value="ADMIN">Admin PJ</option>
             <option value="PENGURUS">Pengurus</option>
           </select>

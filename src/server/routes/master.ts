@@ -225,12 +225,12 @@ const assignPjSchema = z.object({
   departmentId: z.string().min(1, 'Department ID wajib diisi'),
 });
 
-masterRouter.get('/pj-departments', requireRole(['SUPER_ADMIN', 'ADMIN']), async (c) => {
+masterRouter.get('/pj-departments', requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']), async (c) => {
   const db = c.get('db');
   const user = c.get('user');
 
-  // SUPER_ADMIN dapat melihat seluruh mapping, ADMIN hanya mapping miliknya
-  if (user.role === 'SUPER_ADMIN') {
+  // SUPER_ADMIN & INTI dapat melihat seluruh mapping, ADMIN hanya mapping miliknya
+  if (user.role === 'SUPER_ADMIN' || user.role === 'INTI') {
     const mappings = await db
       .select({
         adminId: pjDepartments.adminId,

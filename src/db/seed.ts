@@ -275,6 +275,24 @@ async function seed() {
       programStudiId:   PRODI_ID_2,
       angkatan:         2022,
     },
+    {
+      id:               'usr-inti-001',
+      prn:              'PRN0004',
+      passwordHash,
+      role:             'INTI' as const,
+      generasi:         24,
+      departmentId:     DEPT_PSDM,
+      jabatan:          'Ketua Umum (Pengurus Inti)',
+      namaLengkap:      'Ketua Umum Inti',
+      tempatLahir:      'Makassar',
+      tanggalLahir:     '2001-08-17',
+      alamat:           'Jl. Urip Sumoharjo No. 4',
+      noTelp:           '081234560004',
+      email:            'inti@psdm.org',
+      nim:              '2200000004',
+      programStudiId:   PRODI_ID_1,
+      angkatan:         2022,
+    },
   ];
 
   for (const u of seedUsers) {

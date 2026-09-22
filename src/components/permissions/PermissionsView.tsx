@@ -29,11 +29,15 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               {currentUser.role === 'PENGURUS'
                 ? 'Riwayat & Status Perizinan'
+                : currentUser.role === 'INTI'
+                ? 'Pemantauan & Rekapitulasi Perizinan'
                 : 'Manajemen & Verifikasi Perizinan'}
             </h1>
             <p className="text-xs text-slate-500">
               {currentUser.role === 'SUPER_ADMIN'
                 ? 'Verifikasi dan kelola seluruh permohonan izin kehadiran kegiatan lintas departemen.'
+                : currentUser.role === 'INTI'
+                ? 'Pantau seluruh permohonan izin kehadiran kegiatan di semua departemen secara transparan.'
                 : currentUser.role === 'ADMIN'
                 ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
                 : 'Pantau status verifikasi izin kehadiran kegiatan Anda.'}

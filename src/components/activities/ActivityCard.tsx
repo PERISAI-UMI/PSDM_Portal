@@ -154,7 +154,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           <Eye className="w-4 h-4" />
         </button>
 
-        {userRole !== 'PENGURUS' && (
+        {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && (
           <button
             type="button"
             onClick={() => onOpenAttendance?.(activity)}
@@ -162,6 +162,17 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           >
             <UserCheck className="w-3.5 h-3.5" />
             <span>Presensi</span>
+          </button>
+        )}
+
+        {userRole === 'INTI' && (
+          <button
+            type="button"
+            onClick={() => onViewDetail?.(activity)}
+            className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>Lihat Rekap Presensi</span>
           </button>
         )}
 

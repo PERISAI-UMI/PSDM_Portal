@@ -56,8 +56,8 @@ const updateUserSelfSchema = z.object({
 
 const updateUserAdminSchema = createUserSchema.partial().omit({ prn: true });
 
-// GET /api/users (SUPER_ADMIN & ADMIN)
-usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN']), async (c) => {
+// GET /api/users (SUPER_ADMIN, ADMIN & INTI)
+usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']), async (c) => {
   const db = c.get('db');
   const departmentId = c.req.query('departmentId');
   const role = c.req.query('role');

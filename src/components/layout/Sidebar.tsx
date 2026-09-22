@@ -63,6 +63,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return { label: 'Super Admin', color: 'bg-slate-900 text-white' };
       case 'ADMIN':
         return { label: 'Admin PJ', color: 'bg-slate-800 text-slate-100' };
+      case 'INTI':
+        return { label: 'Pengurus Inti', color: 'bg-purple-900 text-purple-100' };
       case 'PENGURUS':
       default:
         return { label: 'Pengurus', color: 'bg-slate-100 text-slate-700 border border-slate-200' };
@@ -191,7 +193,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="flex items-center gap-2.5">
                 <FileText className="w-4 h-4 text-slate-500" />
                 <span>
-                  {user.role === 'PENGURUS' ? 'Perizinan' : 'Verifikasi Izin'}
+                  {user.role === 'PENGURUS' ? 'Perizinan' : user.role === 'INTI' ? 'Monitoring Izin' : 'Verifikasi Izin'}
                 </span>
               </div>
               {counts.pendingPermissionsCount > 0 && (
@@ -201,7 +203,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </button>
 
-            {/* Member Directory: Only for SUPER_ADMIN and ADMIN */}
+            {/* Member Directory: For all roles except PENGURUS */}
             {user.role !== 'PENGURUS' && (
               <button
                 type="button"
@@ -219,8 +221,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </button>
             )}
 
-            {/* Master Data: only for SuperAdmin */}
-            {user.role === 'SUPER_ADMIN' && (
+            {/* Master Data: for SuperAdmin and INTI */}
+            {(user.role === 'SUPER_ADMIN' || user.role === 'INTI') && (
               <div className="space-y-0.5">
                 <button
                   type="button"
