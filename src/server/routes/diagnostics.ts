@@ -97,3 +97,76 @@ diagnosticsRouter.get('/', async (c) => {
     data: checks,
   });
 });
+
+/**
+ * POST /api/diagnostics/clean-db
+ * Pembersihan database pra-peluncuran produksi (Fresh Launch Sanitization).
+ * Dilindungi maintenance secret key.
+ */
+diagnosticsRouter.post('/clean-db', async (c) => {
+  const maintenanceKey = c.req.header('x-maintenance-key');
+  const secret = c.env?.SESSION_SECRET || process.env.SESSION_SECRET;
+
+  if (!maintenanceKey || maintenanceKey !== secret) {
+    return c.json({ success: false, message: 'Akses ditolak: Maintenance key tidak valid' }, 403);
+  }
+
+  const db = c.get('db');
+
+  try {
+    const {
+      attendances,
+      permissions,
+      activities,
+      pjDepartments,
+      sessions,
+      users,
+      departments,
+      fakultas,
+      programStudi,
+    } = await import('../../db/schema/index.ts');
+    const { ne, count } = await import('drizzle-orm');
+
+    // 1. Hapus seluruh data transaksi dummy
+    await db.delete(attendances);
+    await db.delete(permissions);
+    await db.delete(activities);
+    await db.delete(pjDepartments);
+    await db.delete(sessions);
+
+    // 2. Hapus seluruh user demo (pertahankan 1 akun SUPER_ADMIN)
+    await db.delete(users).where(ne(users.role, 'SUPER_ADMIN'));
+
+    // 3. Reset avatar pada SUPER_ADMIN yang tersisa agar bersih
+    await db.update(users).set({ avatarUrl: null });
+
+    // 4. Hitung rekap data bersih
+    const [uCount] = await db.select({ count: count() }).from(users);
+    const [actCount] = await db.select({ count: count() }).from(activities);
+    const [attCount] = await db.select({ count: count() }).from(attendances);
+    const [permCount] = await db.select({ count: count() }).from(permissions);
+    const [deptCount] = await db.select({ count: count() }).from(departments);
+    const [fakCount] = await db.select({ count: count() }).from(fakultas);
+    const [prodiCount] = await db.select({ count: count() }).from(programStudi);
+
+    return c.json({
+      success: true,
+      message: 'Database berhasil dibersihkan untuk peluncuran produksi (Fresh & Bersih)',
+      data: {
+        users: uCount.count,
+        activities: actCount.count,
+        attendances: attCount.count,
+        permissions: permCount.count,
+        departments: deptCount.count,
+        fakultas: fakCount.count,
+        prodi: prodiCount.count,
+      },
+    });
+  } catch (err: any) {
+    return c.json(
+      { success: false, message: `Gagal membersihkan database: ${err?.message || 'Unknown error'}` },
+      500
+    );
+  }
+});
+

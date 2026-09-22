@@ -14,16 +14,57 @@ export const syncRouter = new Hono<AppEnv>();
 
 syncRouter.use('*', authMiddleware);
 
+interface SyncCacheEntry {
+  hash: string;
+  data: {
+    activities: any[];
+    permissions: any[];
+    attendances: any[];
+  };
+  cachedAt: number;
+}
+
+// Micro-cache 4 detik per user/role di Cloudflare Worker isolate untuk meredam lonjakan query simultan
+const syncMicroCache = new Map<string, SyncCacheEntry>();
+const SYNC_CACHE_TTL_MS = 4000;
+
+export function invalidateSyncCache() {
+  syncMicroCache.clear();
+}
+
 /**
  * GET /api/sync/live
  * Endpoint agregasi real-time untuk sinkronisasi live data (activities, permissions, attendances)
- * Dilengkapi pengecekan hash/versioning sehingga jika tidak ada perubahan,
+ * Dilengkapi micro-cache dan hash/versioning sehingga jika tidak ada perubahan,
  * response berukuran sangat kecil (~70 byte) tanpa membebani browser atau server.
  */
 syncRouter.get('/live', async (c) => {
   const db = c.get('db');
   const user = c.get('user');
   const clientHash = c.req.query('hash');
+  const cacheKey = `${user.id}:${user.role}`;
+  const nowMs = Date.now();
+
+  // Layani dari micro-cache jika masih valid
+  const cached = syncMicroCache.get(cacheKey);
+  if (cached && nowMs - cached.cachedAt < SYNC_CACHE_TTL_MS) {
+    if (clientHash && clientHash === cached.hash) {
+      return c.json({
+        success: true,
+        changed: false,
+        hash: cached.hash,
+        serverTime: new Date().toISOString(),
+      });
+    }
+
+    return c.json({
+      success: true,
+      changed: true,
+      hash: cached.hash,
+      serverTime: new Date().toISOString(),
+      data: cached.data,
+    });
+  }
 
   try {
     // 1. Ambil Activities sesuai RBAC
@@ -155,6 +196,19 @@ syncRouter.get('/live', async (c) => {
     const attHashStr = attList.map((at) => `${at.id}:${at.status}`).join('|');
     const combinedHash = `${actList.length}_${permList.length}_${attList.length}_${actHashStr.length}_${permHashStr}_${attHashStr.slice(0, 80)}`;
 
+    const payloadData = {
+      activities: activitiesWithSummary,
+      permissions: permList,
+      attendances: attList,
+    };
+
+    // Simpan ke in-memory micro-cache
+    syncMicroCache.set(cacheKey, {
+      hash: combinedHash,
+      data: payloadData,
+      cachedAt: nowMs,
+    });
+
     if (clientHash && clientHash === combinedHash) {
       return c.json({
         success: true,
@@ -169,11 +223,7 @@ syncRouter.get('/live', async (c) => {
       changed: true,
       hash: combinedHash,
       serverTime: new Date().toISOString(),
-      data: {
-        activities: activitiesWithSummary,
-        permissions: permList,
-        attendances: attList,
-      },
+      data: payloadData,
     });
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : 'Kesalahan sinkronisasi real-time';

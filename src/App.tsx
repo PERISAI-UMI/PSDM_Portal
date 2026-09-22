@@ -140,12 +140,12 @@ function MainAppContent() {
     // 1. Initial live sync
     syncRealtime(true);
 
-    // 2. Interval adaptif: 3.5 detik saat tab aktif, 25 detik saat tab di background
+    // 2. Interval adaptif hemat kuota: 15 detik saat tab aktif, 45 detik saat tab di background
     let timer: ReturnType<typeof setTimeout>;
 
     const scheduleNextSync = () => {
       const isHidden = typeof document !== 'undefined' && document.hidden;
-      const delay = isHidden ? 25000 : 3500;
+      const delay = isHidden ? 45000 : 15000;
       timer = setTimeout(async () => {
         await syncRealtime(false);
         scheduleNextSync();

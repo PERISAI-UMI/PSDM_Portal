@@ -40,11 +40,15 @@ const getUploadUrlSchema = z.object({
 permissionsRouter.post('/presigned-url', zValidator('json', getUploadUrlSchema), async (c) => {
   const { fileName, contentType } = c.req.valid('json');
 
-  const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID || 'mock_key_id';
-  const appKey = c.env?.B2_APPLICATION_KEY || process.env.B2_APPLICATION_KEY || 'mock_app_key';
-  const bucket = c.env?.B2_BUCKET_NAME || process.env.B2_BUCKET_NAME || 'psdm-evidence';
+  const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID;
+  const appKey = c.env?.B2_APPLICATION_KEY || process.env.B2_APPLICATION_KEY;
+  const bucket = c.env?.B2_BUCKET_NAME || process.env.B2_BUCKET_NAME || 'PSDM-B2';
   const endpoint = c.env?.B2_ENDPOINT || process.env.B2_ENDPOINT;
-  const region = c.env?.B2_REGION || process.env.B2_REGION || 'us-east-005';
+  const region = c.env?.B2_REGION || process.env.B2_REGION || 'us-west-004';
+
+  if (!keyId || !appKey) {
+    return c.json({ success: false, message: 'Kredensial Backblaze B2 belum dikonfigurasi' }, 500);
+  }
 
   const presigned = await createPresignedUploadUrl(
     {

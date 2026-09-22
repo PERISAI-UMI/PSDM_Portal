@@ -121,6 +121,27 @@ storageRouter.post('/upload', authMiddleware, async (c) => {
       return c.json({ success: false, message: 'File bukti izin tidak ditemukan dalam form data' }, 400);
     }
 
+    // Proteksi Kuota & Crash: Batas ukuran berkas maksimal 5 MB
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      return c.json({ success: false, message: 'Ukuran berkas melebihi batas maksimal 5 MB' }, 400);
+    }
+
+    // Whitelist tipe berkas yang aman
+    const ALLOWED_MIME_TYPES = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'application/pdf',
+    ];
+    if (file.type && !ALLOWED_MIME_TYPES.includes(file.type.toLowerCase())) {
+      return c.json(
+        { success: false, message: 'Format berkas tidak didukung. Gunakan gambar (JPG, PNG, WebP) atau PDF.' },
+        400
+      );
+    }
+
     // Ambil kredensial B2 dari cache
     let creds = await getB2Credentials(keyId, appKey, targetBucketName);
 
@@ -229,6 +250,20 @@ async function handleStorageFileStream(c: any) {
     return c.text('Nama berkas tidak valid', 400);
   }
 
+  // Cek Cloudflare Edge Cache untuk mencegah transaksi berulang ke B2
+  const cache = typeof (globalThis as any).caches !== 'undefined' ? (globalThis as any).caches.default : null;
+  const cacheUrl = c.req.url;
+  if (cache) {
+    try {
+      const cached = await cache.match(cacheUrl);
+      if (cached) {
+        return cached;
+      }
+    } catch {
+      // Abaikan jika cache API gagal/tidak aktif
+    }
+  }
+
   try {
     let creds = await getB2Credentials(keyId, appKey, targetBucketName);
 
@@ -271,16 +306,27 @@ async function handleStorageFileStream(c: any) {
 
     const headers = new Headers();
     headers.set('Content-Type', contentType);
-    headers.set('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+    // Cache di browser dan Edge Cloudflare selama 7 hari
+    headers.set('Cache-Control', 'public, max-age=604800, s-maxage=604800');
     headers.set('Content-Disposition', 'inline');
     if (contentLength) {
       headers.set('Content-Length', contentLength);
     }
 
-    return new Response(b2Res.body, {
+    const finalResponse = new Response(b2Res.body, {
       status: 200,
       headers,
     });
+
+    if (cache) {
+      try {
+        c.executionCtx?.waitUntil?.(cache.put(cacheUrl, finalResponse.clone()));
+      } catch {
+        // Fallback jika execution context tidak tersedia
+      }
+    }
+
+    return finalResponse;
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : 'Gagal mengambil berkas dari storage';
     return c.text(errorMsg, 500);

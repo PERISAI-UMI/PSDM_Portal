@@ -492,6 +492,17 @@ usersRouter.post('/profile/avatar', async (c) => {
     const body = await c.req.parseBody();
     const file = body['file'];
     if (file && file instanceof File) {
+      // Proteksi Kuota & RAM: Foto profil maksimal 2 MB
+      const MAX_AVATAR_SIZE = 2 * 1024 * 1024;
+      if (file.size > MAX_AVATAR_SIZE) {
+        return c.json({ success: false, message: 'Ukuran foto profil melebihi batas maksimal 2 MB' }, 400);
+      }
+
+      const ALLOWED_AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+      if (file.type && !ALLOWED_AVATAR_TYPES.includes(file.type.toLowerCase())) {
+        return c.json({ success: false, message: 'Format foto harus berupa JPG, PNG, atau WebP' }, 400);
+      }
+
       const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID;
       const appKey = c.env?.B2_APPLICATION_KEY || process.env.B2_APPLICATION_KEY;
       const targetBucketName = c.env?.B2_BUCKET_NAME || process.env.B2_BUCKET_NAME || 'PSDM-B2';
