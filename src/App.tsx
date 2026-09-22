@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type {
   AuthUser,
   ActivityItem,
@@ -11,6 +11,7 @@ import type {
   PjMappingItem,
 } from './types/index.ts';
 import { api, getStoredUser } from './services/api.ts';
+import { broadcastRealtimeEvent, subscribeRealtimeEvents } from './utils/realtime.ts';
 import { Header } from './components/layout/Header.tsx';
 import { Sidebar } from './components/layout/Sidebar.tsx';
 import { LoginForm } from './components/auth/LoginForm.tsx';
@@ -64,6 +65,12 @@ function MainAppContent() {
   const [activeSection, setActiveSection] = useState<ActiveSection>('dashboard');
   const [masterDataTab, setMasterDataTab] = useState<MasterDataTab>('dept');
 
+  // Real-time Live Sync States
+  const [isLiveSyncing, setIsLiveSyncing] = useState(false);
+  const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
+  const syncHashRef = useRef<string>('');
+  const isSyncingRef = useRef<boolean>(false);
+
   const reloadData = async (user: AuthUser) => {
     const [acts, perms, atts, users, master] = await Promise.all([
       api.getActivities(user),
@@ -97,6 +104,89 @@ function MainAppContent() {
       );
     }
   };
+
+  // Real-time live synchronization callback (ringan, ~70 byte jika tidak ada perubahan)
+  const syncRealtime = useCallback(
+    async (force = false) => {
+      if (!currentUser || isSyncingRef.current) return;
+      isSyncingRef.current = true;
+      setIsLiveSyncing(true);
+
+      try {
+        const res = await api.getLiveSync(force ? undefined : syncHashRef.current);
+        if (res.success) {
+          syncHashRef.current = res.hash;
+          if (res.changed && res.data) {
+            setActivities(res.data.activities);
+            setPermissions(res.data.permissions);
+            setAttendances(res.data.attendances);
+          }
+          setLastSyncedAt(new Date());
+        }
+      } catch (err) {
+        console.debug('Real-time sync skipped:', err);
+      } finally {
+        isSyncingRef.current = false;
+        setIsLiveSyncing(false);
+      }
+    },
+    [currentUser]
+  );
+
+  // Engine Real-Time Adaptive Sync (Polling adaptif + tab visibility + cross-tab broadcast)
+  useEffect(() => {
+    if (!currentUser) return;
+
+    // 1. Initial live sync
+    syncRealtime(true);
+
+    // 2. Interval adaptif: 3.5 detik saat tab aktif, 25 detik saat tab di background
+    let timer: ReturnType<typeof setTimeout>;
+
+    const scheduleNextSync = () => {
+      const isHidden = typeof document !== 'undefined' && document.hidden;
+      const delay = isHidden ? 25000 : 3500;
+      timer = setTimeout(async () => {
+        await syncRealtime(false);
+        scheduleNextSync();
+      }, delay);
+    };
+
+    scheduleNextSync();
+
+    // 3. Sinkronisasi instan seketika saat user kembali ke tab browser
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        syncRealtime(true);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 4. Sinkronisasi instan saat window/layar difokuskan
+    const handleFocus = () => {
+      syncRealtime(true);
+    };
+    window.addEventListener('focus', handleFocus);
+
+    // 5. Sinkronisasi saat koneksi internet kembali online
+    const handleOnline = () => {
+      syncRealtime(true);
+    };
+    window.addEventListener('online', handleOnline);
+
+    // 6. Listener event lintas tab (BroadcastChannel)
+    const unsubscribeCrossTab = subscribeRealtimeEvents((_event) => {
+      syncRealtime(true);
+    });
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('online', handleOnline);
+      unsubscribeCrossTab();
+    };
+  }, [currentUser, syncRealtime]);
 
   useEffect(() => {
     let isMounted = true;
@@ -159,12 +249,14 @@ function MainAppContent() {
   // Activity Actions
   const handleCreateActivity = async (data: Omit<ActivityItem, 'id' | 'attendanceSummary'>) => {
     await api.createActivity(data);
+    broadcastRealtimeEvent('ACTIVITY_CHANGED');
     if (currentUser) await reloadData(currentUser);
     showToast('Program kerja berhasil dibuat!', 'success');
   };
 
   const handleTogglePublish = async (id: string, current: boolean) => {
     await api.updateActivity(id, { isPublished: !current });
+    broadcastRealtimeEvent('ACTIVITY_CHANGED');
     if (currentUser) await reloadData(currentUser);
     showToast(
       !current
@@ -181,6 +273,7 @@ function MainAppContent() {
   const executeDeleteActivity = async () => {
     if (!confirmDeleteId) return;
     await api.deleteActivity(confirmDeleteId);
+    broadcastRealtimeEvent('ACTIVITY_CHANGED');
     setConfirmDeleteId(null);
     if (currentUser) await reloadData(currentUser);
     showToast('Kegiatan proker berhasil dihapus.', 'info');
@@ -195,6 +288,7 @@ function MainAppContent() {
   }) => {
     if (!currentUser) return;
     await api.requestPermission(currentUser, data);
+    broadcastRealtimeEvent('PERMISSION_CHANGED');
     await reloadData(currentUser);
     showToast('Permohonan izin berhasil dikirim! Menunggu validasi PJ.', 'success');
   };
@@ -205,6 +299,8 @@ function MainAppContent() {
     if (!res.success) {
       showToast(res.message || 'Gagal memproses permohonan', 'error');
     } else {
+      broadcastRealtimeEvent('PERMISSION_CHANGED');
+      broadcastRealtimeEvent('ATTENDANCE_CHANGED');
       showToast(
         status === 'APPROVED'
           ? 'Permohonan izin disetujui & absensi peserta diperbarui!'
@@ -218,12 +314,14 @@ function MainAppContent() {
   // Master Data Actions
   const handleAssignPj = async (adminId: string, departmentId: string) => {
     await api.assignPjDepartment(adminId, departmentId);
+    broadcastRealtimeEvent('MASTER_DATA_CHANGED');
     if (currentUser) await reloadData(currentUser);
     showToast('Penugasan PJ Departemen berhasil disimpan!', 'success');
   };
 
   const handleRemovePj = async (adminId: string, departmentId: string) => {
     await api.removePjDepartment(adminId, departmentId);
+    broadcastRealtimeEvent('MASTER_DATA_CHANGED');
     if (currentUser) await reloadData(currentUser);
     showToast('Penugasan PJ Departemen telah dihapus.', 'info');
   };
@@ -329,6 +427,9 @@ function MainAppContent() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onToggleSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}
+          isLiveSyncing={isLiveSyncing}
+          onManualSync={() => syncRealtime(true)}
+          lastSyncedAt={lastSyncedAt}
         />
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 overflow-x-hidden">

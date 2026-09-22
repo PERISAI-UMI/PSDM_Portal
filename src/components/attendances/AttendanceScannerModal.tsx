@@ -3,6 +3,7 @@ import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw } from 'lucide-reac
 import type { ActivityItem, AuthUser, AttendanceStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { useToast } from '../ui/Toast.tsx';
+import { broadcastRealtimeEvent, subscribeRealtimeEvents } from '../../utils/realtime.ts';
 
 interface AttendanceScannerModalProps {
   isOpen: boolean;
@@ -33,6 +34,23 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
       loadData();
     }
   }, [isOpen, activity]);
+
+  // Real-time synchronization: memperbarui status absensi modal seketika jika admin lain mencatat absensi
+  useEffect(() => {
+    if (!isOpen || !activity) return;
+    const unsubscribe = subscribeRealtimeEvents((event) => {
+      if (event.type === 'ATTENDANCE_CHANGED' && activity) {
+        api.getAttendances(currentAdmin, activity.id).then((atts) => {
+          const map: Record<string, AttendanceStatus> = {};
+          atts.forEach((a) => {
+            map[a.userId] = a.status;
+          });
+          setAttendancesMap(map);
+        }).catch(() => {});
+      }
+    });
+    return unsubscribe;
+  }, [isOpen, activity, currentAdmin]);
 
   useEffect(() => {
     if (initialUsers && initialUsers.length > 0) {
@@ -73,6 +91,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
       setAttendancesMap(optimisticMap);
       try {
         await api.resetAttendance(activity.id, [userId]);
+        broadcastRealtimeEvent('ATTENDANCE_CHANGED');
         onSuccess();
       } catch (err: any) {
         console.error('Failed to un-mark attendance:', err);
@@ -85,6 +104,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
     setAttendancesMap((prev) => ({ ...prev, [userId]: status }));
     try {
       await api.recordAttendance(activity.id, userId, status, currentAdmin.id);
+      broadcastRealtimeEvent('ATTENDANCE_CHANGED');
       onSuccess();
     } catch (err: any) {
       console.error('Failed to record attendance:', err);
@@ -114,6 +134,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
 
     try {
       await api.recordBatchAttendance(activity.id, items, currentAdmin.id);
+      broadcastRealtimeEvent('ATTENDANCE_CHANGED');
       onSuccess();
       showToast(`Berhasil menandai ${items.length} pengurus hadir!`, 'success');
     } catch (err: any) {
@@ -159,6 +180,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
         activity.id,
         search.trim() ? targetUserIds : undefined
       );
+      broadcastRealtimeEvent('ATTENDANCE_CHANGED');
       onSuccess();
       showToast('Status presensi berhasil di-reset!', 'success');
     } catch (err: any) {

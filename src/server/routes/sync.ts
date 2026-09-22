@@ -1,0 +1,182 @@
+import { Hono } from 'hono';
+import { eq, and, desc, sql, inArray } from 'drizzle-orm';
+import type { AppEnv } from '../types.ts';
+import {
+  activities,
+  attendances,
+  permissions,
+  users,
+  departments,
+} from '../../db/schema/index.ts';
+import { authMiddleware } from '../middleware/auth.ts';
+
+export const syncRouter = new Hono<AppEnv>();
+
+syncRouter.use('*', authMiddleware);
+
+/**
+ * GET /api/sync/live
+ * Endpoint agregasi real-time untuk sinkronisasi live data (activities, permissions, attendances)
+ * Dilengkapi pengecekan hash/versioning sehingga jika tidak ada perubahan,
+ * response berukuran sangat kecil (~70 byte) tanpa membebani browser atau server.
+ */
+syncRouter.get('/live', async (c) => {
+  const db = c.get('db');
+  const user = c.get('user');
+  const clientHash = c.req.query('hash');
+
+  try {
+    // 1. Ambil Activities sesuai RBAC
+    const actConditions = [];
+    if (user.role === 'PENGURUS') {
+      actConditions.push(eq(activities.isPublished, true));
+    }
+
+    const actQuery = db
+      .select({
+        id: activities.id,
+        nama: activities.nama,
+        deskripsi: activities.deskripsi,
+        jenis: activities.jenis,
+        startDate: activities.startDate,
+        endDate: activities.endDate,
+        isPublished: activities.isPublished,
+        createdBy: activities.createdBy,
+        creatorName: users.namaLengkap,
+        createdAt: activities.createdAt,
+      })
+      .from(activities)
+      .innerJoin(users, eq(activities.createdBy, users.id))
+      .orderBy(desc(activities.startDate));
+
+    const actList = actConditions.length > 0
+      ? await actQuery.where(and(...actConditions)).all()
+      : await actQuery.all();
+
+    // Summary kehadiran per activity
+    let activitiesWithSummary = actList.map((a) => ({
+      ...a,
+      attendanceSummary: { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 },
+    }));
+
+    if (actList.length > 0) {
+      const actIds = actList.map((a) => a.id);
+      const stats = await db
+        .select({
+          activityId: attendances.activityId,
+          status: attendances.status,
+          count: sql<number>`count(*)`.as('count'),
+        })
+        .from(attendances)
+        .where(inArray(attendances.activityId, actIds))
+        .groupBy(attendances.activityId, attendances.status)
+        .all();
+
+      const summaryMap: Record<string, { HADIR: number; IZIN: number; SAKIT: number; ALPHA: number; TOTAL: number }> = {};
+      for (const s of stats) {
+        if (!summaryMap[s.activityId]) {
+          summaryMap[s.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
+        }
+        const cnt = Number(s.count) || 0;
+        if (s.status in summaryMap[s.activityId]) {
+          summaryMap[s.activityId][s.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA'] = cnt;
+          summaryMap[s.activityId].TOTAL += cnt;
+        }
+      }
+
+      activitiesWithSummary = actList.map((act) => ({
+        ...act,
+        attendanceSummary: summaryMap[act.id] || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 },
+      }));
+    }
+
+    // 2. Ambil Permissions sesuai RBAC
+    const permQuery = db
+      .select({
+        id: permissions.id,
+        userId: permissions.userId,
+        userName: users.namaLengkap,
+        userPrn: users.prn,
+        userDepartmentId: users.departmentId,
+        activityId: permissions.activityId,
+        activityName: activities.nama,
+        jenisIzin: permissions.jenisIzin,
+        alasan: permissions.alasan,
+        evidenceUrl: permissions.evidenceUrl,
+        status: permissions.status,
+        reviewedBy: permissions.reviewedBy,
+        reviewedAt: permissions.reviewedAt,
+        createdAt: permissions.createdAt,
+      })
+      .from(permissions)
+      .innerJoin(users, eq(permissions.userId, users.id))
+      .innerJoin(activities, eq(permissions.activityId, activities.id))
+      .orderBy(desc(permissions.createdAt));
+
+    let permList = [];
+    if (user.role === 'PENGURUS') {
+      permList = await permQuery.where(eq(permissions.userId, user.id)).all();
+    } else {
+      permList = await permQuery.all();
+    }
+
+    // 3. Ambil Attendances sesuai RBAC
+    const attQuery = db
+      .select({
+        id: attendances.id,
+        activityId: attendances.activityId,
+        activityName: activities.nama,
+        activityDate: activities.startDate,
+        userId: attendances.userId,
+        userName: users.namaLengkap,
+        userPrn: users.prn,
+        userDepartmentId: users.departmentId,
+        userDepartmentName: departments.nama,
+        status: attendances.status,
+        recordedBy: attendances.recordedBy,
+        recordedAt: attendances.recordedAt,
+      })
+      .from(attendances)
+      .innerJoin(activities, eq(attendances.activityId, activities.id))
+      .innerJoin(users, eq(attendances.userId, users.id))
+      .innerJoin(departments, eq(users.departmentId, departments.id))
+      .orderBy(desc(attendances.recordedAt));
+
+    let attList = [];
+    if (user.role === 'PENGURUS') {
+      attList = await attQuery.where(eq(attendances.userId, user.id)).all();
+    } else {
+      attList = await attQuery.all();
+    }
+
+    // 4. Hitung lightweight hash untuk deteksi perubahan
+    const actHashStr = activitiesWithSummary.map((a) => `${a.id}:${a.attendanceSummary.TOTAL}:${a.isPublished}`).join('|');
+    const permHashStr = permList.map((p) => `${p.id}:${p.status}`).join('|');
+    const attHashStr = attList.map((at) => `${at.id}:${at.status}`).join('|');
+    const combinedHash = `${actList.length}_${permList.length}_${attList.length}_${actHashStr.length}_${permHashStr}_${attHashStr.slice(0, 80)}`;
+
+    if (clientHash && clientHash === combinedHash) {
+      return c.json({
+        success: true,
+        changed: false,
+        hash: combinedHash,
+        serverTime: new Date().toISOString(),
+      });
+    }
+
+    return c.json({
+      success: true,
+      changed: true,
+      hash: combinedHash,
+      serverTime: new Date().toISOString(),
+      data: {
+        activities: activitiesWithSummary,
+        permissions: permList,
+        attendances: attList,
+      },
+    });
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Kesalahan sinkronisasi real-time';
+    return c.json({ success: false, message: errorMsg }, 500);
+  }
+});

@@ -534,4 +534,33 @@ export const api = {
 
     return res.data;
   },
+
+  // ================= REAL-TIME LIVE SYNC =================
+  async getLiveSync(
+    lastHash?: string
+  ): Promise<{
+    success: boolean;
+    changed: boolean;
+    hash: string;
+    serverTime: string;
+    data?: {
+      activities: ActivityItem[];
+      permissions: PermissionRecord[];
+      attendances: AttendanceRecord[];
+    };
+  }> {
+    const qs = lastHash ? `?hash=${encodeURIComponent(lastHash)}` : '';
+    const res = await request<{
+      success: boolean;
+      changed: boolean;
+      hash: string;
+      serverTime: string;
+      data?: {
+        activities: ActivityItem[];
+        permissions: PermissionRecord[];
+        attendances: AttendanceRecord[];
+      };
+    }>(`/api/sync/live${qs}`);
+    return res;
+  },
 };
