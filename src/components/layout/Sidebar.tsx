@@ -103,9 +103,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <span className="font-bold text-slate-900 text-sm tracking-tight shrink-0">Portal PSDM</span>
-              <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${roleInfo.color}`}>
-                {roleInfo.label}
-              </span>
+              {user.role !== 'INTI' && (
+                <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${roleInfo.color}`}>
+                  {roleInfo.label}
+                </span>
+              )}
             </div>
             <p className="text-[11px] text-slate-500 truncate" title={user.departmentName || 'Departemen PSDM'}>
               {user.departmentName || 'Departemen PSDM'}

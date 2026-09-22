@@ -182,9 +182,11 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               Profil & Pengaturan Akun
             </h1>
-            <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-900 text-white">
-              {roleMeta.badge}
-            </span>
+            {currentUser.role !== 'INTI' && (
+              <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-900 text-white">
+                {roleMeta.badge}
+              </span>
+            )}
           </div>
           <p className="text-xs text-slate-500 mt-1">
             Kelola data biodata anggota, informasi keorganisasian, serta keamanan akses akun Anda.

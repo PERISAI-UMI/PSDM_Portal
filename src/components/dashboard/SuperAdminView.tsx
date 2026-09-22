@@ -61,13 +61,11 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Dashboard Eksekutif
           </h1>
-          <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border ${
-            currentUser.role === 'INTI'
-              ? 'bg-purple-50 text-purple-700 border-purple-200'
-              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-          }`}>
-            {currentUser.role === 'INTI' ? 'Pengurus Inti' : 'Super Admin'}
-          </span>
+          {currentUser.role !== 'INTI' && (
+            <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200">
+              Super Admin
+            </span>
+          )}
         </div>
         <p className="text-xs text-slate-500 mt-1">
           Ringkasan eksekutif kegiatan, presensi, dan perizinan lintas departemen organisasi.

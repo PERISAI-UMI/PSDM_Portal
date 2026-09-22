@@ -54,9 +54,11 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
           <span className="font-bold text-slate-900 text-sm">Portal PSDM</span>
-          <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold whitespace-nowrap ${badge.color}`}>
-            {badge.label}
-          </span>
+          {user.role !== 'INTI' && (
+            <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold whitespace-nowrap ${badge.color}`}>
+              {badge.label}
+            </span>
+          )}
         </div>
 
         {/* Desktop View Left (>= 1024px) */}
