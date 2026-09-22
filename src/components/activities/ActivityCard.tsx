@@ -125,25 +125,25 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
 
         {/* Attendance Breakdown Strip */}
         <div className="grid grid-cols-5 gap-1 p-2 rounded-lg bg-slate-50 border border-slate-100 text-center mb-4">
-          <div>
-            <div className="text-[10px] text-slate-500 font-medium">Hadir</div>
-            <div className="text-xs font-bold text-slate-900 tabular-nums">{summary.HADIR}</div>
+          <div className="min-w-0">
+            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Hadir</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.HADIR}</div>
           </div>
-          <div>
-            <div className="text-[10px] text-slate-500 font-medium">Telat</div>
-            <div className="text-xs font-bold text-slate-900 tabular-nums">{summary.TELAT || 0}</div>
+          <div className="min-w-0">
+            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Telat</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.TELAT || 0}</div>
           </div>
-          <div>
-            <div className="text-[10px] text-slate-500 font-medium">Izin</div>
-            <div className="text-xs font-bold text-slate-900 tabular-nums">{summary.IZIN}</div>
+          <div className="min-w-0">
+            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Izin</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.IZIN}</div>
           </div>
-          <div>
-            <div className="text-[10px] text-slate-500 font-medium">Sakit</div>
-            <div className="text-xs font-bold text-slate-900 tabular-nums">{summary.SAKIT}</div>
+          <div className="min-w-0">
+            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Sakit</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.SAKIT}</div>
           </div>
-          <div>
-            <div className="text-[10px] text-slate-500 font-medium">Alpha</div>
-            <div className="text-xs font-bold text-slate-900 tabular-nums">{summary.ALPHA}</div>
+          <div className="min-w-0">
+            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Alpha</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.ALPHA}</div>
           </div>
         </div>
       </div>
