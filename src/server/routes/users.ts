@@ -14,8 +14,9 @@ import {
   attendances,
   permissions,
 } from '../../db/schema/index.ts';
-import { authMiddleware, requireRole } from '../middleware/auth.ts';
+import { authMiddleware, requireRole, invalidateSessionCache } from '../middleware/auth.ts';
 import { hashPassword } from '../crypto.ts';
+import { getB2Credentials } from './storage.ts';
 
 export const usersRouter = new Hono<AppEnv>();
 
@@ -39,6 +40,7 @@ const createUserSchema = z.object({
   angkatan: z.number().int().min(2000).max(2100),
   linkedinUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   instagramUsername: z.string().optional().nullable(),
+  avatarUrl: z.union([z.string(), z.literal(''), z.null()]).optional(),
 });
 
 const updateUserSelfSchema = z.object({
@@ -52,6 +54,7 @@ const updateUserSelfSchema = z.object({
   tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format tanggal lahir YYYY-MM-DD').optional(),
   linkedinUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   instagramUsername: z.string().optional().nullable(),
+  avatarUrl: z.union([z.string(), z.literal(''), z.null()]).optional(),
 });
 
 const updateUserAdminSchema = createUserSchema.partial().omit({ prn: true });
@@ -102,6 +105,7 @@ usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']), async (c) =>
       angkatan: users.angkatan,
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
+      avatarUrl: users.avatarUrl,
     })
     .from(users)
     .innerJoin(departments, eq(users.departmentId, departments.id))
@@ -144,6 +148,7 @@ usersRouter.get('/:id', async (c) => {
       angkatan: users.angkatan,
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
+      avatarUrl: users.avatarUrl,
     })
     .from(users)
     .innerJoin(departments, eq(users.departmentId, departments.id))
@@ -431,6 +436,7 @@ async function getFullUserById(db: any, userId: string) {
       angkatan: users.angkatan,
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
+      avatarUrl: users.avatarUrl,
     })
     .from(users)
     .innerJoin(departments, eq(users.departmentId, departments.id))
@@ -456,14 +462,125 @@ usersRouter.put('/profile', async (c) => {
   if (updateData.linkedinUrl === '') {
     updateData.linkedinUrl = null;
   }
+  if (updateData.avatarUrl === '') {
+    updateData.avatarUrl = null;
+  }
 
   await db.update(users).set(updateData).where(eq(users.id, currentUser.id));
+  invalidateSessionCache();
 
   const updatedUser = await getFullUserById(db, currentUser.id);
   return c.json({
     success: true,
     message: 'Profil berhasil diperbarui',
     data: updatedUser,
+  });
+});
+
+// POST /api/users/profile/avatar (Upload / ubah foto profil akun)
+usersRouter.post('/profile/avatar', async (c) => {
+  const currentUser = c.get('user');
+  const db = c.get('db');
+
+  let avatarUrl: string | null = null;
+  const contentType = c.req.header('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    const json = await c.req.json();
+    avatarUrl = json.avatarUrl || null;
+  } else if (contentType.includes('multipart/form-data')) {
+    const body = await c.req.parseBody();
+    const file = body['file'];
+    if (file && file instanceof File) {
+      const keyId = c.env?.B2_APPLICATION_KEY_ID || process.env.B2_APPLICATION_KEY_ID;
+      const appKey = c.env?.B2_APPLICATION_KEY || process.env.B2_APPLICATION_KEY;
+      const targetBucketName = c.env?.B2_BUCKET_NAME || process.env.B2_BUCKET_NAME || 'PSDM-B2';
+
+      if (keyId && appKey) {
+        try {
+          const creds = await getB2Credentials(keyId, appKey, targetBucketName);
+          const getUploadUrlRes = await fetch(`${creds.apiUrl}/b2api/v2/b2_get_upload_url`, {
+            method: 'POST',
+            headers: {
+              Authorization: creds.authToken,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ bucketId: creds.bucketId }),
+          });
+
+          if (getUploadUrlRes.ok) {
+            const uploadUrlData = (await getUploadUrlRes.json()) as { uploadUrl: string; authorizationToken: string };
+            const fileBytes = await file.arrayBuffer();
+            const ext = file.name.split('.').pop() || 'webp';
+            const cleanFileName = `avatars/${currentUser.id}-${Date.now()}.${ext}`;
+
+            const b2UploadRes = await fetch(uploadUrlData.uploadUrl, {
+              method: 'POST',
+              headers: {
+                Authorization: uploadUrlData.authorizationToken,
+                'X-Bz-File-Name': cleanFileName,
+                'Content-Type': file.type || 'image/webp',
+                'X-Bz-Content-Sha1': 'do_not_verify',
+                'Content-Length': String(fileBytes.byteLength),
+              },
+              body: fileBytes,
+            });
+
+            if (b2UploadRes.ok) {
+              avatarUrl = `/api/storage/file/${cleanFileName}`;
+            }
+          }
+        } catch {
+          // B2 upload failed, fallback to base64 below
+        }
+      }
+
+      // Fallback jika tanpa B2 / offline: simpan sebagai dataURL WebP terkompresi
+      if (!avatarUrl) {
+        const fileBytes = await file.arrayBuffer();
+        const base64 = Buffer.from(fileBytes).toString('base64');
+        const mime = file.type || 'image/webp';
+        avatarUrl = `data:${mime};base64,${base64}`;
+      }
+    }
+  }
+
+  if (!avatarUrl) {
+    return c.json({ success: false, message: 'Berkas foto tidak ditemukan' }, 400);
+  }
+
+  await db.update(users).set({ avatarUrl }).where(eq(users.id, currentUser.id));
+  invalidateSessionCache();
+
+  const updatedUser = await getFullUserById(db, currentUser.id);
+
+  return c.json({
+    success: true,
+    message: 'Foto profil berhasil diperbarui',
+    data: {
+      avatarUrl,
+      user: updatedUser,
+    },
+  });
+});
+
+// DELETE /api/users/profile/avatar (Hapus foto profil)
+usersRouter.delete('/profile/avatar', async (c) => {
+  const currentUser = c.get('user');
+  const db = c.get('db');
+
+  await db.update(users).set({ avatarUrl: null }).where(eq(users.id, currentUser.id));
+  invalidateSessionCache();
+
+  const updatedUser = await getFullUserById(db, currentUser.id);
+
+  return c.json({
+    success: true,
+    message: 'Foto profil berhasil dihapus',
+    data: {
+      avatarUrl: null,
+      user: updatedUser,
+    },
   });
 });
 

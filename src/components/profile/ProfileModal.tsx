@@ -153,8 +153,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-2xs">
-              {currentUser.namaLengkap.slice(0, 2).toUpperCase()}
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-2xs overflow-hidden">
+              {currentUser.avatarUrl ? (
+                <img src={currentUser.avatarUrl} alt={currentUser.namaLengkap} className="w-full h-full object-cover" />
+              ) : (
+                currentUser.namaLengkap.slice(0, 2).toUpperCase()
+              )}
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">

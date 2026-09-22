@@ -568,6 +568,62 @@ export const api = {
     return res.data;
   },
 
+  /**
+   * Mengunggah atau mengganti foto profil pengguna
+   */
+  async uploadAvatar(file: File): Promise<{ avatarUrl: string; user: AuthUser }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await request<{
+      success: boolean;
+      message?: string;
+      data?: {
+        avatarUrl: string;
+        user: AuthUser;
+      };
+    }>('/api/users/profile/avatar', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.success || !res.data) {
+      throw new Error(res.message || 'Gagal memperbarui foto profil');
+    }
+
+    if (res.data.user) {
+      setStoredUser(res.data.user);
+    }
+
+    return res.data;
+  },
+
+  /**
+   * Menghapus foto profil pengguna (kembali ke inisial)
+   */
+  async removeAvatar(): Promise<{ user: AuthUser }> {
+    const res = await request<{
+      success: boolean;
+      message?: string;
+      data?: {
+        avatarUrl: null;
+        user: AuthUser;
+      };
+    }>('/api/users/profile/avatar', {
+      method: 'DELETE',
+    });
+
+    if (!res.success || !res.data) {
+      throw new Error(res.message || 'Gagal menghapus foto profil');
+    }
+
+    if (res.data.user) {
+      setStoredUser(res.data.user);
+    }
+
+    return res.data;
+  },
+
   // ================= REAL-TIME LIVE SYNC =================
   async getLiveSync(
     lastHash?: string

@@ -85,6 +85,7 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
         angkatan: users.angkatan,
         linkedinUrl: users.linkedinUrl,
         instagramUsername: users.instagramUsername,
+        avatarUrl: users.avatarUrl,
       },
     })
     .from(sessions)

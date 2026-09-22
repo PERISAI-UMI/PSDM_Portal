@@ -47,6 +47,7 @@ authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
       angkatan: users.angkatan,
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
+      avatarUrl: users.avatarUrl,
     })
     .from(users)
     .leftJoin(departments, eq(users.departmentId, departments.id))

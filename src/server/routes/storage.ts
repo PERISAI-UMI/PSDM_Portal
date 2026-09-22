@@ -33,7 +33,7 @@ interface B2AuthCache {
 // In-memory cache authorization B2 untuk mencegah rate limiting (429) saat banyak upload bersamaan
 let cachedB2Auth: B2AuthCache | null = null;
 
-async function getB2Credentials(
+export async function getB2Credentials(
   keyId: string,
   appKey: string,
   targetBucketName: string,
@@ -157,7 +157,9 @@ storageRouter.post('/upload', authMiddleware, async (c) => {
     // Upload File ke Backblaze B2
     const fileBytes = await file.arrayBuffer();
     const ext = file.name.split('.').pop() || 'dat';
-    const cleanFileName = `evidence/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+    const rawFolder = typeof body['folder'] === 'string' ? body['folder'].replace(/[^a-zA-Z0-9_-]/g, '') : 'evidence';
+    const folder = rawFolder || 'evidence';
+    const cleanFileName = `${folder}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
 
     const b2UploadRes = await fetch(uploadUrlData.uploadUrl, {
       method: 'POST',

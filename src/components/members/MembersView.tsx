@@ -349,8 +349,12 @@ export const MembersView: React.FC<MembersViewProps> = ({
                   {/* Top Bar: Avatar, PRN & Role */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm tracking-wider shadow-2xs">
-                        {getInitials(user.namaLengkap)}
+                      <div className="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm tracking-wider shadow-2xs overflow-hidden shrink-0">
+                        {user.avatarUrl ? (
+                          <img src={user.avatarUrl} alt={user.namaLengkap} className="w-full h-full object-cover" />
+                        ) : (
+                          getInitials(user.namaLengkap)
+                        )}
                       </div>
                       <div>
                         <h3 className="font-bold text-sm text-slate-900 leading-tight">
@@ -483,8 +487,12 @@ export const MembersView: React.FC<MembersViewProps> = ({
                     <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
-                            {getInitials(user.namaLengkap)}
+                          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+                            {user.avatarUrl ? (
+                              <img src={user.avatarUrl} alt={user.namaLengkap} className="w-full h-full object-cover" />
+                            ) : (
+                              getInitials(user.namaLengkap)
+                            )}
                           </div>
                           <div>
                             <span className="font-semibold text-slate-900 block">

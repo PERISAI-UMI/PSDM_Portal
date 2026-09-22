@@ -24,6 +24,7 @@ export interface AuthUser {
   tanggalLahir?: string;
   linkedinUrl?: string | null;
   instagramUsername?: string | null;
+  avatarUrl?: string | null;
   pjDepartments?: {
     adminId: string;
     departmentId: string;

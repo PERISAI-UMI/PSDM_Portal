@@ -79,10 +79,14 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onOpenProfile}
-              className="lg:hidden p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
+              className="lg:hidden p-1 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer overflow-hidden flex items-center justify-center min-w-[34px] min-h-[34px]"
               title="Profil"
             >
-              <User className="w-4 h-4" />
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.namaLengkap} className="w-5 h-5 rounded-full object-cover" />
+              ) : (
+                <User className="w-4 h-4" />
+              )}
             </button>
           )}
         </div>

@@ -338,8 +338,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             title="Kelola profil & ubah kata sandi Anda"
             className="flex items-center gap-2.5 min-w-0 text-left hover:bg-slate-100/80 p-1 rounded-lg transition-colors flex-1"
           >
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
-              {getInitials(user.namaLengkap)}
+            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.namaLengkap} className="w-full h-full object-cover" />
+              ) : (
+                getInitials(user.namaLengkap)
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-xs font-semibold text-slate-900 truncate">

@@ -17,6 +17,45 @@
       "source_location": "L26"
     },
     {
+      "id": "src_db_schema_academic_fakultas",
+      "label": "Fakultas",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "fakultas",
+      "source_file": "src/db/schema/academic.ts",
+      "source_location": "L16"
+    },
+    {
+      "id": "src_db_schema_academic_newfakultas",
+      "label": "NewFakultas",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "newfakultas",
+      "source_file": "src/db/schema/academic.ts",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_db_schema_academic_newprogramstudi",
+      "label": "NewProgramStudi",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "newprogramstudi",
+      "source_file": "src/db/schema/academic.ts",
+      "source_location": "L20"
+    },
+    {
       "id": "src_db_schema_activities_activity",
       "label": "Activity",
       "_callable": true,
@@ -69,6 +108,32 @@
       "source_location": "L30"
     },
     {
+      "id": "src_db_schema_departments_department",
+      "label": "Department",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "department",
+      "source_file": "src/db/schema/departments.ts",
+      "source_location": "L8"
+    },
+    {
+      "id": "src_db_schema_departments_newdepartment",
+      "label": "NewDepartment",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "newdepartment",
+      "source_file": "src/db/schema/departments.ts",
+      "source_location": "L9"
+    },
+    {
       "id": "src_db_schema_permissions_newpermission",
       "label": "NewPermission",
       "_callable": true,
@@ -93,6 +158,45 @@
       "norm_label": "permission",
       "source_file": "src/db/schema/permissions.ts",
       "source_location": "L25"
+    },
+    {
+      "id": "src_db_schema_system_newpjdepartment",
+      "label": "NewPjDepartment",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "newpjdepartment",
+      "source_file": "src/db/schema/system.ts",
+      "source_location": "L38"
+    },
+    {
+      "id": "src_db_schema_system_newsession",
+      "label": "NewSession",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "newsession",
+      "source_file": "src/db/schema/system.ts",
+      "source_location": "L35"
+    },
+    {
+      "id": "src_db_schema_users_newuser",
+      "label": "NewUser",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "newuser",
+      "source_file": "src/db/schema/users.ts",
+      "source_location": "L35"
     },
     {
       "id": "src_components_layout_header_headerprops",
@@ -145,19 +249,6 @@
       "norm_label": "profilemodalprops",
       "source_file": "src/components/profile/ProfileModal.tsx",
       "source_location": "L21"
-    },
-    {
-      "id": "src_components_profile_profileview_profileviewprops",
-      "label": "ProfileViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "AuthUser",
-      "file_type": "code",
-      "norm_label": "profileviewprops",
-      "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L25"
     },
     {
       "id": "src_types_index_authuser",
@@ -248,7 +339,7 @@
       "file_type": "code",
       "norm_label": "activityitem",
       "source_file": "src/types/index.ts",
-      "source_location": "L34"
+      "source_location": "L35"
     },
     {
       "id": "src_types_index_permissionrecord",
@@ -261,7 +352,7 @@
       "file_type": "code",
       "norm_label": "permissionrecord",
       "source_file": "src/types/index.ts",
-      "source_location": "L69"
+      "source_location": "L70"
     },
     {
       "id": "src_components_members_memberformmodal_memberformmodalprops",
@@ -339,7 +430,7 @@
       "file_type": "code",
       "norm_label": "departmentitem",
       "source_file": "src/types/index.ts",
-      "source_location": "L88"
+      "source_location": "L89"
     },
     {
       "id": "src_types_index_programstudiitem",
@@ -352,20 +443,46 @@
       "file_type": "code",
       "norm_label": "programstudiitem",
       "source_file": "src/types/index.ts",
-      "source_location": "L98"
+      "source_location": "L99"
     },
     {
-      "id": "src_components_activities_activitydetailmodal_activitydetailmodalprops",
-      "label": "ActivityDetailModalProps",
+      "id": "src_components_dashboard_pengurusview_pengurusviewprops",
+      "label": "PengurusViewProps",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
-      "norm_label": "activitydetailmodalprops",
-      "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L18"
+      "norm_label": "pengurusviewprops",
+      "source_file": "src/components/dashboard/PengurusView.tsx",
+      "source_location": "L13"
+    },
+    {
+      "id": "src_db_schema_attendances_attendancestatus",
+      "label": "AttendanceStatus",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "attendancestatus",
+      "source_file": "src/db/schema/attendances.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_types_index_attendancerecord",
+      "label": "AttendanceRecord",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "attendancerecord",
+      "source_file": "src/types/index.ts",
+      "source_location": "L55"
     },
     {
       "id": "src_components_permissions_permissionformmodal_permissionformmodalprops",
@@ -379,6 +496,19 @@
       "norm_label": "permissionformmodalprops",
       "source_file": "src/components/permissions/PermissionFormModal.tsx",
       "source_location": "L7"
+    },
+    {
+      "id": "src_components_profile_profileview_profileviewprops",
+      "label": "ProfileViewProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "profileviewprops",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L31"
     },
     {
       "id": "src_utils_imagecompressor_compressionresult",
@@ -433,6 +563,19 @@
       "source_location": "L5"
     },
     {
+      "id": "src_components_activities_activitydetailmodal_activitydetailmodalprops",
+      "label": "ActivityDetailModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
+      "file_type": "code",
+      "norm_label": "activitydetailmodalprops",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "source_location": "L18"
+    },
+    {
       "id": "src_db_schema_users_userrole",
       "label": "UserRole",
       "_callable": true,
@@ -444,45 +587,6 @@
       "norm_label": "userrole",
       "source_file": "src/db/schema/users.ts",
       "source_location": "L6"
-    },
-    {
-      "id": "src_components_dashboard_pengurusview_pengurusviewprops",
-      "label": "PengurusViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "pengurusviewprops",
-      "source_file": "src/components/dashboard/PengurusView.tsx",
-      "source_location": "L13"
-    },
-    {
-      "id": "src_db_schema_attendances_attendancestatus",
-      "label": "AttendanceStatus",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "attendancestatus",
-      "source_file": "src/db/schema/attendances.ts",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_types_index_attendancerecord",
-      "label": "AttendanceRecord",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "attendancerecord",
-      "source_file": "src/types/index.ts",
-      "source_location": "L54"
     },
     {
       "id": "src_app_activesection",
@@ -586,7 +690,7 @@
       "file_type": "code",
       "norm_label": "fakultasitem",
       "source_file": "src/types/index.ts",
-      "source_location": "L93"
+      "source_location": "L94"
     },
     {
       "id": "src_types_index_pjmappingitem",
@@ -599,7 +703,7 @@
       "file_type": "code",
       "norm_label": "pjmappingitem",
       "source_file": "src/types/index.ts",
-      "source_location": "L104"
+      "source_location": "L105"
     },
     {
       "id": "src_components_audit_auditmodal_auditmodalprops",
@@ -677,7 +781,7 @@
       "file_type": "code",
       "norm_label": "appdatabase",
       "source_file": "src/db/index.ts",
-      "source_location": "L32"
+      "source_location": "L35"
     },
     {
       "id": "src_db_index_databaseenv",
@@ -729,7 +833,7 @@
       "file_type": "code",
       "norm_label": "user",
       "source_file": "src/db/schema/users.ts",
-      "source_location": "L33"
+      "source_location": "L34"
     },
     {
       "id": "src_server_routes_storage_b2authcache",
@@ -808,6 +912,19 @@
       "norm_label": "userwithpj",
       "source_file": "src/server/types.ts",
       "source_location": "L4"
+    },
+    {
+      "id": "src_db_schema_academic_programstudi",
+      "label": "ProgramStudi",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "routes/users.ts",
+      "file_type": "code",
+      "norm_label": "programstudi",
+      "source_file": "src/db/schema/academic.ts",
+      "source_location": "L19"
     },
     {
       "id": "src_server_middleware_auth_cachedsessionuser",
@@ -901,123 +1018,6 @@
       "source_location": "L16"
     },
     {
-      "id": "src_db_schema_academic_fakultas",
-      "label": "Fakultas",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "fakultas",
-      "source_file": "src/db/schema/academic.ts",
-      "source_location": "L16"
-    },
-    {
-      "id": "src_db_schema_academic_newfakultas",
-      "label": "NewFakultas",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "newfakultas",
-      "source_file": "src/db/schema/academic.ts",
-      "source_location": "L17"
-    },
-    {
-      "id": "src_db_schema_academic_newprogramstudi",
-      "label": "NewProgramStudi",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "newprogramstudi",
-      "source_file": "src/db/schema/academic.ts",
-      "source_location": "L20"
-    },
-    {
-      "id": "src_db_schema_academic_programstudi",
-      "label": "ProgramStudi",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "programstudi",
-      "source_file": "src/db/schema/academic.ts",
-      "source_location": "L19"
-    },
-    {
-      "id": "src_db_schema_departments_department",
-      "label": "Department",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "department",
-      "source_file": "src/db/schema/departments.ts",
-      "source_location": "L8"
-    },
-    {
-      "id": "src_db_schema_departments_newdepartment",
-      "label": "NewDepartment",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "newdepartment",
-      "source_file": "src/db/schema/departments.ts",
-      "source_location": "L9"
-    },
-    {
-      "id": "src_db_schema_system_newpjdepartment",
-      "label": "NewPjDepartment",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "newpjdepartment",
-      "source_file": "src/db/schema/system.ts",
-      "source_location": "L38"
-    },
-    {
-      "id": "src_db_schema_system_newsession",
-      "label": "NewSession",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "newsession",
-      "source_file": "src/db/schema/system.ts",
-      "source_location": "L35"
-    },
-    {
-      "id": "src_db_schema_users_newuser",
-      "label": "NewUser",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "newuser",
-      "source_file": "src/db/schema/users.ts",
-      "source_location": "L34"
-    },
-    {
       "id": "src_server_middleware_auth_requirerole",
       "label": "requireRole()",
       "_callable": true,
@@ -1027,7 +1027,7 @@
       "file_type": "code",
       "norm_label": "requirerole()",
       "source_file": "src/server/middleware/auth.ts",
-      "source_location": "L134"
+      "source_location": "L135"
     },
     {
       "id": "src_server_routes_attendances_handlerecordsingleattendance",
@@ -1102,18 +1102,6 @@
       "source_location": "L32"
     },
     {
-      "id": "src_components_profile_profileview_profileview",
-      "label": "ProfileView()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "AuthUser",
-      "file_type": "code",
-      "norm_label": "profileview()",
-      "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L35"
-    },
-    {
       "id": "src_components_permissions_permissionlisttable_permissionlisttable",
       "label": "PermissionListTable()",
       "_callable": true,
@@ -1174,16 +1162,16 @@
       "source_location": "L15"
     },
     {
-      "id": "src_components_activities_activitydetailmodal_activitydetailmodal",
-      "label": "ActivityDetailModal()",
+      "id": "src_components_dashboard_pengurusview_pengurusview",
+      "label": "PengurusView()",
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
-      "norm_label": "activitydetailmodal()",
-      "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L29"
+      "norm_label": "pengurusview()",
+      "source_file": "src/components/dashboard/PengurusView.tsx",
+      "source_location": "L24"
     },
     {
       "id": "src_services_api_getstoredtoken",
@@ -1191,7 +1179,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
       "norm_label": "getstoredtoken()",
       "source_file": "src/services/api.ts",
@@ -1203,7 +1191,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
       "norm_label": "request()",
       "source_file": "src/services/api.ts",
@@ -1215,7 +1203,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
       "norm_label": "setstoredtoken()",
       "source_file": "src/services/api.ts",
@@ -1227,7 +1215,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
       "norm_label": "setstoreduser()",
       "source_file": "src/services/api.ts",
@@ -1244,6 +1232,18 @@
       "norm_label": "permissionformmodal()",
       "source_file": "src/components/permissions/PermissionFormModal.tsx",
       "source_location": "L21"
+    },
+    {
+      "id": "src_components_profile_profileview_profileview",
+      "label": "ProfileView()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "profileview()",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L41"
     },
     {
       "id": "src_utils_imagecompressor_compressimagefile",
@@ -1294,16 +1294,16 @@
       "source_location": "L15"
     },
     {
-      "id": "src_components_dashboard_pengurusview_pengurusview",
-      "label": "PengurusView()",
+      "id": "src_components_activities_activitydetailmodal_activitydetailmodal",
+      "label": "ActivityDetailModal()",
       "_callable": true,
       "_origin": "ast",
-      "community": 26,
-      "community_name": "types/index.ts",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
-      "norm_label": "pengurusview()",
-      "source_file": "src/components/dashboard/PengurusView.tsx",
-      "source_location": "L24"
+      "norm_label": "activitydetailmodal()",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "source_location": "L29"
     },
     {
       "id": "src_components_activities_createactivitymodal_createactivitymodal",
@@ -1543,7 +1543,7 @@
       "file_type": "code",
       "norm_label": "handlestoragefilestream()",
       "source_file": "src/server/routes/storage.ts",
-      "source_location": "L203"
+      "source_location": "L205"
     },
     {
       "id": "src_server_middleware_auth_invalidatesessioncache",
@@ -1567,7 +1567,7 @@
       "file_type": "code",
       "norm_label": "getfulluserbyid()",
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L412"
+      "source_location": "L417"
     },
     {
       "id": "src_app_mainappcontent",
@@ -1820,26 +1820,70 @@
       "source_location": "L6"
     },
     {
-      "id": "src_server_routes_sync",
-      "label": "sync.ts",
+      "id": "src_server_routes_master",
+      "label": "master.ts",
       "_origin": "ast",
       "community": 0,
       "community_name": "routes/attendances.ts",
       "file_type": "code",
-      "norm_label": "sync.ts",
-      "source_file": "src/server/routes/sync.ts",
+      "norm_label": "master.ts",
+      "source_file": "src/server/routes/master.ts",
       "source_location": "L1"
     },
     {
-      "id": "src_server_routes_sync_syncrouter",
-      "label": "syncRouter",
+      "id": "src_server_routes_master_assignpjschema",
+      "label": "assignPjSchema",
       "_origin": "ast",
       "community": 0,
       "community_name": "routes/attendances.ts",
       "file_type": "code",
-      "norm_label": "syncrouter",
-      "source_file": "src/server/routes/sync.ts",
-      "source_location": "L13"
+      "norm_label": "assignpjschema",
+      "source_file": "src/server/routes/master.ts",
+      "source_location": "L223"
+    },
+    {
+      "id": "src_server_routes_master_createdepartmentschema",
+      "label": "createDepartmentSchema",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "routes/attendances.ts",
+      "file_type": "code",
+      "norm_label": "createdepartmentschema",
+      "source_file": "src/server/routes/master.ts",
+      "source_location": "L160"
+    },
+    {
+      "id": "src_server_routes_master_createfakultasschema",
+      "label": "createFakultasSchema",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "routes/attendances.ts",
+      "file_type": "code",
+      "norm_label": "createfakultasschema",
+      "source_file": "src/server/routes/master.ts",
+      "source_location": "L22"
+    },
+    {
+      "id": "src_server_routes_master_createprodischema",
+      "label": "createProdiSchema",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "routes/attendances.ts",
+      "file_type": "code",
+      "norm_label": "createprodischema",
+      "source_file": "src/server/routes/master.ts",
+      "source_location": "L94"
+    },
+    {
+      "id": "src_server_routes_master_masterrouter",
+      "label": "masterRouter",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "routes/attendances.ts",
+      "file_type": "code",
+      "norm_label": "masterrouter",
+      "source_file": "src/server/routes/master.ts",
+      "source_location": "L15"
     },
     {
       "id": "ref_hono",
@@ -1862,6 +1906,28 @@
       "norm_label": "@hono/zod-validator",
       "source_file": "package.json",
       "source_location": "L20"
+    },
+    {
+      "id": "ref_zod",
+      "label": "zod",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "routes/attendances.ts",
+      "file_type": "concept",
+      "norm_label": "zod",
+      "source_file": "package.json",
+      "source_location": "L34"
+    },
+    {
+      "id": "src_db_schema_academic",
+      "label": "academic.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "academic.ts",
+      "source_file": "src/db/schema/academic.ts",
+      "source_location": "L1"
     },
     {
       "id": "src_db_schema_activities",
@@ -1919,6 +1985,39 @@
       "source_location": "L5"
     },
     {
+      "id": "src_db_schema_departments",
+      "label": "departments.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "departments.ts",
+      "source_file": "src/db/schema/departments.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_db_schema_departments_departments",
+      "label": "departments",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "departments",
+      "source_file": "src/db/schema/departments.ts",
+      "source_location": "L3"
+    },
+    {
+      "id": "src_db_schema_index",
+      "label": "schema/index.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "schema/index.ts",
+      "source_file": "src/db/schema/index.ts",
+      "source_location": "L1"
+    },
+    {
       "id": "src_db_schema_permissions",
       "label": "schema/permissions.ts",
       "_origin": "ast",
@@ -1939,6 +2038,17 @@
       "norm_label": "permissions",
       "source_file": "src/db/schema/permissions.ts",
       "source_location": "L8"
+    },
+    {
+      "id": "src_db_schema_permissions_permissionstatusenum",
+      "label": "permissionStatusEnum",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "permissionstatusenum",
+      "source_file": "src/db/schema/permissions.ts",
+      "source_location": "L5"
     },
     {
       "id": "src_db_schema_relations",
@@ -2051,6 +2161,50 @@
       "source_location": "L27"
     },
     {
+      "id": "src_db_schema_system",
+      "label": "system.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "system.ts",
+      "source_file": "src/db/schema/system.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_db_schema_system_pjdepartments",
+      "label": "pjDepartments",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "pjdepartments",
+      "source_file": "src/db/schema/system.ts",
+      "source_location": "L18"
+    },
+    {
+      "id": "src_db_schema_users",
+      "label": "schema/users.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "schema/users.ts",
+      "source_file": "src/db/schema/users.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_db_schema_users_userroleenum",
+      "label": "userRoleEnum",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "code",
+      "norm_label": "userroleenum",
+      "source_file": "src/db/schema/users.ts",
+      "source_location": "L5"
+    },
+    {
       "id": "src_db_schema_users_users",
       "label": "users",
       "_origin": "ast",
@@ -2060,6 +2214,17 @@
       "norm_label": "users",
       "source_file": "src/db/schema/users.ts",
       "source_location": "L8"
+    },
+    {
+      "id": "ref_drizzle_orm",
+      "label": "drizzle-orm",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "relations.ts",
+      "file_type": "concept",
+      "norm_label": "drizzle-orm",
+      "source_file": "package.json",
+      "source_location": "L25"
     },
     {
       "id": "tsconfig",
@@ -2247,116 +2412,6 @@
       "norm_label": "usedefineforclassfields",
       "source_file": "tsconfig.json",
       "source_location": "L5"
-    },
-    {
-      "id": "src_db_seed",
-      "label": "seed.ts",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "seed.ts",
-      "source_file": "src/db/seed.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_db_seed_db",
-      "label": "db",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "db",
-      "source_file": "src/db/seed.ts",
-      "source_location": "L38"
-    },
-    {
-      "id": "src_db_seed_umi_academic_data",
-      "label": "UMI_ACADEMIC_DATA",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "umi_academic_data",
-      "source_file": "src/db/seed.ts",
-      "source_location": "L54"
-    },
-    {
-      "id": "src_server_routes_master",
-      "label": "master.ts",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "master.ts",
-      "source_file": "src/server/routes/master.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_server_routes_master_assignpjschema",
-      "label": "assignPjSchema",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "assignpjschema",
-      "source_file": "src/server/routes/master.ts",
-      "source_location": "L223"
-    },
-    {
-      "id": "src_server_routes_master_createdepartmentschema",
-      "label": "createDepartmentSchema",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "createdepartmentschema",
-      "source_file": "src/server/routes/master.ts",
-      "source_location": "L160"
-    },
-    {
-      "id": "src_server_routes_master_createfakultasschema",
-      "label": "createFakultasSchema",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "createfakultasschema",
-      "source_file": "src/server/routes/master.ts",
-      "source_location": "L22"
-    },
-    {
-      "id": "src_server_routes_master_createprodischema",
-      "label": "createProdiSchema",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "createprodischema",
-      "source_file": "src/server/routes/master.ts",
-      "source_location": "L94"
-    },
-    {
-      "id": "src_server_routes_master_masterrouter",
-      "label": "masterRouter",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "code",
-      "norm_label": "masterrouter",
-      "source_file": "src/server/routes/master.ts",
-      "source_location": "L15"
-    },
-    {
-      "id": "ref_zod",
-      "label": "zod",
-      "_origin": "ast",
-      "community": 11,
-      "community_name": "seed.ts",
-      "file_type": "concept",
-      "norm_label": "zod",
-      "source_file": "package.json",
-      "source_location": "L34"
     },
     {
       "id": "package_devdependencies",
@@ -2672,15 +2727,37 @@
       "source_location": "L1"
     },
     {
-      "id": "src_db_schema_permissions_permissionstatusenum",
-      "label": "permissionStatusEnum",
+      "id": "src_db_seed",
+      "label": "seed.ts",
       "_origin": "ast",
       "community": 15,
       "community_name": "routes/permissions.ts",
       "file_type": "code",
-      "norm_label": "permissionstatusenum",
-      "source_file": "src/db/schema/permissions.ts",
-      "source_location": "L5"
+      "norm_label": "seed.ts",
+      "source_file": "src/db/seed.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_db_seed_db",
+      "label": "db",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
+      "file_type": "code",
+      "norm_label": "db",
+      "source_file": "src/db/seed.ts",
+      "source_location": "L38"
+    },
+    {
+      "id": "src_db_seed_umi_academic_data",
+      "label": "UMI_ACADEMIC_DATA",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
+      "file_type": "code",
+      "norm_label": "umi_academic_data",
+      "source_file": "src/db/seed.ts",
+      "source_location": "L54"
     },
     {
       "id": "src_server_routes_permissions",
@@ -2736,6 +2813,28 @@
       "norm_label": "reviewpermissionschema",
       "source_file": "src/server/routes/permissions.ts",
       "source_location": "L30"
+    },
+    {
+      "id": "src_server_routes_sync",
+      "label": "sync.ts",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
+      "file_type": "code",
+      "norm_label": "sync.ts",
+      "source_file": "src/server/routes/sync.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_server_routes_sync_syncrouter",
+      "label": "syncRouter",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
+      "file_type": "code",
+      "norm_label": "syncrouter",
+      "source_file": "src/server/routes/sync.ts",
+      "source_location": "L13"
     },
     {
       "id": "package_scripts",
@@ -3178,17 +3277,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_profile_profileview",
-      "label": "ProfileView.tsx",
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "AuthUser",
-      "file_type": "code",
-      "norm_label": "profileview.tsx",
-      "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "ref_lucide_react",
       "label": "lucide-react",
       "_origin": "ast",
@@ -3299,14 +3387,14 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_activities_activitydetailmodal",
-      "label": "ActivityDetailModal.tsx",
+      "id": "src_components_dashboard_pengurusview",
+      "label": "PengurusView.tsx",
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
-      "norm_label": "activitydetailmodal.tsx",
-      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "norm_label": "pengurusview.tsx",
+      "source_file": "src/components/dashboard/PengurusView.tsx",
       "source_location": "L1"
     },
     {
@@ -3314,22 +3402,22 @@
       "label": "api.ts",
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
       "norm_label": "api.ts",
       "source_file": "src/services/api.ts",
       "source_location": "L1"
     },
     {
-      "id": "src_services_api_api",
-      "label": "api",
+      "id": "src_types_index",
+      "label": "types/index.ts",
       "_origin": "ast",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "file_type": "code",
-      "norm_label": "api",
-      "source_file": "src/services/api.ts",
-      "source_location": "L94"
+      "norm_label": "types/index.ts",
+      "source_file": "src/types/index.ts",
+      "source_location": "L1"
     },
     {
       "id": "src_components_permissions_permissionformmodal",
@@ -3341,6 +3429,28 @@
       "norm_label": "permissionformmodal.tsx",
       "source_file": "src/components/permissions/PermissionFormModal.tsx",
       "source_location": "L1"
+    },
+    {
+      "id": "src_components_profile_profileview",
+      "label": "ProfileView.tsx",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "profileview.tsx",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_services_api_api",
+      "label": "api",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "api",
+      "source_file": "src/services/api.ts",
+      "source_location": "L94"
     },
     {
       "id": "src_utils_imagecompressor",
@@ -3376,25 +3486,14 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_dashboard_pengurusview",
-      "label": "PengurusView.tsx",
+      "id": "src_components_activities_activitydetailmodal",
+      "label": "ActivityDetailModal.tsx",
       "_origin": "ast",
-      "community": 26,
-      "community_name": "types/index.ts",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
-      "norm_label": "pengurusview.tsx",
-      "source_file": "src/components/dashboard/PengurusView.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_types_index",
-      "label": "types/index.ts",
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "types/index.ts",
-      "source_file": "src/types/index.ts",
+      "norm_label": "activitydetailmodal.tsx",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
       "source_location": "L1"
     },
     {
@@ -4099,7 +4198,7 @@
       "file_type": "code",
       "norm_label": "batchimportschema",
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L192"
+      "source_location": "L197"
     },
     {
       "id": "src_server_routes_users_createuserschema",
@@ -4110,7 +4209,7 @@
       "file_type": "code",
       "norm_label": "createuserschema",
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L24"
+      "source_location": "L25"
     },
     {
       "id": "src_server_routes_users_updateuseradminschema",
@@ -4121,7 +4220,7 @@
       "file_type": "code",
       "norm_label": "updateuseradminschema",
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L57"
+      "source_location": "L60"
     },
     {
       "id": "src_server_routes_users_updateuserselfschema",
@@ -4132,7 +4231,7 @@
       "file_type": "code",
       "norm_label": "updateuserselfschema",
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L44"
+      "source_location": "L46"
     },
     {
       "id": "src_server_routes_users_usersrouter",
@@ -4143,7 +4242,7 @@
       "file_type": "code",
       "norm_label": "usersrouter",
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L20"
+      "source_location": "L21"
     },
     {
       "id": "src_components_attendances_attendancescannermodal",
@@ -4190,129 +4289,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_db_schema_academic",
-      "label": "academic.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "academic.ts",
-      "source_file": "src/db/schema/academic.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_db_schema_departments",
-      "label": "departments.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "departments.ts",
-      "source_file": "src/db/schema/departments.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_db_schema_departments_departments",
-      "label": "departments",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "departments",
-      "source_file": "src/db/schema/departments.ts",
-      "source_location": "L3"
-    },
-    {
-      "id": "src_db_schema_index",
-      "label": "schema/index.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "schema/index.ts",
-      "source_file": "src/db/schema/index.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_db_schema_system",
-      "label": "system.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "system.ts",
-      "source_file": "src/db/schema/system.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_db_schema_system_pjdepartments",
-      "label": "pjDepartments",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "pjdepartments",
-      "source_file": "src/db/schema/system.ts",
-      "source_location": "L18"
-    },
-    {
-      "id": "src_db_schema_users",
-      "label": "schema/users.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "schema/users.ts",
-      "source_file": "src/db/schema/users.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_db_schema_users_userroleenum",
-      "label": "userRoleEnum",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "code",
-      "norm_label": "userroleenum",
-      "source_file": "src/db/schema/users.ts",
-      "source_location": "L5"
-    },
-    {
-      "id": "ref_drizzle_orm",
-      "label": "drizzle-orm",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "drizzle-orm",
-      "file_type": "concept",
-      "norm_label": "drizzle-orm",
-      "source_file": "package.json",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_db_schema_index_activities",
-      "label": "src_db_schema_index_activities",
-      "_origin": "semantic",
-      "community": 0,
-      "community_name": "routes/attendances.ts",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "src_db_schema_index_activities",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "src_db_schema_index_attendances",
-      "label": "src_db_schema_index_attendances",
-      "_origin": "semantic",
-      "community": 0,
-      "community_name": "routes/attendances.ts",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "src_db_schema_index_attendances",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "src_db_schema_index_attendancestatusenum",
       "label": "src_db_schema_index_attendancestatusenum",
       "_origin": "semantic",
@@ -4325,11 +4301,47 @@
       "type": "external"
     },
     {
+      "id": "src_db_schema_index_pjdepartments",
+      "label": "src_db_schema_index_pjdepartments",
+      "_origin": "semantic",
+      "community": 0,
+      "community_name": "routes/attendances.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "src_db_schema_index_pjdepartments",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "src_db_schema_index_activities",
+      "label": "src_db_schema_index_activities",
+      "_origin": "semantic",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "src_db_schema_index_activities",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "src_db_schema_index_attendances",
+      "label": "src_db_schema_index_attendances",
+      "_origin": "semantic",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "src_db_schema_index_attendances",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "src_db_schema_index_fakultas",
       "label": "src_db_schema_index_fakultas",
       "_origin": "semantic",
-      "community": 11,
-      "community_name": "seed.ts",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_db_schema_index_fakultas",
@@ -4340,23 +4352,11 @@
       "id": "src_db_schema_index_permissions",
       "label": "src_db_schema_index_permissions",
       "_origin": "semantic",
-      "community": 11,
-      "community_name": "seed.ts",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_db_schema_index_permissions",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "src_db_schema_index_pjdepartments",
-      "label": "src_db_schema_index_pjdepartments",
-      "_origin": "semantic",
-      "community": 11,
-      "community_name": "seed.ts",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "src_db_schema_index_pjdepartments",
       "source_file": "",
       "type": "external"
     },
@@ -4369,6 +4369,18 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "src_db_schema_index_permissionstatusenum",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "src_db_schema_index_users",
+      "label": "src_db_schema_index_users",
+      "_origin": "semantic",
+      "community": 15,
+      "community_name": "routes/permissions.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "src_db_schema_index_users",
       "source_file": "",
       "type": "external"
     },
@@ -4425,7 +4437,7 @@
       "label": "src_types_index_attendancestatus",
       "_origin": "semantic",
       "community": 23,
-      "community_name": "api.ts",
+      "community_name": "types/index.ts",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_types_index_attendancestatus",
@@ -4525,18 +4537,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "src_db_schema_index_userroleenum",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "src_db_schema_index_users",
-      "label": "src_db_schema_index_users",
-      "_origin": "semantic",
-      "community": 7,
-      "community_name": "routes/users.ts",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "src_db_schema_index_users",
       "source_file": "",
       "type": "external"
     }
@@ -4711,6 +4711,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_components_profile_profileview_profileview",
+      "target": "src_utils_imagecompressor_compressimagefile",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
       "source": "src_db_seed_seed",
       "target": "src_server_crypto_hashpassword",
       "relation": "calls",
@@ -4791,7 +4803,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/server/routes/storage.ts",
-      "source_location": "L231",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -4899,7 +4911,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L412",
+      "source_location": "L417",
       "weight": 1.0
     },
     {
@@ -4911,7 +4923,7 @@
       "confidence_score": 1.0,
       "context": "export",
       "source_file": "src/db/index.ts",
-      "source_location": "L33",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -5610,7 +5622,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/types/index.ts",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -5634,7 +5646,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/types/index.ts",
-      "source_location": "L82",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -5682,7 +5694,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L27",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -7398,7 +7410,31 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L23",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_profile_profileview",
+      "target": "src_services_api_api",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_profile_profileview",
+      "target": "src_utils_imagecompressor_compressimagefile",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -9203,6 +9239,18 @@
     },
     {
       "source": "src_server_routes_users",
+      "target": "src_server_middleware_auth_invalidatesessioncache",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/server/routes/users.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_server_routes_users",
       "target": "src_server_middleware_auth_requirerole",
       "relation": "imports",
       "_origin": "ast",
@@ -9223,6 +9271,18 @@
       "context": "import",
       "source_file": "src/server/routes/users.ts",
       "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_server_routes_users",
+      "target": "src_server_routes_storage_getb2credentials",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/server/routes/users.ts",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -11162,8 +11222,32 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L23",
+      "source_location": "L27",
       "type_only": true,
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_profile_profileview",
+      "target": "src_services_api",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_profile_profileview",
+      "target": "src_utils_imagecompressor",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -12543,6 +12627,18 @@
       "context": "import",
       "source_file": "src/server/routes/users.ts",
       "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_server_routes_users",
+      "target": "src_server_routes_storage",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/server/routes/users.ts",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -13986,7 +14082,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L25",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -13997,7 +14093,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L35",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -14107,7 +14203,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/index.ts",
-      "source_location": "L32",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -14514,7 +14610,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema/users.ts",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -14525,7 +14621,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema/users.ts",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -14822,7 +14918,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/server/middleware/auth.ts",
-      "source_location": "L134",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -15174,7 +15270,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L192",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -15185,7 +15281,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -15196,7 +15292,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -15207,7 +15303,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L44",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -15218,7 +15314,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/server/routes/users.ts",
-      "source_location": "L57",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -15416,7 +15512,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L104",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -15427,7 +15523,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -15438,18 +15534,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L54",
-      "weight": 1.0
-    },
-    {
-      "source": "src_types_index",
-      "target": "src_types_index_permissionrecord",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/types/index.ts",
-      "source_location": "L69",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -15465,13 +15550,24 @@
     },
     {
       "source": "src_types_index",
+      "target": "src_types_index_permissionrecord",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "src_types_index",
       "target": "src_types_index_departmentitem",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L88",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -15482,7 +15578,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L93",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -15493,7 +15589,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L98",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -15792,7 +15888,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/server/routes/storage.ts",
-      "source_location": "L288",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -15809,5 +15905,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "742a043ea51b035c2ed8be6ea37a7262c349a80c"
+  "built_at_commit": "fc231354123e67f214043c6bde969569117d7935"
 }

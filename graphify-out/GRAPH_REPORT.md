@@ -1,17 +1,17 @@
-# Graph Report - PSDM-PORTAL  (2026-09-22)
+# Graph Report - PSDM-PORTAL  (2026-09-23)
 
 ## Corpus Check
-- 66 files · ~46,983 words
+- 66 files · ~47,993 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 6 file(s) not represented in the graph (top: .ico 2, .example 1, (none) 1)
 
 ## Summary
-- 390 nodes · 958 edges · 27 communities (26 shown, 1 thin omitted)
+- 390 nodes · 966 edges · 24 communities (23 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `742a043e`
+- Built from commit: `fc231354`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,9 +25,7 @@
 - types.ts
 - routes/users.ts
 - AttendanceScannerModal.tsx
-- drizzle-orm
 - compilerOptions
-- seed.ts
 - devDependencies
 - Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)
 - PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)
@@ -39,10 +37,9 @@
 - AuthUser
 - ActivityItem
 - MembersView.tsx
-- api.ts
+- types/index.ts
 - PermissionFormModal.tsx
 - ActivitiesView.tsx
-- types/index.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `AuthUser` - 37 edges
@@ -61,25 +58,25 @@
   HANDOVER.md → src/db/schema/academic.ts
 - `CreateActivityModalProps` --references--> `ActivityItem`  [EXTRACTED]
   src/components/activities/CreateActivityModal.tsx → src/types/index.ts
+- `ProfileViewProps` --references--> `AuthUser`  [EXTRACTED]
+  src/components/profile/ProfileView.tsx → src/types/index.ts
 - `ActivitiesViewProps` --references--> `ActivityItem`  [EXTRACTED]
   src/components/activities/ActivitiesView.tsx → src/types/index.ts
 - `ActivitiesViewProps` --references--> `AuthUser`  [EXTRACTED]
   src/components/activities/ActivitiesView.tsx → src/types/index.ts
-- `ActivityCardProps` --references--> `ActivityItem`  [EXTRACTED]
-  src/components/activities/ActivityCard.tsx → src/types/index.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (27 total, 1 thin omitted)
+## Communities (24 total, 1 thin omitted)
 
 ### Community 0 - "routes/attendances.ts"
-Cohesion: 0.15
-Nodes (18): hono, @hono/zod-validator, src_db_schema_index_activities, src_db_schema_index_attendances, src_db_schema_index_attendancestatusenum, app, requireRole(), activitiesRouter (+10 more)
+Cohesion: 0.12
+Nodes (22): hono, @hono/zod-validator, zod, src_db_schema_index_attendancestatusenum, src_db_schema_index_pjdepartments, app, requireRole(), activitiesRouter (+14 more)
 
 ### Community 1 - "relations.ts"
-Cohesion: 0.12
-Nodes (20): activities, Activity, NewActivity, Attendance, attendances, attendanceStatusEnum, NewAttendance, NewPermission (+12 more)
+Cohesion: 0.09
+Nodes (33): drizzle-orm, Fakultas, NewFakultas, NewProgramStudi, activities, Activity, NewActivity, Attendance (+25 more)
 
 ### Community 2 - "package.json"
 Cohesion: 0.11
@@ -103,23 +100,15 @@ Nodes (20): @libsql/client, AppDatabase, createDb(), DatabaseEnv, src_db_schema_
 
 ### Community 7 - "routes/users.ts"
 Cohesion: 0.15
-Nodes (19): src_db_schema_index_departments, src_db_schema_index_programstudi, src_db_schema_index_sessions, src_db_schema_index_userrole, src_db_schema_index_userroleenum, src_db_schema_index_users, sessions, authMiddleware (+11 more)
+Nodes (19): ProgramStudi, src_db_schema_index_departments, src_db_schema_index_programstudi, src_db_schema_index_sessions, src_db_schema_index_userrole, src_db_schema_index_userroleenum, sessions, authMiddleware (+11 more)
 
 ### Community 8 - "AttendanceScannerModal.tsx"
 Cohesion: 0.17
 Nodes (15): MainAppContent(), checkAuthSession(), AttendanceScannerModal(), AttendanceScannerModalProps, ToastContext, ToastContextType, ToastItem, ToastProvider() (+7 more)
 
-### Community 9 - "drizzle-orm"
-Cohesion: 0.18
-Nodes (13): drizzle-orm, Fakultas, NewFakultas, NewProgramStudi, ProgramStudi, Department, departments, NewDepartment (+5 more)
-
 ### Community 10 - "compilerOptions"
 Cohesion: 0.12
 Nodes (16): compilerOptions, allowImportingTsExtensions, allowJs, experimentalDecorators, isolatedModules, jsx, lib, module (+8 more)
-
-### Community 11 - "seed.ts"
-Cohesion: 0.17
-Nodes (11): zod, src_db_schema_index_fakultas, src_db_schema_index_permissions, src_db_schema_index_pjdepartments, db, UMI_ACADEMIC_DATA, assignPjSchema, createDepartmentSchema (+3 more)
 
 ### Community 12 - "devDependencies"
 Cohesion: 0.18
@@ -134,8 +123,8 @@ Cohesion: 0.25
 Nodes (7): 1. Ikhtisar Sistem, 2. Arsitektur Teknologi & Edge Stack, 3. Matriks Hak Akses (Role-Based Access Control / RBAC), 4. Struktur Database Ternormalisasi (3NF), 5. Ringkasan Hasil Pengujian Integrasi (Tahap 6), 6. Audit & Health Panel Langsung pada Aplikasi, PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)
 
 ### Community 15 - "routes/permissions.ts"
-Cohesion: 0.29
-Nodes (6): src_db_schema_index_permissionstatusenum, permissionStatusEnum, getUploadUrlSchema, permissionsRouter, requestPermissionSchema, reviewPermissionSchema
+Cohesion: 0.17
+Nodes (13): src_db_schema_index_activities, src_db_schema_index_attendances, src_db_schema_index_fakultas, src_db_schema_index_permissions, src_db_schema_index_permissionstatusenum, src_db_schema_index_users, db, UMI_ACADEMIC_DATA (+5 more)
 
 ### Community 16 - "scripts"
 Cohesion: 0.22
@@ -150,8 +139,8 @@ Cohesion: 0.50
 Nodes (3): react-dom, App(), src_index
 
 ### Community 20 - "AuthUser"
-Cohesion: 0.18
-Nodes (11): lucide-react, Header(), HeaderProps, Sidebar(), SidebarProps, MemberListModalProps, ProfileModal(), ProfileModalProps (+3 more)
+Cohesion: 0.22
+Nodes (9): lucide-react, Header(), HeaderProps, Sidebar(), SidebarProps, MemberListModalProps, ProfileModal(), ProfileModalProps (+1 more)
 
 ### Community 21 - "ActivityItem"
 Cohesion: 0.36
@@ -161,21 +150,17 @@ Nodes (10): AdminViewProps, SuperAdminViewProps, PermissionListTable(), Permissi
 Cohesion: 0.27
 Nodes (11): MemberFormModal(), MemberFormModalProps, MemberImportModal(), MemberImportModalProps, ParsedUserRow, MembersViewProps, ConfirmModal(), ConfirmModalProps (+3 more)
 
-### Community 23 - "api.ts"
-Cohesion: 0.24
-Nodes (6): ActivityDetailModal(), ActivityDetailModalProps, api, getStoredToken(), request(), src_types_index_attendancestatus
+### Community 23 - "types/index.ts"
+Cohesion: 0.26
+Nodes (7): PengurusView(), PengurusViewProps, AttendanceStatus, getStoredToken(), request(), AttendanceRecord, src_types_index_attendancestatus
 
 ### Community 24 - "PermissionFormModal.tsx"
-Cohesion: 0.39
-Nodes (6): PermissionFormModal(), PermissionFormModalProps, compressImageFile(), CompressionResult, CompressOptions, formatFileSize()
+Cohesion: 0.27
+Nodes (9): PermissionFormModal(), PermissionFormModalProps, ProfileView(), ProfileViewProps, api, compressImageFile(), CompressionResult, CompressOptions (+1 more)
 
 ### Community 25 - "ActivitiesView.tsx"
-Cohesion: 0.43
-Nodes (5): ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityCardProps, UserRole
-
-### Community 26 - "types/index.ts"
-Cohesion: 0.53
-Nodes (4): PengurusView(), PengurusViewProps, AttendanceStatus, AttendanceRecord
+Cohesion: 0.29
+Nodes (7): ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityCardProps, ActivityDetailModal(), ActivityDetailModalProps, UserRole
 
 ## Knowledge Gaps
 - **157 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+152 more)
@@ -187,15 +172,15 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
   _High betweenness centrality (0.085) - this node is a cross-community bridge._
-- **Why does `drizzle-orm` connect `drizzle-orm` to `routes/attendances.ts`, `relations.ts`, `package.json`, `types.ts`, `routes/users.ts`, `seed.ts`, `routes/permissions.ts`?**
+- **Why does `drizzle-orm` connect `relations.ts` to `routes/attendances.ts`, `package.json`, `types.ts`, `routes/users.ts`, `routes/permissions.ts`?**
   _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `react` connect `App.tsx` to `package.json`, `integration.test.ts`, `AttendanceScannerModal.tsx`, `main.tsx`, `AuthUser`, `ActivityItem`, `MembersView.tsx`, `api.ts`, `PermissionFormModal.tsx`, `ActivitiesView.tsx`, `types/index.ts`?**
+- **Why does `react` connect `App.tsx` to `package.json`, `integration.test.ts`, `AttendanceScannerModal.tsx`, `main.tsx`, `AuthUser`, `ActivityItem`, `MembersView.tsx`, `types/index.ts`, `PermissionFormModal.tsx`, `ActivitiesView.tsx`?**
   _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
   _157 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `routes/attendances.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.14855072463768115 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11904761904761904 - nodes in this community are weakly interconnected._
 - **Should `relations.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.11956521739130435 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09175377468060394 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._

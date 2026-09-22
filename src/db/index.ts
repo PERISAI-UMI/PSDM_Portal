@@ -24,6 +24,9 @@ export function createDb(env: DatabaseEnv): LibSQLDatabase<typeof schema> {
     authToken: env.TURSO_AUTH_TOKEN,
   });
 
+  // Non-blocking idempotent migration to ensure avatar_url column exists
+  client.execute('ALTER TABLE users ADD COLUMN avatar_url TEXT').catch(() => {});
+
   const instance = drizzle(client, { schema });
   cachedDb = { key: cacheKey, instance };
   return instance;

@@ -28,6 +28,7 @@ export const users = sqliteTable('users', {
   angkatan: integer('angkatan').notNull(),
   linkedinUrl: text('linkedin_url'),
   instagramUsername: text('instagram_username'),
+  avatarUrl: text('avatar_url'),
 });
 
 export type User = typeof users.$inferSelect;
