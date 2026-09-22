@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
-import { compressImageFile } from '../../utils/imageCompressor.ts';
+import { AvatarCropModal } from './AvatarCropModal.tsx';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -75,30 +75,42 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [avatarUrl, setAvatarUrl] = useState<string | null>(currentUser.avatarUrl || null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
-  const handleAvatarFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     e.target.value = '';
 
+    if (!file.type.startsWith('image/')) {
+      setAvatarError('Berkas yang dipilih harus berupa gambar (JPG, PNG, WebP).');
+      return;
+    }
+
+    setAvatarError(null);
+    const objectUrl = URL.createObjectURL(file);
+    setCropImageSrc(objectUrl);
+    setIsCropModalOpen(true);
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
     try {
       setIsUploadingAvatar(true);
       setAvatarError(null);
 
-      const compression = await compressImageFile(file, {
-        maxWidth: 400,
-        maxHeight: 400,
-        quality: 0.85,
-        format: 'image/webp',
-      });
-
-      const res = await api.uploadAvatar(compression.file);
+      const res = await api.uploadAvatar(croppedFile);
       setAvatarUrl(res.avatarUrl);
-      setProfileSuccess('Foto profil berhasil diperbarui!');
+      setProfileSuccess('Foto profil berhasil disesuaikan dan diperbarui!');
       setTimeout(() => setProfileSuccess(null), 3000);
       await onUpdateProfile({ avatarUrl: res.avatarUrl });
+      setIsCropModalOpen(false);
+      if (cropImageSrc) {
+        URL.revokeObjectURL(cropImageSrc);
+        setCropImageSrc(null);
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Gagal mengunggah foto profil.';
       setAvatarError(msg);
@@ -653,6 +665,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </form>
         )}
       </div>
+
+      {/* Interactive Avatar Crop & Zoom Modal */}
+      <AvatarCropModal
+        isOpen={isCropModalOpen}
+        imageSrc={cropImageSrc}
+        onClose={() => {
+          setIsCropModalOpen(false);
+          if (cropImageSrc) {
+            URL.revokeObjectURL(cropImageSrc);
+            setCropImageSrc(null);
+          }
+        }}
+        onCropComplete={handleCropComplete}
+        isSaving={isUploadingAvatar}
+      />
     </div>
   );
 };

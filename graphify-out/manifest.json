@@ -144,15 +144,15 @@
     "semantic_hash": ""
   },
   "src/components/profile/ProfileModal.tsx": {
-    "mtime": 1790096774.2798219,
-    "seen": 1790096959.605338,
-    "ast_hash": "7ed7195ca878084aca820f1c9b45461d",
+    "mtime": 1790097461.5066178,
+    "seen": 1790097958.8949444,
+    "ast_hash": "5fccc4be0bfb5d573667eea9360beecd",
     "semantic_hash": ""
   },
   "src/components/profile/ProfileView.tsx": {
-    "mtime": 1790096790.5818253,
-    "seen": 1790096959.605338,
-    "ast_hash": "7ef26bd0dff81b179c8e5bfeaa49af1c",
+    "mtime": 1790097432.5834546,
+    "seen": 1790097958.8949444,
+    "ast_hash": "f07d97ccf7c3fbdb6e48ad9ba790f39e",
     "semantic_hash": ""
   },
   "src/components/ui/ConfirmModal.tsx": {
@@ -399,6 +399,12 @@
     "mtime": 1790049894.1568925,
     "seen": 1790085475.6279593,
     "ast_hash": "f669d83b7a5d9b482051fbf4702a6510",
+    "semantic_hash": ""
+  },
+  "src/components/profile/AvatarCropModal.tsx": {
+    "mtime": 1790097399.8468814,
+    "seen": 1790097958.8949444,
+    "ast_hash": "ae7bce594b6878c6797e647c135f3fc6",
     "semantic_hash": ""
   }
 }
