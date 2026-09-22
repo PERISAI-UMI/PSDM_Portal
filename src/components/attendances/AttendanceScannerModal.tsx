@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw, Eye } from 'lucide-react';
+import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw } from 'lucide-react';
 import type { ActivityItem, AuthUser, AttendanceStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { useToast } from '../ui/Toast.tsx';
@@ -246,23 +246,13 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
       <div className="bg-white w-full max-w-3xl rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] sm:max-h-[88vh] flex flex-col">
-        {/* Header */}
         <div className="flex items-start justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">
-              {isMonitorOnly ? (
-                <Eye className="w-5 h-5 text-purple-700" />
-              ) : (
-                <UserCheck className="w-5 h-5 text-slate-900" />
-              )}
+              <UserCheck className="w-5 h-5 text-slate-900" />
               <h2 className="text-base sm:text-lg font-bold text-slate-900">
                 {isMonitorOnly ? 'Rekap Presensi Kegiatan' : 'Presensi Kegiatan'}
               </h2>
-              {isMonitorOnly && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
-                  Mode Pemonitor
-                </span>
-              )}
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
               Kegiatan: <span className="font-semibold text-slate-700">{activity.nama}</span>
@@ -427,23 +417,13 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
 
         {/* Operator Badge Footer */}
         <div className="mt-3 sm:mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-          {isMonitorOnly ? (
-            <div className="flex items-center gap-1.5 text-center sm:text-left text-slate-600">
-              <ShieldCheck className="w-4 h-4 text-purple-700 shrink-0" />
-              <span>
-                Hak Akses:{' '}
-                <strong className="text-slate-800 font-semibold">Pengurus Inti (Pemonitor)</strong>
-              </span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 text-center sm:text-left">
-              <ShieldCheck className="w-4 h-4 text-slate-700 shrink-0" />
-              <span>
-                Pencatat:{' '}
-                <strong className="text-slate-800 font-semibold">{currentAdmin.namaLengkap}</strong>
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-1.5 text-center sm:text-left">
+            <ShieldCheck className="w-4 h-4 text-slate-700 shrink-0" />
+            <span>
+              {isMonitorOnly ? 'Akses:' : 'Pencatat:'}{' '}
+              <strong className="text-slate-800 font-semibold">{currentAdmin.namaLengkap}</strong>
+            </span>
+          </div>
           <button
             type="button"
             onClick={onClose}
