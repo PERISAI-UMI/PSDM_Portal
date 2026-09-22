@@ -313,6 +313,19 @@ function MainAppContent() {
     await reloadData(currentUser);
   };
 
+  const handleDeletePermission = async (id: string) => {
+    if (!currentUser) return;
+    const res = await api.deletePermission(id);
+    if (!res.success) {
+      showToast(res.message || 'Gagal menghapus permohonan izin', 'error');
+    } else {
+      broadcastRealtimeEvent('PERMISSION_CHANGED');
+      broadcastRealtimeEvent('ATTENDANCE_CHANGED');
+      showToast('Data izin berhasil dihapus.', 'info');
+    }
+    await reloadData(currentUser);
+  };
+
   // Master Data Actions
   const handleAssignPj = async (adminId: string, departmentId: string) => {
     await api.assignPjDepartment(adminId, departmentId);
@@ -469,6 +482,7 @@ function MainAppContent() {
               permissions={permissions}
               activities={activities}
               onReviewPermission={handleReviewPermission}
+              onDeletePermission={handleDeletePermission}
               onOpenPermissionModal={() => {
                 setActivePermissionActivity(null);
                 setShowPermissionModal(true);

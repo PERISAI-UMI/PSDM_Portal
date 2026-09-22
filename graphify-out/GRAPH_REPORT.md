@@ -1,17 +1,17 @@
 # Graph Report - PSDM-PORTAL  (2026-09-22)
 
 ## Corpus Check
-- 66 files · ~46,004 words
+- 66 files · ~46,343 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 6 file(s) not represented in the graph (top: .ico 2, .example 1, (none) 1)
 
 ## Summary
-- 390 nodes · 954 edges · 16 communities
+- 390 nodes · 956 edges · 20 communities (19 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d0ddf879`
+- Built from commit: `b645bacf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -32,6 +32,10 @@
 - Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)
 - PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)
 - routes/permissions.ts
+- scripts
+- vite.config.ts
+- main.tsx
+- dotenv
 
 ## God Nodes (most connected - your core abstractions)
 1. `AuthUser` - 37 edges
@@ -60,7 +64,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (16 total, 0 thin omitted)
+## Communities (20 total, 1 thin omitted)
 
 ### Community 0 - "routes/attendances.ts"
 Cohesion: 0.15
@@ -71,8 +75,8 @@ Cohesion: 0.12
 Nodes (20): activities, Activity, NewActivity, Attendance, attendances, attendanceStatusEnum, NewAttendance, NewPermission (+12 more)
 
 ### Community 2 - "package.json"
-Cohesion: 0.06
-Nodes (35): name, private, scripts, build, clean, deploy, dev, lint (+27 more)
+Cohesion: 0.11
+Nodes (17): name, private, type, version, autoprefixer, drizzle-zod, esbuild, @google/genai (+9 more)
 
 ### Community 3 - "App.tsx"
 Cohesion: 0.07
@@ -126,9 +130,22 @@ Nodes (7): 1. Ikhtisar Sistem, 2. Arsitektur Teknologi & Edge Stack, 3. Matriks 
 Cohesion: 0.29
 Nodes (6): src_db_schema_index_permissionstatusenum, permissionStatusEnum, getUploadUrlSchema, permissionsRouter, requestPermissionSchema, reviewPermissionSchema
 
+### Community 16 - "scripts"
+Cohesion: 0.22
+Nodes (9): scripts, build, clean, deploy, dev, lint, preview, seed (+1 more)
+
+### Community 17 - "vite.config.ts"
+Cohesion: 0.40
+Nodes (4): ref_path, @tailwindcss/vite, vite, @vitejs/plugin-react
+
+### Community 18 - "main.tsx"
+Cohesion: 0.50
+Nodes (3): react-dom, App(), src_index
+
 ## Knowledge Gaps
 - **157 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+152 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 174 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -137,8 +154,8 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.085) - this node is a cross-community bridge._
 - **Why does `drizzle-orm` connect `drizzle-orm` to `routes/attendances.ts`, `relations.ts`, `package.json`, `types.ts`, `routes/users.ts`, `seed.ts`, `routes/permissions.ts`?**
   _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `react` connect `App.tsx` to `AttendanceScannerModal.tsx`, `package.json`, `integration.test.ts`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
+- **Why does `react` connect `App.tsx` to `AttendanceScannerModal.tsx`, `package.json`, `main.tsx`, `integration.test.ts`?**
+  _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
   _157 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `routes/attendances.ts` be split into smaller, more focused modules?**
@@ -146,4 +163,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `relations.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.11956521739130435 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.0553306342780027 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._

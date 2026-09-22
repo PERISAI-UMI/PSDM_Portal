@@ -365,7 +365,7 @@
       "file_type": "code",
       "norm_label": "permissionlisttableprops",
       "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L6"
+      "source_location": "L7"
     },
     {
       "id": "src_components_permissions_permissionsview_permissionsviewprops",
@@ -1046,12 +1046,12 @@
       "label": "App()",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
+      "community": 18,
+      "community_name": "main.tsx",
       "file_type": "code",
       "norm_label": "app()",
       "source_file": "src/App.tsx",
-      "source_location": "L766"
+      "source_location": "L780"
     },
     {
       "id": "src_components_activities_activitiesview_activitiesview",
@@ -1243,7 +1243,7 @@
       "file_type": "code",
       "norm_label": "permissionlisttable()",
       "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L12"
+      "source_location": "L14"
     },
     {
       "id": "src_components_permissions_permissionsview_permissionsview",
@@ -1255,7 +1255,7 @@
       "file_type": "code",
       "norm_label": "permissionsview()",
       "source_file": "src/components/permissions/PermissionsView.tsx",
-      "source_location": "L14"
+      "source_location": "L15"
     },
     {
       "id": "src_components_profile_profilemodal_profilemodal",
@@ -2738,15 +2738,202 @@
       "source_location": "L30"
     },
     {
+      "id": "package_scripts",
+      "label": "scripts",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "scripts",
+      "source_file": "package.json",
+      "source_location": "L6"
+    },
+    {
+      "id": "package_scripts_build",
+      "label": "build",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "build",
+      "source_file": "package.json",
+      "source_location": "L8"
+    },
+    {
+      "id": "package_scripts_clean",
+      "label": "clean",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "clean",
+      "source_file": "package.json",
+      "source_location": "L10"
+    },
+    {
+      "id": "package_scripts_deploy",
+      "label": "deploy",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "deploy",
+      "source_file": "package.json",
+      "source_location": "L14"
+    },
+    {
+      "id": "package_scripts_dev",
+      "label": "dev",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "dev",
+      "source_file": "package.json",
+      "source_location": "L7"
+    },
+    {
+      "id": "package_scripts_lint",
+      "label": "lint",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "lint",
+      "source_file": "package.json",
+      "source_location": "L11"
+    },
+    {
+      "id": "package_scripts_preview",
+      "label": "preview",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "preview",
+      "source_file": "package.json",
+      "source_location": "L9"
+    },
+    {
+      "id": "package_scripts_seed",
+      "label": "seed",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "seed",
+      "source_file": "package.json",
+      "source_location": "L13"
+    },
+    {
+      "id": "package_scripts_test_integration",
+      "label": "test:integration",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "test:integration",
+      "source_file": "package.json",
+      "source_location": "L12"
+    },
+    {
+      "id": "vite_config",
+      "label": "vite.config.ts",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "vite.config.ts",
+      "file_type": "code",
+      "norm_label": "vite.config.ts",
+      "source_file": "vite.config.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "ref_tailwindcss_vite",
+      "label": "@tailwindcss/vite",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "vite.config.ts",
+      "file_type": "concept",
+      "norm_label": "@tailwindcss/vite",
+      "source_file": "package.json",
+      "source_location": "L22"
+    },
+    {
+      "id": "ref_vite",
+      "label": "vite",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "vite.config.ts",
+      "file_type": "concept",
+      "norm_label": "vite",
+      "source_file": "package.json",
+      "source_location": "L32"
+    },
+    {
+      "id": "ref_vitejs_plugin_react",
+      "label": "@vitejs/plugin-react",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "vite.config.ts",
+      "file_type": "concept",
+      "norm_label": "@vitejs/plugin-react",
+      "source_file": "package.json",
+      "source_location": "L23"
+    },
+    {
+      "id": "src_main",
+      "label": "main.tsx",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "main.tsx",
+      "file_type": "code",
+      "norm_label": "main.tsx",
+      "source_file": "src/main.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ref_react_dom",
+      "label": "react-dom",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "main.tsx",
+      "file_type": "concept",
+      "norm_label": "react-dom",
+      "source_file": "package.json",
+      "source_location": "L31"
+    },
+    {
       "id": "drizzle_config",
       "label": "drizzle.config.ts",
       "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
+      "community": 19,
+      "community_name": "dotenv",
       "file_type": "code",
       "norm_label": "drizzle.config.ts",
       "source_file": "drizzle.config.ts",
       "source_location": "L1"
+    },
+    {
+      "id": "ref_dotenv",
+      "label": "dotenv",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "dotenv",
+      "file_type": "concept",
+      "norm_label": "dotenv",
+      "source_file": "package.json",
+      "source_location": "L24"
+    },
+    {
+      "id": "ref_drizzle_kit",
+      "label": "drizzle-kit",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "dotenv",
+      "file_type": "concept",
+      "norm_label": "drizzle-kit",
+      "source_file": "package.json",
+      "source_location": "L41"
     },
     {
       "id": "package",
@@ -2782,105 +2969,6 @@
       "source_location": "L3"
     },
     {
-      "id": "package_scripts",
-      "label": "scripts",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "scripts",
-      "source_file": "package.json",
-      "source_location": "L6"
-    },
-    {
-      "id": "package_scripts_build",
-      "label": "build",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "build",
-      "source_file": "package.json",
-      "source_location": "L8"
-    },
-    {
-      "id": "package_scripts_clean",
-      "label": "clean",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "clean",
-      "source_file": "package.json",
-      "source_location": "L10"
-    },
-    {
-      "id": "package_scripts_deploy",
-      "label": "deploy",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "deploy",
-      "source_file": "package.json",
-      "source_location": "L14"
-    },
-    {
-      "id": "package_scripts_dev",
-      "label": "dev",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "dev",
-      "source_file": "package.json",
-      "source_location": "L7"
-    },
-    {
-      "id": "package_scripts_lint",
-      "label": "lint",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "lint",
-      "source_file": "package.json",
-      "source_location": "L11"
-    },
-    {
-      "id": "package_scripts_preview",
-      "label": "preview",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "preview",
-      "source_file": "package.json",
-      "source_location": "L9"
-    },
-    {
-      "id": "package_scripts_seed",
-      "label": "seed",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "seed",
-      "source_file": "package.json",
-      "source_location": "L13"
-    },
-    {
-      "id": "package_scripts_test_integration",
-      "label": "test:integration",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "test:integration",
-      "source_file": "package.json",
-      "source_location": "L12"
-    },
-    {
       "id": "package_type",
       "label": "type",
       "_origin": "ast",
@@ -2903,28 +2991,6 @@
       "source_location": "L4"
     },
     {
-      "id": "src_main",
-      "label": "main.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "main.tsx",
-      "source_file": "src/main.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "vite_config",
-      "label": "vite.config.ts",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "vite.config.ts",
-      "source_file": "vite.config.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "ref_autoprefixer",
       "label": "autoprefixer",
       "_origin": "ast",
@@ -2934,28 +3000,6 @@
       "norm_label": "autoprefixer",
       "source_file": "package.json",
       "source_location": "L40"
-    },
-    {
-      "id": "ref_dotenv",
-      "label": "dotenv",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "dotenv",
-      "source_file": "package.json",
-      "source_location": "L24"
-    },
-    {
-      "id": "ref_drizzle_kit",
-      "label": "drizzle-kit",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "drizzle-kit",
-      "source_file": "package.json",
-      "source_location": "L41"
     },
     {
       "id": "ref_drizzle_zod",
@@ -3002,17 +3046,6 @@
       "source_location": "L29"
     },
     {
-      "id": "ref_react_dom",
-      "label": "react-dom",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "react-dom",
-      "source_file": "package.json",
-      "source_location": "L31"
-    },
-    {
       "id": "ref_tailwindcss",
       "label": "tailwindcss",
       "_origin": "ast",
@@ -3022,17 +3055,6 @@
       "norm_label": "tailwindcss",
       "source_file": "package.json",
       "source_location": "L43"
-    },
-    {
-      "id": "ref_tailwindcss_vite",
-      "label": "@tailwindcss/vite",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "@tailwindcss/vite",
-      "source_file": "package.json",
-      "source_location": "L22"
     },
     {
       "id": "ref_tsx",
@@ -3088,28 +3110,6 @@
       "norm_label": "typescript",
       "source_file": "package.json",
       "source_location": "L45"
-    },
-    {
-      "id": "ref_vite",
-      "label": "vite",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "vite",
-      "source_file": "package.json",
-      "source_location": "L32"
-    },
-    {
-      "id": "ref_vitejs_plugin_react",
-      "label": "@vitejs/plugin-react",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "@vitejs/plugin-react",
-      "source_file": "package.json",
-      "source_location": "L23"
     },
     {
       "id": "ref_wrangler",
@@ -4376,8 +4376,8 @@
       "id": "ref_path",
       "label": "ref_path",
       "_origin": "semantic",
-      "community": 2,
-      "community_name": "package.json",
+      "community": 17,
+      "community_name": "vite.config.ts",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_path",
@@ -4388,8 +4388,8 @@
       "id": "src_index",
       "label": "src_index",
       "_origin": "semantic",
-      "community": 2,
-      "community_name": "package.json",
+      "community": 18,
+      "community_name": "main.tsx",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_index",
@@ -4707,7 +4707,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L407",
+      "source_location": "L437",
       "weight": 1.0
     },
     {
@@ -5495,19 +5495,19 @@
     },
     {
       "source": "src_components_permissions_permissionlisttable_permissionlisttableprops",
-      "target": "src_types_index_permissionrecord",
+      "target": "src_db_schema_permissions_permissionstatus",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L7",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
       "source": "src_components_permissions_permissionlisttable_permissionlisttableprops",
-      "target": "src_types_index_authuser",
+      "target": "src_types_index_permissionrecord",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -5519,7 +5519,7 @@
     },
     {
       "source": "src_components_permissions_permissionlisttable_permissionlisttableprops",
-      "target": "src_db_schema_permissions_permissionstatus",
+      "target": "src_types_index_authuser",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7279,6 +7279,18 @@
       "context": "import",
       "source_file": "src/components/permissions/PermissionListTable.tsx",
       "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_permissions_permissionlisttable",
+      "target": "src_components_ui_confirmmodal_confirmmodal",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/permissions/PermissionListTable.tsx",
+      "source_location": "L5",
       "weight": 1.0
     },
     {
@@ -10996,6 +11008,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_components_permissions_permissionlisttable",
+      "target": "src_components_ui_confirmmodal",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/permissions/PermissionListTable.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_permissions_permissionsview",
       "target": "ref_react",
       "relation": "imports_from",
@@ -13399,7 +13423,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.tsx",
-      "source_location": "L766",
+      "source_location": "L780",
       "weight": 1.0
     },
     {
@@ -13872,7 +13896,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L12",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -13883,7 +13907,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0
     },
     {
@@ -13894,7 +13918,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/permissions/PermissionsView.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0
     },
     {
@@ -15761,5 +15785,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d0ddf87988c4b5884d64eab40433d2ded945f813"
+  "built_at_commit": "b645bacfe3ea282b6d40446759cf65729e573890"
 }

@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Check, X, ExternalLink, Clock, ShieldAlert, Search, Filter, Eye, RotateCcw } from 'lucide-react';
+import { Check, X, ExternalLink, Clock, ShieldAlert, Search, Filter, Eye, RotateCcw, Trash2 } from 'lucide-react';
 import type { PermissionRecord, AuthUser, PermissionStatus } from '../../types/index.ts';
 import { getEvidenceViewUrl } from '../../utils/storage.ts';
+import { ConfirmModal } from '../ui/ConfirmModal.tsx';
 
 interface PermissionListTableProps {
   permissions: PermissionRecord[];
   currentUser: AuthUser;
   onReview?: (permissionId: string, status: PermissionStatus) => Promise<void>;
+  onDelete?: (permissionId: string) => Promise<void>;
 }
 
 export const PermissionListTable: React.FC<PermissionListTableProps> = ({
   permissions,
   currentUser,
   onReview,
+  onDelete,
 }) => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
   const [previewPermission, setPreviewPermission] = useState<PermissionRecord | null>(null);
+  const [confirmDeletePermission, setConfirmDeletePermission] = useState<PermissionRecord | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [zoom, setZoom] = useState(false);
@@ -243,6 +247,19 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                       </div>
                     )
                   )}
+
+                  {currentUser.role === 'SUPER_ADMIN' && onDelete && (
+                    <div className="pt-2 border-t border-slate-100 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDeletePermission(p)}
+                        className="text-xs text-rose-600 hover:text-rose-700 font-medium inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Hapus Data Izin
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -329,47 +346,60 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         </td>
                         {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') && (
                           <td className="py-3.5 px-4 text-right">
-                            {eligible ? (
-                              <div className="inline-flex items-center gap-1.5">
+                            <div className="inline-flex items-center gap-1.5 justify-end">
+                              {eligible ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={() => onReview?.(p.id, 'APPROVED')}
+                                    className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center gap-1 transition-colors shadow-2xs cursor-pointer"
+                                  >
+                                    <Check className="w-3 h-3" />
+                                    Setujui
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => onReview?.(p.id, 'REJECTED')}
+                                    className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
+                                  >
+                                    <X className="w-3 h-3" />
+                                    Tolak
+                                  </button>
+                                </>
+                              ) : currentUser.role === 'SUPER_ADMIN' && (p.status === 'APPROVED' || p.status === 'REJECTED') ? (
                                 <button
                                   type="button"
-                                  onClick={() => onReview?.(p.id, 'APPROVED')}
-                                  className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center gap-1 transition-colors shadow-2xs cursor-pointer"
+                                  onClick={() => onReview?.(p.id, 'PENDING')}
+                                  className="px-2.5 py-1 rounded-md bg-white hover:bg-amber-50 text-slate-600 hover:text-amber-800 border border-slate-200 hover:border-amber-300 font-medium text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+                                  title="Batalkan status izin dan kembalikan ke Pending"
                                 >
-                                  <Check className="w-3 h-3" />
-                                  Setujui
+                                  <RotateCcw className="w-3 h-3 text-amber-600" />
+                                  Batalkan
                                 </button>
+                              ) : (
+                                p.status === 'PENDING' &&
+                                currentUser.role === 'ADMIN' && (
+                                  <span
+                                    className="text-[10px] text-slate-400 italic flex items-center justify-end gap-1"
+                                    title="Bukan anggota departemen binaan Anda"
+                                  >
+                                    <ShieldAlert className="w-3 h-3" />
+                                    Bukan PJ Dept
+                                  </span>
+                                )
+                              )}
+
+                              {currentUser.role === 'SUPER_ADMIN' && onDelete && (
                                 <button
                                   type="button"
-                                  onClick={() => onReview?.(p.id, 'REJECTED')}
-                                  className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
+                                  onClick={() => setConfirmDeletePermission(p)}
+                                  className="p-1 rounded-md bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-300 transition-colors cursor-pointer shadow-2xs"
+                                  title="Hapus data izin"
                                 >
-                                  <X className="w-3 h-3" />
-                                  Tolak
+                                  <Trash2 className="w-3.5 h-3.5" />
                                 </button>
-                              </div>
-                            ) : currentUser.role === 'SUPER_ADMIN' && (p.status === 'APPROVED' || p.status === 'REJECTED') ? (
-                              <button
-                                type="button"
-                                onClick={() => onReview?.(p.id, 'PENDING')}
-                                className="px-2.5 py-1 rounded-md bg-white hover:bg-amber-50 text-slate-600 hover:text-amber-800 border border-slate-200 hover:border-amber-300 font-medium text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
-                                title="Batalkan status izin dan kembalikan ke Pending"
-                              >
-                                <RotateCcw className="w-3 h-3 text-amber-600" />
-                                Batalkan
-                              </button>
-                            ) : (
-                              p.status === 'PENDING' &&
-                              currentUser.role === 'ADMIN' && (
-                                <span
-                                  className="text-[10px] text-slate-400 italic flex items-center justify-end gap-1"
-                                  title="Bukan anggota departemen binaan Anda"
-                                >
-                                  <ShieldAlert className="w-3 h-3" />
-                                  Bukan PJ Dept
-                                </span>
-                              )
-                            )}
+                              )}
+                            </div>
                           </td>
                         )}
                       </tr>
@@ -517,6 +547,23 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
           </div>
         </div>
       )}
+
+      {/* Verification Popup Modal for Delete */}
+      <ConfirmModal
+        isOpen={Boolean(confirmDeletePermission)}
+        onClose={() => setConfirmDeletePermission(null)}
+        onConfirm={() => {
+          if (confirmDeletePermission && onDelete) {
+            onDelete(confirmDeletePermission.id);
+            setConfirmDeletePermission(null);
+          }
+        }}
+        title="Hapus Data Perizinan"
+        message={`Apakah Anda yakin ingin menghapus data perizinan dari ${confirmDeletePermission?.userName || 'anggota ini'} untuk kegiatan "${confirmDeletePermission?.activityName || ''}"? Presensi terkait jika sebelumnya disetujui juga akan dibersihkan.`}
+        confirmLabel="Ya, Hapus Izin"
+        cancelLabel="Batal"
+        isDanger={true}
+      />
     </div>
   );
 };

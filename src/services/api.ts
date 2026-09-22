@@ -500,6 +500,17 @@ export const api = {
     return res;
   },
 
+  async deletePermission(
+    permissionId: string
+  ): Promise<{ success: boolean; message: string }> {
+    return await request<{ success: boolean; message: string }>(
+      `/api/permissions/${permissionId}`,
+      {
+        method: 'DELETE',
+      }
+    );
+  },
+
   // ================= OBJECT STORAGE (BACKBLAZE B2) =================
   /**
    * Mengunggah berkas bukti secara nyata ke Backblaze B2 Object Storage

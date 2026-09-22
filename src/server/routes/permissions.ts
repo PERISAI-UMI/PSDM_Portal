@@ -300,3 +300,49 @@ permissionsRouter.patch(
     });
   }
 );
+
+// DELETE /api/permissions/:id (Hapus izin khusus Super Admin)
+permissionsRouter.delete(
+  '/:id',
+  requireRole(['SUPER_ADMIN']),
+  async (c) => {
+    const id = c.req.param('id');
+    const db = c.get('db');
+
+    // Cek keberadaan data izin
+    const permQuery = await db
+      .select({
+        id: permissions.id,
+        activityId: permissions.activityId,
+        userId: permissions.userId,
+      })
+      .from(permissions)
+      .where(eq(permissions.id, id))
+      .limit(1);
+
+    if (!permQuery || permQuery.length === 0) {
+      return c.json({ success: false, message: 'Data perizinan tidak ditemukan' }, 404);
+    }
+
+    const perm = permQuery[0];
+
+    // Hapus record izin
+    await db.delete(permissions).where(eq(permissions.id, id));
+
+    // Bersihkan catatan absensi jika izin ini sebelumnya disetujui (APPROVED)
+    await db
+      .delete(attendances)
+      .where(
+        and(
+          eq(attendances.activityId, perm.activityId),
+          eq(attendances.userId, perm.userId)
+        )
+      );
+
+    return c.json({
+      success: true,
+      message: 'Data perizinan berhasil dihapus',
+    });
+  }
+);
+

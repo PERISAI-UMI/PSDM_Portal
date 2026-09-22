@@ -8,6 +8,7 @@ interface PermissionsViewProps {
   permissions: PermissionRecord[];
   activities: ActivityItem[];
   onReviewPermission: (id: string, status: PermissionStatus) => Promise<void>;
+  onDeletePermission?: (id: string) => Promise<void>;
   onOpenPermissionModal?: () => void;
 }
 
@@ -15,6 +16,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
   currentUser,
   permissions,
   onReviewPermission,
+  onDeletePermission,
 }) => {
   const pendingCount = permissions.filter((p) => p.status === 'PENDING').length;
   const approvedCount = permissions.filter((p) => p.status === 'APPROVED').length;
@@ -101,6 +103,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
           permissions={permissions}
           currentUser={currentUser}
           onReview={onReviewPermission}
+          onDelete={onDeletePermission}
         />
       </div>
     </div>

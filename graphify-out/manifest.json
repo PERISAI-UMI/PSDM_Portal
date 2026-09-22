@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1790086198.1036954,
-    "seen": 1790086264.8874032,
-    "ast_hash": "33416d9ae420127ae5656ac75d12e203",
+    "mtime": 1790086799.6149604,
+    "seen": 1790086867.6167855,
+    "ast_hash": "fad61cb1ce0cb562fe04bda4f25a289a",
     "semantic_hash": ""
   },
   "src/components/activities/ActivitiesView.tsx": {
@@ -132,15 +132,15 @@
     "semantic_hash": ""
   },
   "src/components/permissions/PermissionListTable.tsx": {
-    "mtime": 1790086168.5856733,
-    "seen": 1790086264.8874032,
-    "ast_hash": "dc81df90893eece6f66035fc1d3b3c12",
+    "mtime": 1790086769.9472673,
+    "seen": 1790086867.6167855,
+    "ast_hash": "542b1422afd14d22195d7a439a45c6d2",
     "semantic_hash": ""
   },
   "src/components/permissions/PermissionsView.tsx": {
-    "mtime": 1790052723.2383237,
-    "seen": 1790085475.6279593,
-    "ast_hash": "dbdfe01800183fca74231d7b3b4bbeb4",
+    "mtime": 1790086786.9728022,
+    "seen": 1790086867.6167855,
+    "ast_hash": "c727582ce377c7750982c1e2ab28a77e",
     "semantic_hash": ""
   },
   "src/components/profile/ProfileModal.tsx": {
@@ -300,9 +300,9 @@
     "semantic_hash": ""
   },
   "src/server/routes/permissions.ts": {
-    "mtime": 1790086103.2916577,
-    "seen": 1790086264.8874032,
-    "ast_hash": "bfc90fcfa1983d3d71e9880db9c04f06",
+    "mtime": 1790086721.0346088,
+    "seen": 1790086867.6167855,
+    "ast_hash": "f89028c8f776bd5e046ba164094821ce",
     "semantic_hash": ""
   },
   "src/server/routes/storage.ts": {
@@ -336,9 +336,9 @@
     "semantic_hash": ""
   },
   "src/services/api.ts": {
-    "mtime": 1790046641.798331,
-    "seen": 1790085475.6279593,
-    "ast_hash": "303566095e1b129b7d544ddec53cd971",
+    "mtime": 1790086729.7449164,
+    "seen": 1790086867.6167855,
+    "ast_hash": "1075436a05dff04cb8a15965d61a0f1a",
     "semantic_hash": ""
   },
   "src/tests/integration.test.ts": {
