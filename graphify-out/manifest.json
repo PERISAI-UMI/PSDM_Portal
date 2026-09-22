@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1790099709.3169143,
-    "seen": 1790100220.603542,
-    "ast_hash": "4565b7cd40f23aac99cbd268da1b5fb9",
+    "mtime": 1790101224.9551902,
+    "seen": 1790101612.3943179,
+    "ast_hash": "ef754fb0fff35f9fe872924f38adb1de",
     "semantic_hash": ""
   },
   "src/components/activities/ActivitiesView.tsx": {
@@ -36,9 +36,9 @@
     "semantic_hash": ""
   },
   "src/components/activities/ActivityDetailModal.tsx": {
-    "mtime": 1790088515.7779562,
-    "seen": 1790088656.9754004,
-    "ast_hash": "a4fab1807bfbf64ee81a563a9c851fbb",
+    "mtime": 1790101290.381657,
+    "seen": 1790101612.3943179,
+    "ast_hash": "0b3811a3791b64d7f211246544006af2",
     "semantic_hash": ""
   },
   "src/components/activities/CreateActivityModal.tsx": {
@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src/components/attendances/AttendanceScannerModal.tsx": {
-    "mtime": 1790087700.3421247,
-    "seen": 1790088041.9659991,
-    "ast_hash": "8917e218a22f57308413120bb2fe2bae",
+    "mtime": 1790101158.8568301,
+    "seen": 1790101612.3943179,
+    "ast_hash": "47eb3f7cd10c723319440cbdf4a195aa",
     "semantic_hash": ""
   },
   "src/components/audit/AuditModal.tsx": {
@@ -411,6 +411,12 @@
     "mtime": 1790099733.1208448,
     "seen": 1790100220.603542,
     "ast_hash": "9a1302912e2a9bb6118d115ff0d0d745",
+    "semantic_hash": ""
+  },
+  "src/components/attendances/AttendanceImportModal.tsx": {
+    "mtime": 1790101385.9057164,
+    "seen": 1790101612.3943179,
+    "ast_hash": "f86c98b24dc64f97b5d57fcf759c25c7",
     "semantic_hash": ""
   }
 }

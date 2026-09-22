@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw, Download } from 'lucide-react';
+import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw, Download, FileSpreadsheet } from 'lucide-react';
 import type { ActivityItem, AuthUser, AttendanceStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { useToast } from '../ui/Toast.tsx';
 import { broadcastRealtimeEvent, subscribeRealtimeEvents } from '../../utils/realtime.ts';
+import { AttendanceImportModal } from './AttendanceImportModal.tsx';
 
 interface AttendanceScannerModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   const [saving, setSaving] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [showResetConfirmModal, setShowResetConfirmModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   useEffect(() => {
     if (isOpen && activity) {
@@ -310,16 +312,28 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
             </span>
 
             {(currentAdmin.role === 'SUPER_ADMIN' || currentAdmin.role === 'ADMIN') && (
-              <button
-                type="button"
-                onClick={handleExport}
-                disabled={exporting}
-                className="px-3.5 py-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
-                title="Export rekapan presensi ke CSV (Excel)"
-              >
-                <Download className="w-3.5 h-3.5 text-slate-600" />
-                {exporting ? 'Mengekspor...' : 'Export CSV'}
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(true)}
+                  className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                  title="Import data presensi manual dari Excel / CSV"
+                >
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Import Excel</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleExport}
+                  disabled={exporting}
+                  className="px-3.5 py-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                  title="Export rekapan presensi ke CSV (Excel)"
+                >
+                  <Download className="w-3.5 h-3.5 text-slate-600" />
+                  {exporting ? 'Mengekspor...' : 'Export CSV'}
+                </button>
+              </>
             )}
 
             {!isMonitorOnly && (
@@ -551,6 +565,18 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
           </div>
         </div>
       )}
+
+      {/* Attendance Import Excel Modal */}
+      <AttendanceImportModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        activity={activity}
+        users={usersList}
+        onSuccess={() => {
+          loadData();
+          onSuccess();
+        }}
+      />
     </div>
   );
 };

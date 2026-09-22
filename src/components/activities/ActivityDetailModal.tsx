@@ -11,9 +11,11 @@ import {
   Users,
   Eye,
   Download,
+  FileSpreadsheet,
 } from 'lucide-react';
-import type { ActivityItem, UserRole } from '../../types/index.ts';
+import type { ActivityItem, UserRole, AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
+import { AttendanceImportModal } from '../attendances/AttendanceImportModal.tsx';
 
 interface ActivityDetailModalProps {
   isOpen: boolean;
@@ -24,6 +26,8 @@ interface ActivityDetailModalProps {
   onRequestPermission?: (act: ActivityItem) => void;
   onTogglePublish?: (id: string, current: boolean) => void;
   onDelete?: (id: string) => void;
+  allUsers?: AuthUser[];
+  onImportSuccess?: () => void;
 }
 
 export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
@@ -35,8 +39,11 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
   onRequestPermission,
   onTogglePublish,
   onDelete,
+  allUsers = [],
+  onImportSuccess,
 }) => {
   const [exporting, setExporting] = React.useState(false);
+  const [showImportModal, setShowImportModal] = React.useState(false);
 
   if (!isOpen || !activity) return null;
 
@@ -225,6 +232,16 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
 
               <button
                 type="button"
+                onClick={() => setShowImportModal(true)}
+                className="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-xs font-semibold text-indigo-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="Import rekapan absensi manual dari Excel / CSV"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Import Presensi</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={handleExportCSV}
                 disabled={exporting}
                 className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
@@ -304,6 +321,18 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Attendance Import Modal */}
+      <AttendanceImportModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        activity={activity}
+        users={allUsers}
+        onSuccess={() => {
+          onImportSuccess?.();
+        }}
+      />
     </div>
   );
 };
+

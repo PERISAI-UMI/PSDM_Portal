@@ -759,6 +759,8 @@ function MainAppContent() {
           }}
           onTogglePublish={handleTogglePublish}
           onDelete={handleDeleteActivity}
+          allUsers={allUsers}
+          onImportSuccess={() => syncRealtime(true)}
         />
       )}
 
