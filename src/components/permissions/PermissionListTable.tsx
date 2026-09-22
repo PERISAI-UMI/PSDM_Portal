@@ -246,8 +246,9 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                     <th className="py-3 px-4">Kegiatan Proker</th>
                     <th className="py-3 px-4">Jenis & Alasan</th>
                     <th className="py-3 px-4">Bukti</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-right">Tindakan</th>
+                    {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') && (
+                      <th className="py-3 px-4 text-right">Tindakan</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -313,39 +314,41 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                             </span>
                           )}
                         </td>
-                        <td className="py-3.5 px-4 text-right">
-                          {eligible ? (
-                            <div className="inline-flex items-center gap-1.5">
-                              <button
-                                type="button"
-                                onClick={() => onReview?.(p.id, 'APPROVED')}
-                                className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center gap-1 transition-colors shadow-2xs"
-                              >
-                                <Check className="w-3 h-3" />
-                                Setujui
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => onReview?.(p.id, 'REJECTED')}
-                                className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors"
-                              >
-                                <X className="w-3 h-3" />
-                                Tolak
-                              </button>
-                            </div>
-                          ) : (
-                            p.status === 'PENDING' &&
-                            currentUser.role === 'ADMIN' && (
-                              <span
-                                className="text-[10px] text-slate-400 italic flex items-center justify-end gap-1"
-                                title="Bukan anggota departemen binaan Anda"
-                              >
-                                <ShieldAlert className="w-3 h-3" />
-                                Bukan PJ Dept
-                              </span>
-                            )
-                          )}
-                        </td>
+                        {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') && (
+                          <td className="py-3.5 px-4 text-right">
+                            {eligible ? (
+                              <div className="inline-flex items-center gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => onReview?.(p.id, 'APPROVED')}
+                                  className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center gap-1 transition-colors shadow-2xs"
+                                >
+                                  <Check className="w-3 h-3" />
+                                  Setujui
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => onReview?.(p.id, 'REJECTED')}
+                                  className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors"
+                                >
+                                  <X className="w-3 h-3" />
+                                  Tolak
+                                </button>
+                              </div>
+                            ) : (
+                              p.status === 'PENDING' &&
+                              currentUser.role === 'ADMIN' && (
+                                <span
+                                  className="text-[10px] text-slate-400 italic flex items-center justify-end gap-1"
+                                  title="Bukan anggota departemen binaan Anda"
+                                >
+                                  <ShieldAlert className="w-3 h-3" />
+                                  Bukan PJ Dept
+                                </span>
+                              )
+                            )}
+                          </td>
+                        )}
                       </tr>
                     );
                   })}
