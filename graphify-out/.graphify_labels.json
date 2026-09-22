@@ -17,11 +17,5 @@
   "15": "routes/permissions.ts",
   "16": "vite.config.ts",
   "17": "main.tsx",
-  "18": "dotenv",
-  "20": "AuthUser",
-  "21": "ActivityItem",
-  "22": "types/index.ts",
-  "23": "api.ts",
-  "24": "react",
-  "25": "ActivitiesView.tsx"
+  "18": "dotenv"
 }

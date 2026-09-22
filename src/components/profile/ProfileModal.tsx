@@ -23,6 +23,7 @@ import {
 import type { AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { AvatarCropModal } from './AvatarCropModal.tsx';
+import { ConfirmModal } from '../ui/ConfirmModal.tsx';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -77,6 +78,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const [showDeleteAvatarConfirm, setShowDeleteAvatarConfirm] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleAvatarFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,11 +121,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     }
   };
 
-  const handleRemoveAvatar = async () => {
-    if (!confirm('Apakah Anda yakin ingin menghapus foto profil dan kembali menggunakan inisial?')) {
-      return;
-    }
-
+  const handleConfirmRemoveAvatar = async () => {
     try {
       setIsUploadingAvatar(true);
       setAvatarError(null);
@@ -137,6 +135,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       setAvatarError(msg);
     } finally {
       setIsUploadingAvatar(false);
+      setShowDeleteAvatarConfirm(false);
     }
   };
 
@@ -362,7 +361,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {avatarUrl && (
                   <button
                     type="button"
-                    onClick={handleRemoveAvatar}
+                    onClick={() => setShowDeleteAvatarConfirm(true)}
                     disabled={isUploadingAvatar}
                     className="p-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors cursor-pointer disabled:opacity-50"
                     title="Hapus foto"
@@ -679,6 +678,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         }}
         onCropComplete={handleCropComplete}
         isSaving={isUploadingAvatar}
+      />
+
+      {/* Confirm Delete Avatar Modal */}
+      <ConfirmModal
+        isOpen={showDeleteAvatarConfirm}
+        onClose={() => setShowDeleteAvatarConfirm(false)}
+        onConfirm={handleConfirmRemoveAvatar}
+        title="Hapus Foto Profil"
+        message="Apakah Anda yakin ingin menghapus foto profil dan kembali menggunakan inisial nama organisasi?"
+        confirmLabel="Ya, Hapus Foto"
+        cancelLabel="Batal"
+        isDanger={true}
       />
     </div>
   );
