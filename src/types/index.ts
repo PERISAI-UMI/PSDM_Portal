@@ -46,6 +46,7 @@ export interface ActivityItem {
     IZIN: number;
     SAKIT: number;
     ALPHA: number;
+    TELAT: number;
     TOTAL: number;
   };
 }

@@ -81,21 +81,21 @@ activitiesRouter.get('/', async (c) => {
     .groupBy(attendances.activityId, attendances.status)
     .all();
 
-  const summaryMap: Record<string, { HADIR: number; IZIN: number; SAKIT: number; ALPHA: number; TOTAL: number }> = {};
+  const summaryMap: Record<string, { HADIR: number; IZIN: number; SAKIT: number; ALPHA: number; TELAT: number; TOTAL: number }> = {};
   for (const item of stats) {
     if (!summaryMap[item.activityId]) {
-      summaryMap[item.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
+      summaryMap[item.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
     }
     if (item.status in summaryMap[item.activityId]) {
       const cnt = Number(item.count) || 0;
-      summaryMap[item.activityId][item.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA'] = cnt;
+      summaryMap[item.activityId][item.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA' | 'TELAT'] = cnt;
       summaryMap[item.activityId].TOTAL += cnt;
     }
   }
 
   const result = list.map((act) => ({
     ...act,
-    attendanceSummary: summaryMap[act.id] || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 },
+    attendanceSummary: summaryMap[act.id] || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 },
   }));
 
   return c.json({ success: true, data: result });
@@ -151,6 +151,7 @@ activitiesRouter.get('/:id', async (c) => {
     IZIN: 0,
     SAKIT: 0,
     ALPHA: 0,
+    TELAT: 0,
     TOTAL: 0,
   };
 

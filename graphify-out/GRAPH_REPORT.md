@@ -1,17 +1,17 @@
 # Graph Report - PSDM-PORTAL  (2026-09-22)
 
 ## Corpus Check
-- 66 files · ~46,343 words
+- 66 files · ~46,983 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 6 file(s) not represented in the graph (top: .ico 2, .example 1, (none) 1)
 
 ## Summary
-- 390 nodes · 956 edges · 20 communities (19 shown, 1 thin omitted)
+- 390 nodes · 958 edges · 27 communities (26 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b645bacf`
+- Built from commit: `742a043e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -36,6 +36,13 @@
 - vite.config.ts
 - main.tsx
 - dotenv
+- AuthUser
+- ActivityItem
+- MembersView.tsx
+- api.ts
+- PermissionFormModal.tsx
+- ActivitiesView.tsx
+- types/index.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `AuthUser` - 37 edges
@@ -54,17 +61,17 @@
   HANDOVER.md → src/db/schema/academic.ts
 - `CreateActivityModalProps` --references--> `ActivityItem`  [EXTRACTED]
   src/components/activities/CreateActivityModal.tsx → src/types/index.ts
-- `AttendanceScannerModalProps` --references--> `ActivityItem`  [EXTRACTED]
-  src/components/attendances/AttendanceScannerModal.tsx → src/types/index.ts
-- `AttendanceScannerModalProps` --references--> `AuthUser`  [EXTRACTED]
-  src/components/attendances/AttendanceScannerModal.tsx → src/types/index.ts
-- `HeaderProps` --references--> `AuthUser`  [EXTRACTED]
-  src/components/layout/Header.tsx → src/types/index.ts
+- `ActivitiesViewProps` --references--> `ActivityItem`  [EXTRACTED]
+  src/components/activities/ActivitiesView.tsx → src/types/index.ts
+- `ActivitiesViewProps` --references--> `AuthUser`  [EXTRACTED]
+  src/components/activities/ActivitiesView.tsx → src/types/index.ts
+- `ActivityCardProps` --references--> `ActivityItem`  [EXTRACTED]
+  src/components/activities/ActivityCard.tsx → src/types/index.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 1 thin omitted)
+## Communities (27 total, 1 thin omitted)
 
 ### Community 0 - "routes/attendances.ts"
 Cohesion: 0.15
@@ -79,8 +86,8 @@ Cohesion: 0.11
 Nodes (17): name, private, type, version, autoprefixer, drizzle-zod, esbuild, @google/genai (+9 more)
 
 ### Community 3 - "App.tsx"
-Cohesion: 0.07
-Nodes (62): lucide-react, react, ActiveSection, ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityCardProps, ActivityDetailModal() (+54 more)
+Cohesion: 0.15
+Nodes (17): react, ActiveSection, CreateActivityModal(), CreateActivityModalProps, LoginForm(), LoginFormProps, AdminView(), SuperAdminView() (+9 more)
 
 ### Community 4 - "integration.test.ts"
 Cohesion: 0.09
@@ -99,8 +106,8 @@ Cohesion: 0.15
 Nodes (19): src_db_schema_index_departments, src_db_schema_index_programstudi, src_db_schema_index_sessions, src_db_schema_index_userrole, src_db_schema_index_userroleenum, src_db_schema_index_users, sessions, authMiddleware (+11 more)
 
 ### Community 8 - "AttendanceScannerModal.tsx"
-Cohesion: 0.11
-Nodes (23): MainAppContent(), checkAuthSession(), AttendanceScannerModal(), AttendanceScannerModalProps, PermissionFormModal(), PermissionFormModalProps, ToastContext, ToastContextType (+15 more)
+Cohesion: 0.17
+Nodes (15): MainAppContent(), checkAuthSession(), AttendanceScannerModal(), AttendanceScannerModalProps, ToastContext, ToastContextType, ToastItem, ToastProvider() (+7 more)
 
 ### Community 9 - "drizzle-orm"
 Cohesion: 0.18
@@ -142,6 +149,34 @@ Nodes (4): ref_path, @tailwindcss/vite, vite, @vitejs/plugin-react
 Cohesion: 0.50
 Nodes (3): react-dom, App(), src_index
 
+### Community 20 - "AuthUser"
+Cohesion: 0.18
+Nodes (11): lucide-react, Header(), HeaderProps, Sidebar(), SidebarProps, MemberListModalProps, ProfileModal(), ProfileModalProps (+3 more)
+
+### Community 21 - "ActivityItem"
+Cohesion: 0.36
+Nodes (10): AdminViewProps, SuperAdminViewProps, PermissionListTable(), PermissionListTableProps, PermissionsViewProps, PermissionStatus, ActivityItem, PermissionRecord (+2 more)
+
+### Community 22 - "MembersView.tsx"
+Cohesion: 0.27
+Nodes (11): MemberFormModal(), MemberFormModalProps, MemberImportModal(), MemberImportModalProps, ParsedUserRow, MembersViewProps, ConfirmModal(), ConfirmModalProps (+3 more)
+
+### Community 23 - "api.ts"
+Cohesion: 0.24
+Nodes (6): ActivityDetailModal(), ActivityDetailModalProps, api, getStoredToken(), request(), src_types_index_attendancestatus
+
+### Community 24 - "PermissionFormModal.tsx"
+Cohesion: 0.39
+Nodes (6): PermissionFormModal(), PermissionFormModalProps, compressImageFile(), CompressionResult, CompressOptions, formatFileSize()
+
+### Community 25 - "ActivitiesView.tsx"
+Cohesion: 0.43
+Nodes (5): ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityCardProps, UserRole
+
+### Community 26 - "types/index.ts"
+Cohesion: 0.53
+Nodes (4): PengurusView(), PengurusViewProps, AttendanceStatus, AttendanceRecord
+
 ## Knowledge Gaps
 - **157 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+152 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 174 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
@@ -154,7 +189,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.085) - this node is a cross-community bridge._
 - **Why does `drizzle-orm` connect `drizzle-orm` to `routes/attendances.ts`, `relations.ts`, `package.json`, `types.ts`, `routes/users.ts`, `seed.ts`, `routes/permissions.ts`?**
   _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `react` connect `App.tsx` to `AttendanceScannerModal.tsx`, `package.json`, `main.tsx`, `integration.test.ts`?**
+- **Why does `react` connect `App.tsx` to `package.json`, `integration.test.ts`, `AttendanceScannerModal.tsx`, `main.tsx`, `AuthUser`, `ActivityItem`, `MembersView.tsx`, `api.ts`, `PermissionFormModal.tsx`, `ActivitiesView.tsx`, `types/index.ts`?**
   _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
   _157 weakly-connected nodes found - possible documentation gaps or missing edges._

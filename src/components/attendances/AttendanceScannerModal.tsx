@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw } from 'lucide-react';
+import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw, Download } from 'lucide-react';
 import type { ActivityItem, AuthUser, AttendanceStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { useToast } from '../ui/Toast.tsx';
@@ -27,6 +27,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
   const [search, setSearch] = useState('');
   const [attendancesMap, setAttendancesMap] = useState<Record<string, AttendanceStatus>>({});
   const [saving, setSaving] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [showResetConfirmModal, setShowResetConfirmModal] = useState(false);
 
   useEffect(() => {
@@ -165,6 +166,23 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
     setShowResetConfirmModal(true);
   };
 
+  const handleCloseResetConfirm = () => {
+    setShowResetConfirmModal(false);
+  };
+
+  const handleExport = async () => {
+    if (!activity) return;
+    try {
+      setExporting(true);
+      await api.exportAttendanceCSV(activity.id, activity.nama);
+      showToast('Berkas CSV presensi berhasil diunduh!', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal mengekspor presensi', 'error');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleExecuteReset = async () => {
     setShowResetConfirmModal(false);
     const targets = search.trim() ? filteredUsers : usersList;
@@ -204,7 +222,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
       (u.departmentName && u.departmentName.toLowerCase().includes(search.toLowerCase()))
   );
 
-  const hadirCount = usersList.filter((u) => attendancesMap[u.id] === 'HADIR').length;
+  const hadirCount = usersList.filter((u) => attendancesMap[u.id] === 'HADIR' || attendancesMap[u.id] === 'TELAT').length;
   const recordedCount = usersList.filter((u) => attendancesMap[u.id]).length;
   const targetCount = (search.trim() ? filteredUsers : usersList).length;
 
@@ -214,6 +232,12 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
         return (
           <span className="px-3 py-1 text-xs font-bold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
             HADIR
+          </span>
+        );
+      case 'TELAT':
+        return (
+          <span className="px-3 py-1 text-xs font-bold rounded-md bg-amber-50 text-amber-700 border border-amber-200">
+            TELAT
           </span>
         );
       case 'ALPHA':
@@ -230,7 +254,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
         );
       case 'SAKIT':
         return (
-          <span className="px-3 py-1 text-xs font-bold rounded-md bg-amber-50 text-amber-700 border border-amber-200">
+          <span className="px-3 py-1 text-xs font-bold rounded-md bg-purple-50 text-purple-700 border border-purple-200">
             SAKIT
           </span>
         );
@@ -284,6 +308,19 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
             <span className="text-xs text-slate-500 font-medium whitespace-nowrap">
               Hadir: <strong className="text-emerald-700 font-bold">{hadirCount}</strong> / {usersList.length}
             </span>
+
+            {(currentAdmin.role === 'SUPER_ADMIN' || currentAdmin.role === 'ADMIN') && (
+              <button
+                type="button"
+                onClick={handleExport}
+                disabled={exporting}
+                className="px-3.5 py-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                title="Export rekapan presensi ke CSV (Excel)"
+              >
+                <Download className="w-3.5 h-3.5 text-slate-600" />
+                {exporting ? 'Mengekspor...' : 'Export CSV'}
+              </button>
+            )}
 
             {!isMonitorOnly && (
               <div className="flex items-center gap-2">
@@ -340,21 +377,23 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
                         {renderStatusBadge(currentStatus)}
                       </div>
                     ) : (
-                      <div className="grid grid-cols-4 gap-1.5">
-                        {(['HADIR', 'ALPHA', 'IZIN', 'SAKIT'] as AttendanceStatus[]).map((st) => (
+                      <div className="grid grid-cols-5 gap-1">
+                        {(['HADIR', 'TELAT', 'IZIN', 'SAKIT', 'ALPHA'] as AttendanceStatus[]).map((st) => (
                           <button
                             key={`m-${st}`}
                             type="button"
                             onClick={() => handleSetStatus(u.id, st)}
-                            className={`min-h-[40px] py-1.5 px-1 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center ${
+                            className={`min-h-[40px] py-1.5 px-0.5 rounded-lg text-[10px] sm:text-[11px] font-bold transition-all flex items-center justify-center ${
                               currentStatus === st
                                 ? st === 'HADIR'
                                   ? 'bg-emerald-600 text-white shadow-xs'
+                                  : st === 'TELAT'
+                                  ? 'bg-amber-600 text-white shadow-xs'
                                   : st === 'ALPHA'
                                   ? 'bg-red-600 text-white shadow-xs'
                                   : st === 'IZIN'
                                   ? 'bg-blue-600 text-white shadow-xs'
-                                  : 'bg-amber-600 text-white shadow-xs'
+                                  : 'bg-purple-600 text-white shadow-xs'
                                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                             }`}
                           >
@@ -386,20 +425,22 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
                       </div>
                     ) : (
                       <div className="flex items-center gap-1 shrink-0">
-                        {(['HADIR', 'ALPHA', 'IZIN', 'SAKIT'] as AttendanceStatus[]).map((st) => (
+                        {(['HADIR', 'TELAT', 'IZIN', 'SAKIT', 'ALPHA'] as AttendanceStatus[]).map((st) => (
                           <button
                             key={`d-${st}`}
                             type="button"
                             onClick={() => handleSetStatus(u.id, st)}
-                            className={`px-2.5 py-1.5 rounded text-[11px] font-bold transition-all min-w-[56px] text-center ${
+                            className={`px-2 py-1.5 rounded text-[11px] font-bold transition-all min-w-[50px] text-center ${
                               currentStatus === st
                                 ? st === 'HADIR'
                                   ? 'bg-emerald-600 text-white shadow-xs'
+                                  : st === 'TELAT'
+                                  ? 'bg-amber-600 text-white shadow-xs'
                                   : st === 'ALPHA'
                                   ? 'bg-red-600 text-white shadow-xs'
                                   : st === 'IZIN'
                                   ? 'bg-blue-600 text-white shadow-xs'
-                                  : 'bg-amber-600 text-white shadow-xs'
+                                  : 'bg-purple-600 text-white shadow-xs'
                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
                           >

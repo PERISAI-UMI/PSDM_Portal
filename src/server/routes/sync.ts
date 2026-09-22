@@ -56,7 +56,7 @@ syncRouter.get('/live', async (c) => {
     // Summary kehadiran per activity
     let activitiesWithSummary = actList.map((a) => ({
       ...a,
-      attendanceSummary: { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 },
+      attendanceSummary: { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 },
     }));
 
     if (actList.length > 0) {
@@ -72,21 +72,21 @@ syncRouter.get('/live', async (c) => {
         .groupBy(attendances.activityId, attendances.status)
         .all();
 
-      const summaryMap: Record<string, { HADIR: number; IZIN: number; SAKIT: number; ALPHA: number; TOTAL: number }> = {};
+      const summaryMap: Record<string, { HADIR: number; IZIN: number; SAKIT: number; ALPHA: number; TELAT: number; TOTAL: number }> = {};
       for (const s of stats) {
         if (!summaryMap[s.activityId]) {
-          summaryMap[s.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
+          summaryMap[s.activityId] = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
         }
         const cnt = Number(s.count) || 0;
         if (s.status in summaryMap[s.activityId]) {
-          summaryMap[s.activityId][s.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA'] = cnt;
+          summaryMap[s.activityId][s.status as 'HADIR' | 'IZIN' | 'SAKIT' | 'ALPHA' | 'TELAT'] = cnt;
           summaryMap[s.activityId].TOTAL += cnt;
         }
       }
 
       activitiesWithSummary = actList.map((act) => ({
         ...act,
-        attendanceSummary: summaryMap[act.id] || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 },
+        attendanceSummary: summaryMap[act.id] || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 },
       }));
     }
 

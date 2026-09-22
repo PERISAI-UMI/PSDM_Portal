@@ -10,8 +10,10 @@ import {
   AlertCircle,
   Users,
   Eye,
+  Download,
 } from 'lucide-react';
 import type { ActivityItem, UserRole } from '../../types/index.ts';
+import { api } from '../../services/api.ts';
 
 interface ActivityDetailModalProps {
   isOpen: boolean;
@@ -34,7 +36,21 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
   onTogglePublish,
   onDelete,
 }) => {
+  const [exporting, setExporting] = React.useState(false);
+
   if (!isOpen || !activity) return null;
+
+  const handleExportCSV = async () => {
+    if (!activity) return;
+    try {
+      setExporting(true);
+      await api.exportAttendanceCSV(activity.id, activity.nama);
+    } catch (err) {
+      console.error('Failed to export CSV', err);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const startDate = new Date(activity.startDate);
   const endDate = new Date(activity.endDate);
@@ -56,9 +72,9 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
     minute: '2-digit',
   });
 
-  const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
-  const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA);
-  const hadirPercentage = total > 0 ? Math.round((summary.HADIR / total) * 100) : 0;
+  const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
+  const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));
+  const hadirPercentage = total > 0 ? Math.round(((summary.HADIR + (summary.TELAT || 0)) / total) * 100) : 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-xs">
@@ -143,13 +159,18 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                     title={`Hadir: ${summary.HADIR}`}
                   />
                   <div
+                    style={{ width: `${((summary.TELAT || 0) / total) * 100}%` }}
+                    className="bg-amber-500 transition-all"
+                    title={`Telat: ${summary.TELAT || 0}`}
+                  />
+                  <div
                     style={{ width: `${(summary.IZIN / total) * 100}%` }}
                     className="bg-blue-500 transition-all"
                     title={`Izin: ${summary.IZIN}`}
                   />
                   <div
                     style={{ width: `${(summary.SAKIT / total) * 100}%` }}
-                    className="bg-amber-500 transition-all"
+                    className="bg-purple-500 transition-all"
                     title={`Sakit: ${summary.SAKIT}`}
                   />
                   <div
@@ -162,18 +183,22 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             </div>
 
             {/* Legend Breakdown Grid */}
-            <div className="grid grid-cols-4 gap-2 mt-2.5 text-center">
+            <div className="grid grid-cols-5 gap-1.5 mt-2.5 text-center">
               <div className="p-2 rounded-lg bg-emerald-50/60 border border-emerald-100">
                 <div className="text-[10px] text-emerald-700 font-medium">Hadir</div>
                 <div className="text-sm font-bold text-emerald-800 tabular-nums">{summary.HADIR}</div>
+              </div>
+              <div className="p-2 rounded-lg bg-amber-50/60 border border-amber-100">
+                <div className="text-[10px] text-amber-700 font-medium">Telat</div>
+                <div className="text-sm font-bold text-amber-800 tabular-nums">{summary.TELAT || 0}</div>
               </div>
               <div className="p-2 rounded-lg bg-blue-50/60 border border-blue-100">
                 <div className="text-[10px] text-blue-700 font-medium">Izin</div>
                 <div className="text-sm font-bold text-blue-800 tabular-nums">{summary.IZIN}</div>
               </div>
-              <div className="p-2 rounded-lg bg-amber-50/60 border border-amber-100">
-                <div className="text-[10px] text-amber-700 font-medium">Sakit</div>
-                <div className="text-sm font-bold text-amber-800 tabular-nums">{summary.SAKIT}</div>
+              <div className="p-2 rounded-lg bg-purple-50/60 border border-purple-100">
+                <div className="text-[10px] text-purple-700 font-medium">Sakit</div>
+                <div className="text-sm font-bold text-purple-800 tabular-nums">{summary.SAKIT}</div>
               </div>
               <div className="p-2 rounded-lg bg-rose-50/60 border border-rose-100">
                 <div className="text-[10px] text-rose-700 font-medium">Alpha</div>
@@ -209,6 +234,19 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Hapus</span>
+              </button>
+            )}
+
+            {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && (
+              <button
+                type="button"
+                onClick={handleExportCSV}
+                disabled={exporting}
+                className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="Export presensi kegiatan ini ke CSV"
+              >
+                <Download className="w-3.5 h-3.5 text-slate-600" />
+                <span>{exporting ? 'Mengekspor...' : 'Export Presensi'}</span>
               </button>
             )}
           </div>

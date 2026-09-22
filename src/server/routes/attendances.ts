@@ -143,6 +143,100 @@ attendancesRouter.get(
   }
 );
 
+// GET /api/attendances/export (Export CSV Hasil Presensi khusus Super Admin & Admin)
+attendancesRouter.get(
+  '/export',
+  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  async (c) => {
+    const activityId = c.req.query('activityId');
+    if (!activityId) {
+      return c.json({ success: false, message: 'Parameter activityId wajib disertakan' }, 400);
+    }
+    const db = c.get('db');
+
+    // Detail kegiatan
+    const act = await db
+      .select()
+      .from(activities)
+      .where(eq(activities.id, activityId))
+      .limit(1);
+
+    const activityName = act[0]?.nama || 'Kegiatan';
+    const activityDate = act[0]?.startDate ? new Date(act[0].startDate).toLocaleDateString('id-ID') : '-';
+
+    // Seluruh user pengurus/anggota
+    const allMembers = await db
+      .select({
+        userId: users.id,
+        namaLengkap: users.namaLengkap,
+        prn: users.prn,
+        nim: users.nim,
+        departmentName: departments.nama,
+        jabatan: users.jabatan,
+      })
+      .from(users)
+      .innerJoin(departments, eq(users.departmentId, departments.id))
+      .all();
+
+    // Rekaman absensi
+    const existingAttendances = await db
+      .select()
+      .from(attendances)
+      .where(eq(attendances.activityId, activityId))
+      .all();
+
+    const attendanceMap = new Map<string, typeof existingAttendances[0]>();
+    for (const att of existingAttendances) {
+      attendanceMap.set(att.userId, att);
+    }
+
+    const escapeCsv = (val: any) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+
+    const headers = [
+      'No',
+      'Nama Lengkap',
+      'PRN / Stambuk',
+      'NIM',
+      'Departemen',
+      'Jabatan',
+      'Status Presensi',
+      'Waktu Presensi',
+      'Nama Kegiatan',
+      'Tanggal Kegiatan',
+    ];
+
+    const rows = allMembers.map((member, idx) => {
+      const rec = attendanceMap.get(member.userId);
+      const waktuPresensi = rec?.recordedAt ? new Date(rec.recordedAt).toLocaleString('id-ID') : '-';
+      const status = rec?.status || 'BELUM_ABSEN';
+      return [
+        idx + 1,
+        member.namaLengkap,
+        member.prn,
+        member.nim || '-',
+        member.departmentName,
+        member.jabatan,
+        status,
+        waktuPresensi,
+        activityName,
+        activityDate,
+      ].map(escapeCsv).join(',');
+    });
+
+    const csvContent = '\uFEFF' + [headers.map(escapeCsv).join(','), ...rows].join('\r\n');
+    const safeFilename = `presensi_${activityName.toLowerCase().replace(/[^a-z0-9_-]/g, '_')}.csv`;
+
+    return new Response(csvContent, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${safeFilename}"`,
+        'Cache-Control': 'no-cache',
+      },
+    });
+  }
+);
+
 // POST /api/attendances & POST /api/attendances/record (Pencatatan Absensi oleh Admin / Super Admin)
 // TIDAK BISA ABSEN MANDIRI OLEH PENGURUS
 const handleRecordSingleAttendance = async (c: any) => {

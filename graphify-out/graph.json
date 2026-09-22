@@ -95,17 +95,316 @@
       "source_location": "L25"
     },
     {
-      "id": "src_app_activesection",
-      "label": "ActiveSection",
+      "id": "src_components_layout_header_headerprops",
+      "label": "HeaderProps",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 20,
+      "community_name": "AuthUser",
       "file_type": "code",
-      "norm_label": "activesection",
-      "source_file": "src/App.tsx",
-      "source_location": "L35"
+      "norm_label": "headerprops",
+      "source_file": "src/components/layout/Header.tsx",
+      "source_location": "L8"
+    },
+    {
+      "id": "src_components_layout_sidebar_sidebarprops",
+      "label": "SidebarProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "sidebarprops",
+      "source_file": "src/components/layout/Sidebar.tsx",
+      "source_location": "L22"
+    },
+    {
+      "id": "src_components_members_memberlistmodal_memberlistmodalprops",
+      "label": "MemberListModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "memberlistmodalprops",
+      "source_file": "src/components/members/MemberListModal.tsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_components_profile_profilemodal_profilemodalprops",
+      "label": "ProfileModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "profilemodalprops",
+      "source_file": "src/components/profile/ProfileModal.tsx",
+      "source_location": "L21"
+    },
+    {
+      "id": "src_components_profile_profileview_profileviewprops",
+      "label": "ProfileViewProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "profileviewprops",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L25"
+    },
+    {
+      "id": "src_types_index_authuser",
+      "label": "AuthUser",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "authuser",
+      "source_file": "src/types/index.ts",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_components_dashboard_adminview_adminviewprops",
+      "label": "AdminViewProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "adminviewprops",
+      "source_file": "src/components/dashboard/AdminView.tsx",
+      "source_location": "L14"
+    },
+    {
+      "id": "src_components_dashboard_superadminview_superadminviewprops",
+      "label": "SuperAdminViewProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "superadminviewprops",
+      "source_file": "src/components/dashboard/SuperAdminView.tsx",
+      "source_location": "L18"
+    },
+    {
+      "id": "src_components_permissions_permissionlisttable_permissionlisttableprops",
+      "label": "PermissionListTableProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "permissionlisttableprops",
+      "source_file": "src/components/permissions/PermissionListTable.tsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_components_permissions_permissionsview_permissionsviewprops",
+      "label": "PermissionsViewProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "permissionsviewprops",
+      "source_file": "src/components/permissions/PermissionsView.tsx",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_db_schema_permissions_permissionstatus",
+      "label": "PermissionStatus",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "permissionstatus",
+      "source_file": "src/db/schema/permissions.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_types_index_activityitem",
+      "label": "ActivityItem",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "activityitem",
+      "source_file": "src/types/index.ts",
+      "source_location": "L34"
+    },
+    {
+      "id": "src_types_index_permissionrecord",
+      "label": "PermissionRecord",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "permissionrecord",
+      "source_file": "src/types/index.ts",
+      "source_location": "L69"
+    },
+    {
+      "id": "src_components_members_memberformmodal_memberformmodalprops",
+      "label": "MemberFormModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "memberformmodalprops",
+      "source_file": "src/components/members/MemberFormModal.tsx",
+      "source_location": "L18"
+    },
+    {
+      "id": "src_components_members_memberimportmodal_memberimportmodalprops",
+      "label": "MemberImportModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "memberimportmodalprops",
+      "source_file": "src/components/members/MemberImportModal.tsx",
+      "source_location": "L14"
+    },
+    {
+      "id": "src_components_members_memberimportmodal_parseduserrow",
+      "label": "ParsedUserRow",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "parseduserrow",
+      "source_file": "src/components/members/MemberImportModal.tsx",
+      "source_location": "L27"
+    },
+    {
+      "id": "src_components_members_membersview_membersviewprops",
+      "label": "MembersViewProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "membersviewprops",
+      "source_file": "src/components/members/MembersView.tsx",
+      "source_location": "L26"
+    },
+    {
+      "id": "src_components_ui_confirmmodal_confirmmodalprops",
+      "label": "ConfirmModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "confirmmodalprops",
+      "source_file": "src/components/ui/ConfirmModal.tsx",
+      "source_location": "L4"
+    },
+    {
+      "id": "src_types_index_departmentitem",
+      "label": "DepartmentItem",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "departmentitem",
+      "source_file": "src/types/index.ts",
+      "source_location": "L88"
+    },
+    {
+      "id": "src_types_index_programstudiitem",
+      "label": "ProgramStudiItem",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "programstudiitem",
+      "source_file": "src/types/index.ts",
+      "source_location": "L98"
+    },
+    {
+      "id": "src_components_activities_activitydetailmodal_activitydetailmodalprops",
+      "label": "ActivityDetailModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "activitydetailmodalprops",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "source_location": "L18"
+    },
+    {
+      "id": "src_components_permissions_permissionformmodal_permissionformmodalprops",
+      "label": "PermissionFormModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "permissionformmodalprops",
+      "source_file": "src/components/permissions/PermissionFormModal.tsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_utils_imagecompressor_compressionresult",
+      "label": "CompressionResult",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "compressionresult",
+      "source_file": "src/utils/imageCompressor.ts",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_utils_imagecompressor_compressoptions",
+      "label": "CompressOptions",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "compressoptions",
+      "source_file": "src/utils/imageCompressor.ts",
+      "source_location": "L14"
     },
     {
       "id": "src_components_activities_activitiesview_activitiesviewprops",
@@ -113,8 +412,8 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
       "norm_label": "activitiesviewprops",
       "source_file": "src/components/activities/ActivitiesView.tsx",
@@ -126,25 +425,77 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
       "norm_label": "activitycardprops",
       "source_file": "src/components/activities/ActivityCard.tsx",
       "source_location": "L5"
     },
     {
-      "id": "src_components_activities_activitydetailmodal_activitydetailmodalprops",
-      "label": "ActivityDetailModalProps",
+      "id": "src_db_schema_users_userrole",
+      "label": "UserRole",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
+      "file_type": "code",
+      "norm_label": "userrole",
+      "source_file": "src/db/schema/users.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_components_dashboard_pengurusview_pengurusviewprops",
+      "label": "PengurusViewProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "pengurusviewprops",
+      "source_file": "src/components/dashboard/PengurusView.tsx",
+      "source_location": "L13"
+    },
+    {
+      "id": "src_db_schema_attendances_attendancestatus",
+      "label": "AttendanceStatus",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "attendancestatus",
+      "source_file": "src/db/schema/attendances.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_types_index_attendancerecord",
+      "label": "AttendanceRecord",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "attendancerecord",
+      "source_file": "src/types/index.ts",
+      "source_location": "L54"
+    },
+    {
+      "id": "src_app_activesection",
+      "label": "ActiveSection",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 3,
       "community_name": "App.tsx",
       "file_type": "code",
-      "norm_label": "activitydetailmodalprops",
-      "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L16"
+      "norm_label": "activesection",
+      "source_file": "src/App.tsx",
+      "source_location": "L35"
     },
     {
       "id": "src_components_activities_createactivitymodal_createactivitymodalprops",
@@ -171,71 +522,6 @@
       "norm_label": "loginformprops",
       "source_file": "src/components/auth/LoginForm.tsx",
       "source_location": "L4"
-    },
-    {
-      "id": "src_components_dashboard_adminview_adminviewprops",
-      "label": "AdminViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "adminviewprops",
-      "source_file": "src/components/dashboard/AdminView.tsx",
-      "source_location": "L14"
-    },
-    {
-      "id": "src_components_dashboard_pengurusview_pengurusviewprops",
-      "label": "PengurusViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "pengurusviewprops",
-      "source_file": "src/components/dashboard/PengurusView.tsx",
-      "source_location": "L13"
-    },
-    {
-      "id": "src_components_dashboard_superadminview_superadminviewprops",
-      "label": "SuperAdminViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "superadminviewprops",
-      "source_file": "src/components/dashboard/SuperAdminView.tsx",
-      "source_location": "L18"
-    },
-    {
-      "id": "src_components_layout_header_headerprops",
-      "label": "HeaderProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "headerprops",
-      "source_file": "src/components/layout/Header.tsx",
-      "source_location": "L8"
-    },
-    {
-      "id": "src_components_layout_sidebar_sidebarprops",
-      "label": "SidebarProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "sidebarprops",
-      "source_file": "src/components/layout/Sidebar.tsx",
-      "source_location": "L22"
     },
     {
       "id": "src_components_master_masterdataview_deletetarget",
@@ -290,227 +576,6 @@
       "source_location": "L29"
     },
     {
-      "id": "src_components_members_memberformmodal_memberformmodalprops",
-      "label": "MemberFormModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberformmodalprops",
-      "source_file": "src/components/members/MemberFormModal.tsx",
-      "source_location": "L18"
-    },
-    {
-      "id": "src_components_members_memberimportmodal_memberimportmodalprops",
-      "label": "MemberImportModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberimportmodalprops",
-      "source_file": "src/components/members/MemberImportModal.tsx",
-      "source_location": "L14"
-    },
-    {
-      "id": "src_components_members_memberimportmodal_parseduserrow",
-      "label": "ParsedUserRow",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "parseduserrow",
-      "source_file": "src/components/members/MemberImportModal.tsx",
-      "source_location": "L27"
-    },
-    {
-      "id": "src_components_members_memberlistmodal_memberlistmodalprops",
-      "label": "MemberListModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberlistmodalprops",
-      "source_file": "src/components/members/MemberListModal.tsx",
-      "source_location": "L5"
-    },
-    {
-      "id": "src_components_members_membersview_membersviewprops",
-      "label": "MembersViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "membersviewprops",
-      "source_file": "src/components/members/MembersView.tsx",
-      "source_location": "L26"
-    },
-    {
-      "id": "src_components_permissions_permissionlisttable_permissionlisttableprops",
-      "label": "PermissionListTableProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "permissionlisttableprops",
-      "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L7"
-    },
-    {
-      "id": "src_components_permissions_permissionsview_permissionsviewprops",
-      "label": "PermissionsViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "permissionsviewprops",
-      "source_file": "src/components/permissions/PermissionsView.tsx",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_components_profile_profilemodal_profilemodalprops",
-      "label": "ProfileModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "profilemodalprops",
-      "source_file": "src/components/profile/ProfileModal.tsx",
-      "source_location": "L21"
-    },
-    {
-      "id": "src_components_profile_profileview_profileviewprops",
-      "label": "ProfileViewProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "profileviewprops",
-      "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_components_ui_confirmmodal_confirmmodalprops",
-      "label": "ConfirmModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "confirmmodalprops",
-      "source_file": "src/components/ui/ConfirmModal.tsx",
-      "source_location": "L4"
-    },
-    {
-      "id": "src_db_schema_attendances_attendancestatus",
-      "label": "AttendanceStatus",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "attendancestatus",
-      "source_file": "src/db/schema/attendances.ts",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_db_schema_permissions_permissionstatus",
-      "label": "PermissionStatus",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "permissionstatus",
-      "source_file": "src/db/schema/permissions.ts",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_db_schema_users_userrole",
-      "label": "UserRole",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "userrole",
-      "source_file": "src/db/schema/users.ts",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_types_index_activityitem",
-      "label": "ActivityItem",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "activityitem",
-      "source_file": "src/types/index.ts",
-      "source_location": "L34"
-    },
-    {
-      "id": "src_types_index_attendancerecord",
-      "label": "AttendanceRecord",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "attendancerecord",
-      "source_file": "src/types/index.ts",
-      "source_location": "L53"
-    },
-    {
-      "id": "src_types_index_authuser",
-      "label": "AuthUser",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "authuser",
-      "source_file": "src/types/index.ts",
-      "source_location": "L7"
-    },
-    {
-      "id": "src_types_index_departmentitem",
-      "label": "DepartmentItem",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "departmentitem",
-      "source_file": "src/types/index.ts",
-      "source_location": "L87"
-    },
-    {
       "id": "src_types_index_fakultasitem",
       "label": "FakultasItem",
       "_callable": true,
@@ -521,20 +586,7 @@
       "file_type": "code",
       "norm_label": "fakultasitem",
       "source_file": "src/types/index.ts",
-      "source_location": "L92"
-    },
-    {
-      "id": "src_types_index_permissionrecord",
-      "label": "PermissionRecord",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "permissionrecord",
-      "source_file": "src/types/index.ts",
-      "source_location": "L68"
+      "source_location": "L93"
     },
     {
       "id": "src_types_index_pjmappingitem",
@@ -547,20 +599,7 @@
       "file_type": "code",
       "norm_label": "pjmappingitem",
       "source_file": "src/types/index.ts",
-      "source_location": "L103"
-    },
-    {
-      "id": "src_types_index_programstudiitem",
-      "label": "ProgramStudiItem",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "programstudiitem",
-      "source_file": "src/types/index.ts",
-      "source_location": "L97"
+      "source_location": "L104"
     },
     {
       "id": "src_components_audit_auditmodal_auditmodalprops",
@@ -797,19 +836,6 @@
       "source_location": "L8"
     },
     {
-      "id": "src_components_permissions_permissionformmodal_permissionformmodalprops",
-      "label": "PermissionFormModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "permissionformmodalprops",
-      "source_file": "src/components/permissions/PermissionFormModal.tsx",
-      "source_location": "L7"
-    },
-    {
       "id": "src_components_ui_toast_toastcontexttype",
       "label": "ToastContextType",
       "_callable": true,
@@ -847,32 +873,6 @@
       "norm_label": "toasttype",
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L4"
-    },
-    {
-      "id": "src_utils_imagecompressor_compressionresult",
-      "label": "CompressionResult",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "compressionresult",
-      "source_file": "src/utils/imageCompressor.ts",
-      "source_location": "L7"
-    },
-    {
-      "id": "src_utils_imagecompressor_compressoptions",
-      "label": "CompressOptions",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "compressoptions",
-      "source_file": "src/utils/imageCompressor.ts",
-      "source_location": "L14"
     },
     {
       "id": "src_utils_realtime_realtimeeventtype",
@@ -1039,7 +1039,7 @@
       "file_type": "code",
       "norm_label": "handlerecordsingleattendance()",
       "source_file": "src/server/routes/attendances.ts",
-      "source_location": "L148"
+      "source_location": "L242"
     },
     {
       "id": "src_app_app",
@@ -1054,12 +1054,228 @@
       "source_location": "L780"
     },
     {
+      "id": "src_components_layout_header_header",
+      "label": "Header()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "header()",
+      "source_file": "src/components/layout/Header.tsx",
+      "source_location": "L18"
+    },
+    {
+      "id": "src_components_layout_sidebar_sidebar",
+      "label": "Sidebar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "sidebar()",
+      "source_file": "src/components/layout/Sidebar.tsx",
+      "source_location": "L43"
+    },
+    {
+      "id": "src_components_members_memberlistmodal_memberlistmodal",
+      "label": "MemberListModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "memberlistmodal()",
+      "source_file": "src/components/members/MemberListModal.tsx",
+      "source_location": "L12"
+    },
+    {
+      "id": "src_components_profile_profilemodal_profilemodal",
+      "label": "ProfileModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "profilemodal()",
+      "source_file": "src/components/profile/ProfileModal.tsx",
+      "source_location": "L32"
+    },
+    {
+      "id": "src_components_profile_profileview_profileview",
+      "label": "ProfileView()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "profileview()",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L35"
+    },
+    {
+      "id": "src_components_permissions_permissionlisttable_permissionlisttable",
+      "label": "PermissionListTable()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "permissionlisttable()",
+      "source_file": "src/components/permissions/PermissionListTable.tsx",
+      "source_location": "L14"
+    },
+    {
+      "id": "src_utils_storage_getevidenceviewurl",
+      "label": "getEvidenceViewUrl()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "getevidenceviewurl()",
+      "source_file": "src/utils/storage.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_components_members_memberformmodal_memberformmodal",
+      "label": "MemberFormModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "memberformmodal()",
+      "source_file": "src/components/members/MemberFormModal.tsx",
+      "source_location": "L28"
+    },
+    {
+      "id": "src_components_members_memberimportmodal_memberimportmodal",
+      "label": "MemberImportModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "memberimportmodal()",
+      "source_file": "src/components/members/MemberImportModal.tsx",
+      "source_location": "L47"
+    },
+    {
+      "id": "src_components_ui_confirmmodal_confirmmodal",
+      "label": "ConfirmModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "confirmmodal()",
+      "source_file": "src/components/ui/ConfirmModal.tsx",
+      "source_location": "L15"
+    },
+    {
+      "id": "src_components_activities_activitydetailmodal_activitydetailmodal",
+      "label": "ActivityDetailModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "activitydetailmodal()",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "source_location": "L29"
+    },
+    {
+      "id": "src_services_api_getstoredtoken",
+      "label": "getStoredToken()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "getstoredtoken()",
+      "source_file": "src/services/api.ts",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_services_api_request",
+      "label": "request()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "request()",
+      "source_file": "src/services/api.ts",
+      "source_location": "L58"
+    },
+    {
+      "id": "src_services_api_setstoredtoken",
+      "label": "setStoredToken()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "setstoredtoken()",
+      "source_file": "src/services/api.ts",
+      "source_location": "L25"
+    },
+    {
+      "id": "src_services_api_setstoreduser",
+      "label": "setStoredUser()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "setstoreduser()",
+      "source_file": "src/services/api.ts",
+      "source_location": "L46"
+    },
+    {
+      "id": "src_components_permissions_permissionformmodal_permissionformmodal",
+      "label": "PermissionFormModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "permissionformmodal()",
+      "source_file": "src/components/permissions/PermissionFormModal.tsx",
+      "source_location": "L21"
+    },
+    {
+      "id": "src_utils_imagecompressor_compressimagefile",
+      "label": "compressImageFile()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "compressimagefile()",
+      "source_file": "src/utils/imageCompressor.ts",
+      "source_location": "L21"
+    },
+    {
+      "id": "src_utils_imagecompressor_formatfilesize",
+      "label": "formatFileSize()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "formatfilesize()",
+      "source_file": "src/utils/imageCompressor.ts",
+      "source_location": "L146"
+    },
+    {
       "id": "src_components_activities_activitiesview_activitiesview",
       "label": "ActivitiesView()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
       "norm_label": "activitiesview()",
       "source_file": "src/components/activities/ActivitiesView.tsx",
@@ -1070,24 +1286,24 @@
       "label": "ActivityCard()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
       "norm_label": "activitycard()",
       "source_file": "src/components/activities/ActivityCard.tsx",
       "source_location": "L15"
     },
     {
-      "id": "src_components_activities_activitydetailmodal_activitydetailmodal",
-      "label": "ActivityDetailModal()",
+      "id": "src_components_dashboard_pengurusview_pengurusview",
+      "label": "PengurusView()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 26,
+      "community_name": "types/index.ts",
       "file_type": "code",
-      "norm_label": "activitydetailmodal()",
-      "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L27"
+      "norm_label": "pengurusview()",
+      "source_file": "src/components/dashboard/PengurusView.tsx",
+      "source_location": "L24"
     },
     {
       "id": "src_components_activities_createactivitymodal_createactivitymodal",
@@ -1126,18 +1342,6 @@
       "source_location": "L26"
     },
     {
-      "id": "src_components_dashboard_pengurusview_pengurusview",
-      "label": "PengurusView()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "pengurusview()",
-      "source_file": "src/components/dashboard/PengurusView.tsx",
-      "source_location": "L24"
-    },
-    {
       "id": "src_components_dashboard_superadminview_superadminview",
       "label": "SuperAdminView()",
       "_callable": true,
@@ -1148,30 +1352,6 @@
       "norm_label": "superadminview()",
       "source_file": "src/components/dashboard/SuperAdminView.tsx",
       "source_location": "L35"
-    },
-    {
-      "id": "src_components_layout_header_header",
-      "label": "Header()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "header()",
-      "source_file": "src/components/layout/Header.tsx",
-      "source_location": "L18"
-    },
-    {
-      "id": "src_components_layout_sidebar_sidebar",
-      "label": "Sidebar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "sidebar()",
-      "source_file": "src/components/layout/Sidebar.tsx",
-      "source_location": "L43"
     },
     {
       "id": "src_components_master_masterdataview_masterdataview",
@@ -1186,42 +1366,6 @@
       "source_location": "L62"
     },
     {
-      "id": "src_components_members_memberformmodal_memberformmodal",
-      "label": "MemberFormModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberformmodal()",
-      "source_file": "src/components/members/MemberFormModal.tsx",
-      "source_location": "L28"
-    },
-    {
-      "id": "src_components_members_memberimportmodal_memberimportmodal",
-      "label": "MemberImportModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberimportmodal()",
-      "source_file": "src/components/members/MemberImportModal.tsx",
-      "source_location": "L47"
-    },
-    {
-      "id": "src_components_members_memberlistmodal_memberlistmodal",
-      "label": "MemberListModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberlistmodal()",
-      "source_file": "src/components/members/MemberListModal.tsx",
-      "source_location": "L12"
-    },
-    {
       "id": "src_components_members_membersview_membersview",
       "label": "MembersView()",
       "_callable": true,
@@ -1234,18 +1378,6 @@
       "source_location": "L42"
     },
     {
-      "id": "src_components_permissions_permissionlisttable_permissionlisttable",
-      "label": "PermissionListTable()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "permissionlisttable()",
-      "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L14"
-    },
-    {
       "id": "src_components_permissions_permissionsview_permissionsview",
       "label": "PermissionsView()",
       "_callable": true,
@@ -1256,102 +1388,6 @@
       "norm_label": "permissionsview()",
       "source_file": "src/components/permissions/PermissionsView.tsx",
       "source_location": "L15"
-    },
-    {
-      "id": "src_components_profile_profilemodal_profilemodal",
-      "label": "ProfileModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "profilemodal()",
-      "source_file": "src/components/profile/ProfileModal.tsx",
-      "source_location": "L32"
-    },
-    {
-      "id": "src_components_profile_profileview_profileview",
-      "label": "ProfileView()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "profileview()",
-      "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L35"
-    },
-    {
-      "id": "src_components_ui_confirmmodal_confirmmodal",
-      "label": "ConfirmModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "confirmmodal()",
-      "source_file": "src/components/ui/ConfirmModal.tsx",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_services_api_getstoredtoken",
-      "label": "getStoredToken()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "getstoredtoken()",
-      "source_file": "src/services/api.ts",
-      "source_location": "L17"
-    },
-    {
-      "id": "src_services_api_request",
-      "label": "request()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "request()",
-      "source_file": "src/services/api.ts",
-      "source_location": "L58"
-    },
-    {
-      "id": "src_services_api_setstoredtoken",
-      "label": "setStoredToken()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "setstoredtoken()",
-      "source_file": "src/services/api.ts",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_services_api_setstoreduser",
-      "label": "setStoredUser()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "setstoreduser()",
-      "source_file": "src/services/api.ts",
-      "source_location": "L46"
-    },
-    {
-      "id": "src_utils_storage_getevidenceviewurl",
-      "label": "getEvidenceViewUrl()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "getevidenceviewurl()",
-      "source_file": "src/utils/storage.ts",
-      "source_location": "L6"
     },
     {
       "id": "src_components_audit_auditmodal_auditmodal",
@@ -1570,18 +1606,6 @@
       "source_location": "L17"
     },
     {
-      "id": "src_components_permissions_permissionformmodal_permissionformmodal",
-      "label": "PermissionFormModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "permissionformmodal()",
-      "source_file": "src/components/permissions/PermissionFormModal.tsx",
-      "source_location": "L21"
-    },
-    {
       "id": "src_components_ui_toast_toastprovider",
       "label": "ToastProvider()",
       "_callable": true,
@@ -1616,30 +1640,6 @@
       "norm_label": "getstoreduser()",
       "source_file": "src/services/api.ts",
       "source_location": "L37"
-    },
-    {
-      "id": "src_utils_imagecompressor_compressimagefile",
-      "label": "compressImageFile()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "compressimagefile()",
-      "source_file": "src/utils/imageCompressor.ts",
-      "source_location": "L21"
-    },
-    {
-      "id": "src_utils_imagecompressor_formatfilesize",
-      "label": "formatFileSize()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "formatfilesize()",
-      "source_file": "src/utils/imageCompressor.ts",
-      "source_location": "L146"
     },
     {
       "id": "src_utils_realtime_broadcastrealtimeevent",
@@ -1784,7 +1784,7 @@
       "file_type": "code",
       "norm_label": "resetattendanceschema",
       "source_file": "src/server/routes/attendances.ts",
-      "source_location": "L250"
+      "source_location": "L344"
     },
     {
       "id": "src_server_routes_auth_authrouter",
@@ -3134,22 +3134,231 @@
       "source_location": "L33"
     },
     {
-      "id": "src_app",
-      "label": "App.tsx",
+      "id": "src_components_layout_header",
+      "label": "Header.tsx",
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 20,
+      "community_name": "AuthUser",
       "file_type": "code",
-      "norm_label": "app.tsx",
-      "source_file": "src/App.tsx",
+      "norm_label": "header.tsx",
+      "source_file": "src/components/layout/Header.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_layout_sidebar",
+      "label": "Sidebar.tsx",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "sidebar.tsx",
+      "source_file": "src/components/layout/Sidebar.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_members_memberlistmodal",
+      "label": "MemberListModal.tsx",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "memberlistmodal.tsx",
+      "source_file": "src/components/members/MemberListModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_profile_profilemodal",
+      "label": "ProfileModal.tsx",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "profilemodal.tsx",
+      "source_file": "src/components/profile/ProfileModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_profile_profileview",
+      "label": "ProfileView.tsx",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "code",
+      "norm_label": "profileview.tsx",
+      "source_file": "src/components/profile/ProfileView.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ref_lucide_react",
+      "label": "lucide-react",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "AuthUser",
+      "file_type": "concept",
+      "norm_label": "lucide-react",
+      "source_file": "package.json",
+      "source_location": "L28"
+    },
+    {
+      "id": "src_components_dashboard_adminview",
+      "label": "AdminView.tsx",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "adminview.tsx",
+      "source_file": "src/components/dashboard/AdminView.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_dashboard_superadminview",
+      "label": "SuperAdminView.tsx",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "superadminview.tsx",
+      "source_file": "src/components/dashboard/SuperAdminView.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_permissions_permissionlisttable",
+      "label": "PermissionListTable.tsx",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "permissionlisttable.tsx",
+      "source_file": "src/components/permissions/PermissionListTable.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_permissions_permissionsview",
+      "label": "PermissionsView.tsx",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "permissionsview.tsx",
+      "source_file": "src/components/permissions/PermissionsView.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_utils_storage",
+      "label": "utils/storage.ts",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "ActivityItem",
+      "file_type": "code",
+      "norm_label": "utils/storage.ts",
+      "source_file": "src/utils/storage.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_members_memberformmodal",
+      "label": "MemberFormModal.tsx",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "memberformmodal.tsx",
+      "source_file": "src/components/members/MemberFormModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_members_memberimportmodal",
+      "label": "MemberImportModal.tsx",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "memberimportmodal.tsx",
+      "source_file": "src/components/members/MemberImportModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_members_membersview",
+      "label": "MembersView.tsx",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "membersview.tsx",
+      "source_file": "src/components/members/MembersView.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_ui_confirmmodal",
+      "label": "ConfirmModal.tsx",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "MembersView.tsx",
+      "file_type": "code",
+      "norm_label": "confirmmodal.tsx",
+      "source_file": "src/components/ui/ConfirmModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_activities_activitydetailmodal",
+      "label": "ActivityDetailModal.tsx",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "activitydetailmodal.tsx",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_services_api",
+      "label": "api.ts",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "api.ts",
+      "source_file": "src/services/api.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_services_api_api",
+      "label": "api",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "api.ts",
+      "file_type": "code",
+      "norm_label": "api",
+      "source_file": "src/services/api.ts",
+      "source_location": "L94"
+    },
+    {
+      "id": "src_components_permissions_permissionformmodal",
+      "label": "PermissionFormModal.tsx",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "permissionformmodal.tsx",
+      "source_file": "src/components/permissions/PermissionFormModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_utils_imagecompressor",
+      "label": "imageCompressor.ts",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "PermissionFormModal.tsx",
+      "file_type": "code",
+      "norm_label": "imagecompressor.ts",
+      "source_file": "src/utils/imageCompressor.ts",
       "source_location": "L1"
     },
     {
       "id": "src_components_activities_activitiesview",
       "label": "ActivitiesView.tsx",
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
       "norm_label": "activitiesview.tsx",
       "source_file": "src/components/activities/ActivitiesView.tsx",
@@ -3159,22 +3368,44 @@
       "id": "src_components_activities_activitycard",
       "label": "ActivityCard.tsx",
       "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 25,
+      "community_name": "ActivitiesView.tsx",
       "file_type": "code",
       "norm_label": "activitycard.tsx",
       "source_file": "src/components/activities/ActivityCard.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_components_activities_activitydetailmodal",
-      "label": "ActivityDetailModal.tsx",
+      "id": "src_components_dashboard_pengurusview",
+      "label": "PengurusView.tsx",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "pengurusview.tsx",
+      "source_file": "src/components/dashboard/PengurusView.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_types_index",
+      "label": "types/index.ts",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "types/index.ts",
+      "source_file": "src/types/index.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app",
+      "label": "App.tsx",
       "_origin": "ast",
       "community": 3,
       "community_name": "App.tsx",
       "file_type": "code",
-      "norm_label": "activitydetailmodal.tsx",
-      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "norm_label": "app.tsx",
+      "source_file": "src/App.tsx",
       "source_location": "L1"
     },
     {
@@ -3200,61 +3431,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_dashboard_adminview",
-      "label": "AdminView.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "adminview.tsx",
-      "source_file": "src/components/dashboard/AdminView.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_dashboard_pengurusview",
-      "label": "PengurusView.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "pengurusview.tsx",
-      "source_file": "src/components/dashboard/PengurusView.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_dashboard_superadminview",
-      "label": "SuperAdminView.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "superadminview.tsx",
-      "source_file": "src/components/dashboard/SuperAdminView.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_layout_header",
-      "label": "Header.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "header.tsx",
-      "source_file": "src/components/layout/Header.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_layout_sidebar",
-      "label": "Sidebar.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "sidebar.tsx",
-      "source_file": "src/components/layout/Sidebar.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_components_master_masterdataview",
       "label": "MasterDataView.tsx",
       "_origin": "ast",
@@ -3264,149 +3440,6 @@
       "norm_label": "masterdataview.tsx",
       "source_file": "src/components/master/MasterDataView.tsx",
       "source_location": "L1"
-    },
-    {
-      "id": "src_components_members_memberformmodal",
-      "label": "MemberFormModal.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberformmodal.tsx",
-      "source_file": "src/components/members/MemberFormModal.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_members_memberimportmodal",
-      "label": "MemberImportModal.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberimportmodal.tsx",
-      "source_file": "src/components/members/MemberImportModal.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_members_memberlistmodal",
-      "label": "MemberListModal.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "memberlistmodal.tsx",
-      "source_file": "src/components/members/MemberListModal.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_members_membersview",
-      "label": "MembersView.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "membersview.tsx",
-      "source_file": "src/components/members/MembersView.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_permissions_permissionlisttable",
-      "label": "PermissionListTable.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "permissionlisttable.tsx",
-      "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_permissions_permissionsview",
-      "label": "PermissionsView.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "permissionsview.tsx",
-      "source_file": "src/components/permissions/PermissionsView.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_profile_profilemodal",
-      "label": "ProfileModal.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "profilemodal.tsx",
-      "source_file": "src/components/profile/ProfileModal.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_profile_profileview",
-      "label": "ProfileView.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "profileview.tsx",
-      "source_file": "src/components/profile/ProfileView.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_ui_confirmmodal",
-      "label": "ConfirmModal.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "confirmmodal.tsx",
-      "source_file": "src/components/ui/ConfirmModal.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_services_api",
-      "label": "api.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "api.ts",
-      "source_file": "src/services/api.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_types_index",
-      "label": "types/index.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "types/index.ts",
-      "source_file": "src/types/index.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_utils_storage",
-      "label": "utils/storage.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "utils/storage.ts",
-      "source_file": "src/utils/storage.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "ref_lucide_react",
-      "label": "lucide-react",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "App.tsx",
-      "file_type": "concept",
-      "norm_label": "lucide-react",
-      "source_file": "package.json",
-      "source_location": "L28"
     },
     {
       "id": "ref_react",
@@ -4124,17 +4157,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_permissions_permissionformmodal",
-      "label": "PermissionFormModal.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "permissionformmodal.tsx",
-      "source_file": "src/components/permissions/PermissionFormModal.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_components_ui_toast",
       "label": "Toast.tsx",
       "_origin": "ast",
@@ -4155,28 +4177,6 @@
       "norm_label": "toastcontext",
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L16"
-    },
-    {
-      "id": "src_services_api_api",
-      "label": "api",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "api",
-      "source_file": "src/services/api.ts",
-      "source_location": "L94"
-    },
-    {
-      "id": "src_utils_imagecompressor",
-      "label": "imageCompressor.ts",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "file_type": "code",
-      "norm_label": "imagecompressor.ts",
-      "source_file": "src/utils/imageCompressor.ts",
-      "source_location": "L1"
     },
     {
       "id": "src_utils_realtime",
@@ -4400,8 +4400,8 @@
       "id": "src_types_index_permissionstatus",
       "label": "src_types_index_permissionstatus",
       "_origin": "semantic",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 21,
+      "community_name": "ActivityItem",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_types_index_permissionstatus",
@@ -4412,11 +4412,23 @@
       "id": "src_types_index_userrole",
       "label": "src_types_index_userrole",
       "_origin": "semantic",
-      "community": 3,
-      "community_name": "App.tsx",
+      "community": 22,
+      "community_name": "MembersView.tsx",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_types_index_userrole",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "src_types_index_attendancestatus",
+      "label": "src_types_index_attendancestatus",
+      "_origin": "semantic",
+      "community": 23,
+      "community_name": "api.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "src_types_index_attendancestatus",
       "source_file": "",
       "type": "external"
     },
@@ -4527,18 +4539,6 @@
       "norm_label": "src_db_schema_index_users",
       "source_file": "",
       "type": "external"
-    },
-    {
-      "id": "src_types_index_attendancestatus",
-      "label": "src_types_index_attendancestatus",
-      "_origin": "semantic",
-      "community": 8,
-      "community_name": "AttendanceScannerModal.tsx",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "src_types_index_attendancestatus",
-      "source_file": "",
-      "type": "external"
     }
   ],
   "links": [
@@ -4623,7 +4623,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/attendances/AttendanceScannerModal.tsx",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -4635,7 +4635,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/attendances/AttendanceScannerModal.tsx",
-      "source_location": "L97",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -5106,7 +5106,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -5118,7 +5118,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -5610,7 +5610,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/types/index.ts",
-      "source_location": "L63",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -5634,7 +5634,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/types/index.ts",
-      "source_location": "L81",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -6546,7 +6546,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0
     },
     {
@@ -6558,7 +6558,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0
     },
     {
@@ -6570,7 +6570,19 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_activities_activitydetailmodal",
+      "target": "src_services_api_api",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -10305,8 +10317,20 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "type_only": true,
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_activities_activitydetailmodal",
+      "target": "src_services_api",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/activities/ActivityDetailModal.tsx",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -13478,7 +13502,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L16",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -13489,7 +13513,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/activities/ActivityDetailModal.tsx",
-      "source_location": "L27",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -14941,7 +14965,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/server/routes/attendances.ts",
-      "source_location": "L250",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -15392,7 +15416,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L103",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -15414,7 +15438,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L53",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -15425,7 +15449,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L68",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -15447,7 +15471,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L87",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -15458,7 +15482,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L92",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -15469,7 +15493,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
-      "source_location": "L97",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -15756,7 +15780,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/server/routes/attendances.ts",
-      "source_location": "L185",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -15785,5 +15809,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b645bacfe3ea282b6d40446759cf65729e573890"
+  "built_at_commit": "742a043ea51b035c2ed8be6ea37a7262c349a80c"
 }

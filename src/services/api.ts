@@ -463,6 +463,28 @@ export const api = {
     });
   },
 
+  async exportAttendanceCSV(activityId: string, activityName?: string): Promise<void> {
+    const res = await fetch(`/api/attendances/export?activityId=${encodeURIComponent(activityId)}`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      throw new Error('Gagal mengunduh berkas presensi');
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safeTitle = (activityName || 'kegiatan').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+    a.download = `presensi_${safeTitle}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  },
+
   // ================= PERMISSIONS =================
   async getPermissions(_user: AuthUser): Promise<PermissionRecord[]> {
     try {

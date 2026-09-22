@@ -2,7 +2,7 @@ import { sqliteTable, text, integer, uniqueIndex } from 'drizzle-orm/sqlite-core
 import { users } from './users.ts';
 import { activities } from './activities.ts';
 
-export const attendanceStatusEnum = ['HADIR', 'IZIN', 'SAKIT', 'ALPHA'] as const;
+export const attendanceStatusEnum = ['HADIR', 'IZIN', 'SAKIT', 'ALPHA', 'TELAT'] as const;
 export type AttendanceStatus = (typeof attendanceStatusEnum)[number];
 
 export const attendances = sqliteTable(

@@ -30,7 +30,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
   onViewDetail,
   onNavigateTo,
 }) => {
-  const hadirCount = myAttendances.filter((a) => a.status === 'HADIR').length;
+  const hadirCount = myAttendances.filter((a) => a.status === 'HADIR' || a.status === 'TELAT').length;
   const izinCount = myAttendances.filter((a) => a.status === 'IZIN' || a.status === 'SAKIT').length;
   const alphaCount = myAttendances.filter((a) => a.status === 'ALPHA').length;
   const totalRecorded = myAttendances.length;

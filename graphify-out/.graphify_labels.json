@@ -18,5 +18,12 @@
   "16": "scripts",
   "17": "vite.config.ts",
   "18": "main.tsx",
-  "19": "dotenv"
+  "19": "dotenv",
+  "20": "AuthUser",
+  "21": "ActivityItem",
+  "22": "MembersView.tsx",
+  "23": "api.ts",
+  "24": "PermissionFormModal.tsx",
+  "25": "ActivitiesView.tsx",
+  "26": "types/index.ts"
 }

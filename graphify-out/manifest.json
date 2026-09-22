@@ -30,15 +30,15 @@
     "semantic_hash": ""
   },
   "src/components/activities/ActivityCard.tsx": {
-    "mtime": 1790074177.205207,
-    "seen": 1790085475.6279593,
-    "ast_hash": "260b93eee92a73456d544504eb5013e3",
+    "mtime": 1790087787.4904964,
+    "seen": 1790088041.9659991,
+    "ast_hash": "06b7bf19c700b5f0d559f1b8da51141f",
     "semantic_hash": ""
   },
   "src/components/activities/ActivityDetailModal.tsx": {
-    "mtime": 1790074177.206728,
-    "seen": 1790085475.6279593,
-    "ast_hash": "a363d2e5605507daf2f38f88977b1328",
+    "mtime": 1790087757.585965,
+    "seen": 1790088041.9659991,
+    "ast_hash": "2d9ca2044587c671872962acb8eebc9d",
     "semantic_hash": ""
   },
   "src/components/activities/CreateActivityModal.tsx": {
@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src/components/attendances/AttendanceScannerModal.tsx": {
-    "mtime": 1790083462.4456506,
-    "seen": 1790085475.6279593,
-    "ast_hash": "1db47d02c82490c33f9b72e326ae22ee",
+    "mtime": 1790087700.3421247,
+    "seen": 1790088041.9659991,
+    "ast_hash": "8917e218a22f57308413120bb2fe2bae",
     "semantic_hash": ""
   },
   "src/components/audit/AuditModal.tsx": {
@@ -72,9 +72,9 @@
     "semantic_hash": ""
   },
   "src/components/dashboard/PengurusView.tsx": {
-    "mtime": 1790084008.2941802,
-    "seen": 1790085475.6279593,
-    "ast_hash": "1e9a44563a7f90b96ca70946b6ae336c",
+    "mtime": 1790087797.3365839,
+    "seen": 1790088041.9659991,
+    "ast_hash": "0154af7008a4e5bfdfe242e698f5a25e",
     "semantic_hash": ""
   },
   "src/components/dashboard/SuperAdminView.tsx": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "src/db/schema/attendances.ts": {
-    "mtime": 1789976270.9156544,
-    "seen": 1790085475.6279593,
-    "ast_hash": "ac8868c2a70d8f0754ae398f63a3f12f",
+    "mtime": 1790087526.764053,
+    "seen": 1790088041.9659991,
+    "ast_hash": "83bd48ec680f0209818e82a143c703a5",
     "semantic_hash": ""
   },
   "src/db/schema/departments.ts": {
@@ -270,15 +270,15 @@
     "semantic_hash": ""
   },
   "src/server/routes/activities.ts": {
-    "mtime": 1790029088.64613,
-    "seen": 1790085475.6279593,
-    "ast_hash": "ed1d851744b914326aeaf20d3cf0719b",
+    "mtime": 1790087557.239096,
+    "seen": 1790088041.9659991,
+    "ast_hash": "2eae012bcc2040696bbc1537c9c87169",
     "semantic_hash": ""
   },
   "src/server/routes/attendances.ts": {
-    "mtime": 1790030690.0329444,
-    "seen": 1790085475.6279593,
-    "ast_hash": "142efee7ce574545174c023f8260a5d6",
+    "mtime": 1790087592.1073055,
+    "seen": 1790088041.9659991,
+    "ast_hash": "e3cb0fdd500ed58b7001ca4a8c9ce4b8",
     "semantic_hash": ""
   },
   "src/server/routes/auth.ts": {
@@ -312,9 +312,9 @@
     "semantic_hash": ""
   },
   "src/server/routes/sync.ts": {
-    "mtime": 1790047013.1978517,
-    "seen": 1790085475.6279593,
-    "ast_hash": "a77063d48c13d79b46b4c1842bfd4d05",
+    "mtime": 1790087545.2302325,
+    "seen": 1790088041.9659991,
+    "ast_hash": "bc24724411199e2c64d21278b6d6fc99",
     "semantic_hash": ""
   },
   "src/server/routes/users.ts": {
@@ -336,9 +336,9 @@
     "semantic_hash": ""
   },
   "src/services/api.ts": {
-    "mtime": 1790086729.7449164,
-    "seen": 1790086867.6167855,
-    "ast_hash": "1075436a05dff04cb8a15965d61a0f1a",
+    "mtime": 1790087608.896203,
+    "seen": 1790088041.9659991,
+    "ast_hash": "c41badfac3f9ccd15058e85232424d4f",
     "semantic_hash": ""
   },
   "src/tests/integration.test.ts": {
@@ -348,9 +348,9 @@
     "semantic_hash": ""
   },
   "src/types/index.ts": {
-    "mtime": 1790024625.9055219,
-    "seen": 1790085475.6279593,
-    "ast_hash": "790fdd67f4d3f1f5f7a93e3fc046b3ef",
+    "mtime": 1790087532.7022986,
+    "seen": 1790088041.9659991,
+    "ast_hash": "a8e6a20b25af5d36b41699d7806fc3e7",
     "semantic_hash": ""
   },
   "src/utils/imageCompressor.ts": {

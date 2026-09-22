@@ -33,9 +33,9 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
     minute: '2-digit',
   });
 
-  const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TOTAL: 0 };
-  const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA);
-  const hadirPercent = total > 0 ? Math.round((summary.HADIR / total) * 100) : 0;
+  const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
+  const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));
+  const hadirPercent = total > 0 ? Math.round(((summary.HADIR + (summary.TELAT || 0)) / total) * 100) : 0;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all flex flex-col justify-between group">
@@ -114,8 +114,9 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             {total > 0 && (
               <>
                 <div style={{ width: `${(summary.HADIR / total) * 100}%` }} className="bg-emerald-500" />
+                <div style={{ width: `${((summary.TELAT || 0) / total) * 100}%` }} className="bg-amber-500" />
                 <div style={{ width: `${(summary.IZIN / total) * 100}%` }} className="bg-blue-500" />
-                <div style={{ width: `${(summary.SAKIT / total) * 100}%` }} className="bg-amber-500" />
+                <div style={{ width: `${(summary.SAKIT / total) * 100}%` }} className="bg-purple-500" />
                 <div style={{ width: `${(summary.ALPHA / total) * 100}%` }} className="bg-rose-500" />
               </>
             )}
@@ -123,10 +124,14 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         </div>
 
         {/* Attendance Breakdown Strip */}
-        <div className="grid grid-cols-4 gap-1 p-2 rounded-lg bg-slate-50 border border-slate-100 text-center mb-4">
+        <div className="grid grid-cols-5 gap-1 p-2 rounded-lg bg-slate-50 border border-slate-100 text-center mb-4">
           <div>
             <div className="text-[10px] text-slate-500 font-medium">Hadir</div>
             <div className="text-xs font-bold text-slate-900 tabular-nums">{summary.HADIR}</div>
+          </div>
+          <div>
+            <div className="text-[10px] text-slate-500 font-medium">Telat</div>
+            <div className="text-xs font-bold text-slate-900 tabular-nums">{summary.TELAT || 0}</div>
           </div>
           <div>
             <div className="text-[10px] text-slate-500 font-medium">Izin</div>
