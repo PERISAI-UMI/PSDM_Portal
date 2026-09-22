@@ -412,8 +412,8 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
                 </div>
               </div>
 
-              <div className="border border-slate-200/80 rounded-xl overflow-hidden max-h-64 overflow-y-auto">
-                <table className="w-full text-left text-xs">
+              <div className="border border-slate-200/80 rounded-xl overflow-x-auto max-h-64 overflow-y-auto">
+                <table className="w-full text-left text-xs min-w-[640px]">
                   <thead className="bg-slate-50 text-slate-500 font-semibold sticky top-0 border-b border-slate-200">
                     <tr>
                       <th className="py-2.5 px-3">Status</th>

@@ -239,16 +239,16 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
           {/* Desktop & Tablet Table Layout (Hidden on mobile) */}
           <div className="hidden md:block bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-2xs">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[720px]">
                 <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-medium">
                   <tr>
-                    <th className="py-3 px-4">Nama & Departemen</th>
-                    <th className="py-3 px-4">Kegiatan Proker</th>
-                    <th className="py-3 px-4">Jenis & Alasan</th>
-                    <th className="py-3 px-4">Bukti</th>
-                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4 min-w-[180px]">Nama & Departemen</th>
+                    <th className="py-3 px-4 min-w-[160px]">Kegiatan Proker</th>
+                    <th className="py-3 px-4 min-w-[180px]">Jenis & Alasan</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Bukti</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Status</th>
                     {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') && (
-                      <th className="py-3 px-4 text-right">Tindakan</th>
+                      <th className="py-3 px-4 text-right whitespace-nowrap">Tindakan</th>
                     )}
                   </tr>
                 </thead>
@@ -275,7 +275,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                           </span>
                           <p className="text-slate-600 line-clamp-2 text-[11px] leading-relaxed">{p.alasan}</p>
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 px-4 whitespace-nowrap">
                           {p.evidenceUrl ? (
                             <button
                               type="button"
@@ -295,21 +295,21 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                             <span className="text-[11px] text-slate-400 italic">Tidak ada</span>
                           )}
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 px-4 whitespace-nowrap">
                           {p.status === 'PENDING' && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200/60">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-amber-50 text-amber-700 border border-amber-200/60">
                               <Clock className="w-3 h-3" />
                               Pending
                             </span>
                           )}
                           {p.status === 'APPROVED' && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                               <Check className="w-3 h-3" />
                               Disetujui
                             </span>
                           )}
                           {p.status === 'REJECTED' && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-rose-50 text-rose-700 border border-rose-200/60">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-rose-50 text-rose-700 border border-rose-200/60">
                               <X className="w-3 h-3" />
                               Ditolak
                             </span>

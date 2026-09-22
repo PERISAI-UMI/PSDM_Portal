@@ -363,7 +363,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                     </div>
 
                     <span
-                      className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${badge.className}`}
+                      className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full border whitespace-nowrap shrink-0 ${badge.className}`}
                     >
                       {badge.label}
                     </span>
@@ -464,16 +464,16 @@ export const MembersView: React.FC<MembersViewProps> = ({
         /* Table Mode */
         <div className="bg-white rounded-xl border border-slate-200/80 shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[840px]">
               <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                 <tr>
-                  <th className="py-3 px-4">Anggota</th>
-                  <th className="py-3 px-4">PRN & NIM</th>
-                  <th className="py-3 px-4">Role</th>
-                  <th className="py-3 px-4">Departemen</th>
-                  <th className="py-3 px-4">Program Studi</th>
-                  <th className="py-3 px-4">Kontak</th>
-                  {isSuperAdmin && <th className="py-3 px-4 text-right">Aksi</th>}
+                  <th className="py-3 px-4 min-w-[200px]">Anggota</th>
+                  <th className="py-3 px-4 whitespace-nowrap">PRN & NIM</th>
+                  <th className="py-3 px-4 whitespace-nowrap min-w-[130px]">Role</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Departemen</th>
+                  <th className="py-3 px-4 whitespace-nowrap min-w-[150px]">Program Studi</th>
+                  <th className="py-3 px-4 whitespace-nowrap min-w-[160px]">Kontak</th>
+                  {isSuperAdmin && <th className="py-3 px-4 text-right whitespace-nowrap">Aksi</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -497,8 +497,8 @@ export const MembersView: React.FC<MembersViewProps> = ({
                         </div>
                       </td>
 
-                      <td className="py-3 px-4">
-                        <span className="font-mono text-[11px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded block w-fit font-medium">
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <span className="font-mono text-[11px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded inline-block font-medium">
                           {user.prn}
                         </span>
                         {user.nim && (
@@ -508,15 +508,15 @@ export const MembersView: React.FC<MembersViewProps> = ({
                         )}
                       </td>
 
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 whitespace-nowrap min-w-[130px]">
                         <span
-                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${badge.className}`}
+                          className={`inline-flex items-center text-[10px] font-semibold px-2.5 py-0.5 rounded-full border whitespace-nowrap ${badge.className}`}
                         >
                           {badge.label}
                         </span>
                       </td>
 
-                      <td className="py-3 px-4 font-medium text-slate-700">
+                      <td className="py-3 px-4 font-medium text-slate-700 whitespace-nowrap">
                         {user.departmentName || '-'}
                       </td>
 
