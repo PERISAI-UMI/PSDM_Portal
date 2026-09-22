@@ -168,8 +168,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         {userRole === 'INTI' && (
           <button
             type="button"
-            onClick={() => onViewDetail?.(activity)}
-            className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+            onClick={() => onOpenAttendance?.(activity)}
+            className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>Lihat Rekap Presensi</span>

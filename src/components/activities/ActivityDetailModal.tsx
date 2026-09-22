@@ -214,7 +214,21 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            {userRole !== 'PENGURUS' && onOpenAttendance && (
+            {userRole === 'INTI' && onOpenAttendance && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenAttendance(activity);
+                }}
+                className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span>Lihat Rekap Presensi</span>
+              </button>
+            )}
+
+            {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && onOpenAttendance && (
               <button
                 type="button"
                 onClick={() => {
