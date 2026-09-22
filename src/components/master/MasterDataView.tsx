@@ -253,11 +253,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
               Master Data & Manajemen Struktur
             </h1>
-            {!isReadOnly && (
-              <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-900 text-white">
-                Super Admin
-              </span>
-            )}
           </div>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">
             {isReadOnly

@@ -57,9 +57,6 @@ export const AdminView: React.FC<AdminViewProps> = ({
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               Dashboard Staf PSDM
             </h1>
-            <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-              Admin PJ
-            </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
             Presensi kegiatan dan validasi perizinan departemen binaan Anda.

@@ -57,22 +57,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeMasterDataTab = 'dept',
   counts = { activitiesCount: 0, pendingPermissionsCount: 0 },
 }) => {
-  const getRoleBadge = () => {
-    switch (user.role) {
-      case 'SUPER_ADMIN':
-        return { label: 'Super Admin', color: 'bg-slate-900 text-white' };
-      case 'ADMIN':
-        return { label: 'Admin PJ', color: 'bg-slate-800 text-slate-100' };
-      case 'INTI':
-        return { label: 'Pengurus Inti', color: 'bg-purple-900 text-purple-100' };
-      case 'PENGURUS':
-      default:
-        return { label: 'Pengurus', color: 'bg-slate-100 text-slate-700 border border-slate-200' };
-    }
-  };
-
-  const roleInfo = getRoleBadge();
-
   const getInitials = (name: string) => {
     const parts = name.trim().split(/\s+/);
     if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
@@ -103,11 +87,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <span className="font-bold text-slate-900 text-sm tracking-tight shrink-0">Portal PSDM</span>
-              {user.role !== 'INTI' && (
-                <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${roleInfo.color}`}>
-                  {roleInfo.label}
-                </span>
-              )}
             </div>
             <p className="text-[11px] text-slate-500 truncate" title={user.departmentName || 'Departemen PSDM'}>
               {user.departmentName || 'Departemen PSDM'}
@@ -366,8 +345,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="text-xs font-semibold text-slate-900 truncate">
                 {user.namaLengkap}
               </div>
-              <div className="text-[10px] font-mono text-slate-500 truncate">
-                {user.prn} • {roleInfo.label}
+              <div className="text-[10px] text-slate-500 truncate">
+                {user.prn} • {user.departmentName || 'PSDM'}
               </div>
             </div>
           </button>

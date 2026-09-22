@@ -368,13 +368,6 @@ function MainAppContent() {
     return <LoginForm onLogin={handleLogin} error={loginError} />;
   }
 
-  const roleLabel =
-    currentUser.role === 'SUPER_ADMIN'
-      ? 'Kepala Departemen (Super Admin)'
-      : currentUser.role === 'ADMIN'
-      ? 'Staf PSDM (PJ Departemen)'
-      : 'Anggota Pengurus Organisasi';
-
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
       {/* Professional Sidebar Navigation */}

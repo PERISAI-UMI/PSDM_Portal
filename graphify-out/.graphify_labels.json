@@ -1,1 +1,18 @@
-{"0": "Backend & Edge API", "1": "Database Schema & ORM", "2": "Build & Configuration", "3": "Application Routing & Auth", "4": "Audit & Diagnostics", "5": "Package Dependencies", "6": "Master Data Management", "7": "Activities & Proker Views", "8": "Attendance & Scanner Module", "9": "Executive & Admin Dashboards", "10": "Member Management", "11": "Permissions Management", "12": "Layout & Navigation", "13": "Profile & User Settings", "14": "UI Components & Utilities"}
+{
+  "0": "routes/attendances.ts",
+  "1": "relations.ts",
+  "2": "package.json",
+  "3": "App.tsx",
+  "4": "integration.test.ts",
+  "5": "dependencies",
+  "6": "types.ts",
+  "7": "routes/users.ts",
+  "8": "AttendanceScannerModal.tsx",
+  "9": "drizzle-orm",
+  "10": "compilerOptions",
+  "11": "seed.ts",
+  "12": "devDependencies",
+  "13": "Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)",
+  "14": "PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)",
+  "15": "routes/permissions.ts"
+}
