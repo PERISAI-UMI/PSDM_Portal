@@ -200,43 +200,43 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       </div>
 
       {/* 2. Key Metadata Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
-            <User className="w-3.5 h-3.5 text-slate-400" />
+            <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span>Nama</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 truncate">
+          <div className="text-sm font-bold text-slate-900 leading-snug break-words">
             {currentUser.namaLengkap}
           </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
-            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+            <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span>Departemen</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 truncate">
+          <div className="text-sm font-bold text-slate-900 leading-snug break-words">
             {currentUser.departmentName || 'PSDM'}
           </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
-            <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+            <GraduationCap className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span>Jabatan</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 truncate">
+          <div className="text-sm font-bold text-slate-900 leading-snug break-words">
             {currentUser.jabatan}
           </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span>Angkatan</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 truncate">
+          <div className="text-sm font-bold text-slate-900 leading-snug break-words">
             {currentUser.angkatan ? `Angkatan ${currentUser.angkatan}` : '-'} • Gen {currentUser.generasi}
           </div>
         </div>
