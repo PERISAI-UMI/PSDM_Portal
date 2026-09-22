@@ -409,6 +409,13 @@ export const api = {
     });
   },
 
+  async toggleLockActivity(id: string, isLocked: boolean): Promise<void> {
+    await request(`/api/activities/${id}/lock`, {
+      method: 'PATCH',
+      body: JSON.stringify({ isLocked }),
+    });
+  },
+
   // ================= ATTENDANCES =================
   async getAttendances(_user: AuthUser, activityId?: string): Promise<AttendanceRecord[]> {
     try {

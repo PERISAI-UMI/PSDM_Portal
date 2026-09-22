@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw, Download, FileSpreadsheet } from 'lucide-react';
+import { X, UserCheck, Check, Search, ShieldCheck, RotateCcw, Download, FileSpreadsheet, Lock } from 'lucide-react';
 import type { ActivityItem, AuthUser, AttendanceStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { useToast } from '../ui/Toast.tsx';
@@ -82,7 +82,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
     }
   };
 
-  const isMonitorOnly = currentAdmin.role === 'INTI';
+  const isMonitorOnly = currentAdmin.role === 'INTI' || Boolean(activity?.isLocked && currentAdmin.role !== 'SUPER_ADMIN');
 
   if (!isOpen || !activity) return null;
 
@@ -292,6 +292,21 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Lock Alert Banner */}
+        {activity.isLocked && (
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2.5 shrink-0">
+            <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+            <div>
+              <span className="font-bold">Kegiatan ini telah dikunci oleh Super Admin.</span>
+              <p className="text-[11px] text-amber-700 mt-0.5">
+                {currentAdmin.role === 'SUPER_ADMIN'
+                  ? 'Sebagai Super Admin, Anda tetap memiliki wewenang untuk merekam atau mereset presensi.'
+                  : 'Presensi terkunci dalam mode pantau (hanya-lihat). Anda tidak dapat mengubah status presensi.'}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Filter & Quick Actions */}
         <div className="my-3 sm:my-4 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center justify-between">

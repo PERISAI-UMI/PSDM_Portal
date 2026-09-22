@@ -40,13 +40,11 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL');
-  const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
+  const [modeFilter, setModeFilter] = useState<'ALL' | 'OFFLINE' | 'ONLINE'>('ALL');
   const [showImportModal, setShowImportModal] = useState(false);
 
   const publishedCount = activities.filter((a) => a.isPublished).length;
   const draftCount = activities.filter((a) => !a.isPublished).length;
-
-  const categories = Array.from(new Set(activities.map((a) => a.jenis)));
 
   const filteredActivities = activities.filter((act) => {
     const matchesStatus =
@@ -54,17 +52,18 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
       (statusFilter === 'PUBLISHED' && act.isPublished) ||
       (statusFilter === 'DRAFT' && !act.isPublished);
 
-    const matchesCategory = categoryFilter === 'ALL' || act.jenis === categoryFilter;
+    const matchesMode = modeFilter === 'ALL' || act.mode === modeFilter;
 
     const query = search.toLowerCase().trim();
-    if (!query) return matchesStatus && matchesCategory;
+    if (!query) return matchesStatus && matchesMode;
 
     const matchesSearch =
       act.nama.toLowerCase().includes(query) ||
       (act.deskripsi && act.deskripsi.toLowerCase().includes(query)) ||
-      act.jenis.toLowerCase().includes(query);
+      (act.lokasi && act.lokasi.toLowerCase().includes(query)) ||
+      act.mode.toLowerCase().includes(query);
 
-    return matchesStatus && matchesCategory && matchesSearch;
+    return matchesStatus && matchesMode && matchesSearch;
   });
 
   return (
@@ -151,13 +150,15 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
 
         <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Kategori Kegiatan</span>
+            <span className="text-xs font-medium text-slate-500">Mode Pelaksanaan</span>
             <Filter className="w-4 h-4 text-slate-400" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
-            {categories.length}
+          <div className="text-xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5 flex items-baseline gap-2">
+            <span>{activities.filter((a) => a.mode === 'ONLINE').length} <span className="text-xs font-semibold text-sky-600">Online</span></span>
+            <span className="text-slate-300 font-normal">/</span>
+            <span>{activities.filter((a) => a.mode === 'OFFLINE').length} <span className="text-xs font-semibold text-slate-600">Offline</span></span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">Jenis variasi agenda</p>
+          <p className="text-[11px] text-slate-400 mt-0.5">Sebaran format kegiatan</p>
         </div>
       </div>
 
@@ -169,27 +170,22 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari kegiatan berdasarkan nama, deskripsi, atau jenis..."
+            placeholder="Cari kegiatan berdasarkan nama, deskripsi, lokasi..."
             className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 transition-all"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Category Filter */}
-          {categories.length > 1 && (
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900"
-            >
-              <option value="ALL">Semua Jenis</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat.replace('_', ' ')}
-                </option>
-              ))}
-            </select>
-          )}
+          {/* Mode Filter */}
+          <select
+            value={modeFilter}
+            onChange={(e) => setModeFilter(e.target.value as 'ALL' | 'OFFLINE' | 'ONLINE')}
+            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900"
+          >
+            <option value="ALL">Semua Format</option>
+            <option value="OFFLINE">Offline (Tatap Muka)</option>
+            <option value="ONLINE">Online (Daring)</option>
+          </select>
 
           {/* Status Tabs */}
           {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'INTI') && (
@@ -225,17 +221,17 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
           <h3 className="text-sm font-semibold text-slate-800">Tidak ada kegiatan ditemukan</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            {search || statusFilter !== 'ALL' || categoryFilter !== 'ALL'
+            {search || statusFilter !== 'ALL' || modeFilter !== 'ALL'
               ? 'Tidak ada kegiatan yang sesuai dengan filter pencarian Anda.'
               : 'Belum ada agenda kegiatan yang terdaftar dalam sistem.'}
           </p>
-          {(search || statusFilter !== 'ALL' || categoryFilter !== 'ALL') && (
+          {(search || statusFilter !== 'ALL' || modeFilter !== 'ALL') && (
             <button
               type="button"
               onClick={() => {
                 setSearch('');
                 setStatusFilter('ALL');
-                setCategoryFilter('ALL');
+                setModeFilter('ALL');
               }}
               className="mt-3 px-3 py-1.5 text-xs text-slate-600 font-medium hover:text-slate-900 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
             >

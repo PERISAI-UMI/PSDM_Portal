@@ -237,12 +237,32 @@ attendancesRouter.get(
   }
 );
 
+async function checkActivityLock(db: any, activityId: string, currentAdmin: any): Promise<string | null> {
+  if (currentAdmin.role === 'SUPER_ADMIN') return null;
+  const act = await db
+    .select({ isLocked: activities.isLocked })
+    .from(activities)
+    .where(eq(activities.id, activityId))
+    .limit(1);
+
+  if (act.length > 0 && act[0].isLocked) {
+    return 'Kegiatan ini telah dikunci oleh Super Admin. Presensi tidak dapat diubah lagi.';
+  }
+  return null;
+}
+
 // POST /api/attendances & POST /api/attendances/record (Pencatatan Absensi oleh Admin / Super Admin)
 // TIDAK BISA ABSEN MANDIRI OLEH PENGURUS
 const handleRecordSingleAttendance = async (c: any) => {
   const { activityId, userId, status } = c.req.valid('json');
   const currentAdmin = c.get('user');
   const db = c.get('db');
+
+  const lockError = await checkActivityLock(db, activityId, currentAdmin);
+  if (lockError) {
+    return c.json({ success: false, message: lockError }, 403);
+  }
+
   const now = new Date();
   const newId = crypto.randomUUID();
 
@@ -295,6 +315,12 @@ attendancesRouter.post(
     const { activityId, items } = c.req.valid('json');
     const currentAdmin = c.get('user');
     const db = c.get('db');
+
+    const lockError = await checkActivityLock(db, activityId, currentAdmin);
+    if (lockError) {
+      return c.json({ success: false, message: lockError }, 403);
+    }
+
     const now = new Date();
 
     if (!items || items.length === 0) {
@@ -353,7 +379,13 @@ attendancesRouter.post(
   zValidator('json', resetAttendanceSchema),
   async (c) => {
     const { activityId, userIds } = c.req.valid('json');
+    const currentAdmin = c.get('user');
     const db = c.get('db');
+
+    const lockError = await checkActivityLock(db, activityId, currentAdmin);
+    if (lockError) {
+      return c.json({ success: false, message: lockError }, 403);
+    }
 
     if (userIds && userIds.length > 0) {
       await db

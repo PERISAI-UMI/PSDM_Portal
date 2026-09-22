@@ -187,7 +187,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
                             month: 'short',
                             year: 'numeric',
                           })}{' '}
-                          • {act.jenis.replace('_', ' ')}
+                          • {act.mode === 'ONLINE' ? '🌐 Online' : (act.lokasi ? `📍 ${act.lokasi}` : '📍 Offline')}
+                          {act.isLocked ? ' • 🔒 Terkunci' : ''}
                         </p>
                       </div>
 
@@ -197,9 +198,13 @@ export const AdminView: React.FC<AdminViewProps> = ({
                           e.stopPropagation();
                           onOpenAttendance(act);
                         }}
-                        className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0"
+                        className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors shrink-0 ${
+                          act.isLocked
+                            ? 'text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200'
+                            : 'text-slate-700 bg-slate-100 hover:bg-slate-200'
+                        }`}
                       >
-                        Presensi
+                        {act.isLocked ? 'Lihat Presensi' : 'Presensi'}
                       </button>
                     </div>
                   );

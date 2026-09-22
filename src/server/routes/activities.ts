@@ -10,16 +10,42 @@ export const activitiesRouter = new Hono<AppEnv>();
 
 activitiesRouter.use('*', authMiddleware);
 
-const createActivitySchema = z.object({
-  nama: z.string().min(3, 'Nama kegiatan minimal 3 karakter'),
-  deskripsi: z.string().optional().nullable(),
-  jenis: z.string().min(2, 'Jenis kegiatan wajib diisi'),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  isPublished: z.boolean().default(false),
-});
+const createActivitySchema = z
+  .object({
+    nama: z.string().min(3, 'Nama kegiatan minimal 3 karakter'),
+    deskripsi: z.string().optional().nullable(),
+    mode: z.enum(['OFFLINE', 'ONLINE']).default('OFFLINE'),
+    lokasi: z.string().optional().nullable(),
+    meetingUrl: z.string().optional().nullable(),
+    isLocked: z.boolean().default(false),
+    startDate: z.coerce.date(),
+    endDate: z.coerce.date(),
+    isPublished: z.boolean().default(false),
+  })
+  .refine(
+    (data) => {
+      if (data.mode === 'OFFLINE' && (!data.lokasi || data.lokasi.trim().length === 0)) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Lokasi kegiatan wajib diisi untuk kegiatan offline',
+      path: ['lokasi'],
+    }
+  );
 
-const updateActivitySchema = createActivitySchema.partial();
+const updateActivitySchema = z.object({
+  nama: z.string().min(3).optional(),
+  deskripsi: z.string().optional().nullable(),
+  mode: z.enum(['OFFLINE', 'ONLINE']).optional(),
+  lokasi: z.string().optional().nullable(),
+  meetingUrl: z.string().optional().nullable(),
+  isLocked: z.boolean().optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
+  isPublished: z.boolean().optional(),
+});
 
 // GET /api/activities (List Kegiatan / Kalender Proker)
 activitiesRouter.get('/', async (c) => {
@@ -27,7 +53,7 @@ activitiesRouter.get('/', async (c) => {
   const user = c.get('user');
   const from = c.req.query('from');
   const to = c.req.query('to');
-  const jenis = c.req.query('jenis');
+  const mode = c.req.query('mode');
 
   const conditions = [];
 
@@ -42,8 +68,8 @@ activitiesRouter.get('/', async (c) => {
   if (to) {
     conditions.push(lte(activities.endDate, new Date(to)));
   }
-  if (jenis) {
-    conditions.push(eq(activities.jenis, jenis));
+  if (mode && (mode === 'OFFLINE' || mode === 'ONLINE')) {
+    conditions.push(eq(activities.mode, mode));
   }
 
   const query = db
@@ -51,7 +77,10 @@ activitiesRouter.get('/', async (c) => {
       id: activities.id,
       nama: activities.nama,
       deskripsi: activities.deskripsi,
-      jenis: activities.jenis,
+      mode: activities.mode,
+      lokasi: activities.lokasi,
+      meetingUrl: activities.meetingUrl,
+      isLocked: activities.isLocked,
       startDate: activities.startDate,
       endDate: activities.endDate,
       isPublished: activities.isPublished,
@@ -112,7 +141,10 @@ activitiesRouter.get('/:id', async (c) => {
       id: activities.id,
       nama: activities.nama,
       deskripsi: activities.deskripsi,
-      jenis: activities.jenis,
+      mode: activities.mode,
+      lokasi: activities.lokasi,
+      meetingUrl: activities.meetingUrl,
+      isLocked: activities.isLocked,
       startDate: activities.startDate,
       endDate: activities.endDate,
       isPublished: activities.isPublished,
@@ -213,6 +245,28 @@ activitiesRouter.put(
     await db.update(activities).set(data).where(eq(activities.id, id));
 
     return c.json({ success: true, message: 'Kegiatan berhasil diperbarui' });
+  }
+);
+
+// PATCH /api/activities/:id/lock (SUPER_ADMIN ONLY - Kunci Presensi Kegiatan)
+activitiesRouter.patch(
+  '/:id/lock',
+  requireRole(['SUPER_ADMIN']),
+  zValidator('json', z.object({ isLocked: z.boolean() })),
+  async (c) => {
+    const id = c.req.param('id');
+    const { isLocked } = c.req.valid('json');
+    const db = c.get('db');
+
+    await db.update(activities).set({ isLocked }).where(eq(activities.id, id));
+
+    return c.json({
+      success: true,
+      message: isLocked
+        ? 'Kegiatan berhasil dikunci! Presensi tidak dapat diubah lagi.'
+        : 'Kunci kegiatan berhasil dibuka.',
+      data: { id, isLocked },
+    });
   }
 );
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CalendarPlus } from 'lucide-react';
+import { X, CalendarPlus, MapPin, Video, Globe } from 'lucide-react';
 import type { ActivityItem } from '../../types/index.ts';
 
 interface CreateActivityModalProps {
@@ -19,30 +19,60 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
 }) => {
   const [nama, setNama] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
-  const [jenis, setJenis] = useState('RAPAT_PLENO');
+  const [mode, setMode] = useState<'OFFLINE' | 'ONLINE'>('OFFLINE');
+  const [lokasi, setLokasi] = useState('');
+  const [meetingUrl, setMeetingUrl] = useState('');
   const [startDate, setStartDate] = useState('2026-04-01T09:00');
   const [endDate, setEndDate] = useState('2026-04-01T12:00');
   const [isPublished, setIsPublished] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nama.trim()) return;
+    setErrorMessage('');
+
+    if (!nama.trim()) {
+      setErrorMessage('Nama kegiatan wajib diisi');
+      return;
+    }
+
+    if (mode === 'OFFLINE' && !lokasi.trim()) {
+      setErrorMessage('Lokasi kegiatan wajib diisi untuk kegiatan offline');
+      return;
+    }
+
+    if (mode === 'ONLINE' && meetingUrl.trim()) {
+      const urlPattern = /^https?:\/\/.+/i;
+      if (!urlPattern.test(meetingUrl.trim())) {
+        setErrorMessage('Link meeting harus diawali dengan http:// atau https://');
+        return;
+      }
+    }
+
     setLoading(true);
-    await onSubmit({
-      nama: nama.trim(),
-      deskripsi: deskripsi.trim() || null,
-      jenis,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
-      isPublished,
-      createdBy: creatorId,
-      creatorName,
-    });
-    setLoading(false);
-    onClose();
+    try {
+      await onSubmit({
+        nama: nama.trim(),
+        deskripsi: deskripsi.trim() || null,
+        mode,
+        lokasi: mode === 'OFFLINE' ? lokasi.trim() : null,
+        meetingUrl: mode === 'ONLINE' && meetingUrl.trim() ? meetingUrl.trim() : null,
+        isLocked: false,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        isPublished,
+        createdBy: creatorId,
+        creatorName,
+      });
+      onClose();
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Gagal membuat kegiatan');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,7 +81,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <CalendarPlus className="w-5 h-5 text-slate-800" />
-            <h2 className="text-base font-bold text-slate-900">Tambah Kegiatan</h2>
+            <h2 className="text-base font-bold text-slate-900">Tambah Kegiatan Proker</h2>
           </div>
           <button
             type="button"
@@ -62,37 +92,104 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-4 space-y-3.5">
+        {errorMessage && (
+          <div className="mt-3 p-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg">
+            {errorMessage}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Nama Kegiatan *</label>
             <input
               type="text"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
-              placeholder="Nama kegiatan proker"
+              placeholder="Contoh: Rapat Pleno Evaluasi Tengah Periode"
               required
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
             />
           </div>
 
+          {/* Mode Pelaksanaan Selection */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Jenis Kegiatan *</label>
-            <select
-              value={jenis}
-              onChange={(e) => setJenis(e.target.value)}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
-            >
-              <option value="RAPAT_PLENO">Rapat Pleno</option>
-              <option value="UPGRADING">Upgrading</option>
-              <option value="PROKER_DEPARTEMEN">Proker Departemen</option>
-              <option value="BRIEFING_INTERNAL">Briefing Internal</option>
-              <option value="EVALUASI_BULANAN">Evaluasi Bulanan</option>
-            </select>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              Mode Pelaksanaan Kegiatan *
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setMode('OFFLINE')}
+                className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
+                  mode === 'OFFLINE'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                <MapPin className="w-4 h-4" />
+                <span>Offline (Tatap Muka)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMode('ONLINE')}
+                className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
+                  mode === 'ONLINE'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                <Video className="w-4 h-4" />
+                <span>Online (Daring)</span>
+              </button>
+            </div>
           </div>
+
+          {/* Conditional Inputs based on Mode */}
+          {mode === 'OFFLINE' ? (
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Lokasi Kegiatan <span className="text-rose-500">*</span>
+              </label>
+              <div className="relative">
+                <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  value={lokasi}
+                  onChange={(e) => setLokasi(e.target.value)}
+                  placeholder="Contoh: Aula Gedung PKM Lt. 2 / Ruang Sidang"
+                  required
+                  className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
+                />
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1">
+                Wajib diisi untuk panduan lokasi fisik pengurus dan peserta.
+              </p>
+            </div>
+          ) : (
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Link Pertemuan Daring <span className="text-slate-400 font-normal">(Opsional)</span>
+              </label>
+              <div className="relative">
+                <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="url"
+                  value={meetingUrl}
+                  onChange={(e) => setMeetingUrl(e.target.value)}
+                  placeholder="https://zoom.us/j/... atau https://meet.google.com/..."
+                  className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
+                />
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1">
+                Jika diisi, pengurus dapat langsung menekan tombol link ini untuk join ke Zoom/Google Meet.
+              </p>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Mulai *</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Mulai *</label>
               <input
                 type="datetime-local"
                 value={startDate}
@@ -102,7 +199,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Selesai *</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Selesai *</label>
               <input
                 type="datetime-local"
                 value={endDate}
@@ -114,12 +211,12 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi & Agenda</label>
             <textarea
               value={deskripsi}
               onChange={(e) => setDeskripsi(e.target.value)}
               rows={3}
-              placeholder="Deskripsi atau agenda kegiatan..."
+              placeholder="Deskripsi agenda, susunan acara, atau instruksi kegiatan..."
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900"
             />
           </div>
@@ -133,7 +230,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 w-4 h-4 cursor-pointer"
             />
             <label htmlFor="isPublished" className="text-xs font-medium text-slate-700 cursor-pointer">
-              Publikasikan ke kalender
+              Publikasikan ke kalender kegiatan pengurus
             </label>
           </div>
 
@@ -141,14 +238,14 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg min-h-[42px]"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg min-h-[42px] cursor-pointer"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[42px] shadow-xs"
+              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[42px] shadow-xs cursor-pointer"
             >
               {loading ? 'Menyimpan...' : 'Buat Kegiatan'}
             </button>

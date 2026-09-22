@@ -266,6 +266,29 @@ function MainAppContent() {
     );
   };
 
+  const handleToggleLock = async (id: string, current: boolean) => {
+    try {
+      const nextLocked = !current;
+      await api.toggleLockActivity(id, nextLocked);
+      setActivities((prev) =>
+        prev.map((act) => (act.id === id ? { ...act, isLocked: nextLocked } : act))
+      );
+      if (selectedActivityDetail?.id === id) {
+        setSelectedActivityDetail((prev) => (prev ? { ...prev, isLocked: nextLocked } : null));
+      }
+      broadcastRealtimeEvent('ACTIVITY_CHANGED');
+      if (currentUser) await reloadData(currentUser);
+      showToast(
+        nextLocked
+          ? 'Kegiatan berhasil dikunci! Presensi tidak dapat diubah lagi.'
+          : 'Kunci kegiatan berhasil dibuka.',
+        'success'
+      );
+    } catch (err: any) {
+      showToast(err.message || 'Gagal mengubah status kunci kegiatan', 'error');
+    }
+  };
+
   const handleDeleteActivity = async (id: string) => {
     setConfirmDeleteId(id);
   };
@@ -760,6 +783,7 @@ function MainAppContent() {
             setShowPermissionModal(true);
           }}
           onTogglePublish={handleTogglePublish}
+          onToggleLock={handleToggleLock}
           onDelete={handleDeleteActivity}
           allUsers={allUsers}
           onImportSuccess={() => syncRealtime(true)}

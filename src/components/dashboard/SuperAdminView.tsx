@@ -210,7 +210,8 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                             month: 'short',
                             year: 'numeric',
                           })}{' '}
-                          • {act.jenis.replace('_', ' ')}
+                          • {act.mode === 'ONLINE' ? '🌐 Online' : (act.lokasi ? `📍 ${act.lokasi}` : '📍 Offline')}
+                          {act.isLocked ? ' • 🔒 Terkunci' : ''}
                         </p>
                       </div>
 

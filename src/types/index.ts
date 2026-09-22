@@ -36,7 +36,10 @@ export interface ActivityItem {
   id: string;
   nama: string;
   deskripsi?: string | null;
-  jenis: string;
+  mode: 'OFFLINE' | 'ONLINE';
+  lokasi?: string | null;
+  meetingUrl?: string | null;
+  isLocked?: boolean;
   startDate: string | Date;
   endDate: string | Date;
   isPublished: boolean;

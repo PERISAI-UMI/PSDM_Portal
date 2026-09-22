@@ -5,7 +5,10 @@ export const activities = sqliteTable('activities', {
   id: text('id').primaryKey(),
   nama: text('nama').notNull(),
   deskripsi: text('deskripsi'),
-  jenis: text('jenis').notNull(), // e.g. 'RAPAT_PLENO', 'UPGRADING', 'PROKER', dll
+  mode: text('mode', { enum: ['OFFLINE', 'ONLINE'] }).notNull().default('OFFLINE'),
+  lokasi: text('lokasi'),
+  meetingUrl: text('meeting_url'),
+  isLocked: integer('is_locked', { mode: 'boolean' }).notNull().default(false),
   startDate: integer('start_date', { mode: 'timestamp' }).notNull(),
   endDate: integer('end_date', { mode: 'timestamp' }).notNull(),
   isPublished: integer('is_published', { mode: 'boolean' }).notNull().default(false),

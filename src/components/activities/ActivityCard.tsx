@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Clock, UserCheck, FileText, Trash2, Eye, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, UserCheck, FileText, Trash2, Eye, CheckCircle2, MapPin, Globe, Video, Lock } from 'lucide-react';
 import type { ActivityItem, UserRole } from '../../types/index.ts';
 
 interface ActivityCardProps {
@@ -42,9 +42,26 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       <div>
         {/* Header Badges */}
         <div className="flex items-start justify-between gap-2 mb-3">
-          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
-            {activity.jenis.replace('_', ' ')}
-          </span>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {activity.mode === 'ONLINE' ? (
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200 flex items-center gap-1">
+                <Globe className="w-3 h-3 text-sky-600" />
+                <span>Online</span>
+              </span>
+            ) : (
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1">
+                <MapPin className="w-3 h-3 text-slate-500" />
+                <span>Offline</span>
+              </span>
+            )}
+
+            {activity.isLocked && (
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                <Lock className="w-3 h-3 text-amber-600" />
+                <span>Terkunci</span>
+              </span>
+            )}
+          </div>
 
           <div className="flex items-center gap-1.5">
             {userRole === 'SUPER_ADMIN' ? (
@@ -90,16 +107,41 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           </p>
         </div>
 
-        {/* Schedule Meta */}
-        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-3.5 font-normal">
-          <div className="flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
-            <span>{formattedDate}</span>
+        {/* Schedule & Location Meta */}
+        <div className="space-y-1.5 mb-3.5 text-xs text-slate-500 font-normal">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <span>{formattedDate}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <span>{formattedTime} WIB</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
-            <span>{formattedTime} WIB</span>
-          </div>
+
+          {activity.mode === 'OFFLINE' && activity.lokasi && (
+            <div className="flex items-center gap-1.5 text-slate-600 truncate">
+              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <span className="truncate">{activity.lokasi}</span>
+            </div>
+          )}
+
+          {activity.mode === 'ONLINE' && activity.meetingUrl && (
+            <div className="flex items-center gap-1.5 pt-0.5">
+              <a
+                href={activity.meetingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 hover:underline bg-indigo-50/70 px-2 py-0.5 rounded-md border border-indigo-100 transition-colors"
+                title="Buka tautan pertemuan daring"
+              >
+                <Video className="w-3 h-3 text-indigo-500" />
+                <span>Buka Link Pertemuan ↗</span>
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Mini Attendance Progress Bar */}
@@ -165,10 +207,23 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           <button
             type="button"
             onClick={() => onOpenAttendance?.(activity)}
-            className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+            className={`flex-1 py-1.5 px-3 min-h-[36px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs ${
+              activity.isLocked && userRole === 'ADMIN'
+                ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                : 'bg-slate-900 hover:bg-slate-800 text-white'
+            }`}
           >
-            <UserCheck className="w-3.5 h-3.5" />
-            <span>Presensi</span>
+            {activity.isLocked && userRole === 'ADMIN' ? (
+              <>
+                <Eye className="w-3.5 h-3.5 text-slate-500" />
+                <span>Lihat Presensi (Terkunci)</span>
+              </>
+            ) : (
+              <>
+                <UserCheck className="w-3.5 h-3.5" />
+                <span>Presensi</span>
+              </>
+            )}
           </button>
         )}
 

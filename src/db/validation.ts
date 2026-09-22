@@ -46,12 +46,16 @@ export const userSchema = z.object({
 export const createUserSchema = userSchema.omit({ id: true });
 export const updateUserSchema = userSchema.partial().omit({ id: true, prn: true });
 
-// Activities Validation
+export const activityModeEnum = ['OFFLINE', 'ONLINE'] as const;
+
 export const activitySchema = z.object({
   id: z.string().min(1),
   nama: z.string().min(3, 'Nama kegiatan minimal 3 karakter'),
   deskripsi: z.string().optional().nullable(),
-  jenis: z.string().min(2, 'Jenis kegiatan wajib diisi'),
+  mode: z.enum(activityModeEnum).default('OFFLINE'),
+  lokasi: z.string().optional().nullable(),
+  meetingUrl: z.string().optional().nullable(),
+  isLocked: z.boolean().default(false),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   isPublished: z.boolean().default(false),
