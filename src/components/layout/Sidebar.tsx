@@ -91,8 +91,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header: perfectly aligned with h-14 Header */}
       <div className="h-14 px-4 border-b border-slate-200/80 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs tracking-wider shadow-2xs shrink-0">
-            PS
+          <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 p-1 flex items-center justify-center shadow-2xs shrink-0">
+            <img
+              src="/favicon.ico"
+              alt="Logo"
+              className="w-full h-full object-contain aspect-square select-none pointer-events-none"
+            />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
