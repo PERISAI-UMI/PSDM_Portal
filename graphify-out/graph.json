@@ -1051,7 +1051,7 @@
       "file_type": "code",
       "norm_label": "app()",
       "source_file": "src/App.tsx",
-      "source_location": "L764"
+      "source_location": "L766"
     },
     {
       "id": "src_components_activities_activitiesview_activitiesview",
@@ -4291,6 +4291,7 @@
     {
       "id": "src_db_schema_index_activities",
       "label": "src_db_schema_index_activities",
+      "_origin": "semantic",
       "community": 0,
       "community_name": "routes/attendances.ts",
       "external": true,
@@ -4302,6 +4303,7 @@
     {
       "id": "src_db_schema_index_attendances",
       "label": "src_db_schema_index_attendances",
+      "_origin": "semantic",
       "community": 0,
       "community_name": "routes/attendances.ts",
       "external": true,
@@ -4313,6 +4315,7 @@
     {
       "id": "src_db_schema_index_attendancestatusenum",
       "label": "src_db_schema_index_attendancestatusenum",
+      "_origin": "semantic",
       "community": 0,
       "community_name": "routes/attendances.ts",
       "external": true,
@@ -4324,6 +4327,7 @@
     {
       "id": "src_db_schema_index_fakultas",
       "label": "src_db_schema_index_fakultas",
+      "_origin": "semantic",
       "community": 11,
       "community_name": "seed.ts",
       "external": true,
@@ -4335,6 +4339,7 @@
     {
       "id": "src_db_schema_index_permissions",
       "label": "src_db_schema_index_permissions",
+      "_origin": "semantic",
       "community": 11,
       "community_name": "seed.ts",
       "external": true,
@@ -4346,6 +4351,7 @@
     {
       "id": "src_db_schema_index_pjdepartments",
       "label": "src_db_schema_index_pjdepartments",
+      "_origin": "semantic",
       "community": 11,
       "community_name": "seed.ts",
       "external": true,
@@ -4357,6 +4363,7 @@
     {
       "id": "src_db_schema_index_permissionstatusenum",
       "label": "src_db_schema_index_permissionstatusenum",
+      "_origin": "semantic",
       "community": 15,
       "community_name": "routes/permissions.ts",
       "external": true,
@@ -4368,6 +4375,7 @@
     {
       "id": "ref_path",
       "label": "ref_path",
+      "_origin": "semantic",
       "community": 2,
       "community_name": "package.json",
       "external": true,
@@ -4379,6 +4387,7 @@
     {
       "id": "src_index",
       "label": "src_index",
+      "_origin": "semantic",
       "community": 2,
       "community_name": "package.json",
       "external": true,
@@ -4390,6 +4399,7 @@
     {
       "id": "src_types_index_permissionstatus",
       "label": "src_types_index_permissionstatus",
+      "_origin": "semantic",
       "community": 3,
       "community_name": "App.tsx",
       "external": true,
@@ -4401,6 +4411,7 @@
     {
       "id": "src_types_index_userrole",
       "label": "src_types_index_userrole",
+      "_origin": "semantic",
       "community": 3,
       "community_name": "App.tsx",
       "external": true,
@@ -4412,6 +4423,7 @@
     {
       "id": "src_db_schema_index_pjdepartment",
       "label": "src_db_schema_index_pjdepartment",
+      "_origin": "semantic",
       "community": 6,
       "community_name": "types.ts",
       "external": true,
@@ -4423,6 +4435,7 @@
     {
       "id": "src_db_schema_index_session",
       "label": "src_db_schema_index_session",
+      "_origin": "semantic",
       "community": 6,
       "community_name": "types.ts",
       "external": true,
@@ -4434,6 +4447,7 @@
     {
       "id": "src_db_schema_index_user",
       "label": "src_db_schema_index_user",
+      "_origin": "semantic",
       "community": 6,
       "community_name": "types.ts",
       "external": true,
@@ -4445,6 +4459,7 @@
     {
       "id": "src_db_schema_index_departments",
       "label": "src_db_schema_index_departments",
+      "_origin": "semantic",
       "community": 7,
       "community_name": "routes/users.ts",
       "external": true,
@@ -4456,6 +4471,7 @@
     {
       "id": "src_db_schema_index_programstudi",
       "label": "src_db_schema_index_programstudi",
+      "_origin": "semantic",
       "community": 7,
       "community_name": "routes/users.ts",
       "external": true,
@@ -4467,6 +4483,7 @@
     {
       "id": "src_db_schema_index_sessions",
       "label": "src_db_schema_index_sessions",
+      "_origin": "semantic",
       "community": 7,
       "community_name": "routes/users.ts",
       "external": true,
@@ -4478,6 +4495,7 @@
     {
       "id": "src_db_schema_index_userrole",
       "label": "src_db_schema_index_userrole",
+      "_origin": "semantic",
       "community": 7,
       "community_name": "routes/users.ts",
       "external": true,
@@ -4489,6 +4507,7 @@
     {
       "id": "src_db_schema_index_userroleenum",
       "label": "src_db_schema_index_userroleenum",
+      "_origin": "semantic",
       "community": 7,
       "community_name": "routes/users.ts",
       "external": true,
@@ -4500,6 +4519,7 @@
     {
       "id": "src_db_schema_index_users",
       "label": "src_db_schema_index_users",
+      "_origin": "semantic",
       "community": 7,
       "community_name": "routes/users.ts",
       "external": true,
@@ -4511,6 +4531,7 @@
     {
       "id": "src_types_index_attendancestatus",
       "label": "src_types_index_attendancestatus",
+      "_origin": "semantic",
       "community": 8,
       "community_name": "AttendanceScannerModal.tsx",
       "external": true,
@@ -4686,7 +4707,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/permissions/PermissionListTable.tsx",
-      "source_location": "L385",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -13378,7 +13399,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.tsx",
-      "source_location": "L764",
+      "source_location": "L766",
       "weight": 1.0
     },
     {
@@ -15740,5 +15761,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "372bdf84c296114cc86923cc88b6d6a328b72a5f"
+  "built_at_commit": "d0ddf87988c4b5884d64eab40433d2ded945f813"
 }

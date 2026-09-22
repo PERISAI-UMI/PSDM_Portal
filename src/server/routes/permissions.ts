@@ -28,7 +28,7 @@ const requestPermissionSchema = z.object({
 });
 
 const reviewPermissionSchema = z.object({
-  status: z.enum(['APPROVED', 'REJECTED']),
+  status: z.enum(['APPROVED', 'REJECTED', 'PENDING']),
 });
 
 const getUploadUrlSchema = z.object({
@@ -221,9 +221,46 @@ permissionsRouter.patch(
       }
     }
 
+    // Pembatalan izin khusus SUPER_ADMIN -> Kembalikan ke PENDING & bersihkan absensi
+    if (status === 'PENDING') {
+      if (reviewer.role !== 'SUPER_ADMIN') {
+        return c.json(
+          {
+            success: false,
+            message: 'Forbidden: Hanya Super Admin yang dapat membatalkan persetujuan izin',
+          },
+          403
+        );
+      }
+
+      await db
+        .update(permissions)
+        .set({
+          status: 'PENDING',
+          reviewedBy: null,
+          reviewedAt: null,
+        })
+        .where(eq(permissions.id, id));
+
+      // Hapus sinkronisasi absensi otomatis yang dibuat saat izin sebelumnya disetujui (APPROVED)
+      await db
+        .delete(attendances)
+        .where(
+          and(
+            eq(attendances.activityId, perm.activityId),
+            eq(attendances.userId, perm.userId)
+          )
+        );
+
+      return c.json({
+        success: true,
+        message: 'Persetujuan izin berhasil dibatalkan dan status kembali menjadi PENDING',
+      });
+    }
+
     const now = new Date();
 
-    // Update status izin
+    // Update status izin (APPROVED atau REJECTED)
     await db
       .update(permissions)
       .set({

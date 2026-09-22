@@ -304,6 +304,8 @@ function MainAppContent() {
       showToast(
         status === 'APPROVED'
           ? 'Permohonan izin disetujui & absensi peserta diperbarui!'
+          : status === 'PENDING'
+          ? 'Status izin berhasil dibatalkan dan dikembalikan ke Pending!'
           : 'Permohonan izin ditolak.',
         status === 'APPROVED' ? 'success' : 'info'
       );

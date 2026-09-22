@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, X, ExternalLink, Clock, ShieldAlert, Search, Filter, Eye } from 'lucide-react';
+import { Check, X, ExternalLink, Clock, ShieldAlert, Search, Filter, Eye, RotateCcw } from 'lucide-react';
 import type { PermissionRecord, AuthUser, PermissionStatus } from '../../types/index.ts';
 import { getEvidenceViewUrl } from '../../utils/storage.ts';
 
@@ -208,7 +208,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onReview?.(p.id, 'APPROVED')}
-                        className="min-h-[40px] py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                        className="min-h-[40px] py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
                       >
                         <Check className="w-3.5 h-3.5" />
                         Setujui
@@ -216,10 +216,22 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onReview?.(p.id, 'REJECTED')}
-                        className="min-h-[40px] py-2 px-3 rounded-lg bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                        className="min-h-[40px] py-2 px-3 rounded-lg bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                         Tolak
+                      </button>
+                    </div>
+                  ) : currentUser.role === 'SUPER_ADMIN' && (p.status === 'APPROVED' || p.status === 'REJECTED') ? (
+                    <div className="pt-1">
+                      <button
+                        type="button"
+                        onClick={() => onReview?.(p.id, 'PENDING')}
+                        className="w-full min-h-[38px] py-1.5 px-3 rounded-lg bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-slate-200 hover:border-amber-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+                        title="Batalkan status izin dan kembalikan ke Pending"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
+                        Batalkan Keputusan (Reset ke Pending)
                       </button>
                     </div>
                   ) : (
@@ -322,7 +334,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => onReview?.(p.id, 'APPROVED')}
-                                  className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center gap-1 transition-colors shadow-2xs"
+                                  className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center gap-1 transition-colors shadow-2xs cursor-pointer"
                                 >
                                   <Check className="w-3 h-3" />
                                   Setujui
@@ -330,12 +342,22 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => onReview?.(p.id, 'REJECTED')}
-                                  className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors"
+                                  className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
                                 >
                                   <X className="w-3 h-3" />
                                   Tolak
                                 </button>
                               </div>
+                            ) : currentUser.role === 'SUPER_ADMIN' && (p.status === 'APPROVED' || p.status === 'REJECTED') ? (
+                              <button
+                                type="button"
+                                onClick={() => onReview?.(p.id, 'PENDING')}
+                                className="px-2.5 py-1 rounded-md bg-white hover:bg-amber-50 text-slate-600 hover:text-amber-800 border border-slate-200 hover:border-amber-300 font-medium text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+                                title="Batalkan status izin dan kembalikan ke Pending"
+                              >
+                                <RotateCcw className="w-3 h-3 text-amber-600" />
+                                Batalkan
+                              </button>
                             ) : (
                               p.status === 'PENDING' &&
                               currentUser.role === 'ADMIN' && (

@@ -1,7 +1,7 @@
 # Graph Report - PSDM-PORTAL  (2026-09-22)
 
 ## Corpus Check
-- 66 files · ~45,771 words
+- 66 files · ~46,004 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 6 file(s) not represented in the graph (top: .ico 2, .example 1, (none) 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `372bdf84`
+- Built from commit: `d0ddf879`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
