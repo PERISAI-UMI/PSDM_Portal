@@ -246,6 +246,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                     <th className="py-3 px-4">Kegiatan Proker</th>
                     <th className="py-3 px-4">Jenis & Alasan</th>
                     <th className="py-3 px-4">Bukti</th>
+                    <th className="py-3 px-4">Status</th>
                     {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') && (
                       <th className="py-3 px-4 text-right">Tindakan</th>
                     )}
