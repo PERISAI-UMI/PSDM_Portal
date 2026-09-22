@@ -2,7 +2,6 @@
   "0": "routes/attendances.ts",
   "1": "relations.ts",
   "2": "package.json",
-  "3": "App.tsx",
   "4": "integration.test.ts",
   "5": "dependencies",
   "6": "types.ts",
@@ -13,14 +12,10 @@
   "13": "Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)",
   "14": "PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)",
   "15": "routes/permissions.ts",
-  "16": "scripts",
-  "17": "vite.config.ts",
-  "18": "main.tsx",
-  "19": "dotenv",
   "20": "AuthUser",
-  "21": "ActivityItem",
+  "21": "PermissionListTable.tsx",
   "22": "MembersView.tsx",
   "23": "types/index.ts",
-  "24": "PermissionFormModal.tsx",
-  "25": "ActivitiesView.tsx"
+  "24": "App.tsx",
+  "25": "ActivityItem"
 }

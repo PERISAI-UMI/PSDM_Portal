@@ -457,6 +457,55 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               <h2 className="text-sm font-semibold text-slate-900">Data Diri</h2>
             </div>
 
+            {/* Foto Profil Form Row */}
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-2xs overflow-hidden shrink-0">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt={currentUser.namaLengkap} className="w-full h-full object-cover" />
+                  ) : (
+                    currentUser.namaLengkap.slice(0, 2).toUpperCase()
+                  )}
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">Foto Profil</div>
+                  <div className="text-[11px] text-slate-500">Mendukung JPG, PNG, atau WebP (maks. 5MB)</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingAvatar}
+                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {isUploadingAvatar ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Mengunggah...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{avatarUrl ? 'Ganti Foto' : 'Unggah Foto'}</span>
+                    </>
+                  )}
+                </button>
+                {avatarUrl && (
+                  <button
+                    type="button"
+                    onClick={handleRemoveAvatar}
+                    disabled={isUploadingAvatar}
+                    className="p-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors cursor-pointer disabled:opacity-50"
+                    title="Hapus foto"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
               <div>
                 <label className="block text-xs font-medium text-slate-700 mb-1.5">

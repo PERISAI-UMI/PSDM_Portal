@@ -15,8 +15,14 @@ import {
   Building2,
   Globe,
   Instagram,
+  Camera,
+  Trash2,
+  Upload,
+  Loader2,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
+import { api } from '../../services/api.ts';
+import { compressImageFile } from '../../utils/imageCompressor.ts';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -64,6 +70,63 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [profileError, setProfileError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  // Avatar Management
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(currentUser.avatarUrl || null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const handleAvatarFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    e.target.value = '';
+
+    try {
+      setIsUploadingAvatar(true);
+      setAvatarError(null);
+
+      const compression = await compressImageFile(file, {
+        maxWidth: 400,
+        maxHeight: 400,
+        quality: 0.85,
+        format: 'image/webp',
+      });
+
+      const res = await api.uploadAvatar(compression.file);
+      setAvatarUrl(res.avatarUrl);
+      setProfileSuccess('Foto profil berhasil diperbarui!');
+      setTimeout(() => setProfileSuccess(null), 3000);
+      await onUpdateProfile({ avatarUrl: res.avatarUrl });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gagal mengunggah foto profil.';
+      setAvatarError(msg);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    if (!confirm('Apakah Anda yakin ingin menghapus foto profil dan kembali menggunakan inisial?')) {
+      return;
+    }
+
+    try {
+      setIsUploadingAvatar(true);
+      setAvatarError(null);
+      await api.removeAvatar();
+      setAvatarUrl(null);
+      setProfileSuccess('Foto profil berhasil dihapus.');
+      setTimeout(() => setProfileSuccess(null), 3000);
+      await onUpdateProfile({ avatarUrl: null });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gagal menghapus foto profil.';
+      setAvatarError(msg);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -227,6 +290,84 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         {/* Tab 1: Profil & Biodata */}
         {activeTab === 'profile' && (
           <form onSubmit={handleSaveProfile} className="flex-1 overflow-y-auto pr-1 space-y-4">
+            {/* Foto Profil Card */}
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative group shrink-0">
+                  <div className="w-14 h-14 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-2xs overflow-hidden ring-2 ring-white">
+                    {avatarUrl ? (
+                      <img src={avatarUrl} alt={currentUser.namaLengkap} className="w-full h-full object-cover" />
+                    ) : (
+                      currentUser.namaLengkap.slice(0, 2).toUpperCase()
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingAvatar}
+                    className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-slate-900 text-white hover:bg-slate-800 shadow cursor-pointer disabled:opacity-50"
+                    title="Ganti Foto"
+                  >
+                    {isUploadingAvatar ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Camera className="w-3 h-3" />
+                    )}
+                  </button>
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-slate-900">Foto Profil</div>
+                  <div className="text-[11px] text-slate-500">JPG, PNG, atau WebP (maks. 5MB)</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5 shrink-0">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/jpg"
+                  onChange={handleAvatarFileSelect}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingAvatar}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-2xs transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  {isUploadingAvatar ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>Mengunggah...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-3 h-3" />
+                      <span>{avatarUrl ? 'Ganti Foto' : 'Unggah Foto'}</span>
+                    </>
+                  )}
+                </button>
+                {avatarUrl && (
+                  <button
+                    type="button"
+                    onClick={handleRemoveAvatar}
+                    disabled={isUploadingAvatar}
+                    className="p-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors cursor-pointer disabled:opacity-50"
+                    title="Hapus foto"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {avatarError && (
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{avatarError}</span>
+              </div>
+            )}
+
             {profileSuccess && (
               <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
