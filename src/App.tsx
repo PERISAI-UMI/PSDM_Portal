@@ -412,6 +412,9 @@ function MainAppContent() {
           if (currentUser.role === 'PENGURUS' && sec === 'members') {
             return;
           }
+          if (currentUser.role !== 'SUPER_ADMIN' && sec === 'master-data') {
+            return;
+          }
           setActiveSection(sec as ActiveSection);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
@@ -532,8 +535,8 @@ function MainAppContent() {
             />
           )}
 
-          {/* 4. Master Data Layout (Super Admin & INTI) */}
-          {activeSection === 'master-data' && (currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'INTI') && (
+          {/* 4. Master Data Layout (Super Admin only) */}
+          {activeSection === 'master-data' && currentUser.role === 'SUPER_ADMIN' && (
             <MasterDataView
               currentUser={currentUser}
               initialTab={masterDataTab}

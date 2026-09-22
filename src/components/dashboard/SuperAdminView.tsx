@@ -123,22 +123,41 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           </p>
         </div>
 
-        <div
-          onClick={() => onNavigateTo?.('master-data')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Master Data</span>
-            <ShieldCheck className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
+        {currentUser.role === 'SUPER_ADMIN' ? (
+          <div
+            onClick={() => onNavigateTo?.('master-data')}
+            className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-slate-500">Master Data</span>
+              <ShieldCheck className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
+            </div>
+            <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
+              Departemen, Fakultas & Jurusan
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
+              <span>Kelola CRUD struktur & penugasan</span>
+              <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            </p>
           </div>
-          <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
-            Departemen, Fakultas & Jurusan
+        ) : (
+          <div
+            onClick={() => onNavigateTo?.('members')}
+            className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-slate-500">Direktori Anggota</span>
+              <Users className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
+            </div>
+            <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
+              Seluruh Anggota Organisasi
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
+              <span>Buka direktori fungsionaris</span>
+              <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            </p>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
-            <span>Kelola CRUD struktur & penugasan</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
-          </p>
-        </div>
+        )}
       </div>
 
       {/* Two Column Layout: Upcoming Agenda & Pending Permissions */}
@@ -345,23 +364,43 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
         </div>
 
-        <div
-          onClick={() => onNavigateTo?.('master-data')}
-          className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
-              <Database className="w-5 h-5" />
+        {currentUser.role === 'SUPER_ADMIN' ? (
+          <div
+            onClick={() => onNavigateTo?.('master-data')}
+            className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <Database className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-xs sm:text-sm text-slate-900">Master Data & Penugasan PJ</h3>
+                <p className="text-[11px] text-slate-500">
+                  Konfigurasi fakultas, program studi, departemen, dan mapping staf PSDM.
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-xs sm:text-sm text-slate-900">Master Data & Penugasan PJ</h3>
-              <p className="text-[11px] text-slate-500">
-                Konfigurasi fakultas, program studi, departemen, dan mapping staf PSDM.
-              </p>
-            </div>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
           </div>
-          <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
-        </div>
+        ) : (
+          <div
+            onClick={() => onNavigateTo?.('activities')}
+            className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <Calendar className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-xs sm:text-sm text-slate-900">Semua Program Kerja & Kegiatan</h3>
+                <p className="text-[11px] text-slate-500">
+                  Pantau seluruh pelaksanaan agenda, linimasa kegiatan, dan rekapitulasi presensi.
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
+          </div>
+        )}
       </div>
     </div>
   );

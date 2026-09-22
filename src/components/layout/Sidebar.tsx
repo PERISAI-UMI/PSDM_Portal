@@ -221,8 +221,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </button>
             )}
 
-            {/* Master Data: for SuperAdmin and INTI */}
-            {(user.role === 'SUPER_ADMIN' || user.role === 'INTI') && (
+            {/* Master Data: SuperAdmin only */}
+            {user.role === 'SUPER_ADMIN' && (
               <div className="space-y-0.5">
                 <button
                   type="button"
