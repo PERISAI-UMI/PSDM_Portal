@@ -161,7 +161,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 Profil & Akun
               </h2>
               <p className="text-xs text-slate-500">
-                Informasi identitas dan keamanan akun.
+                Kelola data diri dan keamanan akun.
               </p>
             </div>
           </div>
@@ -239,8 +239,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Nama Lengkap *
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Nama Lengkap
                 </label>
                 <input
                   type="text"
@@ -252,8 +252,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Email *
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Email
                 </label>
                 <div className="relative">
                   <input
@@ -268,8 +268,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Nomor Telepon *
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Nomor WhatsApp
                 </label>
                 <div className="relative">
                   <input
@@ -397,7 +397,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 disabled={savingProfile}
                 className="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg min-h-[38px] transition-colors shadow-2xs disabled:opacity-50"
               >
-                {savingProfile ? 'Menyimpan...' : 'Simpan Profil'}
+                {savingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}
               </button>
             </div>
           </form>
@@ -422,15 +422,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Kata Sandi Saat Ini *
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Kata Sandi Saat Ini
               </label>
               <div className="relative">
                 <input
                   type={showCurrentPass ? 'text' : 'password'}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Kata sandi saat ini"
+                  placeholder="Masukkan kata sandi saat ini"
                   required
                   className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
                 />
@@ -445,8 +445,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Kata Sandi Baru *
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Kata Sandi Baru
               </label>
               <div className="relative">
                 <input
@@ -469,8 +469,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Konfirmasi Kata Sandi Baru *
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Konfirmasi Kata Sandi
               </label>
               <input
                 type="password"
@@ -502,7 +502,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
                 className="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg min-h-[38px] transition-colors shadow-2xs disabled:opacity-50"
               >
-                {savingPassword ? 'Menyimpan...' : 'Perbarui Kata Sandi'}
+                {savingPassword ? 'Menyimpan...' : 'Simpan Kata Sandi'}
               </button>
             </div>
           </form>

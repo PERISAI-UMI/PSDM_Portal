@@ -165,7 +165,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* 1. Page Header (Standard Layout) */}
+      {/* 1. Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
         <div>
           {onBackToDashboard && (
@@ -175,16 +175,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 mb-2 transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Kembali ke Dasbor</span>
+              <span>Kembali</span>
             </button>
           )}
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Profil & Pengaturan Akun
+              Profil & Akun
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Kelola data biodata anggota, informasi keorganisasian, serta keamanan akses akun Anda.
+            Kelola data diri dan keamanan akun Anda.
           </p>
         </div>
 
@@ -199,12 +199,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
       </div>
 
-      {/* 2. Key Metadata Banner (Full-width grid) */}
+      {/* 2. Key Metadata Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
             <User className="w-3.5 h-3.5 text-slate-400" />
-            <span>Nama Lengkap</span>
+            <span>Nama</span>
           </div>
           <div className="text-sm font-bold text-slate-900 truncate">
             {currentUser.namaLengkap}
@@ -224,7 +224,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
             <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
-            <span>Jabatan / Peran</span>
+            <span>Jabatan</span>
           </div>
           <div className="text-sm font-bold text-slate-900 truncate">
             {currentUser.jabatan}
@@ -234,7 +234,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
-            <span>Angkatan & Generasi</span>
+            <span>Angkatan</span>
           </div>
           <div className="text-sm font-bold text-slate-900 truncate">
             {currentUser.angkatan ? `Angkatan ${currentUser.angkatan}` : '-'} • Gen {currentUser.generasi}
@@ -254,7 +254,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           }`}
         >
           <User className="w-4 h-4" />
-          <span>Biodata Profil</span>
+          <span>Profil</span>
         </button>
         <button
           type="button"
@@ -266,11 +266,11 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           }`}
         >
           <KeyRound className="w-4 h-4" />
-          <span>Keamanan & Sandi</span>
+          <span>Keamanan</span>
         </button>
       </div>
 
-      {/* 4. Main Form Area - Maximized Full-Width Layout */}
+      {/* 4. Main Form Area */}
       {activeTab === 'profile' && (
         <form onSubmit={handleSaveProfile} className="space-y-6">
           {profileSuccess && (
@@ -287,30 +287,29 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             </div>
           )}
 
-          {/* Section A: Identitas & Kontak */}
-          <div className="space-y-4">
-            <div className="border-b border-slate-200/80 pb-2">
-              <h2 className="text-sm font-bold text-slate-900">Identitas Diri & Kontak</h2>
-              <p className="text-xs text-slate-500">Informasi personal dan nomor yang dapat dihubungi</p>
+          {/* Section A: Data Diri */}
+          <div className="space-y-3.5">
+            <div className="border-b border-slate-100 pb-2">
+              <h2 className="text-sm font-semibold text-slate-900">Data Diri</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Nama Lengkap *
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Nama Lengkap
                 </label>
                 <input
                   type="text"
                   value={namaLengkap}
                   onChange={(e) => setNamaLengkap(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Alamat Email *
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Email
                 </label>
                 <div className="relative">
                   <input
@@ -318,15 +317,15 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
-                  <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Nomor WhatsApp / Telepon *
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Nomor WhatsApp
                 </label>
                 <div className="relative">
                   <input
@@ -334,38 +333,37 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={noTelp}
                     onChange={(e) => setNoTelp(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
-                  <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section B: Data Akademik & Kelahiran */}
-          <div className="space-y-4 pt-2">
-            <div className="border-b border-slate-200/80 pb-2">
-              <h2 className="text-sm font-bold text-slate-900">Data Akademik & Tempat Lahir</h2>
-              <p className="text-xs text-slate-500">Nomor induk mahasiswa dan keterangan kelahiran</p>
+          {/* Section B: Akademik */}
+          <div className="space-y-3.5 pt-1">
+            <div className="border-b border-slate-100 pb-2">
+              <h2 className="text-sm font-semibold text-slate-900">Akademik & Kelahiran</h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  NIM (Nomor Induk Mahasiswa) *
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  NIM
                 </label>
                 <input
                   type="text"
                   value={nim}
                   onChange={(e) => setNim(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Tahun Angkatan *
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Angkatan
                 </label>
                 <input
                   type="number"
@@ -374,12 +372,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   min={2000}
                   max={2100}
                   required
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
                   Tempat Lahir
                 </label>
                 <input
@@ -387,89 +385,88 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   value={tempatLahir}
                   onChange={(e) => setTempatLahir(e.target.value)}
                   placeholder="Kota kelahiran"
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
                   Tanggal Lahir
                 </label>
                 <input
                   type="date"
                   value={tanggalLahir}
                   onChange={(e) => setTanggalLahir(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                 />
               </div>
             </div>
           </div>
 
           {/* Section C: Media Sosial & Domisili */}
-          <div className="space-y-4 pt-2">
-            <div className="border-b border-slate-200/80 pb-2">
-              <h2 className="text-sm font-bold text-slate-900">Media Sosial & Domisili</h2>
-              <p className="text-xs text-slate-500">Tautan jejaring profesional dan alamat tempat tinggal</p>
+          <div className="space-y-3.5 pt-1">
+            <div className="border-b border-slate-100 pb-2">
+              <h2 className="text-sm font-semibold text-slate-900">Media Sosial & Alamat</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Instagram (Username)
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Instagram
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     value={instagramUsername}
                     onChange={(e) => setInstagramUsername(e.target.value)}
-                    placeholder="username (tanpa @)"
-                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    placeholder="@username"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
-                  <Instagram className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <Instagram className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  LinkedIn URL
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  LinkedIn
                 </label>
                 <div className="relative">
                   <input
                     type="url"
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
-                    placeholder="https://linkedin.com/in/username"
-                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    placeholder="linkedin.com/in/username"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
-                  <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
                   Alamat Domisili
                 </label>
                 <div className="relative">
                   <textarea
                     value={alamat}
                     onChange={(e) => setAlamat(e.target.value)}
-                    rows={3}
-                    placeholder="Alamat domisili / tempat tinggal saat ini..."
-                    className="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    rows={2}
+                    placeholder="Alamat domisili saat ini"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                   />
-                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Action Bar */}
-          <div className="pt-4 border-t border-slate-200/80 flex items-center justify-end gap-3">
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
             {onBackToDashboard && (
               <button
                 type="button"
                 onClick={onBackToDashboard}
-                className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
               >
                 Batal
               </button>
@@ -477,16 +474,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             <button
               type="submit"
               disabled={savingProfile}
-              className="px-6 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
+              className="px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>{savingProfile ? 'Menyimpan...' : 'Simpan Pembaruan Profil'}</span>
+              <span>{savingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
             </button>
           </div>
         </form>
       )}
 
-      {/* 5. Security & Password Tab (Maximized Layout) */}
+      {/* 5. Security & Password Tab */}
       {activeTab === 'security' && (
         <div className="space-y-6">
           {passwordSuccess && (
@@ -505,18 +502,15 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Left Column: Password Update Form (7 cols) */}
-            <form onSubmit={handleSavePassword} className="lg:col-span-7 space-y-5">
-              <div className="border-b border-slate-200/80 pb-2">
-                <h2 className="text-sm font-bold text-slate-900">Formulir Perubahan Kata Sandi</h2>
-                <p className="text-xs text-slate-500">
-                  Perbarui kata sandi secara berkala demi menjaga keamanan data keorganisasian
-                </p>
+            <form onSubmit={handleSavePassword} className="lg:col-span-7 space-y-4">
+              <div className="border-b border-slate-100 pb-2">
+                <h2 className="text-sm font-semibold text-slate-900">Ubah Kata Sandi</h2>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Kata Sandi Saat Ini *
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                    Kata Sandi Saat Ini
                   </label>
                   <div className="relative">
                     <input
@@ -525,22 +519,22 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Masukkan kata sandi saat ini"
                       required
-                      className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                      className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                     />
                     <button
                       type="button"
                       onClick={() => setShowCurrentPass(!showCurrentPass)}
-                      className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
                       {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                      Kata Sandi Baru *
+                    <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                      Kata Sandi Baru
                     </label>
                     <div className="relative">
                       <input
@@ -550,12 +544,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                         placeholder="Minimal 6 karakter"
                         required
                         minLength={6}
-                        className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                        className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPass(!showNewPass)}
-                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                        className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
                       >
                         {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -563,8 +557,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                      Konfirmasi Kata Sandi Baru *
+                    <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                      Konfirmasi Kata Sandi
                     </label>
                     <input
                       type="password"
@@ -572,59 +566,43 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Ulangi kata sandi baru"
                       required
-                      className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${
+                      className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${
                         confirmPassword && newPassword !== confirmPassword
                           ? 'border-rose-300 focus:ring-rose-200'
                           : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
                       }`}
                     />
                     {confirmPassword && newPassword !== confirmPassword && (
-                      <p className="text-[11px] text-rose-600 mt-1.5">Konfirmasi kata sandi tidak cocok.</p>
+                      <p className="text-[11px] text-rose-600 mt-1">Konfirmasi kata sandi tidak cocok.</p>
                     )}
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-200/80 flex items-center justify-end gap-3">
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
                 <button
                   type="submit"
                   disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
-                  className="px-6 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
+                  className="px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
                 >
                   <KeyRound className="w-3.5 h-3.5" />
-                  <span>{savingPassword ? 'Menyimpan...' : 'Perbarui Kata Sandi'}</span>
+                  <span>{savingPassword ? 'Menyimpan...' : 'Simpan Kata Sandi'}</span>
                 </button>
               </div>
             </form>
 
-            {/* Right Column: Security Guidelines & Policy (5 cols) */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="p-5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3.5">
-                <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                  <Shield className="w-4 h-4 text-emerald-600" />
-                  <span>Standar Keamanan Akun PSDM</span>
+            {/* Right Column: Security Guidelines (5 cols) */}
+            <div className="lg:col-span-5 space-y-3">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                <div className="flex items-center gap-2 text-slate-900 font-semibold text-xs">
+                  <Shield className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Keamanan Akun</span>
                 </div>
-                <ul className="text-xs text-slate-600 space-y-2.5">
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
-                    <span>Gunakan minimal 8 karakter dengan kombinasi huruf, angka, dan simbol.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
-                    <span>Hindari memakai tanggal lahir, nomor telepon, atau data umum yang mudah ditebak.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
-                    <span>Kata sandi dienkripsi dengan PBKDF2 SHA-256 standard cloud security.</span>
-                  </li>
+                <ul className="text-xs text-slate-500 space-y-1.5 list-disc list-inside">
+                  <li>Gunakan minimal 6 karakter.</li>
+                  <li>Kombinasikan huruf, angka, atau simbol.</li>
+                  <li>Jangan berikan kata sandi kepada siapapun.</li>
                 </ul>
-              </div>
-
-              <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/80 flex items-start gap-3">
-                <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                <div className="text-xs text-amber-800 leading-relaxed">
-                  <strong>Peringatan Keamanan:</strong> Jangan berikan kata sandi atau kode akses Anda kepada siapapun, termasuk sesama pengurus maupun pengelola sistem.
-                </div>
               </div>
             </div>
           </div>
