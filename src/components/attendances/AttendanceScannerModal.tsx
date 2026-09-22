@@ -311,29 +311,29 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
               Hadir: <strong className="text-emerald-700 font-bold">{hadirCount}</strong> / {usersList.length}
             </span>
 
-            {(currentAdmin.role === 'SUPER_ADMIN' || currentAdmin.role === 'ADMIN') && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setShowImportModal(true)}
-                  className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
-                  title="Import data presensi manual dari Excel / CSV"
-                >
-                  <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>Import Excel</span>
-                </button>
+            {currentAdmin.role === 'SUPER_ADMIN' && (
+              <button
+                type="button"
+                onClick={() => setShowImportModal(true)}
+                className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                title="Khusus Super Admin: Import data presensi manual dari Excel / CSV"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Import Excel</span>
+              </button>
+            )}
 
-                <button
-                  type="button"
-                  onClick={handleExport}
-                  disabled={exporting}
-                  className="px-3.5 py-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
-                  title="Export rekapan presensi ke CSV (Excel)"
-                >
-                  <Download className="w-3.5 h-3.5 text-slate-600" />
-                  {exporting ? 'Mengekspor...' : 'Export CSV'}
-                </button>
-              </>
+            {(currentAdmin.role === 'SUPER_ADMIN' || currentAdmin.role === 'ADMIN') && (
+              <button
+                type="button"
+                onClick={handleExport}
+                disabled={exporting}
+                className="px-3.5 py-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                title="Export rekapan presensi ke CSV (Excel)"
+              >
+                <Download className="w-3.5 h-3.5 text-slate-600" />
+                {exporting ? 'Mengekspor...' : 'Export CSV'}
+              </button>
             )}
 
             {!isMonitorOnly && (

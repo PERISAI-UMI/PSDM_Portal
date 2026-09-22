@@ -1,17 +1,17 @@
 # Graph Report - PSDM-PORTAL  (2026-09-23)
 
 ## Corpus Check
-- 69 files · ~53,110 words
+- 69 files · ~53,406 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 6 file(s) not represented in the graph (top: .ico 2, .example 1, (none) 1)
 
 ## Summary
-- 403 nodes · 1034 edges · 20 communities (19 shown, 1 thin omitted)
+- 403 nodes · 1036 edges · 20 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b6c953e1`
+- Built from commit: `e356225c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,23 +19,23 @@
 - routes/permissions.ts
 - relations.ts
 - package.json
-- App.tsx
+- react
 - integration.test.ts
 - dependencies
 - types.ts
-- scripts
-- api.ts
+- types/index.ts
+- App.tsx
 - routes/users.ts
 - compilerOptions
-- PermissionFormModal.tsx
-- devDependencies
+- imageCompressor.ts
+- AuthUser
 - Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)
 - PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)
 - seed.ts
-- vite.config.ts
+- api.ts
 - users
-- main.tsx
-- dotenv
+- ActivityItem
+- PengurusView.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `AuthUser` - 42 edges
@@ -54,17 +54,17 @@
   HANDOVER.md → src/db/schema/academic.ts
 - `CreateActivityModalProps` --references--> `ActivityItem`  [EXTRACTED]
   src/components/activities/CreateActivityModal.tsx → src/types/index.ts
-- `ParsedAttendanceRow` --references--> `AuthUser`  [EXTRACTED]
-  src/components/attendances/AttendanceImportModal.tsx → src/types/index.ts
-- `AttendanceScannerModalProps` --references--> `ActivityItem`  [EXTRACTED]
-  src/components/attendances/AttendanceScannerModal.tsx → src/types/index.ts
-- `AttendanceScannerModalProps` --references--> `AuthUser`  [EXTRACTED]
-  src/components/attendances/AttendanceScannerModal.tsx → src/types/index.ts
+- `SidebarProps` --references--> `AuthUser`  [EXTRACTED]
+  src/components/layout/Sidebar.tsx → src/types/index.ts
+- `MemberListModalProps` --references--> `AuthUser`  [EXTRACTED]
+  src/components/members/MemberListModal.tsx → src/types/index.ts
+- `ProfileModalProps` --references--> `AuthUser`  [EXTRACTED]
+  src/components/profile/ProfileModal.tsx → src/types/index.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 1 thin omitted)
+## Communities (20 total, 0 thin omitted)
 
 ### Community 0 - "routes/permissions.ts"
 Cohesion: 0.12
@@ -75,12 +75,12 @@ Cohesion: 0.13
 Nodes (21): drizzle-orm, Fakultas, NewFakultas, NewProgramStudi, ProgramStudi, Department, departments, NewDepartment (+13 more)
 
 ### Community 2 - "package.json"
-Cohesion: 0.11
-Nodes (17): name, private, type, version, autoprefixer, drizzle-zod, esbuild, @google/genai (+9 more)
+Cohesion: 0.04
+Nodes (45): devDependencies, autoprefixer, drizzle-kit, esbuild, tailwindcss, tsx, @types/node, @types/react (+37 more)
 
-### Community 3 - "App.tsx"
-Cohesion: 0.08
-Nodes (62): lucide-react, react, ActiveSection, ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityCardProps, ActivityDetailModal() (+54 more)
+### Community 3 - "react"
+Cohesion: 0.12
+Nodes (17): lucide-react, react, CreateActivityModal(), CreateActivityModalProps, LoginForm(), LoginFormProps, Sidebar(), SidebarProps (+9 more)
 
 ### Community 4 - "integration.test.ts"
 Cohesion: 0.08
@@ -94,13 +94,13 @@ Nodes (19): dependencies, @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, dot
 Cohesion: 0.11
 Nodes (20): @libsql/client, AppDatabase, createDb(), DatabaseEnv, src_db_schema_index_pjdepartment, src_db_schema_index_session, src_db_schema_index_user, PjDepartment (+12 more)
 
-### Community 7 - "scripts"
-Cohesion: 0.22
-Nodes (9): scripts, build, clean, deploy, dev, lint, preview, seed (+1 more)
+### Community 7 - "types/index.ts"
+Cohesion: 0.21
+Nodes (16): DeleteTarget, EditTarget, MasterDataTab, MasterDataView(), MasterDataViewProps, MemberFormModal(), MemberFormModalProps, MemberImportModal() (+8 more)
 
-### Community 8 - "api.ts"
-Cohesion: 0.13
-Nodes (22): MainAppContent(), checkAuthSession(), AttendanceImportModal(), ParsedAttendanceRow, AttendanceScannerModal(), AttendanceScannerModalProps, ToastContext, ToastContextType (+14 more)
+### Community 8 - "App.tsx"
+Cohesion: 0.17
+Nodes (19): ActiveSection, MainAppContent(), checkAuthSession(), AttendanceImportModal(), AttendanceScannerModal(), AdminView(), SuperAdminView(), PermissionsView() (+11 more)
 
 ### Community 9 - "routes/users.ts"
 Cohesion: 0.14
@@ -110,13 +110,13 @@ Nodes (18): @hono/zod-validator, src_db_schema_index_programstudi, src_db_schema
 Cohesion: 0.12
 Nodes (16): compilerOptions, allowImportingTsExtensions, allowJs, experimentalDecorators, isolatedModules, jsx, lib, module (+8 more)
 
-### Community 11 - "PermissionFormModal.tsx"
-Cohesion: 0.39
-Nodes (6): PermissionFormModal(), PermissionFormModalProps, compressImageFile(), CompressionResult, CompressOptions, formatFileSize()
+### Community 11 - "imageCompressor.ts"
+Cohesion: 0.40
+Nodes (5): PermissionFormModal(), compressImageFile(), CompressionResult, CompressOptions, formatFileSize()
 
-### Community 12 - "devDependencies"
-Cohesion: 0.18
-Nodes (11): devDependencies, autoprefixer, drizzle-kit, esbuild, tailwindcss, tsx, @types/node, @types/react (+3 more)
+### Community 12 - "AuthUser"
+Cohesion: 0.29
+Nodes (12): AdminViewProps, SuperAdminViewProps, Header(), HeaderProps, PermissionListTable(), PermissionListTableProps, PermissionsViewProps, PermissionStatus (+4 more)
 
 ### Community 13 - "Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)"
 Cohesion: 0.25
@@ -130,22 +130,25 @@ Nodes (7): 1. Ikhtisar Sistem, 2. Arsitektur Teknologi & Edge Stack, 3. Matriks 
 Cohesion: 0.16
 Nodes (14): zod, db, src_db_schema_index_departments, src_db_schema_index_fakultas, src_db_schema_index_permissions, src_db_schema_index_pjdepartments, pjDepartments, db (+6 more)
 
-### Community 16 - "vite.config.ts"
-Cohesion: 0.40
-Nodes (4): ref_path, @tailwindcss/vite, vite, @vitejs/plugin-react
+### Community 16 - "api.ts"
+Cohesion: 0.21
+Nodes (9): xlsx, AttendanceImportModalProps, ParsedAttendanceRow, PermissionFormModalProps, AttendanceStatus, api, getStoredToken(), request() (+1 more)
 
 ### Community 17 - "users"
 Cohesion: 0.17
 Nodes (12): activities, Activity, NewActivity, Attendance, attendances, attendanceStatusEnum, NewAttendance, NewPermission (+4 more)
 
-### Community 18 - "main.tsx"
-Cohesion: 0.50
-Nodes (3): react-dom, App(), src_index
+### Community 18 - "ActivityItem"
+Cohesion: 0.29
+Nodes (10): ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityCardProps, ActivityDetailModal(), ActivityDetailModalProps, AttendanceScannerModalProps, UserRole (+2 more)
+
+### Community 19 - "PengurusView.tsx"
+Cohesion: 0.67
+Nodes (3): PengurusView(), PengurusViewProps, AttendanceRecord
 
 ## Knowledge Gaps
 - **161 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+156 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 180 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -154,7 +157,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.084) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
   _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `react` connect `App.tsx` to `package.json`, `integration.test.ts`, `api.ts`, `PermissionFormModal.tsx`, `main.tsx`?**
+- **Why does `react` connect `react` to `package.json`, `integration.test.ts`, `types/index.ts`, `App.tsx`, `AuthUser`, `api.ts`, `ActivityItem`, `PengurusView.tsx`?**
   _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
   _161 weakly-connected nodes found - possible documentation gaps or missing edges._
@@ -163,4 +166,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `relations.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.12535612535612536 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.04336734693877551 - nodes in this community are weakly interconnected._

@@ -472,6 +472,8 @@ function MainAppContent() {
                 setActivePermissionActivity(act);
                 setShowPermissionModal(true);
               }}
+              allUsers={allUsers}
+              onAttendanceImportSuccess={() => syncRealtime(true)}
             />
           )}
 

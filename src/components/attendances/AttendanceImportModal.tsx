@@ -21,7 +21,8 @@ import { broadcastRealtimeEvent } from '../../utils/realtime.ts';
 interface AttendanceImportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  activity: ActivityItem | null;
+  activity?: ActivityItem | null;
+  activities?: ActivityItem[];
   users: AuthUser[];
   onSuccess: () => void;
 }
@@ -41,11 +42,26 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
   isOpen,
   onClose,
   activity,
+  activities = [],
   users,
   onSuccess,
 }) => {
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [selectedActivityId, setSelectedActivityId] = useState<string>(
+    activity?.id || (activities.length > 0 ? activities[0].id : '')
+  );
+
+  React.useEffect(() => {
+    if (activity?.id) {
+      setSelectedActivityId(activity.id);
+    } else if (activities.length > 0 && !selectedActivityId) {
+      setSelectedActivityId(activities[0].id);
+    }
+  }, [activity, activities, isOpen]);
+
+  const targetActivity = activity || activities.find((a) => a.id === selectedActivityId) || null;
 
   const [fileName, setFileName] = useState<string | null>(null);
   const [parsedRows, setParsedRows] = useState<ParsedAttendanceRow[]>([]);
@@ -59,7 +75,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
     skippedCount: number;
   } | null>(null);
 
-  if (!isOpen || !activity) return null;
+  if (!isOpen) return null;
 
   // 1. Download template Excel yang sudah diisi daftar pengurus dari DB
   const handleDownloadTemplate = () => {
@@ -118,7 +134,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Presensi');
 
-    const cleanActName = activity.nama.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 30);
+    const cleanActName = (targetActivity?.nama || 'kegiatan').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 30);
     XLSX.writeFile(workbook, `Template_Presensi_${cleanActName}.xlsx`);
     showToast('Template Excel presensi berhasil diunduh!', 'success');
   };
@@ -251,14 +267,14 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
         status: r.status,
       }));
 
-    if (validItems.length === 0) {
-      showToast('Tidak ada data absensi valid untuk diimpor.', 'info');
+    if (!targetActivity) {
+      showToast('Pilih kegiatan terlebih dahulu untuk mengimpor presensi.', 'info');
       return;
     }
 
     try {
       setIsSaving(true);
-      await api.recordBatchAttendance(activity.id, validItems);
+      await api.recordBatchAttendance(targetActivity.id, validItems);
       broadcastRealtimeEvent('ATTENDANCE_CHANGED');
       onSuccess();
 
@@ -334,9 +350,15 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                 <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
                   Import Presensi dari Excel
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Kegiatan: <span className="font-semibold text-slate-700">{activity.nama}</span>
-                </p>
+                {activity ? (
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Kegiatan: <span className="font-semibold text-slate-700">{activity.nama}</span>
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Khusus Super Admin: Import presensi manual lampau
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -351,6 +373,31 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
 
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto py-4 space-y-4">
+          {/* Activity Selector jika dibuka dari halaman daftar kegiatan (tanpa preselected activity) */}
+          {!activity && (
+            <div className="p-3.5 bg-indigo-50/50 rounded-xl border border-indigo-100 space-y-1.5">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <span>Pilih Agenda Kegiatan yang Ingin Diimpor Presensinya:</span>
+              </label>
+              {activities.length > 0 ? (
+                <select
+                  value={selectedActivityId}
+                  onChange={(e) => setSelectedActivityId(e.target.value)}
+                  className="w-full text-xs sm:text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white"
+                >
+                  {activities.map((act) => (
+                    <option key={act.id} value={act.id}>
+                      {act.nama} ({new Date(act.startDate).toLocaleDateString('id-ID')})
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs">
+                  Belum ada agenda kegiatan yang dibuat di sistem. Silakan buat kegiatan baru terlebih dahulu melalui tombol <strong>"+ Buat Kegiatan Baru"</strong>.
+                </div>
+              )}
+            </div>
+          )}
           {/* Step 1: Belum ada file yang di-parse */}
           {parsedRows.length === 0 && !importResult && (
             <div className="space-y-4">

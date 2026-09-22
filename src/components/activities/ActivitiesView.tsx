@@ -7,34 +7,41 @@ import {
   Clock,
   Filter,
   Layers,
+  FileSpreadsheet,
 } from 'lucide-react';
 import type { ActivityItem, AuthUser, UserRole } from '../../types/index.ts';
 import { ActivityCard } from './ActivityCard.tsx';
+import { AttendanceImportModal } from '../attendances/AttendanceImportModal.tsx';
 
 interface ActivitiesViewProps {
   currentUser: AuthUser;
   activities: ActivityItem[];
+  allUsers?: AuthUser[];
   onOpenCreateActivity: () => void;
   onOpenAttendance: (act: ActivityItem) => void;
   onTogglePublish: (id: string, current: boolean) => void;
   onDeleteActivity: (id: string) => void;
   onViewDetail: (act: ActivityItem) => void;
   onRequestPermission?: (act: ActivityItem) => void;
+  onAttendanceImportSuccess?: () => void;
 }
 
 export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
   currentUser,
   activities,
+  allUsers = [],
   onOpenCreateActivity,
   onOpenAttendance,
   onTogglePublish,
   onDeleteActivity,
   onViewDetail,
   onRequestPermission,
+  onAttendanceImportSuccess,
 }) => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL');
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
+  const [showImportModal, setShowImportModal] = useState(false);
 
   const publishedCount = activities.filter((a) => a.isPublished).length;
   const draftCount = activities.filter((a) => !a.isPublished).length;
@@ -82,14 +89,26 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
         </div>
 
         {currentUser.role === 'SUPER_ADMIN' && (
-          <button
-            type="button"
-            onClick={onOpenCreateActivity}
-            className="px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs cursor-pointer self-start sm:self-auto"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Buat Kegiatan Baru</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => setShowImportModal(true)}
+              className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center gap-2 transition-all shadow-2xs cursor-pointer active:scale-95"
+              title="Khusus Super Admin: Import data presensi manual dari Excel / CSV"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-indigo-600" />
+              <span>Import Presensi</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onOpenCreateActivity}
+              className="px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Buat Kegiatan Baru</span>
+            </button>
+          </div>
         )}
       </div>
 
@@ -239,6 +258,19 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             />
           ))}
         </div>
+      )}
+
+      {/* Attendance Import Modal for Super Admin */}
+      {currentUser.role === 'SUPER_ADMIN' && (
+        <AttendanceImportModal
+          isOpen={showImportModal}
+          onClose={() => setShowImportModal(false)}
+          activities={activities}
+          users={allUsers}
+          onSuccess={() => {
+            onAttendanceImportSuccess?.();
+          }}
+        />
       )}
     </div>
   );

@@ -230,15 +230,17 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                 </button>
               )}
 
-              <button
-                type="button"
-                onClick={() => setShowImportModal(true)}
-                className="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-xs font-semibold text-indigo-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
-                title="Import rekapan absensi manual dari Excel / CSV"
-              >
-                <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Import Presensi</span>
-              </button>
+              {userRole === 'SUPER_ADMIN' && (
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(true)}
+                  className="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-xs font-semibold text-indigo-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  title="Khusus Super Admin: Import rekapan absensi manual dari Excel / CSV"
+                >
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Import Presensi</span>
+                </button>
+              )}
 
               <button
                 type="button"
