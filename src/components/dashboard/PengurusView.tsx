@@ -35,6 +35,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
   const alphaCount = myAttendances.filter((a) => a.status === 'ALPHA').length;
   const attendanceBase = hadirCount + alphaCount;
   const attendanceRate = attendanceBase > 0 ? Math.round((hadirCount / attendanceBase) * 100) : 100;
+  const totalRecorded = myAttendances.length;
 
   const publishedActivities = activities.filter((a) => a.isPublished);
   const upcomingActivities = [...publishedActivities]
@@ -72,7 +73,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
             {attendanceRate}%
           </div>
           <p className="text-[11px] text-emerald-600 font-medium mt-0.5">
-            {hadirCount} dari {totalRecorded} kegiatan
+            {hadirCount} dari {attendanceBase} kegiatan
           </p>
         </div>
 
