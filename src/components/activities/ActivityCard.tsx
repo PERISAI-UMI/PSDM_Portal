@@ -232,20 +232,20 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           )}
         </div>
 
-        {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && (
+        {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN' || (userRole === 'INTI' && activity.isLocked)) && (
           <button
             type="button"
             onClick={() => onOpenAttendance?.(activity)}
-            className={`flex-1 py-1.5 px-3 min-h-[36px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs ${
-              activity.isLocked && userRole === 'ADMIN'
+            className={`flex-1 py-1.5 px-3 min-h-[36px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer ${
+              activity.isLocked && (userRole === 'ADMIN' || userRole === 'INTI')
                 ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
                 : 'bg-slate-900 hover:bg-slate-800 text-white'
             }`}
           >
-            {activity.isLocked && userRole === 'ADMIN' ? (
+            {activity.isLocked && (userRole === 'ADMIN' || userRole === 'INTI') ? (
               <>
                 <Eye className="w-3.5 h-3.5 text-slate-500" />
-                <span>Lihat Presensi (Terkunci)</span>
+                <span>Lihat Daftar Hadir (Terkunci)</span>
               </>
             ) : (
               <>
@@ -256,7 +256,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           </button>
         )}
 
-        {userRole !== 'SUPER_ADMIN' && userRole !== 'ADMIN' && (
+        {userRole !== 'SUPER_ADMIN' && userRole !== 'ADMIN' && !(userRole === 'INTI' && activity.isLocked) && (
           activity.isLocked ? (
             <div
               className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 border border-slate-200 text-slate-500 text-xs font-medium flex items-center justify-center gap-1.5 select-none"
