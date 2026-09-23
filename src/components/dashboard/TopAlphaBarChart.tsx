@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart3, ArrowRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { BarChart3, ArrowRight, ShieldAlert, CheckCircle2, AlignLeft, BarChart2 } from 'lucide-react';
 
 export type AttendanceCategory = 'ALPHA' | 'HADIR' | 'TELAT' | 'IZIN' | 'SAKIT';
 
@@ -164,7 +164,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
   onNavigateToMembers,
 }) => {
   const [activeCategory, setActiveCategory] = useState<AttendanceCategory>('ALPHA');
-  const [viewMode, setViewMode] = useState<'chart' | 'list'>('chart');
+  const [viewMode, setViewMode] = useState<'vertical' | 'horizontal' | 'list'>('vertical');
   const [hoveredUser, setHoveredUser] = useState<string | null>(null);
 
   const currentConfig = CATEGORIES[activeCategory];
@@ -177,8 +177,9 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
     .slice(0, 10);
 
   const maxValue = top10.length > 0 ? Math.max(...top10.map((d) => d[fieldKey] || 0)) : 0;
-  // Skala Y-axis dibulatkan ke atas agar ada ruang di puncak batang
-  const yAxisMax = Math.max(maxValue + 1, 4);
+
+  // Skala Y-axis dibuat lega (ada sisa ruang ~35-40% di atas agar popup tidak pernah terpotong)
+  const yAxisMax = Math.max(Math.ceil(maxValue * 1.35), maxValue + 3, 5);
 
   // Y-axis grid lines (4 tingkatan)
   const gridSteps = [
@@ -189,6 +190,9 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
     0,
   ];
   const uniqueGridSteps = Array.from(new Set(gridSteps)).sort((a, b) => b - a);
+
+  // Fungsionaris yang sedang aktif disorot (hovered atau fungsionaris peringkat 1)
+  const activeMember = top10.find((m) => m.userId === hoveredUser) || (top10.length > 0 ? top10[0] : null);
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs">
@@ -206,20 +210,34 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-          {/* View Toggle */}
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 flex-wrap">
+          {/* View Toggle (3 Pilihan: Vertikal, Horizontal, Rincian) */}
           <div className="flex items-center p-0.5 bg-slate-100 rounded-lg text-xs">
             <button
               type="button"
-              onClick={() => setViewMode('chart')}
-              className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
-                viewMode === 'chart'
+              onClick={() => setViewMode('vertical')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                viewMode === 'vertical'
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="Tampilan Diagram Batang"
+              title="Grafik Batang Vertikal"
             >
-              Grafik Batang
+              <BarChart2 className="w-3.5 h-3.5" />
+              <span>Vertikal</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('horizontal')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                viewMode === 'horizontal'
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              title="Grafik Batang Horizontal (Nama Lebih Jelas)"
+            >
+              <AlignLeft className="w-3.5 h-3.5" />
+              <span>Horizontal</span>
             </button>
             <button
               type="button"
@@ -229,9 +247,9 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="Tampilan Rincian"
+              title="Tampilan Rincian Data"
             >
-              Rincian
+              <span>Rincian</span>
             </button>
           </div>
 
@@ -248,27 +266,51 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
         </div>
       </div>
 
-      {/* Category Filter Pills */}
-      <div className="mt-3.5 flex items-center gap-1.5 flex-wrap">
-        <span className="text-[11px] font-semibold text-slate-500 mr-1">Filter Kategori:</span>
-        {CATEGORY_LIST.map((catKey) => {
-          const cat = CATEGORIES[catKey];
-          const isActive = activeCategory === catKey;
-          return (
-            <button
-              key={catKey}
-              type="button"
-              onClick={() => setActiveCategory(catKey)}
-              className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${
-                isActive
-                  ? cat.activePillClass
-                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <span>{cat.label}</span>
-            </button>
-          );
-        })}
+      {/* Category Filter Pills & Live Inspector Strip */}
+      <div className="mt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[11px] font-semibold text-slate-500 mr-1">Filter Kategori:</span>
+          {CATEGORY_LIST.map((catKey) => {
+            const cat = CATEGORIES[catKey];
+            const isActive = activeCategory === catKey;
+            return (
+              <button
+                key={catKey}
+                type="button"
+                onClick={() => setActiveCategory(catKey)}
+                className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${
+                  isActive
+                    ? cat.activePillClass
+                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <span>{cat.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Live Detail Strip: Menampilkan data fungsionaris aktif/hovered tanpa takut terpotong */}
+        {activeMember && (
+          <div className="bg-slate-50 border border-slate-200/90 rounded-lg px-3 py-1.5 flex items-center gap-3 text-xs self-stretch sm:self-auto">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="px-1.5 py-0.5 rounded bg-slate-800 text-white font-mono text-[10px] font-bold">
+                #{top10.findIndex((m) => m.userId === activeMember.userId) + 1}
+              </span>
+              <span className="font-bold text-slate-900 truncate" title={activeMember.nama}>
+                {activeMember.nama}
+              </span>
+              <span className="text-[11px] text-slate-400 hidden md:inline">• {activeMember.dept || 'PSDM'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-[11px] ml-auto shrink-0 border-l border-slate-200 pl-2.5">
+              <span className="text-emerald-600 font-semibold">{activeMember.hadir} Hadir</span>
+              <span className="text-amber-600 font-semibold">{activeMember.telat} Telat</span>
+              <span className="text-sky-600 font-semibold">{activeMember.izin} Izin</span>
+              <span className="text-violet-600 font-semibold">{activeMember.sakit} Sakit</span>
+              <span className="text-rose-600 font-semibold">{activeMember.alpa} Alpa</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Konten Chart / Empty State */}
@@ -282,13 +324,13 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             {currentConfig.emptySubtitle}
           </p>
         </div>
-      ) : viewMode === 'chart' ? (
-        /* ================= MODE 1: VERTICAL BAR CHART (UP TO 10 BARS) ================= */
-        <div className="mt-6">
-          <div className="overflow-x-auto pb-1 scrollbar-thin">
-            <div className="min-w-[620px] sm:min-w-full">
-              {/* Chart Canvas Area */}
-              <div className="relative h-60 flex items-end pl-7 pr-2 pt-6">
+      ) : viewMode === 'vertical' ? (
+        /* ================= MODE 1: VERTICAL BAR CHART DENGAN POPUP ANTI-TERPOTONG ================= */
+        <div className="mt-5">
+          <div className="overflow-x-auto pb-2 scrollbar-thin">
+            <div className="min-w-[840px] sm:min-w-full">
+              {/* Chart Canvas Area (Padding atas lega h-68 pt-12) */}
+              <div className="relative h-68 flex items-end pl-7 pr-2 pt-12">
                 {/* Horizontal Gridlines & Y-Axis Labels */}
                 <div className="absolute inset-0 left-7 flex flex-col justify-between pointer-events-none">
                   {uniqueGridSteps.map((step) => (
@@ -301,10 +343,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 </div>
 
                 {/* Vertical Bars Columns */}
-                <div className="relative z-10 w-full h-full flex items-end justify-around gap-1.5 sm:gap-3">
+                <div className="relative z-10 w-full h-full flex items-end justify-around gap-2 sm:gap-3">
                   {top10.map((item, idx) => {
                     const val = item[fieldKey] || 0;
-                    const heightPercent = Math.max(Math.round((val / yAxisMax) * 100), 10);
+                    const heightPercent = Math.max(Math.round((val / yAxisMax) * 100), 8);
                     const isHovered = hoveredUser === item.userId;
 
                     const gradientClass =
@@ -314,20 +356,25 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                         ? currentConfig.barColors.rank2
                         : currentConfig.barColors.rankRest;
 
+                    // Posisi cerdas popup tooltip: jika batang tinggi, popup berada tepat di bawah puncak batang agar tidak menembus batas atas
+                    const isHighBar = val / yAxisMax > 0.6;
+
                     return (
                       <div
                         key={item.userId}
-                        className="flex-1 max-w-[48px] sm:max-w-[60px] lg:max-w-[72px] h-full flex flex-col items-center justify-end group cursor-pointer"
+                        className="flex-1 min-w-[76px] sm:min-w-[88px] max-w-[104px] h-full flex flex-col items-center justify-end group cursor-pointer relative"
                         onMouseEnter={() => setHoveredUser(item.userId)}
                         onMouseLeave={() => setHoveredUser(null)}
                       >
-                        {/* Tooltip Hover Bubble */}
+                        {/* Tooltip Hover Bubble (Posisi adaptif, dijamin 100% tidak terpotong) */}
                         <div
-                          className={`absolute -top-3 z-30 transition-all duration-200 pointer-events-none transform -translate-y-full ${
-                            isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                          }`}
+                          className={`absolute z-30 transition-all duration-200 pointer-events-none ${
+                            isHighBar
+                              ? 'top-9 translate-y-0'
+                              : '-top-3 -translate-y-full'
+                          } ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                         >
-                          <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-xl text-left min-w-[170px] border border-slate-700">
+                          <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-2xl text-left min-w-[170px] border border-slate-700">
                             <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
                             <div className="text-[10px] text-slate-400 mt-0.5">{item.dept || 'PSDM'}</div>
 
@@ -373,24 +420,32 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 </div>
               </div>
 
-              {/* X-Axis Labels (Nama & Info Pengurus) */}
-              <div className="pl-7 pr-2 mt-3 pt-2.5 border-t border-slate-200/80 flex items-start justify-around gap-1.5 sm:gap-3">
+              {/* X-Axis Labels: Multi-line wrap, nama lengkap tidak terpotong! */}
+              <div className="pl-7 pr-2 mt-3 pt-2.5 border-t border-slate-200/80 flex items-start justify-around gap-2 sm:gap-3">
                 {top10.map((item, idx) => (
                   <div
                     key={item.userId}
-                    className="flex-1 max-w-[48px] sm:max-w-[60px] lg:max-w-[72px] text-center min-w-0"
+                    className="flex-1 min-w-[76px] sm:min-w-[88px] max-w-[104px] text-center"
+                    onMouseEnter={() => setHoveredUser(item.userId)}
                   >
                     <div
-                      className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold mb-1 leading-none ${
+                      className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold mb-1.5 leading-none ${
                         idx < 3 ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600'
                       }`}
                     >
                       #{idx + 1}
                     </div>
-                    <div className="font-semibold text-slate-800 text-[10px] sm:text-[11px] truncate leading-tight" title={item.nama}>
+                    {/* Nama utuh: line-clamp-2 dengan break-words agar tidak ada ellipsis kasar */}
+                    <div
+                      className="font-semibold text-slate-800 text-[10.5px] sm:text-[11px] leading-snug text-center break-words line-clamp-2 min-h-[32px] flex items-center justify-center px-0.5"
+                      title={item.nama}
+                    >
                       {item.nama}
                     </div>
-                    <div className="text-[9px] text-slate-400 truncate mt-0.5 hidden sm:block">
+                    <div
+                      className="text-[9.5px] text-slate-400 text-center leading-tight mt-0.5 break-words line-clamp-1"
+                      title={item.dept}
+                    >
                       {item.dept || 'PSDM'}
                     </div>
                   </div>
@@ -399,14 +454,78 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             </div>
           </div>
         </div>
+      ) : viewMode === 'horizontal' ? (
+        /* ================= MODE 2: HORIZONTAL BAR CHART (NAMA LEGA & BEBAS TERPOTONG) ================= */
+        <div className="mt-4 space-y-2.5">
+          {top10.map((item, idx) => {
+            const val = item[fieldKey] || 0;
+            const ratioPercent = Math.max(Math.round((val / maxValue) * 100), 6);
+            const isHovered = hoveredUser === item.userId;
+
+            const gradientClass =
+              idx === 0
+                ? 'bg-gradient-to-r from-rose-500 to-rose-600'
+                : idx <= 2
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600'
+                : 'bg-gradient-to-r from-slate-400 to-slate-500';
+
+            return (
+              <div
+                key={item.userId}
+                onMouseEnter={() => setHoveredUser(item.userId)}
+                className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+                  isHovered
+                    ? 'bg-slate-50/90 border-slate-300 shadow-2xs'
+                    : 'bg-white border-slate-100 hover:border-slate-200'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3 mb-1.5">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span
+                      className={`w-5 h-5 rounded-md text-[10px] font-mono font-bold flex items-center justify-center shrink-0 ${
+                        idx < 3 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      #{idx + 1}
+                    </span>
+                    <span className="font-bold text-xs text-slate-900" title={item.nama}>
+                      {item.nama}
+                    </span>
+                    <span className="text-[11px] text-slate-400 hidden sm:inline">
+                      • {item.dept || 'PSDM'}
+                    </span>
+                  </div>
+
+                  <span className={`font-bold text-xs shrink-0 tabular-nums ${currentConfig.hoverText}`}>
+                    {val} {currentConfig.unit}
+                  </span>
+                </div>
+
+                {/* Horizontal Bar Pillar */}
+                <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex items-center">
+                  <div
+                    className={`h-2.5 rounded-full transition-all duration-500 ${currentConfig.breakdownBar} ${
+                      isHovered ? 'brightness-110 ring-2 ring-slate-300' : ''
+                    }`}
+                    style={{ width: `${ratioPercent}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
       ) : (
-        /* ================= MODE 2: DETAILED TABLE / BREAKDOWN ================= */
+        /* ================= MODE 3: DETAILED TABLE / BREAKDOWN ================= */
         <div className="mt-4 divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden">
           {top10.map((item, idx) => {
             const val = item[fieldKey] || 0;
             const ratioPercent = Math.round((val / maxValue) * 100);
             return (
-              <div key={item.userId} className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
+              <div
+                key={item.userId}
+                onMouseEnter={() => setHoveredUser(item.userId)}
+                className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors"
+              >
                 <div className="flex items-center gap-3 min-w-0">
                   <span
                     className={`w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${
@@ -416,8 +535,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                     #{idx + 1}
                   </span>
                   <div className="min-w-0">
-                    <div className="font-bold text-xs text-slate-900 truncate">{item.nama}</div>
-                    <div className="text-[11px] text-slate-500 truncate">
+                    <div className="font-bold text-xs text-slate-900">{item.nama}</div>
+                    <div className="text-[11px] text-slate-500">
                       {item.prn ? `${item.prn} • ` : ''}{item.dept || 'PSDM'}
                     </div>
                   </div>
