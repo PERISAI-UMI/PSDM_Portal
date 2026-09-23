@@ -178,8 +178,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
 
   const maxValue = top10.length > 0 ? Math.max(...top10.map((d) => d[fieldKey] || 0)) : 0;
 
-  // Skala Y-axis dibuat lega (ada sisa ruang ~35-40% di atas agar popup tidak pernah terpotong)
-  const yAxisMax = Math.max(Math.ceil(maxValue * 1.35), maxValue + 3, 5);
+  // Skala Y-axis dibuat lapang (memberikan sisa ruang kosong 40% di atas agar popup tidak pernah menyentuh bibir atas)
+  const yAxisMax = Math.max(Math.ceil(maxValue * 1.6), maxValue + 4, 6);
 
   // Y-axis grid lines (4 tingkatan)
   const gridSteps = [
@@ -234,7 +234,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="Grafik Batang Horizontal (Nama Lebih Jelas)"
+              title="Grafik Batang Horizontal (Nama 100% Utuh)"
             >
               <AlignLeft className="w-3.5 h-3.5" />
               <span>Horizontal</span>
@@ -290,14 +290,14 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           })}
         </div>
 
-        {/* Live Detail Strip: Menampilkan data fungsionaris aktif/hovered tanpa takut terpotong */}
+        {/* Live Detail Strip: Menampilkan data fungsionaris aktif/hovered secara utuh */}
         {activeMember && (
           <div className="bg-slate-50 border border-slate-200/90 rounded-lg px-3 py-1.5 flex items-center gap-3 text-xs self-stretch sm:self-auto">
             <div className="flex items-center gap-1.5 min-w-0">
               <span className="px-1.5 py-0.5 rounded bg-slate-800 text-white font-mono text-[10px] font-bold">
                 #{top10.findIndex((m) => m.userId === activeMember.userId) + 1}
               </span>
-              <span className="font-bold text-slate-900 truncate" title={activeMember.nama}>
+              <span className="font-bold text-slate-900" title={activeMember.nama}>
                 {activeMember.nama}
               </span>
               <span className="text-[11px] text-slate-400 hidden md:inline">• {activeMember.dept || 'PSDM'}</span>
@@ -325,12 +325,12 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           </p>
         </div>
       ) : viewMode === 'vertical' ? (
-        /* ================= MODE 1: VERTICAL BAR CHART DENGAN POPUP ANTI-TERPOTONG ================= */
+        /* ================= MODE 1: VERTICAL BAR CHART DENGAN TOOLTIP DI DALAM CANVAS ================= */
         <div className="mt-5">
           <div className="overflow-x-auto pb-2 scrollbar-thin">
-            <div className="min-w-[840px] sm:min-w-full">
-              {/* Chart Canvas Area (Padding atas lega h-68 pt-12) */}
-              <div className="relative h-68 flex items-end pl-7 pr-2 pt-12">
+            <div className="min-w-[900px] sm:min-w-full">
+              {/* Chart Canvas Area (Tinggi 300px dengan padding atas 110px untuk sky-zone bebas tooltip) */}
+              <div className="relative h-76 flex items-end pl-7 pr-2 pt-28">
                 {/* Horizontal Gridlines & Y-Axis Labels */}
                 <div className="absolute inset-0 left-7 flex flex-col justify-between pointer-events-none">
                   {uniqueGridSteps.map((step) => (
@@ -356,25 +356,24 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                         ? currentConfig.barColors.rank2
                         : currentConfig.barColors.rankRest;
 
-                    // Posisi cerdas popup tooltip: jika batang tinggi, popup berada tepat di bawah puncak batang agar tidak menembus batas atas
-                    const isHighBar = val / yAxisMax > 0.6;
-
                     return (
                       <div
                         key={item.userId}
-                        className="flex-1 min-w-[76px] sm:min-w-[88px] max-w-[104px] h-full flex flex-col items-center justify-end group cursor-pointer relative"
+                        className="flex-1 min-w-[84px] sm:min-w-[96px] max-w-[115px] h-full flex flex-col items-center justify-end group cursor-pointer relative"
                         onMouseEnter={() => setHoveredUser(item.userId)}
                         onMouseLeave={() => setHoveredUser(null)}
                       >
-                        {/* Tooltip Hover Bubble (Posisi adaptif, dijamin 100% tidak terpotong) */}
+                        {/* Tooltip Hover Bubble (Posisi di DALAM canvas: top-2, dijamin 100% TIDAK PERNAH terpotong batas atas) */}
                         <div
-                          className={`absolute z-30 transition-all duration-200 pointer-events-none ${
-                            isHighBar
-                              ? 'top-9 translate-y-0'
-                              : '-top-3 -translate-y-full'
-                          } ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                          className={`absolute top-2 z-40 transition-all duration-200 pointer-events-none ${
+                            idx === 0
+                              ? 'left-0'
+                              : idx === top10.length - 1
+                              ? 'right-0'
+                              : 'left-1/2 -translate-x-1/2'
+                          } ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
                         >
-                          <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-2xl text-left min-w-[170px] border border-slate-700">
+                          <div className="bg-slate-900 text-white rounded-xl p-2.5 shadow-2xl text-left min-w-[170px] border border-slate-700 relative">
                             <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
                             <div className="text-[10px] text-slate-400 mt-0.5">{item.dept || 'PSDM'}</div>
 
@@ -420,12 +419,12 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 </div>
               </div>
 
-              {/* X-Axis Labels: Multi-line wrap, nama lengkap tidak terpotong! */}
+              {/* X-Axis Labels: Nama LENGKAP tanpa truncate kasar, bebas terpotong! */}
               <div className="pl-7 pr-2 mt-3 pt-2.5 border-t border-slate-200/80 flex items-start justify-around gap-2 sm:gap-3">
                 {top10.map((item, idx) => (
                   <div
                     key={item.userId}
-                    className="flex-1 min-w-[76px] sm:min-w-[88px] max-w-[104px] text-center"
+                    className="flex-1 min-w-[84px] sm:min-w-[96px] max-w-[115px] text-center"
                     onMouseEnter={() => setHoveredUser(item.userId)}
                   >
                     <div
@@ -435,15 +434,16 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                     >
                       #{idx + 1}
                     </div>
-                    {/* Nama utuh: line-clamp-2 dengan break-words agar tidak ada ellipsis kasar */}
+                    {/* Nama utuh tanpa truncate */}
                     <div
-                      className="font-semibold text-slate-800 text-[10.5px] sm:text-[11px] leading-snug text-center break-words line-clamp-2 min-h-[32px] flex items-center justify-center px-0.5"
+                      className="font-semibold text-slate-800 text-[10.5px] sm:text-[11px] leading-tight text-center break-words px-1"
                       title={item.nama}
                     >
                       {item.nama}
                     </div>
+                    {/* Departemen */}
                     <div
-                      className="text-[9.5px] text-slate-400 text-center leading-tight mt-0.5 break-words line-clamp-1"
+                      className="text-[9.5px] text-slate-400 text-center leading-tight mt-1 break-words px-1"
                       title={item.dept}
                     >
                       {item.dept || 'PSDM'}
@@ -455,19 +455,12 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           </div>
         </div>
       ) : viewMode === 'horizontal' ? (
-        /* ================= MODE 2: HORIZONTAL BAR CHART (NAMA LEGA & BEBAS TERPOTONG) ================= */
+        /* ================= MODE 2: HORIZONTAL BAR CHART (NAMA 100% LEGA) ================= */
         <div className="mt-4 space-y-2.5">
           {top10.map((item, idx) => {
             const val = item[fieldKey] || 0;
             const ratioPercent = Math.max(Math.round((val / maxValue) * 100), 6);
             const isHovered = hoveredUser === item.userId;
-
-            const gradientClass =
-              idx === 0
-                ? 'bg-gradient-to-r from-rose-500 to-rose-600'
-                : idx <= 2
-                ? 'bg-gradient-to-r from-amber-500 to-amber-600'
-                : 'bg-gradient-to-r from-slate-400 to-slate-500';
 
             return (
               <div
