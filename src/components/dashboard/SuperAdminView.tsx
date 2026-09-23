@@ -401,7 +401,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
         </div>
       </div>
 
-      {/* Top 5 Alpa Bar Chart (Khusus Super Admin) */}
+      {/* Top 10 Presensi Bar Chart (Khusus Super Admin) */}
       {currentUser.role === 'SUPER_ADMIN' && (
         <TopAlphaBarChart
           data={memberStats}

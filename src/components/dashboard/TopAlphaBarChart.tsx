@@ -49,7 +49,7 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     key: 'ALPHA',
     label: 'Alpa',
     field: 'alpa',
-    title: 'Top 5 Pengurus dengan Alpa Terbanyak',
+    title: 'Top 10 Pengurus dengan Alpa Terbanyak',
     subtitle: 'Monitoring akumulasi ketidakhadiran tanpa keterangan untuk bahan evaluasi kedisiplinan fungsionaris.',
     unit: 'Alpa',
     footerNote: 'Fungsionaris dengan alpa tinggi dapat ditindaklanjuti untuk surat peringatan (SP) atau pembinaan.',
@@ -71,7 +71,7 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     key: 'HADIR',
     label: 'Hadir',
     field: 'hadir',
-    title: 'Top 5 Pengurus dengan Kehadiran Terbanyak',
+    title: 'Top 10 Pengurus dengan Kehadiran Terbanyak',
     subtitle: 'Apresiasi fungsionaris dengan partisipasi dan komitmen kehadiran kegiatan tertinggi.',
     unit: 'Hadir',
     footerNote: 'Fungsionaris teladan dapat dipertimbangkan untuk apresiasi atau sertifikasi kepengurusan terbaik.',
@@ -93,7 +93,7 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     key: 'TELAT',
     label: 'Telat',
     field: 'telat',
-    title: 'Top 5 Pengurus dengan Keterlambatan Terbanyak',
+    title: 'Top 10 Pengurus dengan Keterlambatan Terbanyak',
     subtitle: 'Monitoring ketepatan waktu presensi untuk evaluasi efisiensi jadwal kegiatan.',
     unit: 'Telat',
     footerNote: 'Keterlambatan berulang dapat dievaluasi pada sesi review kedisiplinan fungsionaris.',
@@ -115,7 +115,7 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     key: 'IZIN',
     label: 'Izin',
     field: 'izin',
-    title: 'Top 5 Pengurus dengan Izin Terbanyak',
+    title: 'Top 10 Pengurus dengan Izin Terbanyak',
     subtitle: 'Rekapitulasi fungsionaris dengan permohonan izin atau dispensasi kegiatan resmi.',
     unit: 'Izin',
     footerNote: 'Fungsionaris dengan izin teratur tetap menjaga tanggung jawab penugasan organisasi.',
@@ -137,7 +137,7 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     key: 'SAKIT',
     label: 'Sakit',
     field: 'sakit',
-    title: 'Top 5 Pengurus dengan Sakit Terbanyak',
+    title: 'Top 10 Pengurus dengan Izin Sakit Terbanyak',
     subtitle: 'Pemantauan kondisi kesehatan fungsionaris untuk koordinasi dan pendampingan internal.',
     unit: 'Sakit',
     footerNote: 'Data kesehatan fungsionaris untuk perhatian tim PSDM dan penyesuaian penugasan.',
@@ -170,13 +170,13 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
   const currentConfig = CATEGORIES[activeCategory];
   const fieldKey = currentConfig.field;
 
-  // Filter pengurus dengan nilai field terpilih > 0 dan ambil 5 teratas
-  const top5 = [...data]
+  // Filter pengurus dengan nilai field terpilih > 0 dan ambil hingga 10 teratas
+  const top10 = [...data]
     .filter((d) => (d[fieldKey] || 0) > 0)
     .sort((a, b) => (b[fieldKey] || 0) - (a[fieldKey] || 0))
-    .slice(0, 5);
+    .slice(0, 10);
 
-  const maxValue = top5.length > 0 ? Math.max(...top5.map((d) => d[fieldKey] || 0)) : 0;
+  const maxValue = top10.length > 0 ? Math.max(...top10.map((d) => d[fieldKey] || 0)) : 0;
   // Skala Y-axis dibulatkan ke atas agar ada ruang di puncak batang
   const yAxisMax = Math.max(maxValue + 1, 4);
 
@@ -272,7 +272,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
       </div>
 
       {/* Konten Chart / Empty State */}
-      {top5.length === 0 ? (
+      {top10.length === 0 ? (
         <div className="py-12 flex flex-col items-center justify-center text-center">
           <div className="w-10 h-10 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center mb-2.5">
             <CheckCircle2 className="w-5 h-5" />
@@ -283,124 +283,136 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           </p>
         </div>
       ) : viewMode === 'chart' ? (
-        /* ================= MODE 1: VERTICAL BAR CHART ================= */
+        /* ================= MODE 1: VERTICAL BAR CHART (UP TO 10 BARS) ================= */
         <div className="mt-6">
-          {/* Chart Canvas Area */}
-          <div className="relative h-60 flex items-end pl-7 pr-2 pt-6">
-            {/* Horizontal Gridlines & Y-Axis Labels */}
-            <div className="absolute inset-0 left-7 flex flex-col justify-between pointer-events-none">
-              {uniqueGridSteps.map((step) => (
-                <div key={step} className="relative w-full border-b border-dashed border-slate-100 flex items-center">
-                  <span className="absolute -left-7 text-[10px] font-mono text-slate-400 w-5 text-right tabular-nums">
-                    {step}
-                  </span>
+          <div className="overflow-x-auto pb-1 scrollbar-thin">
+            <div className="min-w-[620px] sm:min-w-full">
+              {/* Chart Canvas Area */}
+              <div className="relative h-60 flex items-end pl-7 pr-2 pt-6">
+                {/* Horizontal Gridlines & Y-Axis Labels */}
+                <div className="absolute inset-0 left-7 flex flex-col justify-between pointer-events-none">
+                  {uniqueGridSteps.map((step) => (
+                    <div key={step} className="relative w-full border-b border-dashed border-slate-100 flex items-center">
+                      <span className="absolute -left-7 text-[10px] font-mono text-slate-400 w-5 text-right tabular-nums">
+                        {step}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Vertical Bars Columns */}
-            <div className="relative z-10 w-full h-full flex items-end justify-around gap-2 sm:gap-6">
-              {top5.map((item, idx) => {
-                const val = item[fieldKey] || 0;
-                const heightPercent = Math.max(Math.round((val / yAxisMax) * 100), 10);
-                const isHovered = hoveredUser === item.userId;
+                {/* Vertical Bars Columns */}
+                <div className="relative z-10 w-full h-full flex items-end justify-around gap-1.5 sm:gap-3">
+                  {top10.map((item, idx) => {
+                    const val = item[fieldKey] || 0;
+                    const heightPercent = Math.max(Math.round((val / yAxisMax) * 100), 10);
+                    const isHovered = hoveredUser === item.userId;
 
-                const gradientClass =
-                  idx === 0
-                    ? currentConfig.barColors.rank1
-                    : idx === 1
-                    ? currentConfig.barColors.rank2
-                    : currentConfig.barColors.rankRest;
+                    const gradientClass =
+                      idx === 0
+                        ? currentConfig.barColors.rank1
+                        : idx <= 2
+                        ? currentConfig.barColors.rank2
+                        : currentConfig.barColors.rankRest;
 
-                return (
-                  <div
-                    key={item.userId}
-                    className="flex-1 max-w-[72px] sm:max-w-[88px] h-full flex flex-col items-center justify-end group cursor-pointer"
-                    onMouseEnter={() => setHoveredUser(item.userId)}
-                    onMouseLeave={() => setHoveredUser(null)}
-                  >
-                    {/* Tooltip Hover Bubble */}
-                    <div
-                      className={`absolute -top-3 z-30 transition-all duration-200 pointer-events-none transform -translate-y-full ${
-                        isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                      }`}
-                    >
-                      <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-xl text-left min-w-[170px] border border-slate-700">
-                        <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{item.dept || 'PSDM'}</div>
+                    return (
+                      <div
+                        key={item.userId}
+                        className="flex-1 max-w-[48px] sm:max-w-[60px] lg:max-w-[72px] h-full flex flex-col items-center justify-end group cursor-pointer"
+                        onMouseEnter={() => setHoveredUser(item.userId)}
+                        onMouseLeave={() => setHoveredUser(null)}
+                      >
+                        {/* Tooltip Hover Bubble */}
+                        <div
+                          className={`absolute -top-3 z-30 transition-all duration-200 pointer-events-none transform -translate-y-full ${
+                            isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                          }`}
+                        >
+                          <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-xl text-left min-w-[170px] border border-slate-700">
+                            <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
+                            <div className="text-[10px] text-slate-400 mt-0.5">{item.dept || 'PSDM'}</div>
 
-                        {/* Rincian Status Pengurus */}
-                        <div className="mt-2 pt-2 border-t border-slate-800 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-slate-300">
-                          <div>Hadir: <span className="font-semibold text-emerald-400">{item.hadir}</span></div>
-                          <div>Telat: <span className="font-semibold text-amber-400">{item.telat}</span></div>
-                          <div>Izin: <span className="font-semibold text-sky-400">{item.izin}</span></div>
-                          <div>Sakit: <span className="font-semibold text-violet-400">{item.sakit}</span></div>
-                          <div className="col-span-2 text-rose-400 font-semibold">Alpa: {item.alpa}</div>
+                            {/* Rincian Status Pengurus */}
+                            <div className="mt-2 pt-2 border-t border-slate-800 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-slate-300">
+                              <div>Hadir: <span className="font-semibold text-emerald-400">{item.hadir}</span></div>
+                              <div>Telat: <span className="font-semibold text-amber-400">{item.telat}</span></div>
+                              <div>Izin: <span className="font-semibold text-sky-400">{item.izin}</span></div>
+                              <div>Sakit: <span className="font-semibold text-violet-400">{item.sakit}</span></div>
+                              <div className="col-span-2 text-rose-400 font-semibold">Alpa: {item.alpa}</div>
+                            </div>
+
+                            <div className="mt-2 pt-1.5 border-t border-slate-800 flex justify-between items-center text-[10px]">
+                              <span className={`font-bold ${currentConfig.hoverText}`}>
+                                {val} {currentConfig.unit}
+                              </span>
+                              <span className="text-slate-400 font-mono">Rank #{idx + 1}</span>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="mt-2 pt-1.5 border-t border-slate-800 flex justify-between items-center text-[10px]">
-                          <span className={`font-bold ${currentConfig.hoverText}`}>
-                            {val} {currentConfig.unit}
-                          </span>
-                          <span className="text-slate-400 font-mono">Rank #{idx + 1}</span>
+                        {/* Value Pill di atas Bar */}
+                        <span
+                          className={`text-[11px] font-bold mb-1.5 tabular-nums transition-transform ${
+                            isHovered ? `${currentConfig.hoverText} scale-110` : 'text-slate-700'
+                          }`}
+                        >
+                          {val}
+                        </span>
+
+                        {/* Bar Column Pillar */}
+                        <div className="w-full bg-slate-100/90 rounded-t-lg h-full flex items-end p-1 transition-colors group-hover:bg-slate-200/80">
+                          <div
+                            className={`w-full rounded-t-md transition-all duration-500 shadow-2xs ${gradientClass} ${
+                              isHovered ? `brightness-110 shadow-md ring-2 ${currentConfig.hoverBorder}` : ''
+                            }`}
+                            style={{ height: `${heightPercent}%` }}
+                          />
                         </div>
                       </div>
-                    </div>
-
-                    {/* Value Pill di atas Bar */}
-                    <span
-                      className={`text-[11px] font-bold mb-1.5 tabular-nums transition-transform ${
-                        isHovered ? `${currentConfig.hoverText} scale-110` : 'text-slate-700'
-                      }`}
-                    >
-                      {val}
-                    </span>
-
-                    {/* Bar Column Pillar */}
-                    <div className="w-full bg-slate-100/90 rounded-t-lg h-full flex items-end p-1 transition-colors group-hover:bg-slate-200/80">
-                      <div
-                        className={`w-full rounded-t-md transition-all duration-500 shadow-2xs ${gradientClass} ${
-                          isHovered ? `brightness-110 shadow-md ring-2 ${currentConfig.hoverBorder}` : ''
-                        }`}
-                        style={{ height: `${heightPercent}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* X-Axis Labels (Nama & Info Pengurus) */}
-          <div className="pl-7 pr-2 mt-3 pt-2.5 border-t border-slate-200/80 flex items-start justify-around gap-2 sm:gap-6">
-            {top5.map((item, idx) => (
-              <div
-                key={item.userId}
-                className="flex-1 max-w-[72px] sm:max-w-[88px] text-center min-w-0"
-              >
-                <div className="inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-100 text-slate-600 mb-1 leading-none">
-                  #{idx + 1}
-                </div>
-                <div className="font-semibold text-slate-800 text-[11px] truncate leading-tight" title={item.nama}>
-                  {item.nama}
-                </div>
-                <div className="text-[10px] text-slate-400 truncate mt-0.5 hidden sm:block">
-                  {item.dept || 'PSDM'}
+                    );
+                  })}
                 </div>
               </div>
-            ))}
+
+              {/* X-Axis Labels (Nama & Info Pengurus) */}
+              <div className="pl-7 pr-2 mt-3 pt-2.5 border-t border-slate-200/80 flex items-start justify-around gap-1.5 sm:gap-3">
+                {top10.map((item, idx) => (
+                  <div
+                    key={item.userId}
+                    className="flex-1 max-w-[48px] sm:max-w-[60px] lg:max-w-[72px] text-center min-w-0"
+                  >
+                    <div
+                      className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold mb-1 leading-none ${
+                        idx < 3 ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      #{idx + 1}
+                    </div>
+                    <div className="font-semibold text-slate-800 text-[10px] sm:text-[11px] truncate leading-tight" title={item.nama}>
+                      {item.nama}
+                    </div>
+                    <div className="text-[9px] text-slate-400 truncate mt-0.5 hidden sm:block">
+                      {item.dept || 'PSDM'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       ) : (
         /* ================= MODE 2: DETAILED TABLE / BREAKDOWN ================= */
         <div className="mt-4 divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden">
-          {top5.map((item, idx) => {
+          {top10.map((item, idx) => {
             const val = item[fieldKey] || 0;
             const ratioPercent = Math.round((val / maxValue) * 100);
             return (
               <div key={item.userId} className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0">
+                  <span
+                    className={`w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${
+                      idx < 3 ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-700'
+                    }`}
+                  >
                     #{idx + 1}
                   </span>
                   <div className="min-w-0">
@@ -434,7 +446,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           <ShieldAlert className="w-3.5 h-3.5 text-slate-400" />
           <span>{currentConfig.footerNote}</span>
         </div>
-        {top5.length > 0 && (
+        {top10.length > 0 && (
           <span className="font-mono text-slate-500">
             Maks: {maxValue} {currentConfig.unit}
           </span>
