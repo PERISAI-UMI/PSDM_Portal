@@ -3,7 +3,7 @@
  * Sinkronisasi penuh ke Database Cloud Turso:
  * - Fakultas & Program Studi
  * - Departemen & Pemetaan PJ Departemen
- * - User per role: PRN0001 (Super Admin), PRN0002 (Admin PJ), PRN0003 (Pengurus)
+ * - User per role: PRN0001 (Super Admin), PRN0002 (Admin), PRN0003 (Pengurus)
  * - Program Kerja & Kegiatan Terjadwal
  * - Catatan Presensi Lapangan
  * - Data Perizinan
@@ -39,17 +39,17 @@ const db = createDb({ TURSO_DATABASE_URL, TURSO_AUTH_TOKEN });
 
 // ── Master IDs ──
 const FAK_ID_FIKOM = 'fak-seed-001';
-const PRODI_ID_1   = 'prodi-seed-001';
-const PRODI_ID_2   = 'prodi-seed-002';
+const PRODI_ID_1 = 'prodi-seed-001';
+const PRODI_ID_2 = 'prodi-seed-002';
 
-const DEPT_PSDM      = 'dept-seed-001';
-const DEPT_RISTEK    = 'dept-seed-002';
-const DEPT_HUMAS     = 'dept-seed-003';
-const DEPT_MEDIA     = 'dept-seed-004';
+const DEPT_PSDM = 'dept-seed-001';
+const DEPT_RISTEK = 'dept-seed-002';
+const DEPT_HUMAS = 'dept-seed-003';
+const DEPT_MEDIA = 'dept-seed-004';
 const DEPT_PENALARAN = 'dept-seed-005';
-const DEPT_KOMPRES   = 'dept-seed-006';
+const DEPT_KOMPRES = 'dept-seed-006';
 
-const PASSWORD     = 'password123';
+const PASSWORD = 'password123';
 
 export const UMI_ACADEMIC_DATA = [
   {
@@ -222,76 +222,76 @@ async function seed() {
   // ── 4. Seed Users ──────────────────────────────────────────
   const seedUsers = [
     {
-      id:               'usr-superadmin-001',
-      prn:              'PRN0001',
+      id: 'usr-superadmin-001',
+      prn: 'PRN0001',
       passwordHash,
-      role:             'SUPER_ADMIN' as const,
-      generasi:         24,
-      departmentId:     DEPT_PSDM,
-      jabatan:          'Kepala Departemen PSDM',
-      namaLengkap:      'Super Admin PSDM',
-      tempatLahir:      'Jakarta',
-      tanggalLahir:     '2000-01-01',
-      alamat:           'Jl. Kampus No. 1',
-      noTelp:           '081234560001',
-      email:            'superadmin@psdm.org',
-      nim:              '2200000001',
-      programStudiId:   PRODI_ID_1,
-      angkatan:         2022,
+      role: 'SUPER_ADMIN' as const,
+      generasi: 24,
+      departmentId: DEPT_PSDM,
+      jabatan: 'Kepala Departemen PSDM',
+      namaLengkap: 'Super Admin PSDM',
+      tempatLahir: 'Jakarta',
+      tanggalLahir: '2000-01-01',
+      alamat: 'Jl. Kampus No. 1',
+      noTelp: '081234560001',
+      email: 'superadmin@psdm.org',
+      nim: '2200000001',
+      programStudiId: PRODI_ID_1,
+      angkatan: 2022,
     },
     {
-      id:               'usr-admin-001',
-      prn:              'PRN0002',
+      id: 'usr-admin-001',
+      prn: 'PRN0002',
       passwordHash,
-      role:             'ADMIN' as const,
-      generasi:         24,
-      departmentId:     DEPT_PSDM,
-      jabatan:          'Staf PSDM (PJ Departemen)',
-      namaLengkap:      'Admin Staf PSDM',
-      tempatLahir:      'Bandung',
-      tanggalLahir:     '2001-06-15',
-      alamat:           'Jl. Kampus No. 2',
-      noTelp:           '081234560002',
-      email:            'admin@psdm.org',
-      nim:              '2200000002',
-      programStudiId:   PRODI_ID_1,
-      angkatan:         2022,
+      role: 'ADMIN' as const,
+      generasi: 24,
+      departmentId: DEPT_PSDM,
+      jabatan: 'Staf PSDM (PJ Departemen)',
+      namaLengkap: 'Admin Staf PSDM',
+      tempatLahir: 'Bandung',
+      tanggalLahir: '2001-06-15',
+      alamat: 'Jl. Kampus No. 2',
+      noTelp: '081234560002',
+      email: 'admin@psdm.org',
+      nim: '2200000002',
+      programStudiId: PRODI_ID_1,
+      angkatan: 2022,
     },
     {
-      id:               'usr-pengurus-001',
-      prn:              'PRN0003',
+      id: 'usr-pengurus-001',
+      prn: 'PRN0003',
       passwordHash,
-      role:             'PENGURUS' as const,
-      generasi:         24,
-      departmentId:     DEPT_RISTEK,
-      jabatan:          'Staff Riset & Teknologi',
-      namaLengkap:      'Pengurus PSDM',
-      tempatLahir:      'Surabaya',
-      tanggalLahir:     '2002-03-20',
-      alamat:           'Jl. Kampus No. 3',
-      noTelp:           '081234560003',
-      email:            'pengurus@psdm.org',
-      nim:              '2200000003',
-      programStudiId:   PRODI_ID_2,
-      angkatan:         2022,
+      role: 'PENGURUS' as const,
+      generasi: 24,
+      departmentId: DEPT_RISTEK,
+      jabatan: 'Staff Riset & Teknologi',
+      namaLengkap: 'Pengurus PSDM',
+      tempatLahir: 'Surabaya',
+      tanggalLahir: '2002-03-20',
+      alamat: 'Jl. Kampus No. 3',
+      noTelp: '081234560003',
+      email: 'pengurus@psdm.org',
+      nim: '2200000003',
+      programStudiId: PRODI_ID_2,
+      angkatan: 2022,
     },
     {
-      id:               'usr-inti-001',
-      prn:              'PRN0004',
+      id: 'usr-inti-001',
+      prn: 'PRN0004',
       passwordHash,
-      role:             'INTI' as const,
-      generasi:         24,
-      departmentId:     DEPT_PSDM,
-      jabatan:          'Ketua Umum (Pengurus Inti)',
-      namaLengkap:      'Ketua Umum Inti',
-      tempatLahir:      'Makassar',
-      tanggalLahir:     '2001-08-17',
-      alamat:           'Jl. Urip Sumoharjo No. 4',
-      noTelp:           '081234560004',
-      email:            'inti@psdm.org',
-      nim:              '2200000004',
-      programStudiId:   PRODI_ID_1,
-      angkatan:         2022,
+      role: 'INTI' as const,
+      generasi: 24,
+      departmentId: DEPT_PSDM,
+      jabatan: 'Ketua Umum (Pengurus Inti)',
+      namaLengkap: 'Ketua Umum Inti',
+      tempatLahir: 'Makassar',
+      tanggalLahir: '2001-08-17',
+      alamat: 'Jl. Urip Sumoharjo No. 4',
+      noTelp: '081234560004',
+      email: 'inti@psdm.org',
+      nim: '2200000004',
+      programStudiId: PRODI_ID_1,
+      angkatan: 2022,
     },
   ];
 

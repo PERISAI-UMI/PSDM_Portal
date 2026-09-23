@@ -54,7 +54,7 @@ async function cleanProduction() {
 
   // 2. Hapus user demo non-Super Admin
   await db.delete(users).where(ne(users.role, 'SUPER_ADMIN'));
-  console.log('✓  Seluruh user demo (Admin PJ, Pengurus, Inti) dihapus');
+  console.log('✓  Seluruh user demo (Admin, Pengurus, Inti) dihapus');
 
   // 3. Reset avatar Super Admin agar default
   await db.update(users).set({ avatarUrl: null });

@@ -177,7 +177,7 @@ permissionsRouter.post('/', zValidator('json', requestPermissionSchema), async (
   );
 });
 
-// PATCH /api/permissions/:id/review (ACC / Tolak Izin oleh Super Admin atau Admin PJ Departemen)
+// PATCH /api/permissions/:id/review (ACC / Tolak Izin oleh Super Admin atau Admin Departemen)
 permissionsRouter.patch(
   '/:id/review',
   requireRole(['SUPER_ADMIN', 'ADMIN']),

@@ -188,8 +188,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
                             month: 'short',
                             year: 'numeric',
                           })}{' '}
-                          • {act.mode === 'ONLINE' ? '🌐 Online' : (act.lokasi ? `📍 ${act.lokasi}` : '📍 Offline')}
-                          {act.isLocked ? ' • 🔒 Terkunci' : ''}
+                          • {act.mode === 'ONLINE' ? 'Online' : (act.lokasi || 'Offline')}
+                          {act.isLocked ? ' • Terkunci' : ''}
                         </p>
                       </div>
 

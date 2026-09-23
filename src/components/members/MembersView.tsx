@@ -111,7 +111,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
       case 'SUPER_ADMIN':
         return { label: 'Super Admin', className: 'bg-rose-50 text-rose-700 border-rose-200' };
       case 'ADMIN':
-        return { label: 'Admin PJ', className: 'bg-blue-50 text-blue-700 border-blue-200' };
+        return { label: 'Admin', className: 'bg-blue-50 text-blue-700 border-blue-200' };
       case 'INTI':
         return { label: 'Pengurus Inti', className: 'bg-purple-50 text-purple-700 border-purple-200' };
       case 'PENGURUS':
@@ -198,11 +198,10 @@ export const MembersView: React.FC<MembersViewProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
-                viewMode === 'grid'
+              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${viewMode === 'grid'
                   ? 'bg-white text-slate-900 shadow-2xs'
                   : 'text-slate-500 hover:text-slate-900'
-              }`}
+                }`}
               title="Tampilan Kartu"
             >
               <LayoutGrid className="w-4 h-4" />
@@ -211,11 +210,10 @@ export const MembersView: React.FC<MembersViewProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
-                viewMode === 'table'
+              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${viewMode === 'table'
                   ? 'bg-white text-slate-900 shadow-2xs'
                   : 'text-slate-500 hover:text-slate-900'
-              }`}
+                }`}
               title="Tampilan Tabel"
             >
               <List className="w-4 h-4" />
@@ -251,7 +249,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
 
         <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Admin PJ PSDM</span>
+            <span className="text-xs font-medium text-slate-500">Admin PSDM</span>
             <ShieldCheck className="w-4 h-4 text-blue-500" />
           </div>
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
@@ -309,7 +307,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
             <option value="ALL">Semua Role</option>
             <option value="SUPER_ADMIN">Super Admin</option>
             <option value="INTI">Pengurus Inti</option>
-            <option value="ADMIN">Admin PJ</option>
+            <option value="ADMIN">Admin</option>
             <option value="PENGURUS">Pengurus</option>
           </select>
         </div>

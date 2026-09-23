@@ -677,6 +677,8 @@ function MainAppContent() {
                   currentUser={currentUser}
                   activities={activities}
                   permissions={permissions}
+                  attendances={attendances}
+                  allUsers={allUsers}
                   onOpenCreateActivity={() => setShowCreateActivity(true)}
                   onOpenMasterData={() => setActiveSection('master-data')}
                   onOpenMemberList={() => setActiveSection('members')}

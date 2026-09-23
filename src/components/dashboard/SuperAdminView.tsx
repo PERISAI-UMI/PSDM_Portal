@@ -6,6 +6,8 @@ import {
   ShieldCheck,
   ArrowRight,
   Users,
+  UserCheck,
+  UserX,
   Database,
   Check,
   X,
@@ -13,12 +15,14 @@ import {
   AlertCircle,
   Eye,
 } from 'lucide-react';
-import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus } from '../../types/index.ts';
+import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus, AttendanceRecord } from '../../types/index.ts';
 
 interface SuperAdminViewProps {
   currentUser: AuthUser;
   activities: ActivityItem[];
   permissions: PermissionRecord[];
+  attendances?: AttendanceRecord[];
+  allUsers?: AuthUser[];
   onOpenCreateActivity: () => void;
   onOpenMasterData: () => void;
   onOpenMemberList: () => void;
@@ -36,6 +40,8 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
   currentUser,
   activities,
   permissions,
+  attendances = [],
+  allUsers = [],
   onOpenCreateActivity,
   onOpenMasterData,
   onOpenMemberList,
@@ -46,7 +52,64 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
 }) => {
   const pendingPermissions = permissions.filter((p) => p.status === 'PENDING');
   const pendingCount = pendingPermissions.length;
-  const publishedCount = activities.filter((a) => a.isPublished).length;
+
+  // 1. Rata-rata Kehadiran Organisasi: (HADIR + TELAT) / (HADIR + TELAT + ALPHA) * 100%
+  let totalHadir = 0;
+  let totalAlpa = 0;
+  if (attendances && attendances.length > 0) {
+    for (const a of attendances) {
+      if (a.status === 'HADIR' || a.status === 'TELAT') totalHadir++;
+      else if (a.status === 'ALPHA') totalAlpa++;
+    }
+  } else {
+    for (const act of activities) {
+      if (act.attendanceSummary) {
+        totalHadir += (act.attendanceSummary.HADIR || 0) + (act.attendanceSummary.TELAT || 0);
+        totalAlpa += act.attendanceSummary.ALPHA || 0;
+      }
+    }
+  }
+  const totalBaseKehadiran = totalHadir + totalAlpa;
+  const avgAttendanceRate = totalBaseKehadiran > 0 ? Math.round((totalHadir / totalBaseKehadiran) * 100) : 0;
+
+  // 2. Top 5 Pengurus dengan Alpa Terbanyak
+  const userStatsMap = new Map<string, {
+    userId: string;
+    nama: string;
+    prn?: string;
+    dept?: string;
+    alpa: number;
+    totalKegiatan: number;
+  }>();
+
+  if (attendances && attendances.length > 0) {
+    for (const att of attendances) {
+      let entry = userStatsMap.get(att.userId);
+      if (!entry) {
+        const matched = allUsers.find((u) => u.id === att.userId);
+        entry = {
+          userId: att.userId,
+          nama: att.userName || matched?.namaLengkap || 'Pengurus',
+          prn: att.userPrn || matched?.prn,
+          dept: att.userDepartmentName || matched?.departmentName,
+          alpa: 0,
+          totalKegiatan: 0,
+        };
+        userStatsMap.set(att.userId, entry);
+      }
+      entry.totalKegiatan++;
+      if (att.status === 'ALPHA') {
+        entry.alpa++;
+      }
+    }
+  }
+
+  const top5Alpa = Array.from(userStatsMap.values())
+    .filter((u) => u.alpa > 0)
+    .sort((a, b) => b.alpa - a.alpa)
+    .slice(0, 5);
+
+  const maxAlpa = top5Alpa.length > 0 ? Math.max(...top5Alpa.map((u) => u.alpa)) : 1;
 
   // 3 most recent or upcoming activities
   const upcomingActivities = [...activities]
@@ -91,13 +154,17 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Dipublikasikan</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <span className="text-xs font-medium text-slate-500">Rata-rata Kehadiran</span>
+            <UserCheck className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
-            {publishedCount}
+            {avgAttendanceRate}%
           </div>
-          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Tersedia untuk pengurus</p>
+          <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+            {totalBaseKehadiran > 0
+              ? `${totalHadir} Hadir/Telat • ${totalAlpa} Alpa`
+              : 'Belum ada data presensi'}
+          </p>
         </div>
 
         <div
@@ -117,41 +184,22 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           </p>
         </div>
 
-        {currentUser.role === 'SUPER_ADMIN' ? (
-          <div
-            onClick={() => onNavigateTo?.('master-data')}
-            className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Master Data</span>
-              <ShieldCheck className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
-            </div>
-            <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
-              Departemen & Prodi
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
-              <span>Kelola struktur organisasi</span>
-              <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
-            </p>
+        <div
+          onClick={() => onNavigateTo?.('members')}
+          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Total Pengurus</span>
+            <Users className="w-4 h-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
           </div>
-        ) : (
-          <div
-            onClick={() => onNavigateTo?.('members')}
-            className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Direktori Anggota</span>
-              <Users className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
-            </div>
-            <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
-              Seluruh Anggota
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
-              <span>Lihat data anggota</span>
-              <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
-            </p>
+          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+            {allUsers.length}
           </div>
-        )}
+          <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700">
+            <span>Lihat data pengurus</span>
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+          </p>
+        </div>
       </div>
 
       {/* Two Column Layout: Upcoming Agenda & Pending Permissions */}
@@ -211,8 +259,8 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                             month: 'short',
                             year: 'numeric',
                           })}{' '}
-                          • {act.mode === 'ONLINE' ? '🌐 Online' : (act.lokasi ? `📍 ${act.lokasi}` : '📍 Offline')}
-                          {act.isLocked ? ' • 🔒 Terkunci' : ''}
+                          • {act.mode === 'ONLINE' ? 'Online' : (act.lokasi || 'Offline')}
+                          {act.isLocked ? ' • Terkunci' : ''}
                         </p>
                       </div>
 
@@ -351,6 +399,75 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Top 5 Alpa Leaderboard (Khusus Super Admin) */}
+      {currentUser.role === 'SUPER_ADMIN' && (
+        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
+            <div>
+              <div className="flex items-center gap-2">
+                <UserX className="w-4 h-4 text-rose-500" />
+                <h2 className="text-sm font-bold text-slate-900">
+                  Tingkat Alpa Tertinggi (Top 5)
+                </h2>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Pengurus dengan akumulasi ketidakhadiran tanpa keterangan terbanyak untuk evaluasi PSDM.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onNavigateTo?.('members')}
+              className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+            >
+              <span>Lihat Anggota</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="mt-4 space-y-3.5">
+            {top5Alpa.length === 0 ? (
+              <div className="py-6 text-center text-xs text-slate-400">
+                Tidak ada data alpa. Seluruh pengurus memiliki riwayat kehadiran yang baik.
+              </div>
+            ) : (
+              top5Alpa.map((item, idx) => {
+                const percentage = Math.round((item.alpa / maxAlpa) * 100);
+                return (
+                  <div key={item.userId} className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px] flex items-center justify-center shrink-0">
+                          {idx + 1}
+                        </span>
+                        <span className="font-semibold text-slate-900 truncate">
+                          {item.nama}
+                        </span>
+                        {item.dept && (
+                          <span className="text-[11px] text-slate-400 truncate hidden sm:inline">
+                            • {item.dept}
+                          </span>
+                        )}
+                      </div>
+                      <span className="font-bold text-rose-600 bg-rose-50 border border-rose-200/60 px-2 py-0.5 rounded text-[11px] tabular-nums shrink-0">
+                        {item.alpa} Alpa
+                      </span>
+                    </div>
+
+                    {/* Progress Bar Chart */}
+                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-rose-500 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Quick Access Tiles to Other Layouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

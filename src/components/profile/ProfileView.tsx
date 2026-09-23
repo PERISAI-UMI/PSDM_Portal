@@ -226,7 +226,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       case 'SUPER_ADMIN':
         return { label: 'Kepala Departemen PSDM', badge: 'Super Admin' };
       case 'ADMIN':
-        return { label: 'Staf PSDM', badge: 'Admin PJ' };
+        return { label: 'Staf PSDM', badge: 'Admin' };
       case 'INTI':
         return { label: 'Pengurus Inti Organisasi', badge: 'Pengurus Inti' };
       case 'PENGURUS':
@@ -421,11 +421,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('profile')}
-          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'profile'
+          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${activeTab === 'profile'
               ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
+            }`}
         >
           <User className="w-4 h-4" />
           <span>Profil</span>
@@ -433,11 +432,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('security')}
-          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'security'
+          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${activeTab === 'security'
               ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
+            }`}
         >
           <KeyRound className="w-4 h-4" />
           <span>Keamanan</span>
@@ -740,11 +738,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Ulangi kata sandi baru"
                       required
-                      className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${
-                        confirmPassword && newPassword !== confirmPassword
+                      className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${confirmPassword && newPassword !== confirmPassword
                           ? 'border-rose-300 focus:ring-rose-200'
                           : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
-                      }`}
+                        }`}
                     />
                     {confirmPassword && newPassword !== confirmPassword && (
                       <p className="text-[11px] text-rose-600 mt-1">Konfirmasi kata sandi tidak cocok.</p>

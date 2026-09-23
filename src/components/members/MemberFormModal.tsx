@@ -396,7 +396,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   <option value="" disabled>-- Pilih Role Sistem --</option>
                   <option value="PENGURUS">Pengurus (Standar)</option>
                   <option value="INTI">Pengurus Inti (Monitoring)</option>
-                  <option value="ADMIN">Admin PJ (Staf PSDM)</option>
+                  <option value="ADMIN">Admin (Staf PSDM)</option>
                   <option value="SUPER_ADMIN">Super Admin (Kepala PSDM)</option>
                 </select>
               </div>

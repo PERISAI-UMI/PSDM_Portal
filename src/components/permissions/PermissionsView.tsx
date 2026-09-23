@@ -32,17 +32,17 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
               {currentUser.role === 'PENGURUS'
                 ? 'Riwayat & Status Perizinan'
                 : currentUser.role === 'INTI'
-                ? 'Pemantauan & Rekapitulasi Perizinan'
-                : 'Manajemen & Verifikasi Perizinan'}
+                  ? 'Pemantauan & Rekapitulasi Perizinan'
+                  : 'Manajemen & Verifikasi Perizinan'}
             </h1>
             <p className="text-xs text-slate-500">
               {currentUser.role === 'SUPER_ADMIN'
                 ? 'Verifikasi dan kelola seluruh permohonan izin kehadiran kegiatan lintas departemen.'
                 : currentUser.role === 'INTI'
-                ? 'Pantau seluruh permohonan izin kehadiran kegiatan di semua departemen secara transparan.'
-                : currentUser.role === 'ADMIN'
-                ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
-                : 'Pantau status verifikasi izin kehadiran kegiatan Anda.'}
+                  ? 'Pantau seluruh permohonan izin kehadiran kegiatan di semua departemen secara transparan.'
+                  : currentUser.role === 'ADMIN'
+                    ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
+                    : 'Pantau status verifikasi izin kehadiran kegiatan Anda.'}
             </p>
           </div>
         </div>
@@ -70,7 +70,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
             {pendingCount}
           </div>
           <p className="text-[11px] text-amber-600 font-medium mt-0.5">
-            {currentUser.role === 'PENGURUS' ? 'Sedang diproses admin PJ' : 'Memerlukan persetujuan'}
+            {currentUser.role === 'PENGURUS' ? 'Sedang diproses Admin' : 'Memerlukan persetujuan'}
           </p>
         </div>
 

@@ -163,7 +163,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
                             month: 'short',
                             year: 'numeric',
                           })}{' '}
-                          • {act.mode === 'ONLINE' ? '🌐 Online' : (act.lokasi ? `📍 ${act.lokasi}` : '📍 Offline')}
+                          • {act.mode === 'ONLINE' ? 'Online' : (act.lokasi || 'Offline')}
                         </p>
                       </div>
                     </div>
