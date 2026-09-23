@@ -16,6 +16,7 @@ import {
   Eye,
 } from 'lucide-react';
 import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus, AttendanceRecord } from '../../types/index.ts';
+import { TopAlphaBarChart, type AlphaMemberStat } from './TopAlphaBarChart.tsx';
 
 interface SuperAdminViewProps {
   currentUser: AuthUser;
@@ -72,15 +73,8 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
   const totalBaseKehadiran = totalHadir + totalAlpa;
   const avgAttendanceRate = totalBaseKehadiran > 0 ? Math.round((totalHadir / totalBaseKehadiran) * 100) : 0;
 
-  // 2. Top 5 Pengurus dengan Alpa Terbanyak
-  const userStatsMap = new Map<string, {
-    userId: string;
-    nama: string;
-    prn?: string;
-    dept?: string;
-    alpa: number;
-    totalKegiatan: number;
-  }>();
+  // 2. Data Pengurus & Statistik Alpa untuk Bar Chart
+  const userStatsMap = new Map<string, AlphaMemberStat>();
 
   if (attendances && attendances.length > 0) {
     for (const att of attendances) {
@@ -93,6 +87,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           prn: att.userPrn || matched?.prn,
           dept: att.userDepartmentName || matched?.departmentName,
           alpa: 0,
+          hadir: 0,
           totalKegiatan: 0,
         };
         userStatsMap.set(att.userId, entry);
@@ -100,16 +95,13 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
       entry.totalKegiatan++;
       if (att.status === 'ALPHA') {
         entry.alpa++;
+      } else if (att.status === 'HADIR' || att.status === 'TELAT') {
+        entry.hadir++;
       }
     }
   }
 
-  const top5Alpa = Array.from(userStatsMap.values())
-    .filter((u) => u.alpa > 0)
-    .sort((a, b) => b.alpa - a.alpa)
-    .slice(0, 5);
-
-  const maxAlpa = top5Alpa.length > 0 ? Math.max(...top5Alpa.map((u) => u.alpa)) : 1;
+  const memberStats: AlphaMemberStat[] = Array.from(userStatsMap.values());
 
   // 3 most recent or upcoming activities
   const upcomingActivities = [...activities]
@@ -400,73 +392,12 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
         </div>
       </div>
 
-      {/* Top 5 Alpa Leaderboard (Khusus Super Admin) */}
+      {/* Top 5 Alpa Bar Chart (Khusus Super Admin) */}
       {currentUser.role === 'SUPER_ADMIN' && (
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
-            <div>
-              <div className="flex items-center gap-2">
-                <UserX className="w-4 h-4 text-rose-500" />
-                <h2 className="text-sm font-bold text-slate-900">
-                  Tingkat Alpa Tertinggi (Top 5)
-                </h2>
-              </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Pengurus dengan akumulasi ketidakhadiran tanpa keterangan terbanyak untuk evaluasi PSDM.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => onNavigateTo?.('members')}
-              className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1 self-start sm:self-auto cursor-pointer"
-            >
-              <span>Lihat Anggota</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="mt-4 space-y-3.5">
-            {top5Alpa.length === 0 ? (
-              <div className="py-6 text-center text-xs text-slate-400">
-                Tidak ada data alpa. Seluruh pengurus memiliki riwayat kehadiran yang baik.
-              </div>
-            ) : (
-              top5Alpa.map((item, idx) => {
-                const percentage = Math.round((item.alpa / maxAlpa) * 100);
-                return (
-                  <div key={item.userId} className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px] flex items-center justify-center shrink-0">
-                          {idx + 1}
-                        </span>
-                        <span className="font-semibold text-slate-900 truncate">
-                          {item.nama}
-                        </span>
-                        {item.dept && (
-                          <span className="text-[11px] text-slate-400 truncate hidden sm:inline">
-                            • {item.dept}
-                          </span>
-                        )}
-                      </div>
-                      <span className="font-bold text-rose-600 bg-rose-50 border border-rose-200/60 px-2 py-0.5 rounded text-[11px] tabular-nums shrink-0">
-                        {item.alpa} Alpa
-                      </span>
-                    </div>
-
-                    {/* Progress Bar Chart */}
-                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <div
-                        className="bg-rose-500 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
+        <TopAlphaBarChart
+          data={memberStats}
+          onNavigateToMembers={() => onNavigateTo?.('members')}
+        />
       )}
 
       {/* Quick Access Tiles to Other Layouts */}
