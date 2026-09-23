@@ -76,15 +76,9 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
     year: 'numeric',
   });
 
-  const formattedTimeStart = startDate.toLocaleTimeString('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-  const formattedTimeEnd = endDate.toLocaleTimeString('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const formattedTimeStart = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
+  const formattedTimeEnd = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
 
   const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
   const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));

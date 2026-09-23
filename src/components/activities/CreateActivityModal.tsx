@@ -22,7 +22,9 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
   const [mode, setMode] = useState<'OFFLINE' | 'ONLINE'>('OFFLINE');
   const [lokasi, setLokasi] = useState('');
   const [meetingUrl, setMeetingUrl] = useState('');
-  const [startDate, setStartDate] = useState('2026-04-01T09:00');
+  const [activityDate, setActivityDate] = useState('2026-04-01');
+  const [activityHour, setActivityHour] = useState('09');
+  const [activityMinute, setActivityMinute] = useState('00');
   const [isPublished, setIsPublished] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
 
     setLoading(true);
     try {
-      const start = new Date(startDate);
+      const start = new Date(`${activityDate}T${activityHour}:${activityMinute}:00`);
       const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // Default 2 jam kegiatan
       await onSubmit({
         nama: nama.trim(),
@@ -182,15 +184,53 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
             </div>
           )}
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Pelaksanaan *</label>
-            <input
-              type="datetime-local"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Tanggal Kegiatan *
+              </label>
+              <input
+                type="date"
+                value={activityDate}
+                onChange={(e) => setActivityDate(e.target.value)}
+                required
+                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white cursor-pointer"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Waktu Pelaksanaan (Format 24 Jam) *
+              </label>
+              <div className="flex items-center gap-1.5">
+                <select
+                  value={activityHour}
+                  onChange={(e) => setActivityHour(e.target.value)}
+                  className="flex-1 px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
+                >
+                  {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
+                    <option key={h} value={h}>
+                      {h}
+                    </option>
+                  ))}
+                </select>
+                <span className="font-bold text-slate-400">:</span>
+                <select
+                  value={activityMinute}
+                  onChange={(e) => setActivityMinute(e.target.value)}
+                  className="flex-1 px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
+                >
+                  {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-2 rounded-lg border border-slate-200 min-h-[40px] flex items-center shrink-0">
+                  WIB
+                </span>
+              </div>
+            </div>
           </div>
 
           <div>

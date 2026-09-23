@@ -28,10 +28,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
     month: 'short',
     year: 'numeric',
   });
-  const formattedTime = startDate.toLocaleTimeString('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const formattedTime = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
 
   const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
   const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));
