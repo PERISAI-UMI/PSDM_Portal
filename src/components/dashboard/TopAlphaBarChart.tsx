@@ -191,9 +191,6 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
   ];
   const uniqueGridSteps = Array.from(new Set(gridSteps)).sort((a, b) => b - a);
 
-  // Fungsionaris yang sedang aktif disorot (hovered atau fungsionaris peringkat 1)
-  const activeMember = top10.find((m) => m.userId === hoveredUser) || (top10.length > 0 ? top10[0] : null);
-
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs">
       {/* Header Widget */}
@@ -266,51 +263,27 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
         </div>
       </div>
 
-      {/* Category Filter Pills & Live Inspector Strip */}
-      <div className="mt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[11px] font-semibold text-slate-500 mr-1">Filter Kategori:</span>
-          {CATEGORY_LIST.map((catKey) => {
-            const cat = CATEGORIES[catKey];
-            const isActive = activeCategory === catKey;
-            return (
-              <button
-                key={catKey}
-                type="button"
-                onClick={() => setActiveCategory(catKey)}
-                className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${
-                  isActive
-                    ? cat.activePillClass
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                <span>{cat.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Live Detail Strip: Menampilkan data fungsionaris aktif/hovered secara utuh */}
-        {activeMember && (
-          <div className="bg-slate-50 border border-slate-200/90 rounded-lg px-3 py-1.5 flex items-center gap-3 text-xs self-stretch sm:self-auto">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span className="px-1.5 py-0.5 rounded bg-slate-800 text-white font-mono text-[10px] font-bold">
-                #{top10.findIndex((m) => m.userId === activeMember.userId) + 1}
-              </span>
-              <span className="font-bold text-slate-900" title={activeMember.nama}>
-                {activeMember.nama}
-              </span>
-              <span className="text-[11px] text-slate-400 hidden md:inline">• {activeMember.dept || 'PSDM'}</span>
-            </div>
-            <div className="flex items-center gap-2 text-[11px] ml-auto shrink-0 border-l border-slate-200 pl-2.5">
-              <span className="text-emerald-600 font-semibold">{activeMember.hadir} Hadir</span>
-              <span className="text-amber-600 font-semibold">{activeMember.telat} Telat</span>
-              <span className="text-sky-600 font-semibold">{activeMember.izin} Izin</span>
-              <span className="text-violet-600 font-semibold">{activeMember.sakit} Sakit</span>
-              <span className="text-rose-600 font-semibold">{activeMember.alpa} Alpa</span>
-            </div>
-          </div>
-        )}
+      {/* Category Filter Pills */}
+      <div className="mt-3.5 flex items-center gap-1.5 flex-wrap">
+        <span className="text-[11px] font-semibold text-slate-500 mr-1">Filter Kategori:</span>
+        {CATEGORY_LIST.map((catKey) => {
+          const cat = CATEGORIES[catKey];
+          const isActive = activeCategory === catKey;
+          return (
+            <button
+              key={catKey}
+              type="button"
+              onClick={() => setActiveCategory(catKey)}
+              className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${
+                isActive
+                  ? cat.activePillClass
+                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <span>{cat.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Konten Chart / Empty State */}
