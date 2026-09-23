@@ -14,6 +14,7 @@ import { ActivityCard } from './ActivityCard.tsx';
 interface ActivitiesViewProps {
   currentUser: AuthUser;
   activities: ActivityItem[];
+  allUsers?: AuthUser[];
   onOpenCreateActivity: () => void;
   onOpenAttendance: (act: ActivityItem) => void;
   onTogglePublish: (id: string, current: boolean) => void;
