@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Calendar,
   Users,
-  Building2,
   Clock,
   CheckCircle2,
   ArrowRight,
@@ -109,7 +108,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Area */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-200/80">
+      <div className="pb-5 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -119,16 +118,6 @@ export const AdminView: React.FC<AdminViewProps> = ({
           <p className="text-xs text-slate-500 mt-1">
             Presensi kegiatan dan verifikasi izin departemen binaan.
           </p>
-        </div>
-
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-slate-200 shadow-2xs self-start sm:self-auto">
-          <Building2 className="w-4 h-4 text-blue-600" />
-          <div className="text-left">
-            <span className="text-[10px] text-slate-400 block leading-tight">Departemen Binaan</span>
-            <span className="text-xs font-bold text-slate-800">
-              {currentUser.departmentName || 'Departemen Binaan'}
-            </span>
-          </div>
         </div>
       </div>
 
