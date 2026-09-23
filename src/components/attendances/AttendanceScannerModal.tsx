@@ -298,11 +298,11 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
           <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2.5 shrink-0">
             <Lock className="w-4 h-4 text-amber-600 shrink-0" />
             <div>
-              <span className="font-bold">Kegiatan ini telah dikunci oleh Super Admin.</span>
+              <span className="font-bold">Presensi telah dikunci.</span>
               <p className="text-[11px] text-amber-700 mt-0.5">
                 {currentAdmin.role === 'SUPER_ADMIN'
-                  ? 'Sebagai Super Admin, Anda tetap memiliki wewenang untuk merekam atau mereset presensi.'
-                  : 'Presensi terkunci dalam mode pantau (hanya-lihat). Anda tidak dapat mengubah status presensi.'}
+                  ? 'Sebagai Super Admin, Anda tetap dapat merekam atau mereset presensi.'
+                  : 'Mode pantau (hanya-lihat). Data presensi tidak dapat diubah.'}
               </p>
             </div>
           </div>
@@ -331,7 +331,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
                 type="button"
                 onClick={() => setShowImportModal(true)}
                 className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
-                title="Khusus Super Admin: Import data presensi manual dari Excel / CSV"
+                title="Import presensi dari Excel / CSV"
               >
                 <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
                 <span>Import Excel</span>
@@ -344,7 +344,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
                 onClick={handleExport}
                 disabled={exporting}
                 className="px-3.5 py-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
-                title="Export rekapan presensi ke CSV (Excel)"
+                title="Export presensi ke CSV"
               >
                 <Download className="w-3.5 h-3.5 text-slate-600" />
                 {exporting ? 'Mengekspor...' : 'Export CSV'}

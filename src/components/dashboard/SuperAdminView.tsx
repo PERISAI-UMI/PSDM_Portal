@@ -63,7 +63,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           </h1>
         </div>
         <p className="text-xs text-slate-500 mt-1">
-          Ringkasan eksekutif kegiatan, presensi, dan perizinan lintas departemen organisasi.
+          Ringkasan kegiatan, presensi, dan perizinan organisasi.
         </p>
       </div>
 
@@ -81,7 +81,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
             {activities.length}
           </div>
           <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700">
-            <span>Buka manajemen kegiatan</span>
+            <span>Lihat kegiatan</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>
@@ -112,7 +112,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
             {pendingCount}
           </div>
           <p className="text-[11px] text-amber-600 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
-            <span>Permohonan izin baru</span>
+            <span>Menunggu tinjauan</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>
@@ -127,10 +127,10 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
               <ShieldCheck className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
             </div>
             <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
-              Departemen, Fakultas & Jurusan
+              Departemen & Prodi
             </div>
             <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
-              <span>Kelola CRUD struktur & penugasan</span>
+              <span>Kelola struktur organisasi</span>
               <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
             </p>
           </div>
@@ -144,10 +144,10 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
               <Users className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
             </div>
             <div className="text-sm font-bold text-slate-900 tracking-tight mt-2 flex items-center gap-1">
-              Seluruh Anggota Organisasi
+              Seluruh Anggota
             </div>
             <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
-              <span>Buka direktori fungsionaris</span>
+              <span>Lihat data anggota</span>
               <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
             </p>
           </div>
@@ -362,9 +362,9 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-xs sm:text-sm text-slate-900">Direktori Anggota Organisasi</h3>
+              <h3 className="font-bold text-xs sm:text-sm text-slate-900">Direktori Anggota</h3>
               <p className="text-[11px] text-slate-500">
-                Pangkalan data fungsionaris, program studi, kontak, dan departemen.
+                Pangkalan data fungsionaris dan anggota organisasi.
               </p>
             </div>
           </div>
@@ -383,7 +383,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
               <div>
                 <h3 className="font-bold text-xs sm:text-sm text-slate-900">Master Data & Penugasan PJ</h3>
                 <p className="text-[11px] text-slate-500">
-                  Konfigurasi fakultas, program studi, departemen, dan mapping staf PSDM.
+                  Pengaturan departemen, prodi, dan penugasan PJ PSDM.
                 </p>
               </div>
             </div>
@@ -399,9 +399,9 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-xs sm:text-sm text-slate-900">Semua Program Kerja & Kegiatan</h3>
+                <h3 className="font-bold text-xs sm:text-sm text-slate-900">Kegiatan & Program Kerja</h3>
                 <p className="text-[11px] text-slate-500">
-                  Pantau seluruh pelaksanaan agenda, linimasa kegiatan, dan rekapitulasi presensi.
+                  Pantau seluruh pelaksanaan agenda dan rekap presensi.
                 </p>
               </div>
             </div>

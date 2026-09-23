@@ -81,7 +81,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <CalendarPlus className="w-5 h-5 text-slate-800" />
-            <h2 className="text-base font-bold text-slate-900">Tambah Kegiatan Proker</h2>
+            <h2 className="text-base font-bold text-slate-900">Tambah Kegiatan</h2>
           </div>
           <button
             type="button"
@@ -105,7 +105,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               type="text"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
-              placeholder="Contoh: Rapat Pleno Evaluasi Tengah Periode"
+              placeholder="Contoh: Rapat Pleno Evaluasi"
               required
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
             />
@@ -114,7 +114,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
           {/* Mode Pelaksanaan Selection */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-              Mode Pelaksanaan Kegiatan *
+              Mode Pelaksanaan *
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -127,7 +127,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 }`}
               >
                 <MapPin className="w-4 h-4" />
-                <span>Offline (Tatap Muka)</span>
+                <span>Offline</span>
               </button>
 
               <button
@@ -140,7 +140,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 }`}
               >
                 <Video className="w-4 h-4" />
-                <span>Online (Daring)</span>
+                <span>Online</span>
               </button>
             </div>
           </div>
@@ -149,7 +149,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
           {mode === 'OFFLINE' ? (
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Lokasi Kegiatan <span className="text-rose-500">*</span>
+                Lokasi <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -157,19 +157,16 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                   type="text"
                   value={lokasi}
                   onChange={(e) => setLokasi(e.target.value)}
-                  placeholder="Contoh: Aula Gedung PKM Lt. 2 / Ruang Sidang"
+                  placeholder="Ruang Sidang / Gedung PKM"
                   required
                   className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
                 />
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">
-                Wajib diisi untuk panduan lokasi fisik pengurus dan peserta.
-              </p>
             </div>
           ) : (
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Link Pertemuan Daring <span className="text-slate-400 font-normal">(Opsional)</span>
+                Link Meeting <span className="text-slate-400 font-normal">(Opsional)</span>
               </label>
               <div className="relative">
                 <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -181,9 +178,6 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                   className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
                 />
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">
-                Jika diisi, pengurus dapat langsung menekan tombol link ini untuk join ke Zoom/Google Meet.
-              </p>
             </div>
           )}
 
@@ -211,12 +205,12 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi & Agenda</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi</label>
             <textarea
               value={deskripsi}
               onChange={(e) => setDeskripsi(e.target.value)}
               rows={3}
-              placeholder="Deskripsi agenda, susunan acara, atau instruksi kegiatan..."
+              placeholder="Deskripsi atau agenda kegiatan..."
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900"
             />
           </div>
@@ -230,7 +224,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 w-4 h-4 cursor-pointer"
             />
             <label htmlFor="isPublished" className="text-xs font-medium text-slate-700 cursor-pointer">
-              Publikasikan ke kalender kegiatan pengurus
+              Publikasikan ke kalender kegiatan
             </label>
           </div>
 
@@ -247,7 +241,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               disabled={loading}
               className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[42px] shadow-xs cursor-pointer"
             >
-              {loading ? 'Menyimpan...' : 'Buat Kegiatan'}
+              {loading ? 'Menyimpan...' : 'Simpan Kegiatan'}
             </button>
           </div>
         </form>

@@ -73,16 +73,16 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
         <div>
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Program Kerja & Kegiatan
+              Kegiatan & Agenda
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 mt-1">
               {currentUser.role === 'SUPER_ADMIN'
-                ? 'Kelola jadwal proker, publikasi agenda, dan pencatatan presensi seluruh organisasi.'
+                ? 'Kelola agenda kegiatan dan presensi organisasi.'
                 : currentUser.role === 'INTI'
-                ? 'Pemantauan jadwal program kerja, status publikasi, dan rekapitulasi kehadiran organisasi.'
+                ? 'Pantau agenda kegiatan dan rekapitulasi kehadiran.'
                 : currentUser.role === 'ADMIN'
-                ? 'Jadwal kegiatan organisasi dan pencatatan presensi departemen binaan.'
-                : 'Daftar agenda kegiatan dan program kerja organisasi yang diselenggarakan.'}
+                ? 'Jadwal kegiatan dan presensi departemen binaan.'
+                : 'Daftar agenda kegiatan organisasi.'}
             </p>
           </div>
         </div>
@@ -93,7 +93,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
               type="button"
               onClick={() => setShowImportModal(true)}
               className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center gap-2 transition-all shadow-2xs cursor-pointer active:scale-95"
-              title="Khusus Super Admin: Import data presensi manual dari Excel / CSV"
+              title="Import presensi dari berkas Excel / CSV"
             >
               <FileSpreadsheet className="w-4 h-4 text-indigo-600" />
               <span>Import Presensi</span>
@@ -105,7 +105,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
               className="px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Buat Kegiatan Baru</span>
+              <span>Buat Kegiatan</span>
             </button>
           </div>
         )}

@@ -32,6 +32,7 @@ interface ParsedAttendanceRow {
   rawIdentifier: string;
   rawName: string;
   rawStatus: string;
+  rawNotes?: string;
   matchedUser: AuthUser | null;
   status: AttendanceStatus;
   isValid: boolean;
@@ -77,57 +78,41 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
 
   if (!isOpen) return null;
 
-  // 1. Download template Excel yang sudah diisi daftar pengurus dari DB
+  // 1. Download template Excel presensi (hanya field: PRN, Nama, Status Presensi, Catatan)
   const handleDownloadTemplate = () => {
     let templateData: any[] = [];
 
     if (users && users.length > 0) {
-      templateData = users.map((u, idx) => ({
-        No: idx + 1,
-        'PRN / Stambuk': u.prn,
-        NIM: u.nim || '',
-        'Nama Lengkap': u.namaLengkap,
-        Departemen: u.departmentName || '',
-        Jabatan: u.jabatan || '',
+      templateData = users.map((u) => ({
+        PRN: u.prn,
+        Nama: u.namaLengkap,
         'Status Presensi': 'HADIR',
         Catatan: '',
       }));
     } else {
       templateData = [
         {
-          No: 1,
-          'PRN / Stambuk': 'PRN0001',
-          NIM: '2200000001',
-          'Nama Lengkap': 'Nama Pengurus 1',
-          Departemen: 'PSDM',
-          Jabatan: 'Staf',
+          PRN: 'PRN0001',
+          Nama: 'Nama Pengurus 1',
           'Status Presensi': 'HADIR',
           Catatan: '',
         },
         {
-          No: 2,
-          'PRN / Stambuk': 'PRN0002',
-          NIM: '2200000002',
-          'Nama Lengkap': 'Nama Pengurus 2',
-          Departemen: 'Media',
-          Jabatan: 'Staf',
+          PRN: 'PRN0002',
+          Nama: 'Nama Pengurus 2',
           'Status Presensi': 'IZIN',
-          Catatan: 'Izin tugas kuliah',
+          Catatan: 'Izin kegiatan',
         },
       ];
     }
 
     const worksheet = XLSX.utils.json_to_sheet(templateData);
 
-    // Styling column widths
+    // Styling column widths: PRN, Nama, Status Presensi, Catatan
     worksheet['!cols'] = [
-      { wch: 6 },  // No
-      { wch: 16 }, // PRN
-      { wch: 14 }, // NIM
+      { wch: 18 }, // PRN
       { wch: 28 }, // Nama
-      { wch: 20 }, // Departemen
-      { wch: 18 }, // Jabatan
-      { wch: 16 }, // Status
+      { wch: 18 }, // Status Presensi
       { wch: 25 }, // Catatan
     ];
 
@@ -136,7 +121,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
 
     const cleanActName = (targetActivity?.nama || 'kegiatan').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 30);
     XLSX.writeFile(workbook, `Template_Presensi_${cleanActName}.xlsx`);
-    showToast('Template Excel presensi berhasil diunduh!', 'success');
+    showToast('Template presensi berhasil diunduh', 'success');
   };
 
   // Helper normalisasi status
@@ -171,7 +156,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
       const rawJson = XLSX.utils.sheet_to_json<Record<string, any>>(worksheet, { defval: '' });
 
       if (!rawJson || rawJson.length === 0) {
-        throw new Error('Berkas Excel kosong atau tidak memiliki baris data.');
+        throw new Error('Berkas kosong atau tidak memiliki data.');
       }
 
       // Pre-create index user untuk pencocokan instan O(1)
@@ -188,31 +173,35 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
       const parsed: ParsedAttendanceRow[] = [];
 
       rawJson.forEach((row, idx) => {
-        // Cari kolom yang relevan secara dinamis
         let prnVal = '';
         let nimVal = '';
         let nameVal = '';
         let statusVal = '';
+        let catatanVal = '';
 
         for (const [k, v] of Object.entries(row)) {
           const keyLower = k.trim().toLowerCase();
-          if (/prn|stambuk|username|user_id|id_pengurus/.test(keyLower)) {
+          if (/^prn|stambuk|username|user_id|id_pengurus/.test(keyLower)) {
             prnVal = String(v).trim();
           } else if (/^nim|no_induk/.test(keyLower)) {
             nimVal = String(v).trim();
-          } else if (/nama|name|pengurus|anggota/.test(keyLower)) {
+          } else if (/^nama|name|pengurus|anggota/.test(keyLower)) {
             nameVal = String(v).trim();
-          } else if (/status|presensi|kehadiran|keterangan/.test(keyLower)) {
+          } else if (/status|presensi|kehadiran/.test(keyLower)) {
             statusVal = String(v).trim();
+          } else if (/catatan|keterangan|notes|alasan/.test(keyLower)) {
+            catatanVal = String(v).trim();
           }
         }
 
-        // Jika tidak ada kolom spesifik tapi ada kolom 1/2
+        // Fallback jika header tidak standar
         if (!prnVal && !nimVal && !nameVal) {
           const values = Object.values(row).map((val) => String(val).trim());
           if (values.length >= 2) {
-            prnVal = values[1] || '';
-            nameVal = values[2] || values[0] || '';
+            prnVal = values[0] || '';
+            nameVal = values[1] || '';
+            statusVal = values[2] || '';
+            catatanVal = values[3] || '';
           }
         }
 
@@ -237,20 +226,21 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
           rawIdentifier: prnVal || nimVal || '-',
           rawName: nameVal || (matched ? matched.namaLengkap : '-'),
           rawStatus: statusVal || 'HADIR',
+          rawNotes: catatanVal || '',
           matchedUser: matched,
           status: normalizedStatus,
           isValid,
-          errorReason: isValid ? undefined : 'Anggota tidak ditemukan di database portal',
+          errorReason: isValid ? undefined : 'Anggota tidak ditemukan',
         });
       });
 
       if (parsed.length === 0) {
-        throw new Error('Tidak ada baris data yang dapat dibaca dari berkas ini.');
+        throw new Error('Tidak ada data yang dapat dibaca dari berkas ini.');
       }
 
       setParsedRows(parsed);
     } catch (err: any) {
-      setErrorText(err.message || 'Gagal membaca berkas Excel/CSV');
+      setErrorText(err.message || 'Gagal membaca berkas.');
       setParsedRows([]);
     } finally {
       setIsProcessing(false);
@@ -348,17 +338,17 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
               </div>
               <div>
                 <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
-                  Import Presensi dari Excel
+                  Import Presensi
                 </h2>
-                {activity ? (
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Kegiatan: <span className="font-semibold text-slate-700">{activity.nama}</span>
-                  </p>
-                ) : (
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Khusus Super Admin: Import presensi manual lampau
-                  </p>
-                )}
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {targetActivity ? (
+                    <>
+                      Kegiatan: <span className="font-semibold text-slate-700">{targetActivity.nama}</span>
+                    </>
+                  ) : (
+                    'Unggah berkas presensi kegiatan'
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -373,12 +363,9 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
 
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto py-4 space-y-4">
-          {/* Activity Selector jika dibuka dari halaman daftar kegiatan (tanpa preselected activity) */}
           {!activity && (
-            <div className="p-3.5 bg-indigo-50/50 rounded-xl border border-indigo-100 space-y-1.5">
-              <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                <span>Pilih Agenda Kegiatan yang Ingin Diimpor Presensinya:</span>
-              </label>
+            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <label className="text-xs font-semibold text-slate-700">Pilih Kegiatan</label>
               {activities.length > 0 ? (
                 <select
                   value={selectedActivityId}
@@ -393,23 +380,24 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                 </select>
               ) : (
                 <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs">
-                  Belum ada agenda kegiatan yang dibuat di sistem. Silakan buat kegiatan baru terlebih dahulu melalui tombol <strong>"+ Buat Kegiatan Baru"</strong>.
+                  Belum ada agenda kegiatan. Buat kegiatan baru terlebih dahulu.
                 </div>
               )}
             </div>
           )}
-          {/* Step 1: Belum ada file yang di-parse */}
+
+          {/* Step 1 & 2: Belum ada file yang di-parse */}
           {parsedRows.length === 0 && !importResult && (
             <div className="space-y-4">
               {/* Petunjuk & Download Template */}
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-3">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                      Langkah 1: Unduh Format Template
+                      1. Unduh Template
                     </h3>
-                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                      Unduh template resmi yang sudah otomatis memuat seluruh nama & PRN anggota terdaftar. Anda cukup mengisi kolom status kehadiran.
+                    <p className="text-xs text-slate-600 mt-1">
+                      Format kolom: <span className="font-semibold text-slate-700">PRN, Nama, Status Presensi, Catatan</span>.
                     </p>
                   </div>
                   <button
@@ -422,39 +410,36 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                   </button>
                 </div>
 
-                <div className="bg-white/80 rounded-lg p-2.5 border border-slate-200/60 text-[11px] text-slate-500 flex items-center gap-2">
-                  <span className="font-semibold text-slate-700">Format Status:</span>
-                  <span>H / Hadir</span>
+                <div className="bg-white rounded-lg p-2 border border-slate-200 text-[11px] text-slate-600 flex items-center gap-2">
+                  <span className="font-semibold text-slate-700">Status:</span>
+                  <span>HADIR</span>
                   <span>•</span>
-                  <span>I / Izin</span>
+                  <span>IZIN</span>
                   <span>•</span>
-                  <span>S / Sakit</span>
+                  <span>SAKIT</span>
                   <span>•</span>
-                  <span>A / Alpha</span>
+                  <span>ALPHA</span>
                   <span>•</span>
-                  <span>T / Telat</span>
+                  <span>TELAT</span>
                 </div>
               </div>
 
               {/* Upload Box */}
               <div>
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-                  Langkah 2: Pilih Berkas Excel / CSV Anda
+                  2. Unggah Berkas
                 </h3>
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-indigo-200 hover:border-indigo-400 bg-indigo-50/30 hover:bg-indigo-50/60 rounded-xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2"
+                  className="border-2 border-dashed border-slate-300 hover:border-indigo-400 bg-slate-50 hover:bg-indigo-50/30 rounded-xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5"
                 >
-                  <div className="w-12 h-12 rounded-full bg-white shadow-xs border border-indigo-100 flex items-center justify-center text-indigo-600">
-                    <UploadCloud className="w-6 h-6" />
+                  <div className="w-10 h-10 rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center text-indigo-600">
+                    <UploadCloud className="w-5 h-5" />
                   </div>
-                  <div className="mt-1">
-                    <span className="text-xs font-semibold text-indigo-700">
-                      Klik untuk memilih berkas
-                    </span>{' '}
-                    <span className="text-xs text-slate-500">atau tarik berkas ke sini</span>
+                  <div className="text-xs font-semibold text-slate-700">
+                    Pilih berkas atau seret ke sini
                   </div>
-                  <p className="text-[11px] text-slate-400">Mendukung file .xlsx, .xls, atau .csv</p>
+                  <p className="text-[11px] text-slate-400">Mendukung .xlsx, .xls, .csv</p>
                 </div>
                 <input
                   ref={fileInputRef}
@@ -466,13 +451,13 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
               </div>
 
               {isProcessing && (
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-600 animate-pulse">
-                  Menganalisis dan mencocokkan data pengurus...
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-600 animate-pulse">
+                  Memproses berkas...
                 </div>
               )}
 
               {errorText && (
-                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorText}</span>
                 </div>
@@ -482,8 +467,8 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
 
           {/* Step 2: Preview Hasil Parsing */}
           {parsedRows.length > 0 && !importResult && (
-            <div className="space-y-3.5">
-              {/* Ringkasan Status Header */}
+            <div className="space-y-3">
+              {/* Ringkasan Header */}
               <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <div className="flex items-center gap-2 text-xs">
                   <span className="font-semibold text-slate-700">Berkas:</span>
@@ -491,24 +476,22 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                     {fileName}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleReset}
-                    className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
-                  >
-                    <RotateCcw className="w-3 h-3" />
-                    <span>Ganti Berkas</span>
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Ganti Berkas</span>
+                </button>
               </div>
 
               {/* Metrik Statistik */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <div className="bg-emerald-50/70 border border-emerald-200 rounded-lg p-2.5">
-                  <span className="text-[10px] text-emerald-700 font-bold block">SIAP DIIMPOR</span>
+                  <span className="text-[10px] text-emerald-700 font-bold block">VALID</span>
                   <span className="text-lg font-bold text-emerald-900">{validCount}</span>
-                  <span className="text-[10px] text-emerald-600 block mt-0.5">Pengurus Cocok</span>
+                  <span className="text-[10px] text-emerald-600 block mt-0.5">Siap diimpor</span>
                 </div>
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
                   <span className="text-[10px] text-slate-600 font-bold block">HADIR</span>
@@ -518,10 +501,10 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
                   <span className="text-[10px] text-slate-600 font-bold block">IZIN / SAKIT</span>
                   <span className="text-lg font-bold text-slate-900">{statusStats.IZIN + statusStats.SAKIT}</span>
-                  <span className="text-[10px] text-slate-500 block mt-0.5">Izin: {statusStats.IZIN}, Sakit: {statusStats.SAKIT}</span>
+                  <span className="text-[10px] text-slate-500 block mt-0.5">Pengurus</span>
                 </div>
                 <div className={`${invalidCount > 0 ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-slate-50 border-slate-200 text-slate-900'} border rounded-lg p-2.5`}>
-                  <span className="text-[10px] font-bold block">TIDAK DIKENAL</span>
+                  <span className="text-[10px] font-bold block">TIDAK VALID</span>
                   <span className="text-lg font-bold">{invalidCount}</span>
                   <span className="text-[10px] opacity-75 block mt-0.5">Dilewati</span>
                 </div>
@@ -546,7 +529,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                       filterTab === 'VALID' ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    Cocok ({validCount})
+                    Valid ({validCount})
                   </button>
                   {invalidCount > 0 && (
                     <button
@@ -566,23 +549,23 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                     type="text"
                     value={searchPreview}
                     onChange={(e) => setSearchPreview(e.target.value)}
-                    placeholder="Cari di preview..."
+                    placeholder="Cari..."
                     className="w-full pl-7 pr-3 py-1 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-900"
                   />
                   <Search className="w-3 h-3 text-slate-400 absolute left-2 top-2" />
                 </div>
               </div>
 
-              {/* Preview Table */}
+              {/* Preview Table: Kolom PRN, Nama, Status Presensi, Catatan */}
               <div className="border border-slate-200 rounded-xl overflow-hidden max-h-56 overflow-y-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead className="bg-slate-50 text-slate-600 sticky top-0 border-b border-slate-200 z-10">
                     <tr>
                       <th className="py-2 px-3 font-semibold w-12">Baris</th>
-                      <th className="py-2 px-3 font-semibold">Nama Pengurus</th>
-                      <th className="py-2 px-3 font-semibold">Identitas</th>
-                      <th className="py-2 px-3 font-semibold">Departemen</th>
+                      <th className="py-2 px-3 font-semibold">PRN</th>
+                      <th className="py-2 px-3 font-semibold">Nama</th>
                       <th className="py-2 px-3 font-semibold">Status Presensi</th>
+                      <th className="py-2 px-3 font-semibold">Catatan</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -592,6 +575,9 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                         className={row.isValid ? 'hover:bg-slate-50/80' : 'bg-rose-50/40 hover:bg-rose-50/70'}
                       >
                         <td className="py-2 px-3 font-mono text-slate-400">{row.rowNum}</td>
+                        <td className="py-2 px-3 font-mono text-slate-700">
+                          {row.matchedUser ? row.matchedUser.prn : row.rawIdentifier}
+                        </td>
                         <td className="py-2 px-3 font-medium text-slate-900">
                           {row.matchedUser ? (
                             <span>{row.matchedUser.namaLengkap}</span>
@@ -602,12 +588,6 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                             </span>
                           )}
                         </td>
-                        <td className="py-2 px-3 font-mono text-slate-600">
-                          {row.matchedUser ? row.matchedUser.prn : row.rawIdentifier}
-                        </td>
-                        <td className="py-2 px-3 text-slate-500">
-                          {row.matchedUser ? row.matchedUser.departmentName || '-' : '-'}
-                        </td>
                         <td className="py-2 px-3">
                           {row.isValid ? (
                             getStatusBadge(row.status)
@@ -616,6 +596,9 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                               Tidak Ditemukan
                             </span>
                           )}
+                        </td>
+                        <td className="py-2 px-3 text-slate-500 max-w-[150px] truncate">
+                          {row.rawNotes || '-'}
                         </td>
                       </tr>
                     ))}
@@ -627,16 +610,16 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
 
           {/* Step 3: Hasil Berhasil */}
           {importResult && (
-            <div className="p-6 text-center space-y-3">
+            <div className="p-6 text-center space-y-2">
               <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Presensi Berhasil Diimpor!</h3>
+              <h3 className="text-base font-bold text-slate-900">Presensi Berhasil Diimpor</h3>
               <p className="text-xs text-slate-600 max-w-md mx-auto">
-                Sebanyak <strong className="text-emerald-700 font-bold">{importResult.successCount}</strong> data presensi pengurus telah tersimpan secara resmi ke kegiatan ini.
+                <strong className="text-emerald-700 font-bold">{importResult.successCount}</strong> data presensi berhasil disimpan.
                 {importResult.skippedCount > 0 && (
                   <span className="block mt-1 text-slate-400">
-                    ({importResult.skippedCount} baris tidak dikenal dilewati secara aman).
+                    ({importResult.skippedCount} baris tidak valid dilewati).
                   </span>
                 )}
               </p>

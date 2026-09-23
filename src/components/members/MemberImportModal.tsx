@@ -267,10 +267,10 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
         <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 shrink-0">
           <div>
             <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-              Import Anggota & Pengurus Sekaligus
+              Import Anggota
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Unggah berkas Excel (.xlsx, .xls) atau CSV untuk mendaftarkan banyak anggota dan akun secara otomatis.
+              Unggah berkas Excel atau CSV untuk mendaftarkan data anggota.
             </p>
           </div>
           <button
@@ -289,10 +289,10 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
               <div>
                 <span className="text-xs font-bold text-slate-900 block mb-1">
-                  Format Template Resmi
+                  Unduh Template
                 </span>
                 <p className="text-[11px] text-slate-500 leading-relaxed mb-3">
-                  Unduh template Excel yang sudah dilengkapi contoh kolom: PRN, Nama, NIM, Email, Departemen, Prodi, dan Password.
+                  Gunakan format resmi dengan kolom: PRN, Nama, NIM, Email, Departemen, Prodi, Jabatan.
                 </p>
               </div>
               <button
@@ -301,7 +301,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
                 className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
               >
                 <Download className="w-3.5 h-3.5 text-slate-500" />
-                <span>Unduh Template .XLSX</span>
+                <span>Unduh Template .xlsx</span>
               </button>
             </div>
 
@@ -318,10 +318,10 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
               />
               <FileSpreadsheet className="w-8 h-8 text-emerald-600 mb-2" />
               <div className="text-xs font-bold text-slate-900">
-                {fileName ? fileName : 'Pilih atau Seret Berkas Excel / CSV'}
+                {fileName ? fileName : 'Pilih berkas atau seret ke sini'}
               </div>
               <p className="text-[11px] text-slate-400 mt-1">
-                Format yang didukung: .xlsx, .xls, .csv (maksimal 5 MB)
+                Mendukung .xlsx, .xls, .csv (maksimal 5 MB)
               </p>
             </div>
           </div>

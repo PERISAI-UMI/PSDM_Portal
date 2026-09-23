@@ -59,7 +59,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Presensi kegiatan dan validasi perizinan departemen binaan Anda.
+            Presensi kegiatan dan verifikasi izin departemen binaan.
           </p>
         </div>
 
@@ -88,7 +88,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
             {publishedCount}
           </div>
           <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700">
-            <span>Buka daftar kegiatan</span>
+            <span>Lihat kegiatan</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>
@@ -105,7 +105,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
             {pendingCount}
           </div>
           <p className="text-[11px] text-amber-600 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
-            <span>Perlu validasi Anda</span>
+            <span>Menunggu verifikasi</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>
@@ -136,7 +136,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
             Data Anggota
           </div>
           <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
-            <span>Lihat seluruh anggota</span>
+            <span>Lihat anggota</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>

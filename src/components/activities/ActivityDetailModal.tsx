@@ -100,19 +100,19 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               {activity.mode === 'ONLINE' ? (
                 <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200 flex items-center gap-1">
                   <Globe className="w-3 h-3 text-sky-600" />
-                  <span>Online (Daring)</span>
+                  <span>Online</span>
                 </span>
               ) : (
                 <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-slate-500" />
-                  <span>Offline (Tatap Muka)</span>
+                  <span>Offline</span>
                 </span>
               )}
 
               {activity.isLocked && (
                 <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
                   <Lock className="w-3 h-3 text-amber-600" />
-                  <span>Presensi Terkunci</span>
+                  <span>Terkunci</span>
                 </span>
               )}
 
@@ -144,9 +144,9 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
           <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2.5">
             <Lock className="w-4 h-4 text-amber-600 shrink-0" />
             <div>
-              <span className="font-bold">Presensi kegiatan ini telah dikunci oleh Super Admin.</span>
+              <span className="font-bold">Presensi telah dikunci.</span>
               <p className="text-[11px] text-amber-700 mt-0.5">
-                Admin hanya dapat melihat data presensi dan tidak dapat mengubah status atau merekam presensi baru.
+                Data presensi hanya dapat dilihat dan tidak dapat diubah.
               </p>
             </div>
           </div>
@@ -178,7 +178,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
               <MapPin className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
               <div>
-                <div className="text-[10px] text-slate-400 font-medium">Lokasi Pelaksanaan (Offline)</div>
+                <div className="text-[10px] text-slate-400 font-medium">Lokasi</div>
                 <div className="font-semibold text-slate-800 mt-0.5">
                   {activity.lokasi || 'Lokasi belum ditentukan'}
                 </div>
@@ -189,7 +189,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               <div className="flex items-center gap-2.5">
                 <Globe className="w-4 h-4 text-sky-600 shrink-0" />
                 <div>
-                  <div className="text-[10px] text-sky-600 font-medium">Format Pelaksanaan (Online)</div>
+                  <div className="text-[10px] text-sky-600 font-medium">Format Pertemuan</div>
                   <div className="font-semibold text-slate-800 mt-0.5">
                     Pertemuan Daring (Zoom / Google Meet)
                   </div>
@@ -335,7 +335,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                   type="button"
                   onClick={() => setShowImportModal(true)}
                   className="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-xs font-semibold text-indigo-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
-                  title="Khusus Super Admin: Import rekapan absensi manual dari Excel / CSV"
+                  title="Import presensi dari berkas Excel / CSV"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
                   <span>Import Presensi</span>
