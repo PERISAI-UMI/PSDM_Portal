@@ -14,10 +14,11 @@ import { ActivityCard } from './ActivityCard.tsx';
 interface ActivitiesViewProps {
   currentUser: AuthUser;
   activities: ActivityItem[];
-  allUsers?: AuthUser[];
   onOpenCreateActivity: () => void;
   onOpenAttendance: (act: ActivityItem) => void;
   onTogglePublish: (id: string, current: boolean) => void;
+  onToggleLock?: (id: string, current: boolean) => void;
+  onEditActivity?: (act: ActivityItem) => void;
   onDeleteActivity: (id: string) => void;
   onViewDetail: (act: ActivityItem) => void;
   onRequestPermission?: (act: ActivityItem) => void;
@@ -31,6 +32,8 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
   onOpenCreateActivity,
   onOpenAttendance,
   onTogglePublish,
+  onToggleLock,
+  onEditActivity,
   onDeleteActivity,
   onViewDetail,
   onRequestPermission,
@@ -236,6 +239,8 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
               onOpenAttendance={onOpenAttendance}
               onRequestPermission={onRequestPermission}
               onTogglePublish={onTogglePublish}
+              onToggleLock={onToggleLock}
+              onEdit={onEditActivity}
               onDelete={onDeleteActivity}
               onViewDetail={onViewDetail}
             />

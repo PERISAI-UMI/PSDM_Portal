@@ -17,6 +17,7 @@ import {
   Video,
   Lock,
   Unlock,
+  Pencil,
 } from 'lucide-react';
 import type { ActivityItem, UserRole, AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
@@ -32,6 +33,7 @@ interface ActivityDetailModalProps {
   onRequestPermission?: (act: ActivityItem) => void;
   onTogglePublish?: (id: string, current: boolean) => void;
   onToggleLock?: (id: string, current: boolean) => void;
+  onEdit?: (act: ActivityItem) => void;
   onDelete?: (id: string) => void;
   allUsers?: AuthUser[];
   onImportSuccess?: () => void;
@@ -46,6 +48,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
   onRequestPermission,
   onTogglePublish,
   onToggleLock,
+  onEdit,
   onDelete,
   allUsers = [],
   onImportSuccess,
@@ -288,6 +291,18 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
           {/* Top row for admin action pills (Publish, Lock, Export, Delete) */}
           {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && (
             <div className="flex flex-wrap items-center gap-2">
+              {userRole === 'SUPER_ADMIN' && onEdit && (
+                <button
+                  type="button"
+                  onClick={() => onEdit(activity)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  title="Edit data kegiatan"
+                >
+                  <Pencil className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Edit</span>
+                </button>
+              )}
+
               {userRole === 'SUPER_ADMIN' && onTogglePublish && (
                 <button
                   type="button"

@@ -1,19 +1,45 @@
-import React, { useState } from 'react';
-import { X, CalendarPlus, MapPin, Video, Globe } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, CalendarPlus, MapPin, Video, Globe, Pencil } from 'lucide-react';
 import type { ActivityItem } from '../../types/index.ts';
 
 interface CreateActivityModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: Omit<ActivityItem, 'id' | 'attendanceSummary'>) => Promise<void>;
+  onUpdate?: (id: string, data: Partial<ActivityItem>) => Promise<void>;
+  activityToEdit?: ActivityItem | null;
   creatorId: string;
   creatorName: string;
+}
+
+function getWitaDateParts(d: Date | string) {
+  const date = typeof d === 'string' ? new Date(d) : d;
+  if (isNaN(date.getTime())) {
+    return { dateStr: '2026-04-01', hour: '09', minute: '00' };
+  }
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Makassar',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(date);
+  const year = parts.find((p) => p.type === 'year')?.value || '2026';
+  const month = parts.find((p) => p.type === 'month')?.value || '04';
+  const day = parts.find((p) => p.type === 'day')?.value || '01';
+  const hour = parts.find((p) => p.type === 'hour')?.value.padStart(2, '0') || '09';
+  const minute = parts.find((p) => p.type === 'minute')?.value.padStart(2, '0') || '00';
+  return { dateStr: `${year}-${month}-${day}`, hour, minute };
 }
 
 export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  onUpdate,
+  activityToEdit,
   creatorId,
   creatorName,
 }) => {
@@ -29,7 +55,36 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (activityToEdit) {
+      setNama(activityToEdit.nama);
+      setDeskripsi(activityToEdit.deskripsi || '');
+      setMode(activityToEdit.mode);
+      setLokasi(activityToEdit.lokasi || '');
+      setMeetingUrl(activityToEdit.meetingUrl || '');
+      setIsPublished(activityToEdit.isPublished);
+      const { dateStr, hour, minute } = getWitaDateParts(activityToEdit.startDate);
+      setActivityDate(dateStr);
+      setActivityHour(hour);
+      setActivityMinute(minute);
+    } else {
+      setNama('');
+      setDeskripsi('');
+      setMode('OFFLINE');
+      setLokasi('');
+      setMeetingUrl('');
+      setIsPublished(true);
+      const { dateStr, hour, minute } = getWitaDateParts(new Date());
+      setActivityDate(dateStr);
+      setActivityHour(hour);
+      setActivityMinute(minute);
+    }
+    setErrorMessage('');
+  }, [activityToEdit, isOpen]);
+
   if (!isOpen) return null;
+
+  const isEditing = Boolean(activityToEdit);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,22 +112,36 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
     try {
       const start = new Date(`${activityDate}T${activityHour}:${activityMinute}:00+08:00`);
       const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // Default 2 jam kegiatan
-      await onSubmit({
-        nama: nama.trim(),
-        deskripsi: deskripsi.trim() || null,
-        mode,
-        lokasi: mode === 'OFFLINE' ? lokasi.trim() : null,
-        meetingUrl: mode === 'ONLINE' && meetingUrl.trim() ? meetingUrl.trim() : null,
-        isLocked: false,
-        startDate: start,
-        endDate: end,
-        isPublished,
-        createdBy: creatorId,
-        creatorName,
-      });
+
+      if (isEditing && activityToEdit && onUpdate) {
+        await onUpdate(activityToEdit.id, {
+          nama: nama.trim(),
+          deskripsi: deskripsi.trim() || null,
+          mode,
+          lokasi: mode === 'OFFLINE' ? lokasi.trim() : null,
+          meetingUrl: mode === 'ONLINE' && meetingUrl.trim() ? meetingUrl.trim() : null,
+          startDate: start,
+          endDate: end,
+          isPublished,
+        });
+      } else {
+        await onSubmit({
+          nama: nama.trim(),
+          deskripsi: deskripsi.trim() || null,
+          mode,
+          lokasi: mode === 'OFFLINE' ? lokasi.trim() : null,
+          meetingUrl: mode === 'ONLINE' && meetingUrl.trim() ? meetingUrl.trim() : null,
+          isLocked: false,
+          startDate: start,
+          endDate: end,
+          isPublished,
+          createdBy: creatorId,
+          creatorName,
+        });
+      }
       onClose();
     } catch (err: any) {
-      setErrorMessage(err.message || 'Gagal membuat kegiatan');
+      setErrorMessage(err.message || 'Gagal menyimpan kegiatan');
     } finally {
       setLoading(false);
     }
@@ -83,8 +152,14 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
       <div className="bg-white w-full max-w-lg rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] overflow-y-auto">
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
-            <CalendarPlus className="w-5 h-5 text-slate-800" />
-            <h2 className="text-base font-bold text-slate-900">Tambah Kegiatan</h2>
+            {isEditing ? (
+              <Pencil className="w-5 h-5 text-slate-800" />
+            ) : (
+              <CalendarPlus className="w-5 h-5 text-slate-800" />
+            )}
+            <h2 className="text-base font-bold text-slate-900">
+              {isEditing ? 'Edit Kegiatan' : 'Tambah Kegiatan'}
+            </h2>
           </div>
           <button
             type="button"
@@ -267,7 +342,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               disabled={loading}
               className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[42px] shadow-xs cursor-pointer"
             >
-              {loading ? 'Menyimpan...' : 'Simpan Kegiatan'}
+              {loading ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Buat Kegiatan'}
             </button>
           </div>
         </form>

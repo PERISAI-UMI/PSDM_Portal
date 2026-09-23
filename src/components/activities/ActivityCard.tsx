@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Clock, UserCheck, FileText, Trash2, Eye, CheckCircle2, MapPin, Globe, Video, Lock } from 'lucide-react';
+import { Calendar, Clock, UserCheck, FileText, Trash2, Eye, CheckCircle2, MapPin, Globe, Video, Lock, Unlock, Pencil } from 'lucide-react';
 import type { ActivityItem, UserRole } from '../../types/index.ts';
 import { formatWitaDate, formatWitaTime } from '../../utils/date.ts';
 
@@ -9,6 +9,8 @@ interface ActivityCardProps {
   onOpenAttendance?: (activity: ActivityItem) => void;
   onRequestPermission?: (activity: ActivityItem) => void;
   onTogglePublish?: (id: string, current: boolean) => void;
+  onToggleLock?: (id: string, current: boolean) => void;
+  onEdit?: (activity: ActivityItem) => void;
   onDelete?: (id: string) => void;
   onViewDetail?: (activity: ActivityItem) => void;
 }
@@ -19,6 +21,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   onOpenAttendance,
   onRequestPermission,
   onTogglePublish,
+  onToggleLock,
+  onEdit,
   onDelete,
   onViewDetail,
 }) => {
@@ -191,16 +195,44 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
 
       {/* Action Footer */}
       <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-        {userRole !== 'INTI' && (
-          <button
-            type="button"
-            onClick={() => onViewDetail?.(activity)}
-            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors shrink-0"
-            title="Detail Kegiatan"
-          >
-            <Eye className="w-4 h-4" />
-          </button>
-        )}
+        <div className="flex items-center gap-1 shrink-0">
+          {userRole !== 'INTI' && (
+            <button
+              type="button"
+              onClick={() => onViewDetail?.(activity)}
+              className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+              title="Detail Kegiatan"
+            >
+              <Eye className="w-4 h-4" />
+            </button>
+          )}
+
+          {userRole === 'SUPER_ADMIN' && onEdit && (
+            <button
+              type="button"
+              onClick={() => onEdit(activity)}
+              className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+              title="Edit Kegiatan"
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          )}
+
+          {userRole === 'SUPER_ADMIN' && onToggleLock && (
+            <button
+              type="button"
+              onClick={() => onToggleLock(activity.id, Boolean(activity.isLocked))}
+              className={`p-2 rounded-lg transition-colors cursor-pointer ${
+                activity.isLocked
+                  ? 'text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200'
+                  : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
+              }`}
+              title={activity.isLocked ? 'Buka Kunci Presensi' : 'Kunci Presensi (Admin hanya bisa melihat)'}
+            >
+              {activity.isLocked ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
 
         {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && (
           <button

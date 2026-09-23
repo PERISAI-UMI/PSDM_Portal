@@ -54,6 +54,7 @@ function MainAppContent() {
 
   // Modal States
   const [showCreateActivity, setShowCreateActivity] = useState(false);
+  const [activityToEdit, setActivityToEdit] = useState<ActivityItem | null>(null);
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedActivityDetail, setSelectedActivityDetail] = useState<ActivityItem | null>(null);
@@ -252,6 +253,24 @@ function MainAppContent() {
     broadcastRealtimeEvent('ACTIVITY_CHANGED');
     if (currentUser) await reloadData(currentUser);
     showToast('Program kerja berhasil dibuat!', 'success');
+  };
+
+  const handleUpdateActivity = async (id: string, updates: Partial<ActivityItem>) => {
+    try {
+      await api.updateActivity(id, updates);
+      setActivities((prev) =>
+        prev.map((act) => (act.id === id ? { ...act, ...updates } : act))
+      );
+      if (selectedActivityDetail?.id === id) {
+        setSelectedActivityDetail((prev) => (prev ? { ...prev, ...updates } : null));
+      }
+      broadcastRealtimeEvent('ACTIVITY_CHANGED');
+      if (currentUser) await reloadData(currentUser);
+      showToast('Kegiatan berhasil diperbarui!', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal memperbarui kegiatan', 'error');
+      throw err;
+    }
   };
 
   const handleTogglePublish = async (id: string, current: boolean) => {
@@ -486,9 +505,14 @@ function MainAppContent() {
             <ActivitiesView
               currentUser={currentUser}
               activities={activities}
-              onOpenCreateActivity={() => setShowCreateActivity(true)}
+              onOpenCreateActivity={() => {
+                setActivityToEdit(null);
+                setShowCreateActivity(true);
+              }}
               onOpenAttendance={(act) => setActiveScannerActivity(act)}
               onTogglePublish={handleTogglePublish}
+              onToggleLock={handleToggleLock}
+              onEditActivity={(act) => setActivityToEdit(act)}
               onDeleteActivity={handleDeleteActivity}
               onViewDetail={(act) => setSelectedActivityDetail(act)}
               onRequestPermission={(act) => {
@@ -711,11 +735,16 @@ function MainAppContent() {
       </div>
 
       {/* Modals */}
-      {showCreateActivity && (
+      {(showCreateActivity || Boolean(activityToEdit)) && (
         <CreateActivityModal
-          isOpen={showCreateActivity}
-          onClose={() => setShowCreateActivity(false)}
+          isOpen={showCreateActivity || Boolean(activityToEdit)}
+          onClose={() => {
+            setShowCreateActivity(false);
+            setActivityToEdit(null);
+          }}
           onSubmit={handleCreateActivity}
+          onUpdate={handleUpdateActivity}
+          activityToEdit={activityToEdit}
           creatorId={currentUser.id}
           creatorName={currentUser.namaLengkap}
         />
@@ -784,6 +813,10 @@ function MainAppContent() {
           }}
           onTogglePublish={handleTogglePublish}
           onToggleLock={handleToggleLock}
+          onEdit={(act) => {
+            setSelectedActivityDetail(null);
+            setActivityToEdit(act);
+          }}
           onDelete={handleDeleteActivity}
           allUsers={allUsers}
           onImportSuccess={() => syncRealtime(true)}
