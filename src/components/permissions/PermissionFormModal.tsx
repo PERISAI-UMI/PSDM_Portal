@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, X, CheckCircle, FileText } from 'lucide-react';
+import { UploadCloud, X, CheckCircle, FileText, Lock } from 'lucide-react';
 import type { ActivityItem, AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { compressImageFile, formatFileSize } from '../../utils/imageCompressor.ts';
@@ -26,7 +26,12 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
   currentUser: _currentUser,
   onSubmit,
 }) => {
-  const [activityId, setActivityId] = useState(defaultActivity?.id || activities[0]?.id || '');
+  const defaultSelectable =
+    (defaultActivity && !defaultActivity.isLocked ? defaultActivity : null) ||
+    activities.find((a) => !a.isLocked) ||
+    defaultActivity ||
+    activities[0];
+  const [activityId, setActivityId] = useState(defaultSelectable?.id || '');
   const [jenisIzin, setJenisIzin] = useState('SAKIT');
   const [alasan, setAlasan] = useState('');
   const [evidenceUrl, setEvidenceUrl] = useState('');
@@ -76,9 +81,12 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
     }
   };
 
+  const selectedActivity = activities.find((a) => a.id === activityId);
+  const isActivityLocked = Boolean(selectedActivity?.isLocked);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!activityId || !alasan.trim() || uploading) return;
+    if (!activityId || !alasan.trim() || uploading || isActivityLocked) return;
     setLoading(true);
     await onSubmit({
       activityId,
@@ -117,11 +125,17 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white"
             >
               {activities.map((act) => (
-                <option key={act.id} value={act.id}>
-                  {act.nama}
+                <option key={act.id} value={act.id} disabled={Boolean(act.isLocked)}>
+                  {act.nama} {act.isLocked ? '(Terkunci - Ditutup)' : ''}
                 </option>
               ))}
             </select>
+            {isActivityLocked && (
+              <div className="flex items-center gap-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-xs mt-2">
+                <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Kegiatan telah dikunci oleh Super Admin. Pengajuan izin sudah ditutup.</span>
+              </div>
+            )}
           </div>
 
           <div>
@@ -205,10 +219,10 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
             </button>
             <button
               type="submit"
-              disabled={loading}
-              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[38px] shadow-xs cursor-pointer"
+              disabled={loading || isActivityLocked || uploading}
+              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[38px] shadow-xs cursor-pointer disabled:cursor-not-allowed"
             >
-              {loading ? 'Mengirim...' : 'Kirim'}
+              {loading ? 'Mengirim...' : isActivityLocked ? 'Izin Ditutup' : 'Kirim'}
             </button>
           </div>
         </form>

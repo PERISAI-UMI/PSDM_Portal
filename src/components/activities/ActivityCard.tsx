@@ -257,14 +257,24 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         )}
 
         {userRole !== 'SUPER_ADMIN' && userRole !== 'ADMIN' && (
-          <button
-            type="button"
-            onClick={() => onRequestPermission?.(activity)}
-            className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Ajukan Izin</span>
-          </button>
+          activity.isLocked ? (
+            <div
+              className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 border border-slate-200 text-slate-500 text-xs font-medium flex items-center justify-center gap-1.5 select-none"
+              title="Kegiatan telah dikunci oleh Super Admin. Pengajuan izin sudah ditutup."
+            >
+              <Lock className="w-3.5 h-3.5 text-slate-400" />
+              <span>Izin Ditutup</span>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onRequestPermission?.(activity)}
+              className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Ajukan Izin</span>
+            </button>
+          )
         )}
 
         {userRole === 'SUPER_ADMIN' && onDelete && (

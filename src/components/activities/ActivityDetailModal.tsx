@@ -415,17 +415,27 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             )}
 
             {userRole !== 'SUPER_ADMIN' && userRole !== 'ADMIN' && onRequestPermission && (
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  onRequestPermission(activity);
-                }}
-                className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
-              >
-                <FileText className="w-3.5 h-3.5" />
-                <span>Ajukan Izin</span>
-              </button>
+              activity.isLocked ? (
+                <div
+                  className="px-4 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-500 text-xs font-medium flex items-center gap-1.5 select-none"
+                  title="Kegiatan telah dikunci oleh Super Admin. Pengajuan izin sudah ditutup."
+                >
+                  <Lock className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Izin Ditutup (Terkunci)</span>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onRequestPermission(activity);
+                  }}
+                  className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Ajukan Izin</span>
+                </button>
+              )
             )}
           </div>
         </div>

@@ -144,6 +144,17 @@ permissionsRouter.post('/', zValidator('json', requestPermissionSchema), async (
     return c.json({ success: false, message: 'Kegiatan tidak ditemukan' }, 404);
   }
 
+  // Jika kegiatan telah dikunci oleh Super Admin, pengajuan izin ditutup
+  if (act[0].isLocked) {
+    return c.json(
+      {
+        success: false,
+        message: 'Kegiatan telah dikunci oleh Super Admin. Pengajuan izin sudah ditutup.',
+      },
+      400
+    );
+  }
+
   // Cek apakah sudah pernah mengajukan izin untuk kegiatan ini
   const existing = await db
     .select({ id: permissions.id })
