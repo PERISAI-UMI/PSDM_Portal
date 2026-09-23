@@ -115,7 +115,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-slate-400" />
-              <span>{formattedTime} WITA</span>
+              <span>{formattedTime}</span>
             </div>
           </div>
 

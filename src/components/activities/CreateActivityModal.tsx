@@ -200,13 +200,13 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Waktu Pelaksanaan (Format 24 Jam) *
+                Waktu Pelaksanaan *
               </label>
               <div className="flex items-center gap-1.5">
                 <select
                   value={activityHour}
                   onChange={(e) => setActivityHour(e.target.value)}
-                  className="flex-1 px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
+                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
                 >
                   {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
                     <option key={h} value={h}>
@@ -218,7 +218,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 <select
                   value={activityMinute}
                   onChange={(e) => setActivityMinute(e.target.value)}
-                  className="flex-1 px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
+                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
                 >
                   {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
                     <option key={m} value={m}>
@@ -226,9 +226,6 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                     </option>
                   ))}
                 </select>
-                <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-2 rounded-lg border border-slate-200 min-h-[40px] flex items-center shrink-0">
-                  WITA
-                </span>
               </div>
             </div>
           </div>

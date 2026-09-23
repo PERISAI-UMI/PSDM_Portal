@@ -160,7 +160,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               <div>
                 <div className="text-[10px] text-slate-400 font-medium">Waktu</div>
                 <div className="font-semibold">
-                  {formattedTimeStart} - {formattedTimeEnd} WITA
+                  {formattedTimeStart} - {formattedTimeEnd}
                 </div>
               </div>
             </div>

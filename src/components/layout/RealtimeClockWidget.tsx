@@ -25,9 +25,9 @@ export const RealtimeClockWidget: React.FC = () => {
   return (
     <div
       className="flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1 rounded-lg bg-slate-50/90 hover:bg-slate-100/80 border border-slate-200/80 transition-all shadow-2xs select-none"
-      title={`Waktu Indonesia Tengah (WITA): ${dateString} ${timeString}`}
+      title={`${dateString} • ${timeString}`}
     >
-      <Clock className="w-3.5 h-3.5 text-indigo-600 shrink-0 animate-pulse" />
+      <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
       
       <div className="flex items-center gap-1.5 text-xs">
         {/* Tanggal (sembunyi di layar kecil) */}
@@ -36,14 +36,9 @@ export const RealtimeClockWidget: React.FC = () => {
         </span>
         <span className="hidden md:inline text-slate-300">•</span>
 
-        {/* Jam Realtime (Monospace agar angka tidak bergetar saat detik bertambah) */}
+        {/* Jam Realtime */}
         <span className="font-mono text-xs sm:text-xs font-semibold text-slate-800 tracking-tight tabular-nums">
           {timeString}
-        </span>
-
-        {/* Badge Zona Waktu WITA */}
-        <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50/80 px-1.5 py-0.5 rounded border border-indigo-200/60 leading-none">
-          WITA
         </span>
       </div>
     </div>
