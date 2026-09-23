@@ -73,7 +73,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
   const totalBaseKehadiran = totalHadir + totalAlpa;
   const avgAttendanceRate = totalBaseKehadiran > 0 ? Math.round((totalHadir / totalBaseKehadiran) * 100) : 0;
 
-  // 2. Data Pengurus & Statistik Alpa untuk Bar Chart
+  // 2. Data Pengurus & Statistik Presensi Lengkap (Hadir, Telat, Izin, Sakit, Alpa)
   const userStatsMap = new Map<string, AlphaMemberStat>();
 
   if (attendances && attendances.length > 0) {
@@ -86,17 +86,26 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           nama: att.userName || matched?.namaLengkap || 'Pengurus',
           prn: att.userPrn || matched?.prn,
           dept: att.userDepartmentName || matched?.departmentName,
-          alpa: 0,
           hadir: 0,
+          telat: 0,
+          izin: 0,
+          sakit: 0,
+          alpa: 0,
           totalKegiatan: 0,
         };
         userStatsMap.set(att.userId, entry);
       }
       entry.totalKegiatan++;
-      if (att.status === 'ALPHA') {
-        entry.alpa++;
-      } else if (att.status === 'HADIR' || att.status === 'TELAT') {
+      if (att.status === 'HADIR') {
         entry.hadir++;
+      } else if (att.status === 'TELAT') {
+        entry.telat++;
+      } else if (att.status === 'IZIN') {
+        entry.izin++;
+      } else if (att.status === 'SAKIT') {
+        entry.sakit++;
+      } else if (att.status === 'ALPHA') {
+        entry.alpa++;
       }
     }
   }

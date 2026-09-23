@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { BarChart3, List, ArrowRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { BarChart3, ArrowRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
+
+export type AttendanceCategory = 'ALPHA' | 'HADIR' | 'TELAT' | 'IZIN' | 'SAKIT';
 
 export interface AlphaMemberStat {
   userId: string;
   nama: string;
   prn?: string;
   dept?: string;
-  alpa: number;
   hadir: number;
+  telat: number;
+  izin: number;
+  sakit: number;
+  alpa: number;
   totalKegiatan: number;
 }
 
@@ -16,22 +21,164 @@ interface TopAlphaBarChartProps {
   onNavigateToMembers?: () => void;
 }
 
+interface CategoryConfig {
+  key: AttendanceCategory;
+  label: string;
+  field: 'alpa' | 'hadir' | 'telat' | 'izin' | 'sakit';
+  title: string;
+  subtitle: string;
+  unit: string;
+  footerNote: string;
+  iconColor: string;
+  activePillClass: string;
+  barColors: {
+    rank1: string;
+    rank2: string;
+    rankRest: string;
+  };
+  hoverBorder: string;
+  hoverText: string;
+  breakdownBadge: string;
+  breakdownBar: string;
+  emptyTitle: string;
+  emptySubtitle: string;
+}
+
+const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
+  ALPHA: {
+    key: 'ALPHA',
+    label: 'Alpa',
+    field: 'alpa',
+    title: 'Top 5 Pengurus dengan Alpa Terbanyak',
+    subtitle: 'Monitoring akumulasi ketidakhadiran tanpa keterangan untuk bahan evaluasi kedisiplinan fungsionaris.',
+    unit: 'Alpa',
+    footerNote: 'Fungsionaris dengan alpa tinggi dapat ditindaklanjuti untuk surat peringatan (SP) atau pembinaan.',
+    iconColor: 'text-rose-600',
+    activePillClass: 'bg-rose-50 text-rose-700 border-rose-300 font-semibold shadow-2xs',
+    barColors: {
+      rank1: 'bg-gradient-to-t from-rose-600 via-rose-500 to-rose-400',
+      rank2: 'bg-gradient-to-t from-rose-500 via-rose-500 to-rose-400',
+      rankRest: 'bg-gradient-to-t from-rose-400 via-rose-400 to-rose-300',
+    },
+    hoverBorder: 'ring-rose-400/40',
+    hoverText: 'text-rose-700',
+    breakdownBadge: 'text-rose-700 bg-rose-50 border-rose-200/90',
+    breakdownBar: 'bg-rose-500',
+    emptyTitle: 'Kedisiplinan Sempurna',
+    emptySubtitle: 'Tidak ditemukan catatan alpa pada fungsionaris. Seluruh presensi terekam hadir, izin, atau sakit.',
+  },
+  HADIR: {
+    key: 'HADIR',
+    label: 'Hadir',
+    field: 'hadir',
+    title: 'Top 5 Pengurus dengan Kehadiran Terbanyak',
+    subtitle: 'Apresiasi fungsionaris dengan partisipasi dan komitmen kehadiran kegiatan tertinggi.',
+    unit: 'Hadir',
+    footerNote: 'Fungsionaris teladan dapat dipertimbangkan untuk apresiasi atau sertifikasi kepengurusan terbaik.',
+    iconColor: 'text-emerald-600',
+    activePillClass: 'bg-emerald-50 text-emerald-700 border-emerald-300 font-semibold shadow-2xs',
+    barColors: {
+      rank1: 'bg-gradient-to-t from-emerald-600 via-emerald-500 to-emerald-400',
+      rank2: 'bg-gradient-to-t from-emerald-500 via-emerald-500 to-emerald-400',
+      rankRest: 'bg-gradient-to-t from-emerald-400 via-emerald-400 to-emerald-300',
+    },
+    hoverBorder: 'ring-emerald-400/40',
+    hoverText: 'text-emerald-700',
+    breakdownBadge: 'text-emerald-700 bg-emerald-50 border-emerald-200/90',
+    breakdownBar: 'bg-emerald-500',
+    emptyTitle: 'Belum Ada Presensi Hadir',
+    emptySubtitle: 'Belum ada catatan presensi hadir yang tersimpan untuk fungsionaris.',
+  },
+  TELAT: {
+    key: 'TELAT',
+    label: 'Telat',
+    field: 'telat',
+    title: 'Top 5 Pengurus dengan Keterlambatan Terbanyak',
+    subtitle: 'Monitoring ketepatan waktu presensi untuk evaluasi efisiensi jadwal kegiatan.',
+    unit: 'Telat',
+    footerNote: 'Keterlambatan berulang dapat dievaluasi pada sesi review kedisiplinan fungsionaris.',
+    iconColor: 'text-amber-600',
+    activePillClass: 'bg-amber-50 text-amber-700 border-amber-300 font-semibold shadow-2xs',
+    barColors: {
+      rank1: 'bg-gradient-to-t from-amber-600 via-amber-500 to-amber-400',
+      rank2: 'bg-gradient-to-t from-amber-500 via-amber-500 to-amber-400',
+      rankRest: 'bg-gradient-to-t from-amber-400 via-amber-400 to-amber-300',
+    },
+    hoverBorder: 'ring-amber-400/40',
+    hoverText: 'text-amber-700',
+    breakdownBadge: 'text-amber-700 bg-amber-50 border-amber-200/90',
+    breakdownBar: 'bg-amber-500',
+    emptyTitle: 'Waktu Presensi Sangat Tepat',
+    emptySubtitle: 'Tidak ditemukan fungsionaris yang hadir terlambat pada kegiatan.',
+  },
+  IZIN: {
+    key: 'IZIN',
+    label: 'Izin',
+    field: 'izin',
+    title: 'Top 5 Pengurus dengan Izin Terbanyak',
+    subtitle: 'Rekapitulasi fungsionaris dengan permohonan izin atau dispensasi kegiatan resmi.',
+    unit: 'Izin',
+    footerNote: 'Fungsionaris dengan izin teratur tetap menjaga tanggung jawab penugasan organisasi.',
+    iconColor: 'text-sky-600',
+    activePillClass: 'bg-sky-50 text-sky-700 border-sky-300 font-semibold shadow-2xs',
+    barColors: {
+      rank1: 'bg-gradient-to-t from-sky-600 via-sky-500 to-sky-400',
+      rank2: 'bg-gradient-to-t from-sky-500 via-sky-500 to-sky-400',
+      rankRest: 'bg-gradient-to-t from-sky-400 via-sky-400 to-sky-300',
+    },
+    hoverBorder: 'ring-sky-400/40',
+    hoverText: 'text-sky-700',
+    breakdownBadge: 'text-sky-700 bg-sky-50 border-sky-200/90',
+    breakdownBar: 'bg-sky-500',
+    emptyTitle: 'Tidak Ada Presensi Izin',
+    emptySubtitle: 'Belum ada fungsionaris yang mengajukan permohonan izin pada kegiatan.',
+  },
+  SAKIT: {
+    key: 'SAKIT',
+    label: 'Sakit',
+    field: 'sakit',
+    title: 'Top 5 Pengurus dengan Sakit Terbanyak',
+    subtitle: 'Pemantauan kondisi kesehatan fungsionaris untuk koordinasi dan pendampingan internal.',
+    unit: 'Sakit',
+    footerNote: 'Data kesehatan fungsionaris untuk perhatian tim PSDM dan penyesuaian penugasan.',
+    iconColor: 'text-violet-600',
+    activePillClass: 'bg-violet-50 text-violet-700 border-violet-300 font-semibold shadow-2xs',
+    barColors: {
+      rank1: 'bg-gradient-to-t from-violet-600 via-violet-500 to-violet-400',
+      rank2: 'bg-gradient-to-t from-violet-500 via-violet-500 to-violet-400',
+      rankRest: 'bg-gradient-to-t from-violet-400 via-violet-400 to-violet-300',
+    },
+    hoverBorder: 'ring-violet-400/40',
+    hoverText: 'text-violet-700',
+    breakdownBadge: 'text-violet-700 bg-violet-50 border-violet-200/90',
+    breakdownBar: 'bg-violet-500',
+    emptyTitle: 'Fungsionaris Prima',
+    emptySubtitle: 'Tidak tercatat izin sakit pada fungsionaris selama periode kegiatan.',
+  },
+};
+
+const CATEGORY_LIST: AttendanceCategory[] = ['ALPHA', 'HADIR', 'TELAT', 'IZIN', 'SAKIT'];
+
 export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
   data,
   onNavigateToMembers,
 }) => {
+  const [activeCategory, setActiveCategory] = useState<AttendanceCategory>('ALPHA');
   const [viewMode, setViewMode] = useState<'chart' | 'list'>('chart');
   const [hoveredUser, setHoveredUser] = useState<string | null>(null);
 
-  // Filter pengurus dengan alpa > 0 dan ambil 5 teratas
+  const currentConfig = CATEGORIES[activeCategory];
+  const fieldKey = currentConfig.field;
+
+  // Filter pengurus dengan nilai field terpilih > 0 dan ambil 5 teratas
   const top5 = [...data]
-    .filter((d) => d.alpa > 0)
-    .sort((a, b) => b.alpa - a.alpa)
+    .filter((d) => (d[fieldKey] || 0) > 0)
+    .sort((a, b) => (b[fieldKey] || 0) - (a[fieldKey] || 0))
     .slice(0, 5);
 
-  const maxAlpa = top5.length > 0 ? Math.max(...top5.map((d) => d.alpa)) : 0;
+  const maxValue = top5.length > 0 ? Math.max(...top5.map((d) => d[fieldKey] || 0)) : 0;
   // Skala Y-axis dibulatkan ke atas agar ada ruang di puncak batang
-  const yAxisMax = Math.max(maxAlpa + 1, 4);
+  const yAxisMax = Math.max(maxValue + 1, 4);
 
   // Y-axis grid lines (4 tingkatan)
   const gridSteps = [
@@ -41,7 +188,6 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
     Math.round(yAxisMax * 0.25),
     0,
   ];
-  // Filter duplikat jika nilai kecil
   const uniqueGridSteps = Array.from(new Set(gridSteps)).sort((a, b) => b - a);
 
   return (
@@ -50,13 +196,13 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
         <div>
           <div className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-rose-600" />
+            <BarChart3 className={`w-4 h-4 ${currentConfig.iconColor}`} />
             <h2 className="text-sm font-bold text-slate-900 tracking-tight">
-              Top 5 Pengurus dengan Alpa Terbanyak
+              {currentConfig.title}
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Monitoring akumulasi ketidakhadiran tanpa keterangan untuk bahan evaluasi kedisiplinan fungsionaris.
+            {currentConfig.subtitle}
           </p>
         </div>
 
@@ -102,15 +248,38 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
         </div>
       </div>
 
+      {/* Category Filter Pills */}
+      <div className="mt-3.5 flex items-center gap-1.5 flex-wrap">
+        <span className="text-[11px] font-semibold text-slate-500 mr-1">Filter Kategori:</span>
+        {CATEGORY_LIST.map((catKey) => {
+          const cat = CATEGORIES[catKey];
+          const isActive = activeCategory === catKey;
+          return (
+            <button
+              key={catKey}
+              type="button"
+              onClick={() => setActiveCategory(catKey)}
+              className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${
+                isActive
+                  ? cat.activePillClass
+                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <span>{cat.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Konten Chart / Empty State */}
       {top5.length === 0 ? (
         <div className="py-12 flex flex-col items-center justify-center text-center">
-          <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2.5">
+          <div className="w-10 h-10 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center mb-2.5">
             <CheckCircle2 className="w-5 h-5" />
           </div>
-          <h3 className="text-xs font-bold text-slate-800">Kedisiplinan Sempurna</h3>
+          <h3 className="text-xs font-bold text-slate-800">{currentConfig.emptyTitle}</h3>
           <p className="text-[11px] text-slate-400 mt-1 max-w-sm">
-            Tidak ditemukan catatan alpa pada fungsionaris. Seluruh presensi terekam hadir, izin, atau sakit.
+            {currentConfig.emptySubtitle}
           </p>
         </div>
       ) : viewMode === 'chart' ? (
@@ -132,8 +301,16 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             {/* Vertical Bars Columns */}
             <div className="relative z-10 w-full h-full flex items-end justify-around gap-2 sm:gap-6">
               {top5.map((item, idx) => {
-                const heightPercent = Math.max(Math.round((item.alpa / yAxisMax) * 100), 10);
+                const val = item[fieldKey] || 0;
+                const heightPercent = Math.max(Math.round((val / yAxisMax) * 100), 10);
                 const isHovered = hoveredUser === item.userId;
+
+                const gradientClass =
+                  idx === 0
+                    ? currentConfig.barColors.rank1
+                    : idx === 1
+                    ? currentConfig.barColors.rank2
+                    : currentConfig.barColors.rankRest;
 
                 return (
                   <div
@@ -148,11 +325,23 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                         isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                       }`}
                     >
-                      <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-xl text-left min-w-[160px] border border-slate-700">
+                      <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-xl text-left min-w-[170px] border border-slate-700">
                         <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
                         <div className="text-[10px] text-slate-400 mt-0.5">{item.dept || 'PSDM'}</div>
-                        <div className="mt-2 pt-2 border-t border-slate-800 flex justify-between items-center text-[10px]">
-                          <span className="text-rose-400 font-bold">{item.alpa} Kali Alpa</span>
+
+                        {/* Rincian Status Pengurus */}
+                        <div className="mt-2 pt-2 border-t border-slate-800 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-slate-300">
+                          <div>Hadir: <span className="font-semibold text-emerald-400">{item.hadir}</span></div>
+                          <div>Telat: <span className="font-semibold text-amber-400">{item.telat}</span></div>
+                          <div>Izin: <span className="font-semibold text-sky-400">{item.izin}</span></div>
+                          <div>Sakit: <span className="font-semibold text-violet-400">{item.sakit}</span></div>
+                          <div className="col-span-2 text-rose-400 font-semibold">Alpa: {item.alpa}</div>
+                        </div>
+
+                        <div className="mt-2 pt-1.5 border-t border-slate-800 flex justify-between items-center text-[10px]">
+                          <span className={`font-bold ${currentConfig.hoverText}`}>
+                            {val} {currentConfig.unit}
+                          </span>
                           <span className="text-slate-400 font-mono">Rank #{idx + 1}</span>
                         </div>
                       </div>
@@ -161,22 +350,18 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                     {/* Value Pill di atas Bar */}
                     <span
                       className={`text-[11px] font-bold mb-1.5 tabular-nums transition-transform ${
-                        isHovered ? 'text-rose-700 scale-110' : 'text-slate-700'
+                        isHovered ? `${currentConfig.hoverText} scale-110` : 'text-slate-700'
                       }`}
                     >
-                      {item.alpa}
+                      {val}
                     </span>
 
                     {/* Bar Column Pillar */}
                     <div className="w-full bg-slate-100/90 rounded-t-lg h-full flex items-end p-1 transition-colors group-hover:bg-slate-200/80">
                       <div
-                        className={`w-full rounded-t-md transition-all duration-500 shadow-2xs ${
-                          idx === 0
-                            ? 'bg-gradient-to-t from-rose-600 via-rose-500 to-rose-400'
-                            : idx === 1
-                            ? 'bg-gradient-to-t from-rose-500 via-rose-500 to-rose-400'
-                            : 'bg-gradient-to-t from-rose-400 via-rose-400 to-rose-300'
-                        } ${isHovered ? 'brightness-110 shadow-md ring-2 ring-rose-400/40' : ''}`}
+                        className={`w-full rounded-t-md transition-all duration-500 shadow-2xs ${gradientClass} ${
+                          isHovered ? `brightness-110 shadow-md ring-2 ${currentConfig.hoverBorder}` : ''
+                        }`}
                         style={{ height: `${heightPercent}%` }}
                       />
                     </div>
@@ -210,7 +395,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
         /* ================= MODE 2: DETAILED TABLE / BREAKDOWN ================= */
         <div className="mt-4 divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden">
           {top5.map((item, idx) => {
-            const ratioPercent = Math.round((item.alpa / maxAlpa) * 100);
+            const val = item[fieldKey] || 0;
+            const ratioPercent = Math.round((val / maxValue) * 100);
             return (
               <div key={item.userId} className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center gap-3 min-w-0">
@@ -228,12 +414,12 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="w-24 sm:w-36 bg-slate-100 rounded-full h-2 overflow-hidden hidden sm:block">
                     <div
-                      className="bg-rose-500 h-2 rounded-full transition-all duration-500"
+                      className={`${currentConfig.breakdownBar} h-2 rounded-full transition-all duration-500`}
                       style={{ width: `${ratioPercent}%` }}
                     />
                   </div>
-                  <span className="font-bold text-rose-600 bg-rose-50 border border-rose-200/80 px-2.5 py-1 rounded-lg text-xs tabular-nums">
-                    {item.alpa} Alpa
+                  <span className={`font-bold border px-2.5 py-1 rounded-lg text-xs tabular-nums ${currentConfig.breakdownBadge}`}>
+                    {val} {currentConfig.unit}
                   </span>
                 </div>
               </div>
@@ -246,11 +432,11 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
       <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2">
         <div className="flex items-center gap-1.5">
           <ShieldAlert className="w-3.5 h-3.5 text-slate-400" />
-          <span>Fungsionaris dengan alpa tinggi dapat ditindaklanjuti untuk surat peringatan (SP) atau pembinaan.</span>
+          <span>{currentConfig.footerNote}</span>
         </div>
         {top5.length > 0 && (
           <span className="font-mono text-slate-500">
-            Maks: {maxAlpa} Alpa
+            Maks: {maxValue} {currentConfig.unit}
           </span>
         )}
       </div>
