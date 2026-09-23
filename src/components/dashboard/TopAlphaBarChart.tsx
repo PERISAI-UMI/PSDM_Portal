@@ -178,10 +178,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
 
   const maxValue = top10.length > 0 ? Math.max(...top10.map((d) => d[fieldKey] || 0)) : 0;
 
-  // Skala Y-axis dibuat lapang (memberikan sisa ruang kosong 40% di atas agar popup tidak pernah menyentuh bibir atas)
-  const yAxisMax = Math.max(Math.ceil(maxValue * 1.6), maxValue + 4, 6);
+  // Menggunakan nilai chart tertinggi sebagai batas maksimum skala Y
+  const yAxisMax = Math.max(maxValue, 1);
 
-  // Y-axis grid lines (4 tingkatan)
+  // Y-axis grid lines (4 tingkatan proporsional)
   const gridSteps = [
     yAxisMax,
     Math.round(yAxisMax * 0.75),
@@ -329,10 +329,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
         <div className="mt-5">
           <div className="overflow-x-auto pb-2 scrollbar-thin">
             <div className="min-w-[900px] sm:min-w-full">
-              {/* Chart Canvas Area (Tinggi 300px dengan padding atas 110px untuk sky-zone bebas tooltip) */}
-              <div className="relative h-76 flex items-end pl-7 pr-2 pt-28">
+              {/* Chart Canvas Area (Tinggi proporsional, pilar naik penuh ke batas puncak) */}
+              <div className="relative h-64 flex items-end pl-7 pr-2 pt-6 pb-1">
                 {/* Horizontal Gridlines & Y-Axis Labels */}
-                <div className="absolute inset-0 left-7 flex flex-col justify-between pointer-events-none">
+                <div className="absolute inset-0 left-7 top-6 bottom-1 flex flex-col justify-between pointer-events-none">
                   {uniqueGridSteps.map((step) => (
                     <div key={step} className="relative w-full border-b border-dashed border-slate-100 flex items-center">
                       <span className="absolute -left-7 text-[10px] font-mono text-slate-400 w-5 text-right tabular-nums">
@@ -363,15 +363,17 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                         onMouseEnter={() => setHoveredUser(item.userId)}
                         onMouseLeave={() => setHoveredUser(null)}
                       >
-                        {/* Tooltip Hover Bubble (Posisi di DALAM canvas: top-2, dijamin 100% TIDAK PERNAH terpotong batas atas) */}
+                        {/* Tooltip Hover Bubble (Posisi di DALAM canvas, dijamin 100% aman) */}
                         <div
-                          className={`absolute top-2 z-40 transition-all duration-200 pointer-events-none ${
+                          className={`absolute z-40 transition-all duration-200 pointer-events-none ${
                             idx === 0
                               ? 'left-0'
                               : idx === top10.length - 1
                               ? 'right-0'
                               : 'left-1/2 -translate-x-1/2'
-                          } ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+                          } ${heightPercent >= 75 ? 'top-10' : 'top-1'} ${
+                            isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                          }`}
                         >
                           <div className="bg-slate-900 text-white rounded-xl p-2.5 shadow-2xl text-left min-w-[170px] border border-slate-700 relative">
                             <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
