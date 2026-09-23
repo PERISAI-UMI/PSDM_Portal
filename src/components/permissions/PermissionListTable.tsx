@@ -37,6 +37,8 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
 
   const canReviewPermission = (p: PermissionRecord): boolean => {
     if (!onReview) return false;
+    // Role INTI bersifat read-only untuk pengawasan dan tidak memiliki wewenang mengeksekusi izin
+    if (currentUser.role === 'INTI' || currentUser.role === 'PENGURUS') return false;
     if (p.status !== 'PENDING') return false;
     if (currentUser.role === 'SUPER_ADMIN') return true;
     if (currentUser.role === 'ADMIN') {

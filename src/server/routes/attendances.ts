@@ -11,6 +11,7 @@ import {
   attendanceStatusEnum,
 } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
+import { invalidateSyncCache } from './sync.ts';
 
 export const attendancesRouter = new Hono<AppEnv>();
 
@@ -285,6 +286,8 @@ const handleRecordSingleAttendance = async (c: any) => {
       },
     });
 
+  invalidateSyncCache();
+
   return c.json({
     success: true,
     message: 'Status kehadiran berhasil disimpan',
@@ -360,6 +363,8 @@ attendancesRouter.post(
         });
     }
 
+    invalidateSyncCache();
+
     return c.json({
       success: true,
       message: `${uniqueItems.length} data absensi berhasil disimpan`,
@@ -401,6 +406,8 @@ attendancesRouter.post(
         .delete(attendances)
         .where(eq(attendances.activityId, activityId));
     }
+
+    invalidateSyncCache();
 
     return c.json({
       success: true,

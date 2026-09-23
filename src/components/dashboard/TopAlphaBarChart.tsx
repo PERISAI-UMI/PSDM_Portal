@@ -297,7 +297,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
         /* ================= MODE 1: VERTICAL BAR CHART (TOP 10) ================= */
         <div className="mt-5">
           <div className="overflow-x-auto pb-2 scrollbar-thin">
-            <div className="min-w-[900px] sm:min-w-full">
+            <div className="min-w-[760px] lg:min-w-full">
               {/* Chart Canvas Area */}
               <div className="relative h-64 flex items-end pl-7 pr-2 pt-6 pb-1">
                 {/* Horizontal Gridlines & Y-Axis Labels */}

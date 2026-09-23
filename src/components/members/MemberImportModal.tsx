@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from 'lucide-react';
-import * as XLSX from 'xlsx';
 import type { DepartmentItem, ProgramStudiItem, UserRole } from '../../types/index.ts';
 
 interface MemberImportModalProps {
@@ -66,8 +65,9 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Download template CSV / Excel
-  const handleDownloadTemplate = () => {
+  // Download template CSV / Excel (Loaded dynamically)
+  const handleDownloadTemplate = async () => {
+    const XLSX = await import('xlsx');
     const templateData = [
       {
         PRN: 'PRN0091',
@@ -122,8 +122,9 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
 
     const reader = new FileReader();
 
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       try {
+        const XLSX = await import('xlsx');
         const data = evt.target?.result;
         const workbook = XLSX.read(data, { type: 'binary' });
         const firstSheetName = workbook.SheetNames[0];

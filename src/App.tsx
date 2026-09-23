@@ -106,56 +106,62 @@ function MainAppContent() {
     }
   };
 
-  // Real-time live synchronization callback (ringan, ~70 byte jika tidak ada perubahan)
-  const syncRealtime = useCallback(
-    async (force = false) => {
-      if (!currentUser || isSyncingRef.current) return;
-      isSyncingRef.current = true;
-      setIsLiveSyncing(true);
+  const currentUserRef = useRef<AuthUser | null>(currentUser);
+  useEffect(() => {
+    currentUserRef.current = currentUser;
+  }, [currentUser]);
 
-      try {
-        const res = await api.getLiveSync(force ? undefined : syncHashRef.current);
-        if (res.success) {
-          syncHashRef.current = res.hash;
-          if (res.changed && res.data) {
-            setActivities(res.data.activities);
-            setPermissions(res.data.permissions);
-            setAttendances(res.data.attendances);
-          }
-          setLastSyncedAt(new Date());
+  // Real-time live synchronization callback (ringan, ~70 byte jika tidak ada perubahan)
+  const syncRealtime = useCallback(async (force = false) => {
+    if (!currentUserRef.current || isSyncingRef.current) return;
+    isSyncingRef.current = true;
+    setIsLiveSyncing(true);
+
+    try {
+      const res = await api.getLiveSync(force ? undefined : syncHashRef.current);
+      if (res.success) {
+        syncHashRef.current = res.hash;
+        if (res.changed && res.data) {
+          setActivities(res.data.activities);
+          setPermissions(res.data.permissions);
+          setAttendances(res.data.attendances);
         }
-      } catch (err) {
-        console.debug('Real-time sync skipped:', err);
-      } finally {
-        isSyncingRef.current = false;
-        setIsLiveSyncing(false);
+        setLastSyncedAt(new Date());
       }
-    },
-    [currentUser]
-  );
+    } catch (err) {
+      console.debug('Real-time sync skipped:', err);
+    } finally {
+      isSyncingRef.current = false;
+      setIsLiveSyncing(false);
+    }
+  }, []);
 
   // Engine Real-Time Adaptive Sync (Polling adaptif + tab visibility + cross-tab broadcast)
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser?.id) return;
 
     // 1. Initial live sync
     syncRealtime(true);
 
-    // 2. Interval adaptif hemat kuota: 15 detik saat tab aktif, 45 detik saat tab di background
-    let timer: ReturnType<typeof setTimeout>;
+    // 2. Interval adaptif: 20 detik saat tab aktif, jeda saat background tab untuk menghemat kuota
+    let timer: ReturnType<typeof setTimeout> | null = null;
 
     const scheduleNextSync = () => {
+      // Jika tab tidak aktif (background), tunda interval (sync akan otomatis dipicu saat user kembali ke tab)
       const isHidden = typeof document !== 'undefined' && document.hidden;
-      const delay = isHidden ? 45000 : 15000;
+      const delay = isHidden ? 60000 : 20000;
+
       timer = setTimeout(async () => {
-        await syncRealtime(false);
+        if (!document.hidden) {
+          await syncRealtime(false);
+        }
         scheduleNextSync();
       }, delay);
     };
 
     scheduleNextSync();
 
-    // 3. Sinkronisasi instan seketika saat user kembali ke tab browser
+    // 3. Sinkronisasi instan seketika saat user kembali membuka tab browser
     const handleVisibilityChange = () => {
       if (!document.hidden) {
         syncRealtime(true);
@@ -181,13 +187,13 @@ function MainAppContent() {
     });
 
     return () => {
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleFocus);
       window.removeEventListener('online', handleOnline);
       unsubscribeCrossTab();
     };
-  }, [currentUser, syncRealtime]);
+  }, [currentUser?.id, syncRealtime]);
 
   useEffect(() => {
     let isMounted = true;

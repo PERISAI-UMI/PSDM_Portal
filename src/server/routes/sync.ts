@@ -142,6 +142,7 @@ syncRouter.get('/live', async (c) => {
         userName: users.namaLengkap,
         userPrn: users.prn,
         userDepartmentId: users.departmentId,
+        userDepartmentName: departments.nama,
         activityId: permissions.activityId,
         activityName: activities.nama,
         jenisIzin: permissions.jenisIzin,
@@ -154,13 +155,24 @@ syncRouter.get('/live', async (c) => {
       })
       .from(permissions)
       .innerJoin(users, eq(permissions.userId, users.id))
+      .innerJoin(departments, eq(users.departmentId, departments.id))
       .innerJoin(activities, eq(permissions.activityId, activities.id))
       .orderBy(desc(permissions.createdAt));
 
-    let permList = [];
+    let permList: any[] = [];
     if (user.role === 'PENGURUS') {
+      // PENGURUS: Hanya melihat perizinannya sendiri
       permList = await permQuery.where(eq(permissions.userId, user.id)).all();
+    } else if (user.role === 'ADMIN') {
+      // ADMIN: HANYA melihat izin dari departemen binaan yang ditugaskan (pj_departments)
+      const assignedDepts = user.pjDepartments?.map((pj) => pj.departmentId) || [];
+      if (assignedDepts.length > 0) {
+        permList = await permQuery.where(inArray(users.departmentId, assignedDepts)).all();
+      } else {
+        permList = [];
+      }
     } else {
+      // SUPER_ADMIN & INTI: Akses penuh tanpa filter userId maupun departemen
       permList = await permQuery.all();
     }
 
@@ -186,7 +198,7 @@ syncRouter.get('/live', async (c) => {
       .innerJoin(departments, eq(users.departmentId, departments.id))
       .orderBy(desc(attendances.recordedAt));
 
-    let attList = [];
+    let attList: any[] = [];
     if (user.role === 'PENGURUS') {
       attList = await attQuery.where(eq(attendances.userId, user.id)).all();
     } else {

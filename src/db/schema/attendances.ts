@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, uniqueIndex, index } from 'drizzle-orm/sqlite-core';
 import { users } from './users.ts';
 import { activities } from './activities.ts';
 
@@ -23,6 +23,8 @@ export const attendances = sqliteTable(
   },
   (table) => [
     uniqueIndex('attendances_activity_user_unique').on(table.activityId, table.userId),
+    index('attendances_user_id_idx').on(table.userId),
+    index('attendances_status_idx').on(table.status),
   ]
 );
 

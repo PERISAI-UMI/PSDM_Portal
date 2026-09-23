@@ -7,6 +7,7 @@ import type { AppEnv } from '../types.ts';
 import { users, sessions, departments, programStudi } from '../../db/schema/index.ts';
 import { hashPassword, verifyPassword, generateSessionToken } from '../crypto.ts';
 import { authMiddleware, SESSION_COOKIE_NAME, invalidateSessionCache } from '../middleware/auth.ts';
+import { rateLimiter } from '../middleware/rateLimiter.ts';
 
 export const authRouter = new Hono<AppEnv>();
 
@@ -20,8 +21,16 @@ const changePasswordSchema = z.object({
   newPassword: z.string().min(8, 'Password baru minimal 8 karakter'),
 });
 
-// POST /api/auth/login
-authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
+// POST /api/auth/login (Dilengkapi Rate Limiter untuk mencegah Brute Force)
+authRouter.post(
+  '/login',
+  rateLimiter({
+    windowMs: 60 * 1000,
+    max: 10,
+    message: 'Terlalu banyak percobaan login. Silakan tunggu 1 menit sebelum mencoba lagi.',
+  }),
+  zValidator('json', loginSchema),
+  async (c) => {
   const { prn, password } = c.req.valid('json');
   const db = c.get('db');
 
@@ -81,11 +90,11 @@ authRouter.post('/login', zValidator('json', loginSchema), async (c) => {
   });
 
   // Set HTTP-Only Cookie (Industry Standard: 7 Days Sliding Window)
-  const isProd = process.env.NODE_ENV === 'production';
+  const isSecure = c.req.url.startsWith('https:') || c.env?.NODE_ENV === 'production' || process.env.NODE_ENV === 'production';
   setCookie(c, SESSION_COOKIE_NAME, sessionToken, {
     path: '/',
     httpOnly: true,
-    secure: isProd,
+    secure: isSecure,
     sameSite: 'Lax',
     expires: expiresAt,
     maxAge: 7 * 24 * 60 * 60,
@@ -143,11 +152,11 @@ authRouter.get('/me', authMiddleware, async (c) => {
     const newExpiresAt = new Date(now + SEVEN_DAYS_MS);
     await db.update(sessions).set({ expiresAt: newExpiresAt }).where(eq(sessions.id, session.id));
 
-    const isProd = process.env.NODE_ENV === 'production';
+    const isSecure = c.req.url.startsWith('https:') || c.env?.NODE_ENV === 'production' || process.env.NODE_ENV === 'production';
     setCookie(c, SESSION_COOKIE_NAME, session.token, {
       path: '/',
       httpOnly: true,
-      secure: isProd,
+      secure: isSecure,
       sameSite: 'Lax',
       expires: newExpiresAt,
       maxAge: 7 * 24 * 60 * 60,

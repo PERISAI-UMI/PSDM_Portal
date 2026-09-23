@@ -15,6 +15,7 @@ export type HonoBindings = {
   B2_BUCKET_NAME?: string;
   B2_ENDPOINT?: string;
   B2_REGION?: string;
+  NODE_ENV?: string;
 };
 
 export type HonoVariables = {

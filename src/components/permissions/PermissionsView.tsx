@@ -31,7 +31,9 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
         <div>
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              {isNonAdmin
+              {currentUser.role === 'INTI'
+                ? 'Pengawasan Riwayat Perizinan'
+                : isNonAdmin
                 ? 'Riwayat & Status Perizinan'
                 : 'Manajemen & Verifikasi Perizinan'}
             </h1>
@@ -40,6 +42,8 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
                 ? 'Verifikasi dan kelola seluruh permohonan izin kehadiran kegiatan lintas departemen.'
                 : currentUser.role === 'ADMIN'
                 ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
+                : currentUser.role === 'INTI'
+                ? 'Pantau dan awasi seluruh data perizinan kegiatan pengurus secara terpusat (Read-Only).'
                 : 'Pantau status verifikasi permohonan izin kehadiran kegiatan Anda.'}
             </p>
           </div>
@@ -68,7 +72,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
             {pendingCount}
           </div>
           <p className="text-[11px] text-amber-600 font-medium mt-0.5">
-            {isNonAdmin ? 'Sedang diproses Admin' : 'Memerlukan persetujuan'}
+            {currentUser.role === 'INTI' ? 'Menunggu verifikasi admin' : isNonAdmin ? 'Sedang diproses Admin' : 'Memerlukan persetujuan'}
           </p>
         </div>
 

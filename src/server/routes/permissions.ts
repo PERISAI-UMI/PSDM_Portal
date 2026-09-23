@@ -13,6 +13,7 @@ import {
 } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
 import { createPresignedUploadUrl } from '../storage.ts';
+import { invalidateSyncCache } from './sync.ts';
 
 export const permissionsRouter = new Hono<AppEnv>();
 
@@ -108,8 +109,8 @@ permissionsRouter.get('/', async (c) => {
     conditions.push(eq(permissions.status, status as (typeof permissionStatusEnum)[number]));
   }
 
-  // 1. Role selain SUPER_ADMIN dan ADMIN (PENGURUS, INTI, dll): Hanya melihat perizinannya sendiri
-  if (user.role !== 'SUPER_ADMIN' && user.role !== 'ADMIN') {
+  // 1. PENGURUS: Hanya melihat perizinannya sendiri
+  if (user.role === 'PENGURUS') {
     conditions.push(eq(permissions.userId, user.id));
     const list = conditions.length > 0 ? await baseQuery.where(and(...conditions)).orderBy(desc(permissions.createdAt)).all() : await baseQuery.all();
     return c.json({ success: true, data: list });
@@ -127,7 +128,7 @@ permissionsRouter.get('/', async (c) => {
     return c.json({ success: true, data: list });
   }
 
-  // 3. SUPER_ADMIN: Akses mutlak semua perizinan
+  // 3. SUPER_ADMIN & INTI: Akses penuh tanpa filter userId maupun departemen (INTI untuk pengawasan read-only)
   const list = conditions.length > 0 ? await baseQuery.where(and(...conditions)).orderBy(desc(permissions.createdAt)).all() : await baseQuery.orderBy(desc(permissions.createdAt)).all();
   return c.json({ success: true, data: list });
 });
@@ -177,6 +178,8 @@ permissionsRouter.post('/', zValidator('json', requestPermissionSchema), async (
     status: 'PENDING',
     createdAt: new Date(),
   });
+
+  invalidateSyncCache();
 
   return c.json(
     {
@@ -267,6 +270,8 @@ permissionsRouter.patch(
           )
         );
 
+      invalidateSyncCache();
+
       return c.json({
         success: true,
         message: 'Persetujuan izin berhasil dibatalkan dan status kembali menjadi PENDING',
@@ -308,6 +313,8 @@ permissionsRouter.patch(
           },
         });
     }
+
+    invalidateSyncCache();
 
     return c.json({
       success: true,
@@ -353,6 +360,8 @@ permissionsRouter.delete(
           eq(attendances.userId, perm.userId)
         )
       );
+
+    invalidateSyncCache();
 
     return c.json({
       success: true,

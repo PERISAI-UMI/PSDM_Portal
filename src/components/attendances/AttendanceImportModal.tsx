@@ -12,7 +12,6 @@ import {
   AlertTriangle,
   RotateCcw,
 } from 'lucide-react';
-import * as XLSX from 'xlsx';
 import type { ActivityItem, AuthUser, AttendanceStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { useToast } from '../ui/Toast.tsx';
@@ -79,7 +78,8 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
   if (!isOpen) return null;
 
   // 1. Download template Excel presensi (hanya field: PRN, Nama, Status Presensi, Catatan)
-  const handleDownloadTemplate = () => {
+  const handleDownloadTemplate = async () => {
+    const XLSX = await import('xlsx');
     let templateData: any[] = [];
 
     if (users && users.length > 0) {
@@ -149,6 +149,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
     setIsProcessing(true);
 
     try {
+      const XLSX = await import('xlsx');
       const buffer = await file.arrayBuffer();
       const workbook = XLSX.read(buffer, { type: 'array' });
       const firstSheetName = workbook.SheetNames[0];

@@ -5,6 +5,7 @@ import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import { activities, attendances, users } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
+import { invalidateSyncCache } from './sync.ts';
 
 export const activitiesRouter = new Hono<AppEnv>();
 
@@ -221,6 +222,8 @@ activitiesRouter.post(
       createdAt: new Date(),
     });
 
+    invalidateSyncCache();
+
     return c.json(
       {
         success: true,
@@ -244,6 +247,8 @@ activitiesRouter.put(
 
     await db.update(activities).set(data).where(eq(activities.id, id));
 
+    invalidateSyncCache();
+
     return c.json({ success: true, message: 'Kegiatan berhasil diperbarui' });
   }
 );
@@ -259,6 +264,8 @@ activitiesRouter.patch(
     const db = c.get('db');
 
     await db.update(activities).set({ isLocked }).where(eq(activities.id, id));
+
+    invalidateSyncCache();
 
     return c.json({
       success: true,
@@ -276,5 +283,8 @@ activitiesRouter.delete('/:id', requireRole(['SUPER_ADMIN']), async (c) => {
   const db = c.get('db');
 
   await db.delete(activities).where(eq(activities.id, id));
+
+  invalidateSyncCache();
+
   return c.json({ success: true, message: 'Kegiatan berhasil dihapus' });
 });
