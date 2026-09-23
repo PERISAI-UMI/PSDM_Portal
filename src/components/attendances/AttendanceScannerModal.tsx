@@ -299,11 +299,6 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
             <Lock className="w-4 h-4 text-amber-600 shrink-0" />
             <div>
               <span className="font-bold">Presensi telah dikunci.</span>
-              <p className="text-[11px] text-amber-700 mt-0.5">
-                {currentAdmin.role === 'SUPER_ADMIN'
-                  ? 'Sebagai Super Admin, Anda tetap dapat merekam atau mereset presensi.'
-                  : 'Mode pantau (hanya-lihat). Data presensi tidak dapat diubah.'}
-              </p>
             </div>
           </div>
         )}

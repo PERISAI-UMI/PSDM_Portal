@@ -245,7 +245,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             {activity.isLocked && (userRole === 'ADMIN' || userRole === 'INTI') ? (
               <>
                 <Eye className="w-3.5 h-3.5 text-slate-500" />
-                <span>Lihat Daftar Hadir (Terkunci)</span>
+                <span>Lihat Daftar Hadir</span>
               </>
             ) : (
               <>
