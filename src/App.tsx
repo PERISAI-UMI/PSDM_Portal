@@ -701,6 +701,8 @@ function MainAppContent() {
                   currentUser={currentUser}
                   activities={activities}
                   permissions={permissions}
+                  attendances={attendances}
+                  allUsers={allUsers}
                   onOpenMemberList={() => setActiveSection('members')}
                   onOpenAttendance={(act) => setActiveScannerActivity(act)}
                   onReviewPermission={handleReviewPermission}

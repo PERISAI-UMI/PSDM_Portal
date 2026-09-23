@@ -9,12 +9,15 @@ import {
   Check,
   X,
 } from 'lucide-react';
-import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus } from '../../types/index.ts';
+import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus, AttendanceRecord } from '../../types/index.ts';
+import { TopAlphaBarChart, type AlphaMemberStat } from './TopAlphaBarChart.tsx';
 
 interface AdminViewProps {
   currentUser: AuthUser;
   activities: ActivityItem[];
   permissions: PermissionRecord[];
+  attendances?: AttendanceRecord[];
+  allUsers?: AuthUser[];
   onOpenMemberList: () => void;
   onOpenAttendance: (act: ActivityItem) => void;
   onReviewPermission: (id: string, status: PermissionStatus) => Promise<void>;
@@ -27,6 +30,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
   currentUser,
   activities,
   permissions,
+  attendances = [],
+  allUsers = [],
   onOpenAttendance,
   onReviewPermission,
   onViewDetail,
@@ -43,10 +48,63 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
   const upcomingActivities = [...activities]
     .filter((a) => a.isPublished)
-    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+    .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
     .slice(0, 3);
 
   const pendingList = myAssignedPermissions.filter((p) => p.status === 'PENDING');
+
+  // Akumulasi data presensi pengurus untuk Bar Chart
+  const userStatsMap = new Map<string, AlphaMemberStat>();
+
+  for (const u of allUsers) {
+    userStatsMap.set(u.id, {
+      userId: u.id,
+      nama: u.namaLengkap || 'Pengurus',
+      prn: u.prn,
+      dept: u.departmentName,
+      hadir: 0,
+      telat: 0,
+      izin: 0,
+      sakit: 0,
+      alpa: 0,
+      totalKegiatan: 0,
+    });
+  }
+
+  if (attendances && attendances.length > 0) {
+    for (const att of attendances) {
+      let entry = userStatsMap.get(att.userId);
+      if (!entry) {
+        entry = {
+          userId: att.userId,
+          nama: att.userName || 'Pengurus',
+          prn: att.userPrn,
+          dept: att.userDepartmentName,
+          hadir: 0,
+          telat: 0,
+          izin: 0,
+          sakit: 0,
+          alpa: 0,
+          totalKegiatan: 0,
+        };
+        userStatsMap.set(att.userId, entry);
+      }
+      entry.totalKegiatan++;
+      if (att.status === 'HADIR') {
+        entry.hadir++;
+      } else if (att.status === 'TELAT') {
+        entry.telat++;
+      } else if (att.status === 'IZIN') {
+        entry.izin++;
+      } else if (att.status === 'SAKIT') {
+        entry.sakit++;
+      } else if (att.status === 'ALPHA') {
+        entry.alpa++;
+      }
+    }
+  }
+
+  const memberStats: AlphaMemberStat[] = Array.from(userStatsMap.values());
 
   return (
     <div className="space-y-6">
@@ -314,6 +372,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Top 10 Presensi Bar Chart */}
+      <TopAlphaBarChart data={memberStats} />
     </div>
   );
 };

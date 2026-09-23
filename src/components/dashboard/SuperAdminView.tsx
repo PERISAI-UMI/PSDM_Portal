@@ -128,9 +128,9 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
 
   const memberStats: AlphaMemberStat[] = Array.from(userStatsMap.values());
 
-  // 3 most recent or upcoming activities
+  // 3 most recent activities (terbaru ke terlama)
   const upcomingActivities = [...activities]
-    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+    .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
     .slice(0, 3);
 
   return (
@@ -416,10 +416,8 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
         </div>
       </div>
 
-      {/* Top 10 Presensi Bar Chart (Khusus Super Admin) */}
-      {currentUser.role === 'SUPER_ADMIN' && (
-        <TopAlphaBarChart data={memberStats} />
-      )}
+      {/* Top 10 Presensi Bar Chart (Super Admin & Pengurus Inti) */}
+      <TopAlphaBarChart data={memberStats} />
 
       {/* Quick Access Tiles to Other Layouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -39,7 +39,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
 
   const publishedActivities = activities.filter((a) => a.isPublished);
   const upcomingActivities = [...publishedActivities]
-    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+    .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
     .slice(0, 3);
 
   const recentPermissions = [...myPermissions]
