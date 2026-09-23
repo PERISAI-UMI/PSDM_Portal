@@ -88,7 +88,9 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
 
   const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
   const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));
-  const hadirPercentage = total > 0 ? Math.round(((summary.HADIR + (summary.TELAT || 0)) / total) * 100) : 0;
+  const totalHadir = summary.HADIR + (summary.TELAT || 0);
+  const totalKehadiranBase = totalHadir + summary.ALPHA;
+  const hadirPercentage = totalKehadiranBase > 0 ? Math.round((totalHadir / totalKehadiranBase) * 100) : 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-xs">
@@ -227,7 +229,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
               <span>Kehadiran</span>
               <span className="text-slate-900 font-bold">
-                {hadirPercentage}% ({summary.HADIR}/{total})
+                {hadirPercentage}% ({totalHadir} Hadir / {totalKehadiranBase} Presensi)
               </span>
             </div>
 

@@ -35,7 +35,9 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
 
   const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
   const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));
-  const hadirPercent = total > 0 ? Math.round(((summary.HADIR + (summary.TELAT || 0)) / total) * 100) : 0;
+  const totalHadir = summary.HADIR + (summary.TELAT || 0);
+  const totalKehadiranBase = totalHadir + summary.ALPHA;
+  const hadirPercent = totalKehadiranBase > 0 ? Math.round((totalHadir / totalKehadiranBase) * 100) : 0;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all flex flex-col justify-between group">
@@ -149,7 +151,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           <div className="flex items-center justify-between text-[11px] mb-1">
             <span className="text-slate-500 font-medium">Presensi Terkini</span>
             <span className="font-bold text-slate-800 tabular-nums">
-              {summary.HADIR} Hadir ({hadirPercent}%)
+              {totalHadir} Hadir ({hadirPercent}%)
             </span>
           </div>
           <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden flex">

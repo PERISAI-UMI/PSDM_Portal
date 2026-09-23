@@ -33,8 +33,8 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
   const hadirCount = myAttendances.filter((a) => a.status === 'HADIR' || a.status === 'TELAT').length;
   const izinCount = myAttendances.filter((a) => a.status === 'IZIN' || a.status === 'SAKIT').length;
   const alphaCount = myAttendances.filter((a) => a.status === 'ALPHA').length;
-  const totalRecorded = myAttendances.length;
-  const attendanceRate = totalRecorded > 0 ? Math.round((hadirCount / totalRecorded) * 100) : 100;
+  const attendanceBase = hadirCount + alphaCount;
+  const attendanceRate = attendanceBase > 0 ? Math.round((hadirCount / attendanceBase) * 100) : 100;
 
   const publishedActivities = activities.filter((a) => a.isPublished);
   const upcomingActivities = [...publishedActivities]
