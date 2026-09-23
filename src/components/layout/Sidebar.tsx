@@ -174,7 +174,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="flex items-center gap-2.5">
                 <FileText className="w-4 h-4 text-slate-500" />
                 <span>
-                  {user.role === 'PENGURUS' ? 'Perizinan' : user.role === 'INTI' ? 'Monitoring Izin' : 'Verifikasi Izin'}
+                  {user.role !== 'SUPER_ADMIN' && user.role !== 'ADMIN' ? 'Perizinan' : 'Verifikasi Izin'}
                 </span>
               </div>
               {counts.pendingPermissionsCount > 0 && (

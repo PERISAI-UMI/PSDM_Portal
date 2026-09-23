@@ -50,9 +50,9 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     label: 'Alpa',
     field: 'alpa',
     title: 'Top 10 Pengurus dengan Alpa Terbanyak',
-    subtitle: 'Monitoring akumulasi ketidakhadiran tanpa keterangan untuk bahan evaluasi kedisiplinan fungsionaris.',
+    subtitle: 'Monitoring akumulasi ketidakhadiran tanpa keterangan untuk bahan evaluasi kedisiplinan Pengurus.',
     unit: 'Alpa',
-    footerNote: 'Fungsionaris dengan alpa tinggi dapat ditindaklanjuti untuk surat peringatan (SP) atau pembinaan.',
+    footerNote: 'Pengurus dengan alpa tinggi dapat ditindaklanjuti untuk surat peringatan (SP) atau pembinaan.',
     iconColor: 'text-rose-600',
     activePillClass: 'bg-rose-50 text-rose-700 border-rose-300 font-semibold shadow-2xs',
     barColors: {
@@ -65,16 +65,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     breakdownBadge: 'text-rose-700 bg-rose-50 border-rose-200/90',
     breakdownBar: 'bg-rose-500',
     emptyTitle: 'Kedisiplinan Sempurna',
-    emptySubtitle: 'Tidak ditemukan catatan alpa pada fungsionaris. Seluruh presensi terekam hadir, izin, atau sakit.',
+    emptySubtitle: 'Tidak ditemukan catatan alpa pada Pengurus. Seluruh presensi terekam hadir, izin, atau sakit.',
   },
   HADIR: {
     key: 'HADIR',
     label: 'Hadir',
     field: 'hadir',
     title: 'Top 10 Pengurus dengan Kehadiran Terbanyak',
-    subtitle: 'Apresiasi fungsionaris dengan partisipasi dan komitmen kehadiran kegiatan tertinggi.',
+    subtitle: 'Apresiasi Pengurus dengan partisipasi dan komitmen kehadiran kegiatan tertinggi.',
     unit: 'Hadir',
-    footerNote: 'Fungsionaris teladan dapat dipertimbangkan untuk apresiasi atau sertifikasi kepengurusan terbaik.',
+    footerNote: 'Pengurus teladan dapat dipertimbangkan untuk apresiasi atau sertifikasi kepengurusan terbaik.',
     iconColor: 'text-emerald-600',
     activePillClass: 'bg-emerald-50 text-emerald-700 border-emerald-300 font-semibold shadow-2xs',
     barColors: {
@@ -87,7 +87,7 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     breakdownBadge: 'text-emerald-700 bg-emerald-50 border-emerald-200/90',
     breakdownBar: 'bg-emerald-500',
     emptyTitle: 'Belum Ada Presensi Hadir',
-    emptySubtitle: 'Belum ada catatan presensi hadir yang tersimpan untuk fungsionaris.',
+    emptySubtitle: 'Belum ada catatan presensi hadir yang tersimpan untuk Pengurus.',
   },
   TELAT: {
     key: 'TELAT',
@@ -96,7 +96,7 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     title: 'Top 10 Pengurus dengan Keterlambatan Terbanyak',
     subtitle: 'Monitoring ketepatan waktu presensi untuk evaluasi efisiensi jadwal kegiatan.',
     unit: 'Telat',
-    footerNote: 'Keterlambatan berulang dapat dievaluasi pada sesi review kedisiplinan fungsionaris.',
+    footerNote: 'Keterlambatan berulang dapat dievaluasi pada sesi review kedisiplinan Pengurus.',
     iconColor: 'text-amber-600',
     activePillClass: 'bg-amber-50 text-amber-700 border-amber-300 font-semibold shadow-2xs',
     barColors: {
@@ -109,16 +109,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     breakdownBadge: 'text-amber-700 bg-amber-50 border-amber-200/90',
     breakdownBar: 'bg-amber-500',
     emptyTitle: 'Waktu Presensi Sangat Tepat',
-    emptySubtitle: 'Tidak ditemukan fungsionaris yang hadir terlambat pada kegiatan.',
+    emptySubtitle: 'Tidak ditemukan Pengurus yang hadir terlambat pada kegiatan.',
   },
   IZIN: {
     key: 'IZIN',
     label: 'Izin',
     field: 'izin',
     title: 'Top 10 Pengurus dengan Izin Terbanyak',
-    subtitle: 'Rekapitulasi fungsionaris dengan permohonan izin atau dispensasi kegiatan resmi.',
+    subtitle: 'Rekapitulasi Pengurus dengan permohonan izin atau dispensasi kegiatan resmi.',
     unit: 'Izin',
-    footerNote: 'Fungsionaris dengan izin teratur tetap menjaga tanggung jawab penugasan organisasi.',
+    footerNote: 'Pengurus dengan izin teratur tetap menjaga tanggung jawab penugasan organisasi.',
     iconColor: 'text-sky-600',
     activePillClass: 'bg-sky-50 text-sky-700 border-sky-300 font-semibold shadow-2xs',
     barColors: {
@@ -131,16 +131,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     breakdownBadge: 'text-sky-700 bg-sky-50 border-sky-200/90',
     breakdownBar: 'bg-sky-500',
     emptyTitle: 'Tidak Ada Presensi Izin',
-    emptySubtitle: 'Belum ada fungsionaris yang mengajukan permohonan izin pada kegiatan.',
+    emptySubtitle: 'Belum ada Pengurus yang mengajukan permohonan izin pada kegiatan.',
   },
   SAKIT: {
     key: 'SAKIT',
     label: 'Sakit',
     field: 'sakit',
     title: 'Top 10 Pengurus dengan Izin Sakit Terbanyak',
-    subtitle: 'Pemantauan kondisi kesehatan fungsionaris untuk koordinasi dan pendampingan internal.',
+    subtitle: 'Pemantauan kondisi kesehatan Pengurus untuk koordinasi dan pendampingan internal.',
     unit: 'Sakit',
-    footerNote: 'Data kesehatan fungsionaris untuk perhatian tim PSDM dan penyesuaian penugasan.',
+    footerNote: 'Data kesehatan Pengurus untuk perhatian tim PSDM dan penyesuaian penugasan.',
     iconColor: 'text-violet-600',
     activePillClass: 'bg-violet-50 text-violet-700 border-violet-300 font-semibold shadow-2xs',
     barColors: {
@@ -152,8 +152,8 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     hoverText: 'text-violet-700',
     breakdownBadge: 'text-violet-700 bg-violet-50 border-violet-200/90',
     breakdownBar: 'bg-violet-500',
-    emptyTitle: 'Fungsionaris Prima',
-    emptySubtitle: 'Tidak tercatat izin sakit pada fungsionaris selama periode kegiatan.',
+    emptyTitle: 'Pengurus Prima',
+    emptySubtitle: 'Tidak tercatat izin sakit pada Pengurus selama periode kegiatan.',
   },
 };
 
@@ -206,7 +206,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             <BarChart3 className={`w-4 h-4 ${currentConfig.iconColor}`} />
             <h2 className="text-sm font-bold text-slate-900 tracking-tight">
               {viewMode === 'list'
-                ? `Rincian Seluruh Fungsionaris (${currentConfig.label})`
+                ? `Rincian Seluruh Pengurus (${currentConfig.label})`
                 : currentConfig.title}
             </h2>
           </div>
@@ -223,11 +223,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('vertical')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
-                viewMode === 'vertical'
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${viewMode === 'vertical'
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
               title="Grafik Batang Vertikal"
             >
               <BarChart2 className="w-3.5 h-3.5" />
@@ -236,11 +235,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('horizontal')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
-                viewMode === 'horizontal'
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${viewMode === 'horizontal'
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
               title="Grafik Batang Horizontal"
             >
               <AlignLeft className="w-3.5 h-3.5" />
@@ -249,11 +247,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('list')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
-                viewMode === 'list'
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${viewMode === 'list'
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
               title="Tampilan Rincian Seluruh Pengurus"
             >
               <Users className="w-3.5 h-3.5" />
@@ -274,11 +271,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
               key={catKey}
               type="button"
               onClick={() => setActiveCategory(catKey)}
-              className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${
-                isActive
+              className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${isActive
                   ? cat.activePillClass
                   : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
+                }`}
             >
               <span>{cat.label}</span>
             </button>
@@ -326,8 +322,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                       idx === 0
                         ? currentConfig.barColors.rank1
                         : idx <= 2
-                        ? currentConfig.barColors.rank2
-                        : currentConfig.barColors.rankRest;
+                          ? currentConfig.barColors.rank2
+                          : currentConfig.barColors.rankRest;
 
                     return (
                       <div
@@ -338,15 +334,13 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                       >
                         {/* Tooltip Hover Bubble */}
                         <div
-                          className={`absolute z-40 transition-all duration-200 pointer-events-none ${
-                            idx === 0
+                          className={`absolute z-40 transition-all duration-200 pointer-events-none ${idx === 0
                               ? 'left-0'
                               : idx === top10.length - 1
-                              ? 'right-0'
-                              : 'left-1/2 -translate-x-1/2'
-                          } ${heightPercent >= 75 ? 'top-10' : 'top-1'} ${
-                            isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-                          }`}
+                                ? 'right-0'
+                                : 'left-1/2 -translate-x-1/2'
+                            } ${heightPercent >= 75 ? 'top-10' : 'top-1'} ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                            }`}
                         >
                           <div className="bg-slate-900 text-white rounded-xl p-2.5 shadow-2xl text-left min-w-[170px] border border-slate-700 relative">
                             <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
@@ -372,9 +366,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
 
                         {/* Value Pill di atas Bar */}
                         <span
-                          className={`text-[11px] font-bold mb-1.5 tabular-nums transition-transform ${
-                            isHovered ? `${currentConfig.hoverText} scale-110` : 'text-slate-700'
-                          }`}
+                          className={`text-[11px] font-bold mb-1.5 tabular-nums transition-transform ${isHovered ? `${currentConfig.hoverText} scale-110` : 'text-slate-700'
+                            }`}
                         >
                           {val}
                         </span>
@@ -382,9 +375,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                         {/* Bar Column Pillar */}
                         <div className="w-full bg-slate-100/90 rounded-t-lg h-full flex items-end p-1 transition-colors group-hover:bg-slate-200/80">
                           <div
-                            className={`w-full rounded-t-md transition-all duration-500 shadow-2xs ${gradientClass} ${
-                              isHovered ? `brightness-110 shadow-md ring-2 ${currentConfig.hoverBorder}` : ''
-                            }`}
+                            className={`w-full rounded-t-md transition-all duration-500 shadow-2xs ${gradientClass} ${isHovered ? `brightness-110 shadow-md ring-2 ${currentConfig.hoverBorder}` : ''
+                              }`}
                             style={{ height: `${heightPercent}%` }}
                           />
                         </div>
@@ -403,9 +395,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                     onMouseEnter={() => setHoveredUser(item.userId)}
                   >
                     <div
-                      className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold mb-1.5 leading-none ${
-                        idx < 3 ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600'
-                      }`}
+                      className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold mb-1.5 leading-none ${idx < 3 ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600'
+                        }`}
                     >
                       #{idx + 1}
                     </div>
@@ -439,18 +430,16 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
               <div
                 key={item.userId}
                 onMouseEnter={() => setHoveredUser(item.userId)}
-                className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
-                  isHovered
+                className={`p-2.5 rounded-xl border transition-all cursor-pointer ${isHovered
                     ? 'bg-slate-50/90 border-slate-300 shadow-2xs'
                     : 'bg-white border-slate-100 hover:border-slate-200'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between gap-3 mb-1.5">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span
-                      className={`w-5 h-5 rounded-md text-[10px] font-mono font-bold flex items-center justify-center shrink-0 ${
-                        idx < 3 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
-                      }`}
+                      className={`w-5 h-5 rounded-md text-[10px] font-mono font-bold flex items-center justify-center shrink-0 ${idx < 3 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
+                        }`}
                     >
                       #{idx + 1}
                     </span>
@@ -470,9 +459,8 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 {/* Horizontal Bar Pillar */}
                 <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex items-center">
                   <div
-                    className={`h-2.5 rounded-full transition-all duration-500 ${currentConfig.breakdownBar} ${
-                      isHovered ? 'brightness-110 ring-2 ring-slate-300' : ''
-                    }`}
+                    className={`h-2.5 rounded-full transition-all duration-500 ${currentConfig.breakdownBar} ${isHovered ? 'brightness-110 ring-2 ring-slate-300' : ''
+                      }`}
                     style={{ width: `${ratioPercent}%` }}
                   />
                 </div>
@@ -484,7 +472,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
         /* ================= MODE 3: RINCIAN SELURUH PENGURUS (SEMUA DAFTAR PENGURUS) ================= */
         <div className="mt-4">
           <div className="flex items-center justify-between text-xs text-slate-500 mb-2 px-1">
-            <span>Daftar seluruh fungsionaris ({allSortedMembers.length} orang)</span>
+            <span>Daftar seluruh Pengurus ({allSortedMembers.length} orang)</span>
             <span className="text-[11px]">Diurutkan dari {currentConfig.label.toLowerCase()} tertinggi</span>
           </div>
 
@@ -498,17 +486,15 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 <div
                   key={item.userId}
                   onMouseEnter={() => setHoveredUser(item.userId)}
-                  className={`p-3 sm:p-3.5 flex items-center justify-between gap-3 transition-colors ${
-                    isHovered ? 'bg-slate-50' : 'bg-white hover:bg-slate-50/80'
-                  }`}
+                  className={`p-3 sm:p-3.5 flex items-center justify-between gap-3 transition-colors ${isHovered ? 'bg-slate-50' : 'bg-white hover:bg-slate-50/80'
+                    }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <span
-                      className={`w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${
-                        idx < 3 && val > 0
+                      className={`w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${idx < 3 && val > 0
                           ? 'bg-slate-900 text-white'
                           : 'bg-slate-100 text-slate-600'
-                      }`}
+                        }`}
                     >
                       #{idx + 1}
                     </span>
@@ -532,11 +518,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                       />
                     </div>
                     <span
-                      className={`font-bold border px-2.5 py-1 rounded-lg text-xs tabular-nums ${
-                        val > 0
+                      className={`font-bold border px-2.5 py-1 rounded-lg text-xs tabular-nums ${val > 0
                           ? currentConfig.breakdownBadge
                           : 'text-slate-400 bg-slate-50 border-slate-200'
-                      }`}
+                        }`}
                     >
                       {val} {currentConfig.unit}
                     </span>

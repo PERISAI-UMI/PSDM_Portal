@@ -160,7 +160,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
               Direktori Anggota
             </h1>
             <p className="text-xs text-slate-500">
-              Pangkalan data seluruh fungsionaris, penanggung jawab, dan pengurus organisasi.
+              Pangkalan data seluruh Pengurus organisasi.
             </p>
           </div>
         </div>
@@ -174,7 +174,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
               className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
             >
               <FileSpreadsheet className="w-4 h-4" />
-              <span>Import Excel / CSV</span>
+              <span>Import</span>
             </button>
           )}
 
@@ -199,8 +199,8 @@ export const MembersView: React.FC<MembersViewProps> = ({
               type="button"
               onClick={() => setViewMode('grid')}
               className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${viewMode === 'grid'
-                  ? 'bg-white text-slate-900 shadow-2xs'
-                  : 'text-slate-500 hover:text-slate-900'
+                ? 'bg-white text-slate-900 shadow-2xs'
+                : 'text-slate-500 hover:text-slate-900'
                 }`}
               title="Tampilan Kartu"
             >
@@ -211,8 +211,8 @@ export const MembersView: React.FC<MembersViewProps> = ({
               type="button"
               onClick={() => setViewMode('table')}
               className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${viewMode === 'table'
-                  ? 'bg-white text-slate-900 shadow-2xs'
-                  : 'text-slate-500 hover:text-slate-900'
+                ? 'bg-white text-slate-900 shadow-2xs'
+                : 'text-slate-500 hover:text-slate-900'
                 }`}
               title="Tampilan Tabel"
             >
@@ -227,7 +227,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Total Fungsionaris</span>
+            <span className="text-xs font-medium text-slate-500">Total Pengurus</span>
             <Users className="w-4 h-4 text-slate-400" />
           </div>
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
@@ -244,7 +244,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {pengurusCount}
           </div>
-          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Fungsionaris departemen</p>
+          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Pengurus departemen</p>
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
@@ -255,7 +255,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {adminCount}
           </div>
-          <p className="text-[11px] text-blue-600 font-medium mt-0.5">Penanggung jawab wilayah</p>
+          <p className="text-[11px] text-blue-600 font-medium mt-0.5">Penanggung jawab</p>
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
@@ -266,7 +266,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {superAdminCount}
           </div>
-          <p className="text-[11px] text-rose-600 font-medium mt-0.5">Pimpinan departemen PSDM</p>
+          <p className="text-[11px] text-rose-600 font-medium mt-0.5">Kepala departemen PSDM</p>
         </div>
       </div>
 
@@ -319,7 +319,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <Users className="w-10 h-10 text-slate-300 mx-auto mb-3" />
           <h3 className="text-sm font-semibold text-slate-800">Tidak ada anggota ditemukan</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Tidak ada data fungsionaris yang sesuai dengan filter atau kata kunci pencarian Anda.
+            Tidak ada data Pengurus yang sesuai dengan filter atau kata kunci pencarian Anda.
           </p>
           <button
             type="button"

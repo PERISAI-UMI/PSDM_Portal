@@ -257,7 +257,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">
             {isReadOnly
               ? 'Daftar struktur organisasi untuk Departemen, Fakultas, Jurusan / Program Studi, serta Penugasan PJ.'
-              : 'Kelola penuh (CRUD: Tambah, Ubah, Hapus) untuk Departemen, Fakultas, Jurusan / Program Studi, serta Penugasan PJ.'}
+              : 'Kelola penuh Departemen, Fakultas, Jurusan / Program Studi, serta Penugasan PJ.'}
           </p>
         </div>
       </div>

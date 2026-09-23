@@ -108,8 +108,8 @@ permissionsRouter.get('/', async (c) => {
     conditions.push(eq(permissions.status, status as (typeof permissionStatusEnum)[number]));
   }
 
-  // 1. PENGURUS: Hanya melihat perizinannya sendiri
-  if (user.role === 'PENGURUS') {
+  // 1. Role selain SUPER_ADMIN dan ADMIN (PENGURUS, INTI, dll): Hanya melihat perizinannya sendiri
+  if (user.role !== 'SUPER_ADMIN' && user.role !== 'ADMIN') {
     conditions.push(eq(permissions.userId, user.id));
     const list = conditions.length > 0 ? await baseQuery.where(and(...conditions)).orderBy(desc(permissions.createdAt)).all() : await baseQuery.all();
     return c.json({ success: true, data: list });

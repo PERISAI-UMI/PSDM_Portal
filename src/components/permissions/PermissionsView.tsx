@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Clock, CheckCircle2, XCircle, ShieldCheck } from 'lucide-react';
+import { FileText, Clock, CheckCircle2, XCircle, Plus } from 'lucide-react';
 import type { PermissionRecord, AuthUser, PermissionStatus, ActivityItem } from '../../types/index.ts';
 import { PermissionListTable } from './PermissionListTable.tsx';
 
@@ -17,10 +17,12 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
   permissions,
   onReviewPermission,
   onDeletePermission,
+  onOpenPermissionModal,
 }) => {
   const pendingCount = permissions.filter((p) => p.status === 'PENDING').length;
   const approvedCount = permissions.filter((p) => p.status === 'APPROVED').length;
   const rejectedCount = permissions.filter((p) => p.status === 'REJECTED').length;
+  const isNonAdmin = currentUser.role !== 'SUPER_ADMIN' && currentUser.role !== 'ADMIN';
 
   return (
     <div className="space-y-6">
@@ -29,23 +31,30 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
         <div>
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              {currentUser.role === 'PENGURUS'
+              {isNonAdmin
                 ? 'Riwayat & Status Perizinan'
-                : currentUser.role === 'INTI'
-                  ? 'Pemantauan & Rekapitulasi Perizinan'
-                  : 'Manajemen & Verifikasi Perizinan'}
+                : 'Manajemen & Verifikasi Perizinan'}
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 mt-1">
               {currentUser.role === 'SUPER_ADMIN'
                 ? 'Verifikasi dan kelola seluruh permohonan izin kehadiran kegiatan lintas departemen.'
-                : currentUser.role === 'INTI'
-                  ? 'Pantau seluruh permohonan izin kehadiran kegiatan di semua departemen secara transparan.'
-                  : currentUser.role === 'ADMIN'
-                    ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
-                    : 'Pantau status verifikasi izin kehadiran kegiatan Anda.'}
+                : currentUser.role === 'ADMIN'
+                ? 'Validasi permohonan izin kegiatan untuk anggota di departemen binaan Anda.'
+                : 'Pantau status verifikasi dan ajukan permohonan izin kehadiran kegiatan Anda.'}
             </p>
           </div>
         </div>
+
+        {isNonAdmin && onOpenPermissionModal && (
+          <button
+            type="button"
+            onClick={onOpenPermissionModal}
+            className="px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs cursor-pointer shrink-0 self-start sm:self-auto"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Ajukan Izin</span>
+          </button>
+        )}
       </div>
 
       {/* KPI Metrics */}
@@ -70,7 +79,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
             {pendingCount}
           </div>
           <p className="text-[11px] text-amber-600 font-medium mt-0.5">
-            {currentUser.role === 'PENGURUS' ? 'Sedang diproses Admin' : 'Memerlukan persetujuan'}
+            {isNonAdmin ? 'Sedang diproses Admin' : 'Memerlukan persetujuan'}
           </p>
         </div>
 

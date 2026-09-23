@@ -317,7 +317,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               {currentUser.jabatan} • {currentUser.departmentName || 'PSDM'}
             </p>
             <p className="text-[11px] text-slate-400 mt-1">
-              JPG, PNG, atau WebP (maks. 5MB). Otomatis dioptimalkan.
+              JPG, PNG, atau WebP (maks. 5MB)
             </p>
           </div>
         </div>

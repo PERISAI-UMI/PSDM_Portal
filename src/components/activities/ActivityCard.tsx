@@ -196,16 +196,14 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       {/* Action Footer */}
       <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1 shrink-0">
-          {userRole !== 'INTI' && (
-            <button
-              type="button"
-              onClick={() => onViewDetail?.(activity)}
-              className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-              title="Detail Kegiatan"
-            >
-              <Eye className="w-4 h-4" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => onViewDetail?.(activity)}
+            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+            title="Detail Kegiatan"
+          >
+            <Eye className="w-4 h-4" />
+          </button>
 
           {userRole === 'SUPER_ADMIN' && onEdit && (
             <button
@@ -258,22 +256,11 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           </button>
         )}
 
-        {userRole === 'INTI' && (
-          <button
-            type="button"
-            onClick={() => onOpenAttendance?.(activity)}
-            className="w-full py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-          >
-            <Eye className="w-3.5 h-3.5" />
-            <span>Lihat Rekap Presensi</span>
-          </button>
-        )}
-
-        {userRole === 'PENGURUS' && (
+        {userRole !== 'SUPER_ADMIN' && userRole !== 'ADMIN' && (
           <button
             type="button"
             onClick={() => onRequestPermission?.(activity)}
-            className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+            className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>Ajukan Izin</span>

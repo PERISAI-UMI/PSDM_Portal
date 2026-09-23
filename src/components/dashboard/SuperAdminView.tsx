@@ -259,11 +259,10 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                             {act.nama}
                           </h3>
                           <span
-                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                              act.isPublished
+                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${act.isPublished
                                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                 : 'bg-slate-100 text-slate-600'
-                            }`}
+                              }`}
                           >
                             {act.isPublished ? 'Aktif' : 'Draft'}
                           </span>
@@ -435,7 +434,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
             <div>
               <h3 className="font-bold text-xs sm:text-sm text-slate-900">Direktori Anggota</h3>
               <p className="text-[11px] text-slate-500">
-                Pangkalan data fungsionaris dan anggota organisasi.
+                Pangkalan data Pengurus organisasi.
               </p>
             </div>
           </div>

@@ -387,20 +387,6 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               Tutup
             </button>
 
-            {userRole === 'INTI' && onOpenAttendance && (
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  onOpenAttendance(activity);
-                }}
-                className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span>Lihat Rekap Presensi</span>
-              </button>
-            )}
-
             {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && onOpenAttendance && (
               <button
                 type="button"
@@ -428,7 +414,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               </button>
             )}
 
-            {userRole === 'PENGURUS' && onRequestPermission && (
+            {userRole !== 'SUPER_ADMIN' && userRole !== 'ADMIN' && onRequestPermission && (
               <button
                 type="button"
                 onClick={() => {

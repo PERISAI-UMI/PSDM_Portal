@@ -57,7 +57,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Ringkasan kehadiran kegiatan dan perizinan fungsionaris.
+            Ringkasan kehadiran kegiatan dan perizinan Pengurus.
           </p>
         </div>
       </div>
@@ -218,15 +218,15 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
                     p.status === 'APPROVED'
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                       : p.status === 'REJECTED'
-                      ? 'bg-rose-50 text-rose-700 border-rose-200'
-                      : 'bg-amber-50 text-amber-700 border-amber-200';
+                        ? 'bg-rose-50 text-rose-700 border-rose-200'
+                        : 'bg-amber-50 text-amber-700 border-amber-200';
 
                   const badgeText =
                     p.status === 'APPROVED'
                       ? 'Disetujui'
                       : p.status === 'REJECTED'
-                      ? 'Ditolak'
-                      : 'Menunggu';
+                        ? 'Ditolak'
+                        : 'Menunggu';
 
                   return (
                     <div

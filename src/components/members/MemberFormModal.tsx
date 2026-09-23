@@ -148,7 +148,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
             <p className="text-xs text-slate-500 mt-0.5">
               {isEditing
                 ? `Perbarui informasi data keanggotaan untuk ${member?.namaLengkap}`
-                : 'Daftarkan fungsionaris atau anggota baru ke dalam pangkalan data organisasi.'}
+                : 'Daftarkan Pengurus ke dalam pangkalan data organisasi.'}
             </p>
           </div>
           <button
