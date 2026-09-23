@@ -399,7 +399,6 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               >
                 {activity.isLocked || userRole === 'INTI' ? (
                   <>
-                    <Eye className="w-3.5 h-3.5" />
                     <span>Lihat Daftar Hadir</span>
                   </>
                 ) : (
@@ -417,7 +416,6 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                   className="px-4 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-500 text-xs font-medium flex items-center gap-1.5 select-none"
                   title="Kegiatan telah dikunci oleh Super Admin. Pengajuan izin sudah ditutup."
                 >
-                  <Lock className="w-3.5 h-3.5 text-slate-400" />
                   <span>Izin Ditutup</span>
                 </div>
               ) : (
