@@ -73,19 +73,35 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
   const totalBaseKehadiran = totalHadir + totalAlpa;
   const avgAttendanceRate = totalBaseKehadiran > 0 ? Math.round((totalHadir / totalBaseKehadiran) * 100) : 0;
 
-  // 2. Data Pengurus & Statistik Presensi Lengkap (Hadir, Telat, Izin, Sakit, Alpa)
+  // 2. Data Seluruh Pengurus & Rekapitulasi Presensi Lengkap (Hadir, Telat, Izin, Sakit, Alpa)
   const userStatsMap = new Map<string, AlphaMemberStat>();
 
+  // Inisialisasi seluruh pengurus terdaftar agar masuk ke mode Rincian
+  for (const u of allUsers) {
+    userStatsMap.set(u.id, {
+      userId: u.id,
+      nama: u.namaLengkap || 'Pengurus',
+      prn: u.prn,
+      dept: u.departmentName,
+      hadir: 0,
+      telat: 0,
+      izin: 0,
+      sakit: 0,
+      alpa: 0,
+      totalKegiatan: 0,
+    });
+  }
+
+  // Akumulasi data presensi aktual
   if (attendances && attendances.length > 0) {
     for (const att of attendances) {
       let entry = userStatsMap.get(att.userId);
       if (!entry) {
-        const matched = allUsers.find((u) => u.id === att.userId);
         entry = {
           userId: att.userId,
-          nama: att.userName || matched?.namaLengkap || 'Pengurus',
-          prn: att.userPrn || matched?.prn,
-          dept: att.userDepartmentName || matched?.departmentName,
+          nama: att.userName || 'Pengurus',
+          prn: att.userPrn,
+          dept: att.userDepartmentName,
           hadir: 0,
           telat: 0,
           izin: 0,
@@ -403,10 +419,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
 
       {/* Top 10 Presensi Bar Chart (Khusus Super Admin) */}
       {currentUser.role === 'SUPER_ADMIN' && (
-        <TopAlphaBarChart
-          data={memberStats}
-          onNavigateToMembers={() => onNavigateTo?.('members')}
-        />
+        <TopAlphaBarChart data={memberStats} />
       )}
 
       {/* Quick Access Tiles to Other Layouts */}

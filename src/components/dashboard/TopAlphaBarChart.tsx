@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart3, ArrowRight, ShieldAlert, CheckCircle2, AlignLeft, BarChart2 } from 'lucide-react';
+import { BarChart3, ShieldAlert, CheckCircle2, AlignLeft, BarChart2, Users } from 'lucide-react';
 
 export type AttendanceCategory = 'ALPHA' | 'HADIR' | 'TELAT' | 'IZIN' | 'SAKIT';
 
@@ -161,7 +161,6 @@ const CATEGORY_LIST: AttendanceCategory[] = ['ALPHA', 'HADIR', 'TELAT', 'IZIN', 
 
 export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
   data,
-  onNavigateToMembers,
 }) => {
   const [activeCategory, setActiveCategory] = useState<AttendanceCategory>('ALPHA');
   const [viewMode, setViewMode] = useState<'vertical' | 'horizontal' | 'list'>('vertical');
@@ -170,11 +169,18 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
   const currentConfig = CATEGORIES[activeCategory];
   const fieldKey = currentConfig.field;
 
-  // Filter pengurus dengan nilai field terpilih > 0 dan ambil hingga 10 teratas
+  // 1. Data 10 teratas untuk grafik batang (Vertikal & Horizontal)
   const top10 = [...data]
     .filter((d) => (d[fieldKey] || 0) > 0)
     .sort((a, b) => (b[fieldKey] || 0) - (a[fieldKey] || 0))
     .slice(0, 10);
+
+  // 2. Data SELURUH pengurus untuk mode Rincian (diurutkan berdasarkan kategori aktif)
+  const allSortedMembers = [...data].sort((a, b) => {
+    const diff = (b[fieldKey] || 0) - (a[fieldKey] || 0);
+    if (diff !== 0) return diff;
+    return a.nama.localeCompare(b.nama);
+  });
 
   const maxValue = top10.length > 0 ? Math.max(...top10.map((d) => d[fieldKey] || 0)) : 0;
 
@@ -199,11 +205,15 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           <div className="flex items-center gap-2">
             <BarChart3 className={`w-4 h-4 ${currentConfig.iconColor}`} />
             <h2 className="text-sm font-bold text-slate-900 tracking-tight">
-              {currentConfig.title}
+              {viewMode === 'list'
+                ? `Rincian Seluruh Fungsionaris (${currentConfig.label})`
+                : currentConfig.title}
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            {currentConfig.subtitle}
+            {viewMode === 'list'
+              ? `Rekapitulasi lengkap ${allSortedMembers.length} pengurus diurutkan berdasarkan akumulasi ${currentConfig.label.toLowerCase()}.`
+              : currentConfig.subtitle}
           </p>
         </div>
 
@@ -231,7 +241,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="Grafik Batang Horizontal (Nama 100% Utuh)"
+              title="Grafik Batang Horizontal"
             >
               <AlignLeft className="w-3.5 h-3.5" />
               <span>Horizontal</span>
@@ -239,27 +249,17 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('list')}
-              className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
                 viewMode === 'list'
                   ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="Tampilan Rincian Data"
+              title="Tampilan Rincian Seluruh Pengurus"
             >
+              <Users className="w-3.5 h-3.5" />
               <span>Rincian</span>
             </button>
           </div>
-
-          {onNavigateToMembers && (
-            <button
-              type="button"
-              onClick={onNavigateToMembers}
-              className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1 px-2 py-1 rounded-md hover:bg-slate-50 transition-colors cursor-pointer"
-            >
-              <span>Direktori</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          )}
         </div>
       </div>
 
@@ -287,7 +287,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
       </div>
 
       {/* Konten Chart / Empty State */}
-      {top10.length === 0 ? (
+      {top10.length === 0 && viewMode !== 'list' ? (
         <div className="py-12 flex flex-col items-center justify-center text-center">
           <div className="w-10 h-10 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center mb-2.5">
             <CheckCircle2 className="w-5 h-5" />
@@ -298,11 +298,11 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           </p>
         </div>
       ) : viewMode === 'vertical' ? (
-        /* ================= MODE 1: VERTICAL BAR CHART DENGAN TOOLTIP DI DALAM CANVAS ================= */
+        /* ================= MODE 1: VERTICAL BAR CHART (TOP 10) ================= */
         <div className="mt-5">
           <div className="overflow-x-auto pb-2 scrollbar-thin">
             <div className="min-w-[900px] sm:min-w-full">
-              {/* Chart Canvas Area (Tinggi proporsional, pilar naik penuh ke batas puncak) */}
+              {/* Chart Canvas Area */}
               <div className="relative h-64 flex items-end pl-7 pr-2 pt-6 pb-1">
                 {/* Horizontal Gridlines & Y-Axis Labels */}
                 <div className="absolute inset-0 left-7 top-6 bottom-1 flex flex-col justify-between pointer-events-none">
@@ -336,7 +336,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                         onMouseEnter={() => setHoveredUser(item.userId)}
                         onMouseLeave={() => setHoveredUser(null)}
                       >
-                        {/* Tooltip Hover Bubble (Posisi di DALAM canvas, dijamin 100% aman) */}
+                        {/* Tooltip Hover Bubble */}
                         <div
                           className={`absolute z-40 transition-all duration-200 pointer-events-none ${
                             idx === 0
@@ -394,7 +394,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 </div>
               </div>
 
-              {/* X-Axis Labels: Nama LENGKAP tanpa truncate kasar, bebas terpotong! */}
+              {/* X-Axis Labels */}
               <div className="pl-7 pr-2 mt-3 pt-2.5 border-t border-slate-200/80 flex items-start justify-around gap-2 sm:gap-3">
                 {top10.map((item, idx) => (
                   <div
@@ -409,14 +409,12 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                     >
                       #{idx + 1}
                     </div>
-                    {/* Nama utuh tanpa truncate */}
                     <div
                       className="font-semibold text-slate-800 text-[10.5px] sm:text-[11px] leading-tight text-center break-words px-1"
                       title={item.nama}
                     >
                       {item.nama}
                     </div>
-                    {/* Departemen */}
                     <div
                       className="text-[9.5px] text-slate-400 text-center leading-tight mt-1 break-words px-1"
                       title={item.dept}
@@ -430,7 +428,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           </div>
         </div>
       ) : viewMode === 'horizontal' ? (
-        /* ================= MODE 2: HORIZONTAL BAR CHART (NAMA 100% LEGA) ================= */
+        /* ================= MODE 2: HORIZONTAL BAR CHART (TOP 10) ================= */
         <div className="mt-4 space-y-2.5">
           {top10.map((item, idx) => {
             const val = item[fieldKey] || 0;
@@ -483,47 +481,70 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           })}
         </div>
       ) : (
-        /* ================= MODE 3: DETAILED TABLE / BREAKDOWN ================= */
-        <div className="mt-4 divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden">
-          {top10.map((item, idx) => {
-            const val = item[fieldKey] || 0;
-            const ratioPercent = Math.round((val / maxValue) * 100);
-            return (
-              <div
-                key={item.userId}
-                onMouseEnter={() => setHoveredUser(item.userId)}
-                className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span
-                    className={`w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${
-                      idx < 3 ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-700'
-                    }`}
-                  >
-                    #{idx + 1}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="font-bold text-xs text-slate-900">{item.nama}</div>
-                    <div className="text-[11px] text-slate-500">
-                      {item.prn ? `${item.prn} • ` : ''}{item.dept || 'PSDM'}
+        /* ================= MODE 3: RINCIAN SELURUH PENGURUS (SEMUA DAFTAR PENGURUS) ================= */
+        <div className="mt-4">
+          <div className="flex items-center justify-between text-xs text-slate-500 mb-2 px-1">
+            <span>Daftar seluruh fungsionaris ({allSortedMembers.length} orang)</span>
+            <span className="text-[11px]">Diurutkan dari {currentConfig.label.toLowerCase()} tertinggi</span>
+          </div>
+
+          <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden max-h-[520px] overflow-y-auto scrollbar-thin">
+            {allSortedMembers.map((item, idx) => {
+              const val = item[fieldKey] || 0;
+              const ratioPercent = maxValue > 0 ? Math.round((val / maxValue) * 100) : 0;
+              const isHovered = hoveredUser === item.userId;
+
+              return (
+                <div
+                  key={item.userId}
+                  onMouseEnter={() => setHoveredUser(item.userId)}
+                  className={`p-3 sm:p-3.5 flex items-center justify-between gap-3 transition-colors ${
+                    isHovered ? 'bg-slate-50' : 'bg-white hover:bg-slate-50/80'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span
+                      className={`w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${
+                        idx < 3 && val > 0
+                          ? 'bg-slate-900 text-white'
+                          : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      #{idx + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="font-bold text-xs text-slate-900">{item.nama}</div>
+                      <div className="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5 flex-wrap">
+                        <span>{item.prn ? `${item.prn} • ` : ''}{item.dept || 'PSDM'}</span>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-slate-400 text-[10px]">
+                          Presensi: <b className="text-emerald-600">{item.hadir} H</b> / <b className="text-amber-600">{item.telat} T</b> / <b className="text-sky-600">{item.izin} I</b> / <b className="text-violet-600">{item.sakit} S</b> / <b className="text-rose-600">{item.alpa} A</b>
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="w-24 sm:w-36 bg-slate-100 rounded-full h-2 overflow-hidden hidden sm:block">
-                    <div
-                      className={`${currentConfig.breakdownBar} h-2 rounded-full transition-all duration-500`}
-                      style={{ width: `${ratioPercent}%` }}
-                    />
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="w-20 sm:w-32 bg-slate-100 rounded-full h-2 overflow-hidden hidden sm:block">
+                      <div
+                        className={`${currentConfig.breakdownBar} h-2 rounded-full transition-all duration-500`}
+                        style={{ width: `${Math.max(ratioPercent, val > 0 ? 6 : 0)}%` }}
+                      />
+                    </div>
+                    <span
+                      className={`font-bold border px-2.5 py-1 rounded-lg text-xs tabular-nums ${
+                        val > 0
+                          ? currentConfig.breakdownBadge
+                          : 'text-slate-400 bg-slate-50 border-slate-200'
+                      }`}
+                    >
+                      {val} {currentConfig.unit}
+                    </span>
                   </div>
-                  <span className={`font-bold border px-2.5 py-1 rounded-lg text-xs tabular-nums ${currentConfig.breakdownBadge}`}>
-                    {val} {currentConfig.unit}
-                  </span>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -533,11 +554,10 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
           <ShieldAlert className="w-3.5 h-3.5 text-slate-400" />
           <span>{currentConfig.footerNote}</span>
         </div>
-        {top10.length > 0 && (
-          <span className="font-mono text-slate-500">
-            Maks: {maxValue} {currentConfig.unit}
-          </span>
-        )}
+        <div className="flex items-center gap-3 font-mono text-slate-500">
+          <span>Total: {allSortedMembers.length} Pengurus</span>
+          {maxValue > 0 && <span>• Maks: {maxValue} {currentConfig.unit}</span>}
+        </div>
       </div>
     </div>
   );
