@@ -157,6 +157,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
                         </h3>
                         <p className="text-[11px] text-slate-500 mt-0.5">
                           {startDate.toLocaleDateString('id-ID', {
+                            timeZone: 'Asia/Makassar',
                             weekday: 'short',
                             day: 'numeric',
                             month: 'short',

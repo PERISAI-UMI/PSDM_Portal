@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, Clock, UserCheck, FileText, Trash2, Eye, CheckCircle2, MapPin, Globe, Video, Lock } from 'lucide-react';
 import type { ActivityItem, UserRole } from '../../types/index.ts';
+import { formatWitaDate, formatWitaTime } from '../../utils/date.ts';
 
 interface ActivityCardProps {
   activity: ActivityItem;
@@ -21,15 +22,13 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   onDelete,
   onViewDetail,
 }) => {
-  const startDate = new Date(activity.startDate);
-  const formattedDate = startDate.toLocaleDateString('id-ID', {
+  const formattedDate = formatWitaDate(activity.startDate, {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
     year: 'numeric',
   });
-  const pad = (n: number) => String(n).padStart(2, '0');
-  const formattedTime = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
+  const formattedTime = formatWitaTime(activity.startDate);
 
   const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
   const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));
@@ -116,7 +115,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-slate-400" />
-              <span>{formattedTime} WIB</span>
+              <span>{formattedTime} WITA</span>
             </div>
           </div>
 

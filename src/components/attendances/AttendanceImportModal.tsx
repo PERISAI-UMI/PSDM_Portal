@@ -374,7 +374,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                 >
                   {activities.map((act) => (
                     <option key={act.id} value={act.id}>
-                      {act.nama} ({new Date(act.startDate).toLocaleDateString('id-ID')})
+                      {act.nama} ({new Date(act.startDate).toLocaleDateString('id-ID', { timeZone: 'Asia/Makassar' })})
                     </option>
                   ))}
                 </select>

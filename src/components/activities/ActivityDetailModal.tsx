@@ -21,6 +21,7 @@ import {
 import type { ActivityItem, UserRole, AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { AttendanceImportModal } from '../attendances/AttendanceImportModal.tsx';
+import { formatWitaDate, formatWitaTime } from '../../utils/date.ts';
 
 interface ActivityDetailModalProps {
   isOpen: boolean;
@@ -66,19 +67,15 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
     }
   };
 
-  const startDate = new Date(activity.startDate);
-  const endDate = new Date(activity.endDate);
-
-  const formattedDate = startDate.toLocaleDateString('id-ID', {
+  const formattedDate = formatWitaDate(activity.startDate, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   });
 
-  const pad = (n: number) => String(n).padStart(2, '0');
-  const formattedTimeStart = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
-  const formattedTimeEnd = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
+  const formattedTimeStart = formatWitaTime(activity.startDate);
+  const formattedTimeEnd = formatWitaTime(activity.endDate);
 
   const summary = activity.attendanceSummary || { HADIR: 0, IZIN: 0, SAKIT: 0, ALPHA: 0, TELAT: 0, TOTAL: 0 };
   const total = summary.TOTAL || (summary.HADIR + summary.IZIN + summary.SAKIT + summary.ALPHA + (summary.TELAT || 0));
@@ -163,7 +160,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               <div>
                 <div className="text-[10px] text-slate-400 font-medium">Waktu</div>
                 <div className="font-semibold">
-                  {formattedTimeStart} - {formattedTimeEnd} WIB
+                  {formattedTimeStart} - {formattedTimeEnd} WITA
                 </div>
               </div>
             </div>

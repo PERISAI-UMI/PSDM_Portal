@@ -162,7 +162,7 @@ attendancesRouter.get(
       .limit(1);
 
     const activityName = act[0]?.nama || 'Kegiatan';
-    const activityDate = act[0]?.startDate ? new Date(act[0].startDate).toLocaleDateString('id-ID') : '-';
+    const activityDate = act[0]?.startDate ? new Date(act[0].startDate).toLocaleDateString('id-ID', { timeZone: 'Asia/Makassar' }) : '-';
 
     // Seluruh user pengurus/anggota
     const allMembers = await db

@@ -4,6 +4,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
+import { RealtimeClockWidget } from './RealtimeClockWidget.tsx';
 
 interface HeaderProps {
   user: AuthUser;
@@ -46,7 +47,10 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Actions Right */}
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex items-center gap-2 sm:gap-2.5 ml-auto">
+          {/* Realtime WITA Clock Widget */}
+          <RealtimeClockWidget />
+
           {/* Real-time Live Status Badge */}
           <button
             type="button"

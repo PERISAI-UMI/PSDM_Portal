@@ -55,7 +55,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
 
     setLoading(true);
     try {
-      const start = new Date(`${activityDate}T${activityHour}:${activityMinute}:00`);
+      const start = new Date(`${activityDate}T${activityHour}:${activityMinute}:00+08:00`);
       const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // Default 2 jam kegiatan
       await onSubmit({
         nama: nama.trim(),
@@ -227,7 +227,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                   ))}
                 </select>
                 <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-2 rounded-lg border border-slate-200 min-h-[40px] flex items-center shrink-0">
-                  WIB
+                  WITA
                 </span>
               </div>
             </div>

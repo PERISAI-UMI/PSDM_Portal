@@ -173,7 +173,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                   <div className="bg-slate-50/70 p-3 rounded-lg space-y-1.5 text-xs border border-slate-100">
                     <div className="flex items-center justify-between text-[11px] text-slate-500">
                       <span className="font-medium text-slate-700">Kegiatan:</span>
-                      <span>{new Date(p.createdAt).toLocaleDateString('id-ID')}</span>
+                      <span>{new Date(p.createdAt).toLocaleDateString('id-ID', { timeZone: 'Asia/Makassar' })}</span>
                     </div>
                     <div className="font-semibold text-slate-900">{p.activityName}</div>
 
@@ -295,7 +295,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         <td className="py-3.5 px-4">
                           <div className="font-medium text-slate-800 line-clamp-1">{p.activityName}</div>
                           <div className="text-[10px] text-slate-400">
-                            Diajukan {new Date(p.createdAt).toLocaleDateString('id-ID')}
+                            Diajukan {new Date(p.createdAt).toLocaleDateString('id-ID', { timeZone: 'Asia/Makassar' })}
                           </div>
                         </td>
                         <td className="py-3.5 px-4 max-w-xs">
