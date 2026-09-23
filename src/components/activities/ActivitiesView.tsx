@@ -7,11 +7,9 @@ import {
   Clock,
   Filter,
   Layers,
-  FileSpreadsheet,
 } from 'lucide-react';
 import type { ActivityItem, AuthUser, UserRole } from '../../types/index.ts';
 import { ActivityCard } from './ActivityCard.tsx';
-import { AttendanceImportModal } from '../attendances/AttendanceImportModal.tsx';
 
 interface ActivitiesViewProps {
   currentUser: AuthUser;
@@ -41,7 +39,6 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL');
   const [modeFilter, setModeFilter] = useState<'ALL' | 'OFFLINE' | 'ONLINE'>('ALL');
-  const [showImportModal, setShowImportModal] = useState(false);
 
   const publishedCount = activities.filter((a) => a.isPublished).length;
   const draftCount = activities.filter((a) => !a.isPublished).length;
@@ -88,17 +85,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
         </div>
 
         {currentUser.role === 'SUPER_ADMIN' && (
-          <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setShowImportModal(true)}
-              className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center gap-2 transition-all shadow-2xs cursor-pointer active:scale-95"
-              title="Import presensi dari berkas Excel / CSV"
-            >
-              <FileSpreadsheet className="w-4 h-4 text-indigo-600" />
-              <span>Import Presensi</span>
-            </button>
-
+          <div className="flex items-center gap-2.5 self-start sm:self-auto">
             <button
               type="button"
               onClick={onOpenCreateActivity}
@@ -254,19 +241,6 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             />
           ))}
         </div>
-      )}
-
-      {/* Attendance Import Modal for Super Admin */}
-      {currentUser.role === 'SUPER_ADMIN' && (
-        <AttendanceImportModal
-          isOpen={showImportModal}
-          onClose={() => setShowImportModal(false)}
-          activities={activities}
-          users={allUsers}
-          onSuccess={() => {
-            onAttendanceImportSuccess?.();
-          }}
-        />
       )}
     </div>
   );

@@ -23,7 +23,6 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
   const [lokasi, setLokasi] = useState('');
   const [meetingUrl, setMeetingUrl] = useState('');
   const [startDate, setStartDate] = useState('2026-04-01T09:00');
-  const [endDate, setEndDate] = useState('2026-04-01T12:00');
   const [isPublished, setIsPublished] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -54,6 +53,8 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
 
     setLoading(true);
     try {
+      const start = new Date(startDate);
+      const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // Default 2 jam kegiatan
       await onSubmit({
         nama: nama.trim(),
         deskripsi: deskripsi.trim() || null,
@@ -61,8 +62,8 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
         lokasi: mode === 'OFFLINE' ? lokasi.trim() : null,
         meetingUrl: mode === 'ONLINE' && meetingUrl.trim() ? meetingUrl.trim() : null,
         isLocked: false,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
+        startDate: start,
+        endDate: end,
         isPublished,
         createdBy: creatorId,
         creatorName,
@@ -181,27 +182,15 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Mulai *</label>
-              <input
-                type="datetime-local"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 min-h-[40px]"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Selesai *</label>
-              <input
-                type="datetime-local"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 min-h-[40px]"
-              />
-            </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Waktu Pelaksanaan *</label>
+            <input
+              type="datetime-local"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              required
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
+            />
           </div>
 
           <div>
