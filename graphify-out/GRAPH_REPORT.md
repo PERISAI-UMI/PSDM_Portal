@@ -1,169 +1,203 @@
-# Graph Report - PSDM-PORTAL  (2026-09-23)
+# Graph Report - PSDM-PORTAL  (2026-09-25)
 
 ## Corpus Check
-- 69 files · ~53,406 words
+- 74 files · ~58,451 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 6 file(s) not represented in the graph (top: .ico 2, .example 1, (none) 1)
 
 ## Summary
-- 403 nodes · 1036 edges · 20 communities
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.88)
+- 439 nodes · 1092 edges · 32 communities (26 shown, 6 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.9)
 - Token cost: 0 input · 0 output
 
-## Graph Freshness
-- Built from commit: `e356225c`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
-
 ## Community Hubs (Navigation)
-- routes/permissions.ts
-- relations.ts
-- package.json
-- react
-- integration.test.ts
-- dependencies
-- types.ts
-- types/index.ts
-- App.tsx
-- routes/users.ts
-- compilerOptions
-- imageCompressor.ts
-- AuthUser
-- Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)
-- PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)
-- seed.ts
-- api.ts
-- users
-- ActivityItem
-- PengurusView.tsx
+- Database Schema & Validation
+- Activities & Attendances Model
+- System Audit & Diagnostics
+- Dashboard & Role Views
+- Attendance Scanner & Import
+- Master Data Management
+- Package Configuration
+- Database Clean & Academic Seed
+- Core Runtime Dependencies
+- Authentication & Session Cache
+- Activities UI Components
+- Application Shell & Modals
+- TypeScript Compiler Setup
+- Storage Routes & B2 Auth
+- Database Client & Connection
+- User Profile & Avatar Crop
+- Development Tooling & Build
+- Layout & Navigation Controls
+- NPM Build Scripts
+- Deployment Documentation
+- Permissions Form & Image Compression
+- System Handover & Architecture Spec
+- UI Toast Notifications
+- S3 Storage & Presigned URLs
+- Vite & Tailwind Config
+- Edge Infrastructure & Portal Entry
+- Integration Testing Specs
+- Turso & 3NF Schema Specs
+- Drizzle Kit Migration Config
+- Edge Secrets Management
+- Audit & Health Diagnostics Panel
+- RBAC Matrix Documentation
 
 ## God Nodes (most connected - your core abstractions)
 1. `AuthUser` - 42 edges
-2. `react` - 28 edges
-3. `lucide-react` - 27 edges
+2. `react` - 30 edges
+3. `lucide-react` - 29 edges
 4. `ActivityItem` - 25 edges
-5. `drizzle-orm` - 21 edges
-6. `users` - 17 edges
-7. `compilerOptions` - 16 edges
-8. `PermissionStatus` - 14 edges
+5. `users` - 17 edges
+6. `compilerOptions` - 16 edges
+7. `PermissionStatus` - 14 edges
+8. `AppEnv` - 14 edges
 9. `PermissionRecord` - 14 edges
-10. `hono` - 13 edges
+10. `drizzle-orm` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `4. Struktur Database Ternormalisasi (3NF)` --references--> `Fakultas`  [INFERRED]
   HANDOVER.md → src/db/schema/academic.ts
-- `CreateActivityModalProps` --references--> `ActivityItem`  [EXTRACTED]
-  src/components/activities/CreateActivityModal.tsx → src/types/index.ts
-- `SidebarProps` --references--> `AuthUser`  [EXTRACTED]
-  src/components/layout/Sidebar.tsx → src/types/index.ts
-- `MemberListModalProps` --references--> `AuthUser`  [EXTRACTED]
-  src/components/members/MemberListModal.tsx → src/types/index.ts
-- `ProfileModalProps` --references--> `AuthUser`  [EXTRACTED]
-  src/components/profile/ProfileModal.tsx → src/types/index.ts
+- `Pre-deployment Integration Tests` --semantically_similar_to--> `Integration Test Suites`  [INFERRED] [semantically similar]
+  DEPLOYMENT.md → HANDOVER.md
+- `Cloudflare Workers Deployment` --conceptually_related_to--> `Edge Serverless Architecture`  [INFERRED]
+  DEPLOYMENT.md → HANDOVER.md
+- `Turso Database Setup` --conceptually_related_to--> `3NF Normalized Database Schema`  [INFERRED]
+  DEPLOYMENT.md → HANDOVER.md
+- `Backblaze B2 Object Storage` --conceptually_related_to--> `Edge Serverless Architecture`  [INFERRED]
+  DEPLOYMENT.md → HANDOVER.md
 
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 0 thin omitted)
+## Hyperedges (group relationships)
+- **Edge Serverless Infrastructure Stack** — deployment_cloudflare_workers, deployment_turso_db, deployment_backblaze_b2, handover_edge_serverless_architecture [INFERRED 0.95]
 
-### Community 0 - "routes/permissions.ts"
-Cohesion: 0.12
-Nodes (24): hono, src_db_schema_index_activities, src_db_schema_index_attendances, src_db_schema_index_attendancestatusenum, src_db_schema_index_permissionstatusenum, src_db_schema_index_users, authMiddleware, requireRole() (+16 more)
+## Communities (32 total, 6 thin omitted)
 
-### Community 1 - "relations.ts"
-Cohesion: 0.13
-Nodes (21): drizzle-orm, Fakultas, NewFakultas, NewProgramStudi, ProgramStudi, Department, departments, NewDepartment (+13 more)
+### Community 0 - "Database Schema & Validation"
+Cohesion: 0.10
+Nodes (34): drizzle-orm, hono, zod, src_db_schema_index_activities, src_db_schema_index_attendancestatusenum, src_db_schema_index_departments, src_db_schema_index_permissionstatusenum, src_db_schema_index_users (+26 more)
 
-### Community 2 - "package.json"
-Cohesion: 0.04
-Nodes (45): devDependencies, autoprefixer, drizzle-kit, esbuild, tailwindcss, tsx, @types/node, @types/react (+37 more)
-
-### Community 3 - "react"
-Cohesion: 0.12
-Nodes (17): lucide-react, react, CreateActivityModal(), CreateActivityModalProps, LoginForm(), LoginFormProps, Sidebar(), SidebarProps (+9 more)
-
-### Community 4 - "integration.test.ts"
+### Community 1 - "Activities & Attendances Model"
 Cohesion: 0.08
-Nodes (34): @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, AuditModal(), AuditModalProps, DiagnosticCardItem, INITIAL_ITEMS, seed(), activitySchema (+26 more)
+Nodes (31): activities, Activity, NewActivity, Attendance, attendances, attendanceStatusEnum, NewAttendance, Department (+23 more)
 
-### Community 5 - "dependencies"
+### Community 2 - "System Audit & Diagnostics"
+Cohesion: 0.10
+Nodes (29): AuditModal(), AuditModalProps, DiagnosticCardItem, INITIAL_ITEMS, activityModeEnum, activitySchema, attendanceSchema, createActivitySchema (+21 more)
+
+### Community 3 - "Dashboard & Role Views"
+Cohesion: 0.18
+Nodes (20): react, AdminViewProps, PengurusView(), PengurusViewProps, SuperAdminViewProps, AlphaMemberStat, AttendanceCategory, CATEGORIES (+12 more)
+
+### Community 4 - "Attendance Scanner & Import"
+Cohesion: 0.19
+Nodes (16): MainAppContent(), checkAuthSession(), AttendanceImportModal(), ParsedAttendanceRow, AttendanceScannerModal(), useToast(), AttendanceStatus, api (+8 more)
+
+### Community 5 - "Master Data Management"
+Cohesion: 0.17
+Nodes (17): ActivityCardProps, DeleteTarget, EditTarget, MasterDataTab, MasterDataView(), MasterDataViewProps, MemberFormModal(), MemberFormModalProps (+9 more)
+
+### Community 6 - "Package Configuration"
+Cohesion: 0.10
+Nodes (20): name, private, type, version, autoprefixer, dotenv, drizzle-zod, esbuild (+12 more)
+
+### Community 7 - "Database Clean & Academic Seed"
+Cohesion: 0.15
+Nodes (15): 4. Struktur Database Ternormalisasi (3NF), db, Fakultas, NewFakultas, NewProgramStudi, ProgramStudi, src_db_schema_index_attendances, src_db_schema_index_fakultas (+7 more)
+
+### Community 8 - "Core Runtime Dependencies"
 Cohesion: 0.11
 Nodes (19): dependencies, @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, dotenv, drizzle-orm, drizzle-zod, @google/genai, hono (+11 more)
 
-### Community 6 - "types.ts"
-Cohesion: 0.11
-Nodes (20): @libsql/client, AppDatabase, createDb(), DatabaseEnv, src_db_schema_index_pjdepartment, src_db_schema_index_session, src_db_schema_index_user, PjDepartment (+12 more)
+### Community 9 - "Authentication & Session Cache"
+Cohesion: 0.15
+Nodes (15): @hono/zod-validator, src_db_schema_index_userrole, sessions, CachedSessionUser, invalidateSessionCache(), SESSION_COOKIE_NAME, sessionMicroCache, cleanupExpired() (+7 more)
 
-### Community 7 - "types/index.ts"
-Cohesion: 0.21
-Nodes (16): DeleteTarget, EditTarget, MasterDataTab, MasterDataView(), MasterDataViewProps, MemberFormModal(), MemberFormModalProps, MemberImportModal() (+8 more)
+### Community 10 - "Activities UI Components"
+Cohesion: 0.26
+Nodes (12): lucide-react, ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityDetailModal(), AttendanceImportModalProps, RealtimeClockWidget(), ActivityItem (+4 more)
 
-### Community 8 - "App.tsx"
-Cohesion: 0.17
-Nodes (19): ActiveSection, MainAppContent(), checkAuthSession(), AttendanceImportModal(), AttendanceScannerModal(), AdminView(), SuperAdminView(), PermissionsView() (+11 more)
+### Community 11 - "Application Shell & Modals"
+Cohesion: 0.15
+Nodes (13): ActiveSection, App(), CreateActivityModal(), CreateActivityModalProps, getWitaDateParts(), LoginForm(), LoginFormProps, AdminView() (+5 more)
 
-### Community 9 - "routes/users.ts"
-Cohesion: 0.14
-Nodes (18): @hono/zod-validator, src_db_schema_index_programstudi, src_db_schema_index_sessions, src_db_schema_index_userrole, src_db_schema_index_userroleenum, sessions, CachedSessionUser, invalidateSessionCache() (+10 more)
-
-### Community 10 - "compilerOptions"
+### Community 12 - "TypeScript Compiler Setup"
 Cohesion: 0.12
 Nodes (16): compilerOptions, allowImportingTsExtensions, allowJs, experimentalDecorators, isolatedModules, jsx, lib, module (+8 more)
 
-### Community 11 - "imageCompressor.ts"
-Cohesion: 0.40
-Nodes (5): PermissionFormModal(), compressImageFile(), CompressionResult, CompressOptions, formatFileSize()
+### Community 13 - "Storage Routes & B2 Auth"
+Cohesion: 0.15
+Nodes (13): src_db_schema_index_userroleenum, authMiddleware, B2AuthCache, B2AuthorizeResponse, B2GetUploadUrlResponse, getB2Credentials(), handleStorageFileStream(), storageRouter (+5 more)
 
-### Community 12 - "AuthUser"
-Cohesion: 0.29
-Nodes (12): AdminViewProps, SuperAdminViewProps, Header(), HeaderProps, PermissionListTable(), PermissionListTableProps, PermissionsViewProps, PermissionStatus (+4 more)
+### Community 14 - "Database Client & Connection"
+Cohesion: 0.19
+Nodes (11): AppDatabase, createDb(), DatabaseEnv, src_db_schema_index_pjdepartment, src_db_schema_index_session, src_db_schema_index_user, PjDepartment, dbMiddleware (+3 more)
 
-### Community 13 - "Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)"
+### Community 15 - "User Profile & Avatar Crop"
+Cohesion: 0.24
+Nodes (8): AvatarCropModal(), AvatarCropModalProps, ProfileModal(), ProfileModalProps, ProfileView(), ProfileViewProps, ConfirmModal(), ConfirmModalProps
+
+### Community 16 - "Development Tooling & Build"
+Cohesion: 0.18
+Nodes (11): devDependencies, autoprefixer, drizzle-kit, esbuild, tailwindcss, tsx, @types/node, @types/react (+3 more)
+
+### Community 17 - "Layout & Navigation Controls"
+Cohesion: 0.24
+Nodes (7): ActivityDetailModalProps, AttendanceScannerModalProps, HeaderProps, Sidebar(), SidebarProps, MemberListModalProps, AuthUser
+
+### Community 18 - "NPM Build Scripts"
+Cohesion: 0.22
+Nodes (9): scripts, build, clean, deploy, dev, lint, preview, seed (+1 more)
+
+### Community 19 - "Deployment Documentation"
 Cohesion: 0.25
 Nodes (7): 1. Prasyarat Akun & Peralatan CLI, 2. Setup Database Turso (Edge libSQL 3NF), 3. Setup Bucket Backblaze B2 (Penyimpanan Berkas Izin Mahasiswa), 4. Konfigurasi Rahasia di Cloudflare Workers, 5. Build & Rilis ke Cloudflare Workers, 6. Verifikasi Pasca-Deployment, Panduan Deployment Edge Serverless (Cloudflare Workers, Turso & Backblaze B2)
 
-### Community 14 - "PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)"
-Cohesion: 0.25
-Nodes (7): 1. Ikhtisar Sistem, 2. Arsitektur Teknologi & Edge Stack, 3. Matriks Hak Akses (Role-Based Access Control / RBAC), 4. Struktur Database Ternormalisasi (3NF), 5. Ringkasan Hasil Pengujian Integrasi (Tahap 6), 6. Audit & Health Panel Langsung pada Aplikasi, PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)
+### Community 20 - "Permissions Form & Image Compression"
+Cohesion: 0.39
+Nodes (6): PermissionFormModal(), PermissionFormModalProps, compressImageFile(), CompressionResult, CompressOptions, formatFileSize()
 
-### Community 15 - "seed.ts"
-Cohesion: 0.16
-Nodes (14): zod, db, src_db_schema_index_departments, src_db_schema_index_fakultas, src_db_schema_index_permissions, src_db_schema_index_pjdepartments, pjDepartments, db (+6 more)
-
-### Community 16 - "api.ts"
-Cohesion: 0.21
-Nodes (9): xlsx, AttendanceImportModalProps, ParsedAttendanceRow, PermissionFormModalProps, AttendanceStatus, api, getStoredToken(), request() (+1 more)
-
-### Community 17 - "users"
-Cohesion: 0.17
-Nodes (12): activities, Activity, NewActivity, Attendance, attendances, attendanceStatusEnum, NewAttendance, NewPermission (+4 more)
-
-### Community 18 - "ActivityItem"
+### Community 21 - "System Handover & Architecture Spec"
 Cohesion: 0.29
-Nodes (10): ActivitiesView(), ActivitiesViewProps, ActivityCard(), ActivityCardProps, ActivityDetailModal(), ActivityDetailModalProps, AttendanceScannerModalProps, UserRole (+2 more)
+Nodes (6): 1. Ikhtisar Sistem, 2. Arsitektur Teknologi & Edge Stack, 3. Matriks Hak Akses (Role-Based Access Control / RBAC), 5. Ringkasan Hasil Pengujian Integrasi (Tahap 6), 6. Audit & Health Panel Langsung pada Aplikasi, PSDM.web 2.0 - Dokumen Handover & Ringkasan Arsitektur (Tahap 6)
 
-### Community 19 - "PengurusView.tsx"
-Cohesion: 0.67
-Nodes (3): PengurusView(), PengurusViewProps, AttendanceRecord
+### Community 22 - "UI Toast Notifications"
+Cohesion: 0.33
+Nodes (5): ToastContext, ToastContextType, ToastItem, ToastProvider(), ToastType
+
+### Community 23 - "S3 Storage & Presigned URLs"
+Cohesion: 0.40
+Nodes (4): @aws-sdk/client-s3, @aws-sdk/s3-request-presigner, PresignedUrlResult, StorageConfig
+
+### Community 24 - "Vite & Tailwind Config"
+Cohesion: 0.40
+Nodes (4): ref_path, @tailwindcss/vite, vite, @vitejs/plugin-react
+
+### Community 25 - "Edge Infrastructure & Portal Entry"
+Cohesion: 0.50
+Nodes (4): Backblaze B2 Object Storage, Cloudflare Workers Deployment, Edge Serverless Architecture, Portal PSDM HTML Document
 
 ## Knowledge Gaps
-- **161 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+156 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 180 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **184 isolated node(s):** `1. Prasyarat Akun & Peralatan CLI`, `2. Setup Database Turso (Edge libSQL 3NF)`, `3. Setup Bucket Backblaze B2 (Penyimpanan Berkas Izin Mahasiswa)`, `4. Konfigurasi Rahasia di Cloudflare Workers`, `5. Build & Rilis ke Cloudflare Workers` (+179 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 203 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `drizzle-orm` connect `relations.ts` to `routes/permissions.ts`, `package.json`, `types.ts`, `routes/users.ts`, `seed.ts`, `users`?**
-  _High betweenness centrality (0.084) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `react` connect `react` to `package.json`, `integration.test.ts`, `types/index.ts`, `App.tsx`, `AuthUser`, `api.ts`, `ActivityItem`, `PengurusView.tsx`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
-- **What connects `name`, `private`, `version` to the rest of the system?**
-  _161 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `routes/permissions.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12298387096774194 - nodes in this community are weakly interconnected._
-- **Should `relations.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12535612535612536 - nodes in this community are weakly interconnected._
-- **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.04336734693877551 - nodes in this community are weakly interconnected._
+- **Why does `react` connect `Dashboard & Role Views` to `System Audit & Diagnostics`, `Attendance Scanner & Import`, `Master Data Management`, `Package Configuration`, `Activities UI Components`, `Application Shell & Modals`, `User Profile & Avatar Crop`, `Layout & Navigation Controls`, `Permissions Form & Image Compression`, `UI Toast Notifications`?**
+  _High betweenness centrality (0.088) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `Core Runtime Dependencies` to `Package Configuration`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
+- **Why does `lucide-react` connect `Activities UI Components` to `System Audit & Diagnostics`, `Dashboard & Role Views`, `Attendance Scanner & Import`, `Master Data Management`, `Package Configuration`, `Application Shell & Modals`, `User Profile & Avatar Crop`, `Layout & Navigation Controls`, `Permissions Form & Image Compression`, `UI Toast Notifications`?**
+  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **What connects `1. Prasyarat Akun & Peralatan CLI`, `2. Setup Database Turso (Edge libSQL 3NF)`, `3. Setup Bucket Backblaze B2 (Penyimpanan Berkas Izin Mahasiswa)` to the rest of the system?**
+  _184 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Database Schema & Validation` be split into smaller, more focused modules?**
+  _Cohesion score 0.10336817653890824 - nodes in this community are weakly interconnected._
+- **Should `Activities & Attendances Model` be split into smaller, more focused modules?**
+  _Cohesion score 0.08392603129445235 - nodes in this community are weakly interconnected._
+- **Should `System Audit & Diagnostics` be split into smaller, more focused modules?**
+  _Cohesion score 0.10416666666666667 - nodes in this community are weakly interconnected._

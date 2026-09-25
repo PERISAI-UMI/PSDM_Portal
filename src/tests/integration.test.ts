@@ -24,6 +24,8 @@ import { api } from '../services/api.ts';
 import { createPresignedUploadUrl } from '../server/storage.ts';
 import app from '../server/index.ts';
 import type { AuthUser, AttendanceStatus, PermissionStatus } from '../types/index.ts';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 interface TestResult {
   suite: string;
@@ -349,7 +351,7 @@ export async function runAllIntegrationTests(): Promise<{
 }
 
 // Eksekusi jika dijalankan langsung via node/tsx
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   runAllIntegrationTests().then(({ failed }) => {
     if (failed > 0) {
       process.exit(1);

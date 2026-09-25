@@ -22,9 +22,21 @@ app.use(
   cors({
     origin: (origin, c) => {
       // credentials:true requires explicit origin, never wildcard
-      const allowed = c.env?.ALLOWED_ORIGIN;
-      if (allowed) return origin === allowed ? origin : null;
-      // No ALLOWED_ORIGIN set: reflect the request origin (workers.dev / dev)
+      const allowed = c.env?.ALLOWED_ORIGIN || process.env.ALLOWED_ORIGIN;
+      const isProd = c.env?.NODE_ENV === 'production' || process.env.NODE_ENV === 'production';
+
+      if (allowed && typeof allowed === 'string' && allowed.trim() !== '') {
+        const allowedList = allowed.split(',').map((o: string) => o.trim()).filter(Boolean);
+        return origin && allowedList.includes(origin) ? origin : null;
+      }
+
+      if (isProd) {
+        // In production, ALLOWED_ORIGIN must be explicitly configured; reject arbitrary origins
+        console.error('CORS Security Alert: ALLOWED_ORIGIN is not configured in production environment.');
+        return null;
+      }
+
+      // In local development, reflect request origin (e.g. localhost:3000)
       return origin || null;
     },
     credentials: true,

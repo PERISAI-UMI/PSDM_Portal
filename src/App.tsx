@@ -34,6 +34,14 @@ import { ToastProvider, useToast } from './components/ui/Toast.tsx';
 
 type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data' | 'profile';
 
+const VALID_SECTIONS: ActiveSection[] = ['dashboard', 'activities', 'permissions', 'members', 'master-data', 'profile'];
+
+const getSectionFromHash = (): ActiveSection => {
+  if (typeof window === 'undefined') return 'dashboard';
+  const raw = window.location.hash.replace(/^#\/?/, '').split('?')[0].split('/')[0];
+  return VALID_SECTIONS.includes(raw as ActiveSection) ? (raw as ActiveSection) : 'dashboard';
+};
+
 function MainAppContent() {
   const { showToast } = useToast();
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => getStoredUser());
@@ -63,8 +71,73 @@ function MainAppContent() {
   const [activePermissionActivity, setActivePermissionActivity] = useState<ActivityItem | null>(null);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<ActiveSection>('dashboard');
+  const [activeSection, setActiveSection] = useState<ActiveSection>(() => getSectionFromHash());
   const [masterDataTab, setMasterDataTab] = useState<MasterDataTab>('dept');
+
+  // Close all open modals / drawer
+  const closeAllModals = useCallback(() => {
+    setShowCreateActivity(false);
+    setActivityToEdit(null);
+    setShowAuditModal(false);
+    setShowProfileModal(false);
+    setSelectedActivityDetail(null);
+    setConfirmDeleteId(null);
+    setActiveScannerActivity(null);
+    setShowPermissionModal(false);
+    setActivePermissionActivity(null);
+    setIsMobileSidebarOpen(false);
+  }, []);
+
+  const hasOpenModal = Boolean(
+    showCreateActivity ||
+    activityToEdit ||
+    showAuditModal ||
+    showProfileModal ||
+    selectedActivityDetail ||
+    confirmDeleteId ||
+    activeScannerActivity ||
+    showPermissionModal ||
+    activePermissionActivity ||
+    isMobileSidebarOpen
+  );
+
+  const modalOpenRef = useRef(false);
+
+  // Sync activeSection with window.location.hash
+  useEffect(() => {
+    if (!currentUser) return;
+    const currentHashSec = getSectionFromHash();
+    if (currentHashSec !== activeSection) {
+      if (window.location.hash.includes('?modal=')) {
+        window.history.replaceState({ section: activeSection }, '', `#${activeSection}`);
+      } else {
+        window.history.pushState({ section: activeSection }, '', `#${activeSection}`);
+      }
+    } else if (!window.location.hash) {
+      window.history.replaceState({ section: activeSection }, '', `#${activeSection}`);
+    }
+  }, [activeSection, currentUser]);
+
+  // Sync modal state with history API for physical mobile back button support
+  useEffect(() => {
+    if (!currentUser) return;
+    if (hasOpenModal && !modalOpenRef.current) {
+      modalOpenRef.current = true;
+      if (!window.location.hash.includes('?modal=')) {
+        const baseSection = getSectionFromHash();
+        window.history.pushState(
+          { isModal: true, section: baseSection },
+          '',
+          `#${baseSection}?modal=open`
+        );
+      }
+    } else if (!hasOpenModal && modalOpenRef.current) {
+      modalOpenRef.current = false;
+      if (window.location.hash.includes('?modal=')) {
+        window.history.back();
+      }
+    }
+  }, [hasOpenModal, currentUser]);
 
   // Real-time Live Sync States
   const [isLiveSyncing, setIsLiveSyncing] = useState(false);
@@ -236,6 +309,35 @@ function MainAppContent() {
     };
   }, []);
 
+  // Physical mobile back button & browser navigation (History API / popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      const hasModalInHash = window.location.hash.includes('?modal=');
+      if (!hasModalInHash) {
+        closeAllModals();
+      }
+
+      const sec = getSectionFromHash();
+      const user = currentUserRef.current;
+      if (user?.role === 'PENGURUS' && sec === 'members') return;
+      if (user && user.role !== 'SUPER_ADMIN' && sec === 'master-data') return;
+      setActiveSection(sec);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [closeAllModals]);
+
+  // Role-based section protection
+  useEffect(() => {
+    if (!currentUser) return;
+    if (currentUser.role === 'PENGURUS' && activeSection === 'members') {
+      setActiveSection('dashboard');
+    } else if (currentUser.role !== 'SUPER_ADMIN' && activeSection === 'master-data') {
+      setActiveSection('dashboard');
+    }
+  }, [currentUser, activeSection]);
+
   const handleLogin = async (prn: string, password?: string) => {
     setLoginError(null);
     const res = await api.login(prn, password);
@@ -250,6 +352,7 @@ function MainAppContent() {
   const handleLogout = async () => {
     await api.logout();
     setCurrentUser(null);
+    window.history.replaceState(null, '', window.location.pathname);
     showToast('Anda telah keluar dari sistem.', 'info');
   };
 
