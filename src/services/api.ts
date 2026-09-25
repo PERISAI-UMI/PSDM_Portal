@@ -9,6 +9,7 @@ import type {
   PjMappingItem,
   AttendanceStatus,
   PermissionStatus,
+  OnlinePresenceData,
 } from '../types/index.ts';
 
 const TOKEN_KEY = 'psdm_auth_token';
@@ -661,5 +662,10 @@ export const api = {
       };
     }>(`/api/sync/live${qs}`);
     return res;
+  },
+
+  // ================= ONLINE USERS MONITORING =================
+  async getOnlineUsers(): Promise<OnlinePresenceData> {
+    return request<OnlinePresenceData>('/api/users/online');
   },
 };

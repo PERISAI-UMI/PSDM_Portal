@@ -53,6 +53,23 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
     if (new Date(cached.session.expiresAt).getTime() > nowMs) {
       c.set('user', cached.user);
       c.set('session', cached.session);
+
+      // Throttled presence heartbeat: update session.updatedAt if older than 45 seconds
+      const lastUpdated = cached.session.updatedAt ? new Date(cached.session.updatedAt).getTime() : 0;
+      if (nowMs - lastUpdated > 45_000) {
+        cached.session.updatedAt = new Date();
+        const db = c.get('db');
+        const updatePresence = db
+          .update(sessions)
+          .set({ updatedAt: new Date() })
+          .where(eq(sessions.id, cached.session.id));
+        if (c.executionCtx) {
+          c.executionCtx.waitUntil(updatePresence);
+        } else {
+          updatePresence.catch(() => {});
+        }
+      }
+
       return next();
     } else {
       sessionMicroCache.delete(token);
@@ -121,6 +138,21 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
     session: currentSession,
     cachedAt: nowMs,
   });
+
+  // Throttled presence heartbeat: update session.updatedAt if older than 45 seconds
+  const lastUpdated = currentSession.updatedAt ? new Date(currentSession.updatedAt).getTime() : 0;
+  if (nowMs - lastUpdated > 45_000) {
+    currentSession.updatedAt = new Date();
+    const updatePresence = db
+      .update(sessions)
+      .set({ updatedAt: new Date() })
+      .where(eq(sessions.id, currentSession.id));
+    if (c.executionCtx) {
+      c.executionCtx.waitUntil(updatePresence);
+    } else {
+      updatePresence.catch(() => {});
+    }
+  }
 
   c.set('user', fullUser);
   c.set('session', currentSession);

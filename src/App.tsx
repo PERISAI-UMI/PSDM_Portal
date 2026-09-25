@@ -30,7 +30,9 @@ import { ProfileModal } from './components/profile/ProfileModal.tsx';
 import { ProfileView } from './components/profile/ProfileView.tsx';
 import { ActivityDetailModal } from './components/activities/ActivityDetailModal.tsx';
 import { ConfirmModal } from './components/ui/ConfirmModal.tsx';
+import { OnlineUsersModal } from './components/dashboard/OnlineUsersModal.tsx';
 import { ToastProvider, useToast } from './components/ui/Toast.tsx';
+import type { OnlinePresenceData } from './types/index.ts';
 
 type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data' | 'profile';
 
@@ -70,9 +72,20 @@ function MainAppContent() {
   const [activeScannerActivity, setActiveScannerActivity] = useState<ActivityItem | null>(null);
   const [activePermissionActivity, setActivePermissionActivity] = useState<ActivityItem | null>(null);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [showOnlineUsersModal, setShowOnlineUsersModal] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<ActiveSection>(() => getSectionFromHash());
   const [masterDataTab, setMasterDataTab] = useState<MasterDataTab>('dept');
+
+  // Real-time Online Users Presence State (Khusus Super Admin & Inti)
+  const [onlinePresence, setOnlinePresence] = useState<OnlinePresenceData>({
+    success: false,
+    onlineCount: 0,
+    activeSessionsCount: 0,
+    timestamp: '',
+    users: [],
+  });
+  const [isFetchingPresence, setIsFetchingPresence] = useState(false);
 
   // Close all open modals / drawer
   const closeAllModals = useCallback(() => {
@@ -80,6 +93,7 @@ function MainAppContent() {
     setActivityToEdit(null);
     setShowAuditModal(false);
     setShowProfileModal(false);
+    setShowOnlineUsersModal(false);
     setSelectedActivityDetail(null);
     setConfirmDeleteId(null);
     setActiveScannerActivity(null);
@@ -93,6 +107,7 @@ function MainAppContent() {
     activityToEdit ||
     showAuditModal ||
     showProfileModal ||
+    showOnlineUsersModal ||
     selectedActivityDetail ||
     confirmDeleteId ||
     activeScannerActivity ||
@@ -337,6 +352,36 @@ function MainAppContent() {
       setActiveSection('dashboard');
     }
   }, [currentUser, activeSection]);
+
+  // Live presence poller untuk role Super Admin & Inti
+  const fetchOnlinePresence = useCallback(async () => {
+    if (!currentUserRef.current || (currentUserRef.current.role !== 'SUPER_ADMIN' && currentUserRef.current.role !== 'INTI')) return;
+    try {
+      setIsFetchingPresence(true);
+      const data = await api.getOnlineUsers();
+      if (data && data.success) {
+        setOnlinePresence(data);
+      }
+    } catch (err) {
+      console.debug('Failed to fetch online presence:', err);
+    } finally {
+      setIsFetchingPresence(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!currentUser || (currentUser.role !== 'SUPER_ADMIN' && currentUser.role !== 'INTI')) return;
+
+    fetchOnlinePresence();
+
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && !document.hidden) {
+        fetchOnlinePresence();
+      }
+    }, 20000);
+
+    return () => clearInterval(interval);
+  }, [currentUser, fetchOnlinePresence]);
 
   const handleLogin = async (prn: string, password?: string) => {
     setLoginError(null);
@@ -788,6 +833,8 @@ function MainAppContent() {
                   permissions={permissions}
                   attendances={attendances}
                   allUsers={allUsers}
+                  onlineCount={onlinePresence.onlineCount}
+                  onOpenOnlineUsers={() => setShowOnlineUsersModal(true)}
                   onOpenCreateActivity={() => setShowCreateActivity(true)}
                   onOpenMasterData={() => setActiveSection('master-data')}
                   onOpenMemberList={() => setActiveSection('members')}
@@ -895,6 +942,19 @@ function MainAppContent() {
         <AuditModal
           isOpen={showAuditModal}
           onClose={() => setShowAuditModal(false)}
+        />
+      )}
+
+      {showOnlineUsersModal && (
+        <OnlineUsersModal
+          isOpen={showOnlineUsersModal}
+          onClose={() => setShowOnlineUsersModal(false)}
+          onlineUsers={onlinePresence.users}
+          onlineCount={onlinePresence.onlineCount}
+          activeSessionsCount={onlinePresence.activeSessionsCount}
+          lastUpdated={onlinePresence.timestamp ? new Date(onlinePresence.timestamp) : null}
+          onRefresh={fetchOnlinePresence}
+          isLoading={isFetchingPresence}
         />
       )}
 

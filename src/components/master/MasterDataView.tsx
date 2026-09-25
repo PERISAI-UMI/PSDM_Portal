@@ -6,7 +6,6 @@ import {
   Link as LinkIcon,
   Building2,
   GraduationCap,
-  ArrowLeft,
   Search,
   UserCheck,
   Shield,
@@ -34,7 +33,7 @@ interface MasterDataViewProps {
   pjMappings: PjMappingItem[];
   admins: AuthUser[];
   initialTab?: MasterDataTab;
-  onBackToDashboard: () => void;
+  onBackToDashboard?: () => void;
   onAddFakultas: (nama: string) => Promise<void>;
   onUpdateFakultas: (id: string, nama: string) => Promise<void>;
   onDeleteFakultas: (id: string) => Promise<void>;
@@ -241,14 +240,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-slate-200/80">
         <div>
-          <button
-            type="button"
-            onClick={onBackToDashboard}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 mb-2 transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Kembali ke Dasbor</span>
-          </button>
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
               Master Data & Manajemen Struktur

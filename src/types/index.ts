@@ -113,3 +113,32 @@ export interface PjMappingItem {
   departmentName?: string;
   assignedAt?: string | Date;
 }
+
+export interface OnlineUserDevice {
+  ipAddress: string | null;
+  userAgent: string | null;
+  lastActiveAt: string | Date;
+}
+
+export interface OnlineUserItem {
+  id: string;
+  namaLengkap: string;
+  prn: string;
+  role: UserRole;
+  jabatan: string;
+  departmentId: string | null;
+  departmentName: string | null;
+  avatarUrl?: string | null;
+  lastActiveAt: string | Date;
+  sessionCount: number;
+  devices: OnlineUserDevice[];
+}
+
+export interface OnlinePresenceData {
+  success: boolean;
+  onlineCount: number;
+  activeSessionsCount: number;
+  timestamp: string;
+  users: OnlineUserItem[];
+}
+

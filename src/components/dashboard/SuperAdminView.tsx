@@ -14,6 +14,7 @@ import {
   FileText,
   AlertCircle,
   Eye,
+  Activity,
 } from 'lucide-react';
 import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus, AttendanceRecord } from '../../types/index.ts';
 import { TopAlphaBarChart, type AlphaMemberStat } from './TopAlphaBarChart.tsx';
@@ -35,6 +36,8 @@ interface SuperAdminViewProps {
   onOpenProfile?: () => void;
   onViewDetail?: (act: ActivityItem) => void;
   onNavigateTo?: (section: 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data') => void;
+  onlineCount?: number;
+  onOpenOnlineUsers?: () => void;
 }
 
 export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
@@ -50,6 +53,8 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
   onReviewPermission,
   onViewDetail,
   onNavigateTo,
+  onlineCount = 0,
+  onOpenOnlineUsers,
 }) => {
   const pendingPermissions = permissions.filter((p) => p.status === 'PENDING');
   const pendingCount = pendingPermissions.length;
@@ -148,7 +153,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
         <div
           onClick={() => onNavigateTo?.('activities')}
           className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
@@ -214,6 +219,33 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           </div>
           <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700">
             <span>Lihat data pengurus</span>
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+          </p>
+        </div>
+
+        {/* 5. Live Active Users (Khusus Super Admin & Inti) */}
+        <div
+          onClick={onOpenOnlineUsers}
+          className="col-span-2 sm:col-span-1 bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-emerald-400/80 hover:shadow-xs transition-all cursor-pointer group relative overflow-hidden"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Pengguna Aktif</span>
+            <div className="flex items-center gap-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <Activity className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5 flex items-baseline gap-2">
+            <span>{onlineCount}</span>
+            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+              Live
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-emerald-700">
+            <span>Siapa yang online</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>

@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, and, like, or, inArray } from 'drizzle-orm';
+import { eq, and, like, or, inArray, gt, gte, desc } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   users,
@@ -114,6 +114,83 @@ usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']), async (c) =>
   const list = conditions.length > 0 ? await query.where(and(...conditions)).all() : await query.all();
 
   return c.json({ success: true, data: list });
+});
+
+/**
+ * GET /api/users/online
+ * Real-time monitoring pengguna yang sedang aktif mengakses sistem.
+ * Khusus role SUPER_ADMIN dan INTI.
+ */
+usersRouter.get('/online', requireRole(['SUPER_ADMIN', 'INTI']), async (c) => {
+  const db = c.get('db');
+  const now = new Date();
+  const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+  const activeSessions = await db
+    .select({
+      sessionId: sessions.id,
+      userId: sessions.userId,
+      ipAddress: sessions.ipAddress,
+      userAgent: sessions.userAgent,
+      lastActiveAt: sessions.updatedAt,
+      createdAt: sessions.createdAt,
+      user: {
+        id: users.id,
+        namaLengkap: users.namaLengkap,
+        prn: users.prn,
+        role: users.role,
+        jabatan: users.jabatan,
+        departmentId: users.departmentId,
+        departmentName: departments.nama,
+        avatarUrl: users.avatarUrl,
+      },
+    })
+    .from(sessions)
+    .innerJoin(users, eq(sessions.userId, users.id))
+    .leftJoin(departments, eq(users.departmentId, departments.id))
+    .where(
+      and(
+        gt(sessions.expiresAt, now),
+        gte(sessions.updatedAt, fiveMinutesAgo)
+      )
+    )
+    .orderBy(desc(sessions.updatedAt));
+
+  const userMap = new Map<string, any>();
+  for (const s of activeSessions) {
+    if (!userMap.has(s.userId)) {
+      userMap.set(s.userId, {
+        ...s.user,
+        lastActiveAt: s.lastActiveAt,
+        sessionCount: 1,
+        devices: [
+          {
+            ipAddress: s.ipAddress,
+            userAgent: s.userAgent,
+            lastActiveAt: s.lastActiveAt,
+          },
+        ],
+      });
+    } else {
+      const existing = userMap.get(s.userId);
+      existing.sessionCount += 1;
+      existing.devices.push({
+        ipAddress: s.ipAddress,
+        userAgent: s.userAgent,
+        lastActiveAt: s.lastActiveAt,
+      });
+    }
+  }
+
+  const onlineUsers = Array.from(userMap.values());
+
+  return c.json({
+    success: true,
+    onlineCount: onlineUsers.length,
+    activeSessionsCount: activeSessions.length,
+    timestamp: now.toISOString(),
+    users: onlineUsers,
+  });
 });
 
 // GET /api/users/:id
