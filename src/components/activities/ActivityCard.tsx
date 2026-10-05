@@ -137,10 +137,10 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 hover:underline bg-indigo-50/70 px-2 py-0.5 rounded-md border border-indigo-100 transition-colors"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 hover:text-brand-800 hover:underline bg-brand-50/70 px-2 py-0.5 rounded-md border border-brand-100 transition-colors"
                 title="Buka tautan pertemuan daring"
               >
-                <Video className="w-3 h-3 text-indigo-500" />
+                <Video className="w-3 h-3 text-brand-500" />
                 <span>Buka Link Pertemuan ↗</span>
               </a>
             </div>
@@ -239,7 +239,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             className={`flex-1 py-1.5 px-3 min-h-[36px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer ${
               activity.isLocked && (userRole === 'ADMIN' || userRole === 'INTI')
                 ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
-                : 'bg-slate-900 hover:bg-slate-800 text-white'
+                : 'bg-brand hover:bg-brand-700 text-white'
             }`}
           >
             {activity.isLocked && (userRole === 'ADMIN' || userRole === 'INTI') ? (
@@ -267,7 +267,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             <button
               type="button"
               onClick={() => onRequestPermission?.(activity)}
-              className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+              className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Ajukan Izin</span>

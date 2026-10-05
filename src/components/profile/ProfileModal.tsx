@@ -227,7 +227,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-2xs overflow-hidden">
+            <div className="w-10 h-10 rounded-xl bg-brand text-white flex items-center justify-center font-bold text-sm shadow-2xs overflow-hidden">
               {currentUser.avatarUrl ? (
                 <img src={currentUser.avatarUrl} alt={currentUser.namaLengkap} className="w-full h-full object-cover" />
               ) : (
@@ -277,7 +277,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             onClick={() => setActiveTab('profile')}
             className={`pb-2.5 px-3 sm:px-4 border-b-2 transition-colors flex items-center gap-2 ${
               activeTab === 'profile'
-                ? 'border-slate-900 text-slate-900 font-bold'
+                ? 'border-brand text-slate-900 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -289,7 +289,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             onClick={() => setActiveTab('security')}
             className={`pb-2.5 px-3 sm:px-4 border-b-2 transition-colors flex items-center gap-2 ${
               activeTab === 'security'
-                ? 'border-slate-900 text-slate-900 font-bold'
+                ? 'border-brand text-slate-900 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -305,7 +305,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="relative group shrink-0">
-                  <div className="w-14 h-14 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-2xs overflow-hidden ring-2 ring-white">
+                  <div className="w-14 h-14 rounded-xl bg-brand text-white flex items-center justify-center font-bold text-lg shadow-2xs overflow-hidden ring-2 ring-white">
                     {avatarUrl ? (
                       <img src={avatarUrl} alt={currentUser.namaLengkap} className="w-full h-full object-cover" />
                     ) : (
@@ -316,7 +316,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploadingAvatar}
-                    className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-slate-900 text-white hover:bg-slate-800 shadow cursor-pointer disabled:opacity-50"
+                    className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-brand text-white hover:bg-brand-700 shadow cursor-pointer disabled:opacity-50"
                     title="Ganti Foto"
                   >
                     {isUploadingAvatar ? (
@@ -344,7 +344,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploadingAvatar}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-2xs transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand hover:bg-brand-700 text-white shadow-2xs transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   {isUploadingAvatar ? (
                     <>
@@ -403,7 +403,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   value={namaLengkap}
                   onChange={(e) => setNamaLengkap(e.target.value)}
                   required
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
               </div>
 
@@ -417,7 +417,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
                 </div>
@@ -433,7 +433,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     value={noTelp}
                     onChange={(e) => setNoTelp(e.target.value)}
                     required
-                    className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                   <Phone className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
                 </div>
@@ -447,7 +447,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   type="text"
                   value={nim}
                   onChange={(e) => setNim(e.target.value)}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
               </div>
 
@@ -461,7 +461,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   onChange={(e) => setAngkatan(Number(e.target.value))}
                   min={2018}
                   max={2030}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
               </div>
 
@@ -474,7 +474,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   value={tempatLahir}
                   onChange={(e) => setTempatLahir(e.target.value)}
                   placeholder="Tempat lahir"
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
               </div>
 
@@ -487,7 +487,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     type="date"
                     value={tanggalLahir}
                     onChange={(e) => setTanggalLahir(e.target.value)}
-                    className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                 </div>
               </div>
@@ -502,7 +502,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     value={instagramUsername}
                     onChange={(e) => setInstagramUsername(e.target.value)}
                     placeholder="username"
-                    className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                   <Instagram className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
                 </div>
@@ -519,7 +519,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   value={linkedinUrl}
                   onChange={(e) => setLinkedinUrl(e.target.value)}
                   placeholder="https://linkedin.com/in/username"
-                  className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
                 <Globe className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
               </div>
@@ -535,7 +535,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   onChange={(e) => setAlamat(e.target.value)}
                   rows={2}
                   placeholder="Alamat saat ini..."
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
               </div>
             </div>
@@ -551,7 +551,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <button
                 type="submit"
                 disabled={savingProfile}
-                className="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg min-h-[38px] transition-colors shadow-2xs disabled:opacity-50"
+                className="px-4 py-2 text-xs font-semibold text-white bg-brand hover:bg-brand-700 rounded-lg min-h-[38px] transition-colors shadow-2xs disabled:opacity-50"
               >
                 {savingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}
               </button>
@@ -588,7 +588,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Masukkan kata sandi saat ini"
                   required
-                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
                 <button
                   type="button"
@@ -612,7 +612,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   placeholder="Minimal 6 karakter"
                   required
                   minLength={6}
-                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
                 <button
                   type="button"
@@ -637,7 +637,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg border text-slate-900 focus:outline-none focus:ring-2 ${
                   confirmPassword && newPassword !== confirmPassword
                     ? 'border-rose-300 focus:ring-rose-200'
-                    : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
+                    : 'border-slate-300 focus:ring-brand/10 focus:border-brand'
                 }`}
               />
               {confirmPassword && newPassword !== confirmPassword && (
@@ -656,7 +656,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <button
                 type="submit"
                 disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
-                className="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg min-h-[38px] transition-colors shadow-2xs disabled:opacity-50"
+                className="px-4 py-2 text-xs font-semibold text-white bg-brand hover:bg-brand-700 rounded-lg min-h-[38px] transition-colors shadow-2xs disabled:opacity-50"
               >
                 {savingPassword ? 'Menyimpan...' : 'Simpan Kata Sandi'}
               </button>

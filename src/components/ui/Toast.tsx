@@ -49,7 +49,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             key={toast.id}
             className={`pointer-events-auto flex items-start justify-between gap-3 p-3.5 rounded-xl shadow-lg border text-xs sm:text-sm font-medium transition-all animate-in fade-in slide-in-from-bottom-2 ${
               toast.type === 'success'
-                ? 'bg-slate-900 text-white border-slate-800'
+                ? 'bg-brand text-white border-brand-500'
                 : toast.type === 'error'
                 ? 'bg-rose-900 text-white border-rose-800'
                 : 'bg-white text-slate-900 border-slate-200'

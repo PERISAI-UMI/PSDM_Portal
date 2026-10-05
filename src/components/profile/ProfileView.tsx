@@ -277,7 +277,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 sm:gap-4">
           <div className="relative group shrink-0">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl sm:text-2xl shadow-sm overflow-hidden ring-4 ring-slate-100">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-brand text-white flex items-center justify-center font-bold text-xl sm:text-2xl shadow-sm overflow-hidden ring-4 ring-slate-100">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
@@ -293,7 +293,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploadingAvatar}
-              className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 shadow-md transition-transform hover:scale-105 cursor-pointer disabled:opacity-50"
+              className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-brand text-white hover:bg-brand-700 shadow-md transition-transform hover:scale-105 cursor-pointer disabled:opacity-50"
               title="Ganti Foto Profil"
             >
               {isUploadingAvatar ? (
@@ -336,7 +336,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploadingAvatar}
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-2xs transition-all cursor-pointer disabled:opacity-50 min-h-[38px]"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand hover:bg-brand-700 text-white shadow-2xs transition-all cursor-pointer disabled:opacity-50 min-h-[38px]"
           >
             {isUploadingAvatar ? (
               <>
@@ -422,7 +422,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           type="button"
           onClick={() => setActiveTab('profile')}
           className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${activeTab === 'profile'
-              ? 'border-slate-900 text-slate-900 font-bold'
+              ? 'border-brand text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
         >
@@ -433,7 +433,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           type="button"
           onClick={() => setActiveTab('security')}
           className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${activeTab === 'security'
-              ? 'border-slate-900 text-slate-900 font-bold'
+              ? 'border-brand text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
         >
@@ -475,7 +475,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   value={namaLengkap}
                   onChange={(e) => setNamaLengkap(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -489,7 +489,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -505,7 +505,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={noTelp}
                     onChange={(e) => setNoTelp(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -529,7 +529,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   value={nim}
                   onChange={(e) => setNim(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -544,7 +544,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   min={2000}
                   max={2100}
                   required
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -557,7 +557,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   value={tempatLahir}
                   onChange={(e) => setTempatLahir(e.target.value)}
                   placeholder="Kota kelahiran"
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -569,7 +569,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   type="date"
                   value={tanggalLahir}
                   onChange={(e) => setTanggalLahir(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
             </div>
@@ -592,7 +592,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={instagramUsername}
                     onChange={(e) => setInstagramUsername(e.target.value)}
                     placeholder="@username"
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Instagram className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -608,7 +608,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
                     placeholder="linkedin.com/in/username"
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -624,7 +624,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     onChange={(e) => setAlamat(e.target.value)}
                     rows={2}
                     placeholder="Alamat domisili saat ini"
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -646,7 +646,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             <button
               type="submit"
               disabled={savingProfile}
-              className="px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
+              className="px-5 py-2 text-xs font-semibold text-white bg-brand hover:bg-brand-700 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{savingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
@@ -691,7 +691,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Masukkan kata sandi saat ini"
                       required
-                      className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                      className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                     />
                     <button
                       type="button"
@@ -716,7 +716,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                         placeholder="Minimal 6 karakter"
                         required
                         minLength={6}
-                        className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all"
+                        className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                       />
                       <button
                         type="button"
@@ -740,7 +740,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       required
                       className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${confirmPassword && newPassword !== confirmPassword
                           ? 'border-rose-300 focus:ring-rose-200'
-                          : 'border-slate-300 focus:ring-slate-900/10 focus:border-slate-900'
+                          : 'border-slate-300 focus:ring-brand/10 focus:border-brand'
                         }`}
                     />
                     {confirmPassword && newPassword !== confirmPassword && (
@@ -754,7 +754,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 <button
                   type="submit"
                   disabled={savingPassword || (confirmPassword.length > 0 && newPassword !== confirmPassword)}
-                  className="px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
+                  className="px-5 py-2 text-xs font-semibold text-white bg-brand hover:bg-brand-700 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-2"
                 >
                   <KeyRound className="w-3.5 h-3.5" />
                   <span>{savingPassword ? 'Menyimpan...' : 'Simpan Kata Sandi'}</span>

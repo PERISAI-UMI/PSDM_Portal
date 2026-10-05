@@ -122,7 +122,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
               value={activityId}
               onChange={(e) => setActivityId(e.target.value)}
               required
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand min-h-[40px] bg-white"
             >
               {activities.map((act) => (
                 <option key={act.id} value={act.id} disabled={Boolean(act.isLocked)}>
@@ -143,7 +143,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
             <select
               value={jenisIzin}
               onChange={(e) => setJenisIzin(e.target.value)}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand min-h-[40px] bg-white"
             >
               <option value="SAKIT">Sakit</option>
               <option value="TUGAS_AKADEMIK">Tugas Akademik</option>
@@ -161,7 +161,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
               placeholder="Keterangan izin..."
               required
               minLength={5}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-slate-900"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand"
             />
           </div>
 
@@ -220,7 +220,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
             <button
               type="submit"
               disabled={loading || isActivityLocked || uploading}
-              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[38px] shadow-xs cursor-pointer disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-ink bg-accent hover:bg-accent-600 rounded-lg disabled:opacity-50 min-h-[38px] shadow-xs cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? 'Mengirim...' : isActivityLocked ? 'Izin Ditutup' : 'Kirim'}
             </button>

@@ -210,7 +210,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
               Deskripsi
             </div>
-            <div className="text-xs sm:text-sm text-slate-700 bg-white p-3 rounded-xl border border-slate-200/70 leading-relaxed whitespace-pre-wrap">
+            <div className="text-xs sm:text-sm text-slate-700 bg-white p-3 rounded-xl border border-slate-200/70 leading-relaxed whitespace-pre-wrap shadow-2xs">
               {activity.deskripsi || 'Tidak ada deskripsi untuk kegiatan ini.'}
             </div>
           </div>
@@ -339,10 +339,10 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowImportModal(true)}
-                  className="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-xs font-semibold text-indigo-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 rounded-lg border border-brand-200 bg-brand-50/60 hover:bg-brand-100 text-xs font-semibold text-brand-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   title="Import presensi dari berkas Excel / CSV"
                 >
-                  <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-brand-600" />
                   <span>Import Presensi</span>
                 </button>
               )}
@@ -394,7 +394,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                 className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer ${
                   (activity.isLocked && (userRole === 'ADMIN' || userRole === 'INTI')) || userRole === 'INTI'
                     ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200'
-                    : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    : 'bg-brand hover:bg-brand-700 text-white'
                 }`}
               >
                 {activity.isLocked || userRole === 'INTI' ? (
@@ -425,7 +425,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                     onClose();
                     onRequestPermission(activity);
                   }}
-                  className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
                 >
                   <FileText className="w-3.5 h-3.5" />
                   <span>Ajukan Izin</span>
@@ -440,7 +440,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                   onClose();
                   onRequestPermission(activity);
                 }}
-                className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span>Ajukan Izin</span>

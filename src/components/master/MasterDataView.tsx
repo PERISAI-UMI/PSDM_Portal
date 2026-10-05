@@ -261,7 +261,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           onClick={() => setActiveTab('dept')}
           className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'dept'
-              ? 'border-slate-900 text-slate-900 font-bold'
+              ? 'border-brand text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -278,7 +278,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           onClick={() => setActiveTab('fakultas')}
           className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'fakultas'
-              ? 'border-slate-900 text-slate-900 font-bold'
+              ? 'border-brand text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -295,7 +295,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           onClick={() => setActiveTab('prodi')}
           className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'prodi'
-              ? 'border-slate-900 text-slate-900 font-bold'
+              ? 'border-brand text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -312,7 +312,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           onClick={() => setActiveTab('pj')}
           className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === 'pj'
-              ? 'border-slate-900 text-slate-900 font-bold'
+              ? 'border-brand text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -346,14 +346,14 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     onChange={(e) => setNewDeptName(e.target.value)}
                     placeholder="Contoh: Riset & Teknologi"
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting || !newDeptName.trim()}
-                  className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Departemen'}</span>
@@ -380,7 +380,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   value={deptSearch}
                   onChange={(e) => setDeptSearch(e.target.value)}
                   placeholder="Cari departemen..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full sm:w-56"
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
                 />
               </div>
             </div>
@@ -457,14 +457,14 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     onChange={(e) => setNewFakultasName(e.target.value)}
                     placeholder="Contoh: Fakultas Ilmu Komputer (FIKOM)"
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting || !newFakultasName.trim()}
-                  className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Fakultas'}</span>
@@ -491,7 +491,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   value={fakultasSearch}
                   onChange={(e) => setFakultasSearch(e.target.value)}
                   placeholder="Cari fakultas..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full sm:w-56"
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
                 />
               </div>
             </div>
@@ -586,7 +586,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={selectedFakultasForProdi}
                     onChange={(e) => setSelectedFakultasForProdi(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {fakultas.map((f) => (
                       <option key={f.id} value={f.id}>
@@ -606,14 +606,14 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     onChange={(e) => setNewProdiName(e.target.value)}
                     placeholder="Contoh: S1 Teknik Informatika"
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting || !newProdiName.trim() || fakultas.length === 0}
-                  className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Jurusan'}</span>
@@ -644,7 +644,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={prodiSearch}
                     onChange={(e) => setProdiSearch(e.target.value)}
                     placeholder="Cari nama jurusan..."
-                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full"
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full"
                   />
                 </div>
 
@@ -653,7 +653,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   <select
                     value={prodiFakultasFilter}
                     onChange={(e) => setProdiFakultasFilter(e.target.value)}
-                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full"
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full"
                   >
                     <option value="">Semua Fakultas</option>
                     {fakultas.map((f) => (
@@ -757,7 +757,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={selectedAdmin}
                     onChange={(e) => setSelectedAdmin(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {admins.length === 0 ? (
                       <option value="">Tidak ada akun Admin</option>
@@ -779,7 +779,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={selectedDept}
                     onChange={(e) => setSelectedDept(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {departments.length === 0 ? (
                       <option value="">Tidak ada data Departemen</option>
@@ -796,7 +796,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting || admins.length === 0 || departments.length === 0}
-                  className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>{isSubmitting ? 'Menyimpan...' : 'Simpan Penugasan'}</span>
@@ -823,7 +823,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   value={pjSearch}
                   onChange={(e) => setPjSearch(e.target.value)}
                   placeholder="Cari admin atau departemen..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-full sm:w-56"
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
                 />
               </div>
             </div>
@@ -840,7 +840,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-brand text-white flex items-center justify-center font-bold text-xs shrink-0">
                         {(m.adminName || 'PJ').slice(0, 2).toUpperCase()}
                       </div>
                       <div>
@@ -883,7 +883,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
       {/* ────────────────── REUSABLE EDIT MODAL ────────────────── */}
       {editingTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-brand/40 backdrop-blur-xs">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -913,7 +913,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={editFakultasId}
                     onChange={(e) => setEditFakultasId(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {fakultas.map((f) => (
                       <option key={f.id} value={f.id}>
@@ -934,7 +934,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   onChange={(e) => setEditName(e.target.value)}
                   required
                   autoFocus
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
               </div>
 
@@ -949,7 +949,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting || !editName.trim()}
-                  className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-2xs transition-colors disabled:opacity-50 cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-brand hover:bg-brand-700 text-white text-xs font-semibold shadow-2xs transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'}
                 </button>
@@ -961,7 +961,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
       {/* ────────────────── REUSABLE DELETE MODAL ────────────────── */}
       {deletingTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-brand/40 backdrop-blur-xs">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-sm max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="p-5 text-center space-y-3">
               <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">

@@ -89,8 +89,8 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
         );
       case 'INTI':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-            <Shield className="w-3 h-3 text-indigo-600" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
+            <Shield className="w-3 h-3 text-brand-600" />
             BPH INTI
           </span>
         );
@@ -143,7 +143,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-brand/60 backdrop-blur-xs animate-in fade-in duration-150">
       {/* Backdrop */}
       <div
         className="fixed inset-0"
@@ -154,7 +154,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
       {/* Modal Dialog */}
       <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-5 py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-between shrink-0">
+        <div className="px-5 py-4 bg-gradient-to-r from-brand-700 via-brand to-brand-700 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
               <Activity className="w-5 h-5 animate-pulse" />
@@ -169,7 +169,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                   Live
                 </span>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-canvas/80 mt-0.5">
                 Pengguna yang sedang aktif mengakses Portal PSDM secara real-time
               </p>
             </div>
@@ -181,14 +181,14 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
               onClick={handleManualRefresh}
               disabled={isRefreshing || isLoading}
               title="Segarkan data aktif"
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-canvas transition-colors disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing || isLoading ? 'animate-spin' : ''}`} />
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-colors cursor-pointer"
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-canvas transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -227,7 +227,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari berdasarkan nama, PRN, jabatan, atau departemen..."
-              className="w-full pl-9 pr-3.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all text-slate-900"
+              className="w-full pl-9 pr-3.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all text-slate-900"
             />
           </div>
 
@@ -240,7 +240,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                 onClick={() => setRoleFilter(r)}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer shrink-0 ${
                   roleFilter === r
-                    ? 'bg-slate-900 text-white font-semibold'
+                    ? 'bg-brand text-white font-semibold'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -287,7 +287,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                   {/* User Profile Info */}
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="relative shrink-0">
-                      <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
+                      <div className="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-bold text-xs overflow-hidden">
                         {u.avatarUrl ? (
                           <img
                             src={u.avatarUrl}
@@ -359,7 +359,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors cursor-pointer shadow-2xs"
+            className="px-4 py-1.5 rounded-lg bg-brand hover:bg-brand-700 text-white font-semibold text-xs transition-colors cursor-pointer shadow-2xs"
           >
             Tutup
           </button>

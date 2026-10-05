@@ -311,7 +311,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama, PRN, departemen..."
-              className="w-full pl-8 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[42px]"
+              className="w-full pl-8 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[42px]"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-3" />
           </div>
@@ -325,10 +325,10 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
               <button
                 type="button"
                 onClick={() => setShowImportModal(true)}
-                className="px-3.5 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                className="px-3.5 py-2.5 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
                 title="Import presensi dari Excel / CSV"
               >
-                <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
+                <FileSpreadsheet className="w-3.5 h-3.5 text-brand-600" />
                 <span>Import Excel</span>
               </button>
             )}

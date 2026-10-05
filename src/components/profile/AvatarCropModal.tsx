@@ -250,7 +250,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
             onTouchMove={handleTouchMove}
             onTouchEnd={handleMouseUp}
             onWheel={handleWheel}
-            className={`relative w-72 h-72 sm:w-80 sm:h-80 rounded-2xl bg-slate-950 overflow-hidden select-none touch-none ${
+            className={`relative w-72 h-72 sm:w-80 sm:h-80 rounded-2xl bg-brand-900 overflow-hidden select-none touch-none ${
               isDragging ? 'cursor-grabbing' : 'cursor-grab'
             }`}
           >
@@ -268,7 +268,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
               <div
                 className="w-full h-full"
                 style={{
-                  boxShadow: '0 0 0 9999px rgba(15, 23, 42, 0.65)',
+                  boxShadow: '0 0 0 9999px rgba(48, 56, 65, 0.65)',
                   borderRadius: '50%',
                   width: '82%',
                   height: '82%',
@@ -306,7 +306,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
               value={zoom}
               onChange={(e) => setZoom(parseFloat(e.target.value))}
               disabled={isSaving}
-              className="flex-1 accent-slate-900 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none"
+              className="flex-1 accent-brand cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none"
             />
             <button
               type="button"
@@ -364,7 +364,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
             type="button"
             onClick={handleApplyCrop}
             disabled={isSaving}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-sm transition-all cursor-pointer disabled:opacity-50 min-h-[38px]"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-brand hover:bg-brand-700 text-white shadow-sm transition-all cursor-pointer disabled:opacity-50 min-h-[38px]"
           >
             {isSaving ? (
               <>

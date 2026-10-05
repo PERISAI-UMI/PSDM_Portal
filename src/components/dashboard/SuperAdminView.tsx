@@ -458,7 +458,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+            <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
               <Users className="w-5 h-5" />
             </div>
             <div>
@@ -477,7 +477,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
             className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
                 <Database className="w-5 h-5" />
               </div>
               <div>
@@ -495,7 +495,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
             className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
                 <Calendar className="w-5 h-5" />
               </div>
               <div>

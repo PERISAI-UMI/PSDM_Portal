@@ -557,7 +557,7 @@ function MainAppContent() {
 
   if (isCheckingAuth && !currentUser) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-brand flex flex-col items-center justify-center p-4">
         <div className="flex flex-col items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-white p-2.5 flex items-center justify-center shadow-lg animate-pulse">
             <img
@@ -566,7 +566,7 @@ function MainAppContent() {
               className="w-full h-full object-contain aspect-square select-none pointer-events-none"
             />
           </div>
-          <div className="flex items-center gap-2 text-slate-300 text-xs font-semibold tracking-wider">
+          <div className="flex items-center gap-2 text-canvas/85 text-xs font-semibold tracking-wider">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
             <span>Memulihkan sesi portal...</span>
           </div>

@@ -255,12 +255,12 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
       case 'BACKBLAZE':
         return <HardDrive className="w-4 h-4 text-blue-500" />;
       case 'SECURITY':
-        return <Lock className="w-4 h-4 text-indigo-500" />;
+        return <Lock className="w-4 h-4 text-brand-500" />;
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-3 sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-brand/60 backdrop-blur-xs p-3 sm:p-4">
       <div className="bg-white w-full max-w-xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200 max-h-[90vh] flex flex-col">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
@@ -312,7 +312,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Trigger Button */}
-        <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-900 text-white mb-3">
+        <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-brand text-white mb-3">
           <span className="text-xs text-slate-300">
             {isRunning
               ? 'Memeriksa koneksi layanan...'

@@ -2,6 +2,59 @@
 
 @theme {
   --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* ── Palet 60-30-10 ─────────────────────────────────────────────
+     60%  canvas  #F7F7F7  (latar utama) + surface #FFFFFF (card/modal)
+     30%  ink     #303841  (teks & elemen gelap) + brand #2E4750 (struktural)
+     10%  accent  #F6C90E  (CTA, badge, indikator aktif)
+  ─────────────────────────────────────────────────────────────── */
+  --color-canvas: #F7F7F7;
+  --color-surface: #FFFFFF;
+  --color-ink: #303841;
+
+  --color-brand: #2E4750;
+  --color-brand-50: #F0F5F7;
+  --color-brand-100: #DFE9ED;
+  --color-brand-200: #C0D3DA;
+  --color-brand-300: #97B2BC;
+  --color-brand-400: #6A8C98;
+  --color-brand-500: #46666F;
+  --color-brand-600: #2E4750;
+  --color-brand-700: #253A42;
+  --color-brand-800: #1D2E34;
+  --color-brand-900: #162327;
+
+  --color-accent: #F6C90E;
+  --color-accent-50: #FEF9E1;
+  --color-accent-100: #FDF1B8;
+  --color-accent-200: #FBE57A;
+  --color-accent-500: #F6C90E;
+  --color-accent-600: #E3B70A;
+  --color-accent-700: #B08E08;
+
+  /* Netral: skala slate diselaraskan dengan ink #303841 agar seluruh
+     kelas slate-* yang sudah ada otomatis mengikuti palet. */
+  --color-slate-50: #F7F7F7;
+  --color-slate-100: #EFF1F3;
+  --color-slate-200: #E3E7EA;
+  --color-slate-300: #CDD3D8;
+  --color-slate-400: #9AA4AD;
+  --color-slate-500: #6C7781;
+  --color-slate-600: #535E68;
+  --color-slate-700: #414B55;
+  --color-slate-800: #38414A;
+  --color-slate-900: #303841;
+  --color-slate-950: #252B32;
+
+  /* Shadow lembut ber-tint ink agar surface putih terpisah jelas dari canvas */
+  --shadow-2xs: 0 1px 2px 0 rgb(48 56 65 / 0.06), 0 1px 1px 0 rgb(48 56 65 / 0.03);
+  --shadow-xs: 0 1px 3px 0 rgb(48 56 65 / 0.07), 0 1px 2px -1px rgb(48 56 65 / 0.05);
+  --shadow-sm: 0 2px 6px -1px rgb(48 56 65 / 0.08), 0 1px 3px -1px rgb(48 56 65 / 0.05);
+  --shadow: 0 2px 6px -1px rgb(48 56 65 / 0.08), 0 1px 3px -1px rgb(48 56 65 / 0.05);
+  --shadow-md: 0 4px 10px -2px rgb(48 56 65 / 0.08), 0 2px 4px -2px rgb(48 56 65 / 0.05);
+  --shadow-lg: 0 10px 20px -4px rgb(48 56 65 / 0.10), 0 4px 8px -4px rgb(48 56 65 / 0.05);
+  --shadow-xl: 0 18px 32px -8px rgb(48 56 65 / 0.14), 0 8px 12px -6px rgb(48 56 65 / 0.06);
+  --shadow-2xl: 0 28px 56px -12px rgb(48 56 65 / 0.22);
 }
 
 @layer base {
@@ -11,7 +64,11 @@
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #0f172a;
-    background-color: #f8fafc;
+    color: var(--color-ink);
+    background-color: var(--color-canvas);
+  }
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-ink);
   }
 }

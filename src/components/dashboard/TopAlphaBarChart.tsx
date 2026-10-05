@@ -342,12 +342,12 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                             } ${heightPercent >= 75 ? 'top-10' : 'top-1'} ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
                             }`}
                         >
-                          <div className="bg-slate-900 text-white rounded-xl p-2.5 shadow-2xl text-left min-w-[170px] border border-slate-700 relative">
+                          <div className="bg-brand text-white rounded-xl p-2.5 shadow-2xl text-left min-w-[170px] border border-brand-500 relative">
                             <div className="text-[11px] font-bold text-white leading-tight">{item.nama}</div>
-                            <div className="text-[10px] text-slate-400 mt-0.5">{item.dept || 'PSDM'}</div>
+                            <div className="text-[10px] text-canvas/70 mt-0.5">{item.dept || 'PSDM'}</div>
 
                             {/* Rincian Status Pengurus */}
-                            <div className="mt-2 pt-2 border-t border-slate-800 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-slate-300">
+                            <div className="mt-2 pt-2 border-t border-brand-500 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-canvas/85">
                               <div>Hadir: <span className="font-semibold text-emerald-400">{item.hadir}</span></div>
                               <div>Telat: <span className="font-semibold text-amber-400">{item.telat}</span></div>
                               <div>Izin: <span className="font-semibold text-sky-400">{item.izin}</span></div>
@@ -355,11 +355,11 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                               <div className="col-span-2 text-rose-400 font-semibold">Alpa: {item.alpa}</div>
                             </div>
 
-                            <div className="mt-2 pt-1.5 border-t border-slate-800 flex justify-between items-center text-[10px]">
+                            <div className="mt-2 pt-1.5 border-t border-brand-500 flex justify-between items-center text-[10px]">
                               <span className={`font-bold ${currentConfig.hoverText}`}>
                                 {val} {currentConfig.unit}
                               </span>
-                              <span className="text-slate-400 font-mono">Rank #{idx + 1}</span>
+                              <span className="text-canvas/70 font-mono">Rank #{idx + 1}</span>
                             </div>
                           </div>
                         </div>
@@ -395,7 +395,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                     onMouseEnter={() => setHoveredUser(item.userId)}
                   >
                     <div
-                      className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold mb-1.5 leading-none ${idx < 3 ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600'
+                      className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold mb-1.5 leading-none ${idx < 3 ? 'bg-brand-700 text-white' : 'bg-slate-100 text-slate-600'
                         }`}
                     >
                       #{idx + 1}
@@ -438,7 +438,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 <div className="flex items-center justify-between gap-3 mb-1.5">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span
-                      className={`w-5 h-5 rounded-md text-[10px] font-mono font-bold flex items-center justify-center shrink-0 ${idx < 3 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
+                      className={`w-5 h-5 rounded-md text-[10px] font-mono font-bold flex items-center justify-center shrink-0 ${idx < 3 ? 'bg-brand text-white' : 'bg-slate-100 text-slate-600'
                         }`}
                     >
                       #{idx + 1}
@@ -492,7 +492,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                   <div className="flex items-center gap-3 min-w-0">
                     <span
                       className={`w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${idx < 3 && val > 0
-                          ? 'bg-slate-900 text-white'
+                          ? 'bg-brand text-white'
                           : 'bg-slate-100 text-slate-600'
                         }`}
                     >

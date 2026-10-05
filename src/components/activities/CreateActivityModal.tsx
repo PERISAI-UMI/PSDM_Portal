@@ -185,7 +185,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               onChange={(e) => setNama(e.target.value)}
               placeholder="Contoh: Rapat Pleno Evaluasi"
               required
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px]"
             />
           </div>
 
@@ -200,7 +200,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 onClick={() => setMode('OFFLINE')}
                 className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                   mode === 'OFFLINE'
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                    ? 'bg-brand text-white border-brand shadow-2xs'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
@@ -213,7 +213,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 onClick={() => setMode('ONLINE')}
                 className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                   mode === 'ONLINE'
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                    ? 'bg-brand text-white border-brand shadow-2xs'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
@@ -237,7 +237,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                   onChange={(e) => setLokasi(e.target.value)}
                   placeholder="Ruang Sidang / Gedung PKM"
                   required
-                  className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
+                  className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px]"
                 />
               </div>
             </div>
@@ -253,7 +253,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                   value={meetingUrl}
                   onChange={(e) => setMeetingUrl(e.target.value)}
                   placeholder="https://zoom.us/j/... atau https://meet.google.com/..."
-                  className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px]"
+                  className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px]"
                 />
               </div>
             </div>
@@ -269,7 +269,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 value={activityDate}
                 onChange={(e) => setActivityDate(e.target.value)}
                 required
-                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white cursor-pointer"
+                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-white cursor-pointer"
               />
             </div>
 
@@ -281,7 +281,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 <select
                   value={activityHour}
                   onChange={(e) => setActivityHour(e.target.value)}
-                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
+                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-white font-medium cursor-pointer"
                 >
                   {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
                     <option key={h} value={h}>
@@ -293,7 +293,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 <select
                   value={activityMinute}
                   onChange={(e) => setActivityMinute(e.target.value)}
-                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[40px] bg-white font-medium cursor-pointer"
+                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-white font-medium cursor-pointer"
                 >
                   {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
                     <option key={m} value={m}>
@@ -312,7 +312,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               onChange={(e) => setDeskripsi(e.target.value)}
               rows={3}
               placeholder="Deskripsi atau agenda kegiatan..."
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand"
             />
           </div>
 
@@ -322,7 +322,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               id="isPublished"
               checked={isPublished}
               onChange={(e) => setIsPublished(e.target.checked)}
-              className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 w-4 h-4 cursor-pointer"
+              className="rounded border-slate-300 text-slate-900 focus:ring-brand w-4 h-4 cursor-pointer"
             />
             <label htmlFor="isPublished" className="text-xs font-medium text-slate-700 cursor-pointer">
               Publikasikan ke kalender kegiatan
@@ -340,7 +340,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg disabled:opacity-50 min-h-[42px] shadow-xs cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2 text-xs font-semibold text-ink bg-accent hover:bg-accent-600 rounded-lg disabled:opacity-50 min-h-[42px] shadow-xs cursor-pointer"
             >
               {loading ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Buat Kegiatan'}
             </button>

@@ -56,7 +56,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, error }) => {
                 placeholder="PRN0001"
                 required
                 autoFocus
-                className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 font-mono transition-colors"
+                className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand font-mono transition-colors"
               />
               <User className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
             </div>
@@ -73,7 +73,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, error }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-colors"
+                className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-colors"
               />
               <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
             </div>
@@ -82,7 +82,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, error }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-xs cursor-pointer pt-2"
+            className="w-full py-2.5 px-4 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-xs cursor-pointer pt-2"
           >
             {loading ? 'Memproses...' : 'Masuk'}
             <ArrowRight className="w-3.5 h-3.5" />

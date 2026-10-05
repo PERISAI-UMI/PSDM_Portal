@@ -118,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavClick('dashboard')}
               className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                 activeSection === 'dashboard'
-                  ? 'bg-slate-100 text-slate-900 font-semibold'
+                  ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
@@ -133,7 +133,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavClick('activities')}
               className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                 activeSection === 'activities'
-                  ? 'bg-slate-100 text-slate-900 font-semibold'
+                  ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
@@ -153,7 +153,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavClick('permissions')}
               className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                 activeSection === 'permissions'
-                  ? 'bg-slate-100 text-slate-900 font-semibold'
+                  ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
@@ -164,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               </div>
               {counts.pendingPermissionsCount > 0 && (
-                <span className="text-[11px] font-semibold bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded">
+                <span className="text-[11px] font-semibold bg-accent text-ink px-1.5 py-0.2 rounded">
                   {counts.pendingPermissionsCount}
                 </span>
               )}
@@ -177,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => handleNavClick('members')}
                 className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                   activeSection === 'members'
-                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
@@ -202,7 +202,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }}
                   className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                     activeSection === 'master-data'
-                      ? 'bg-slate-100 text-slate-900 font-semibold'
+                      ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
@@ -220,7 +220,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       onClick={() => onOpenMasterDataTab?.('dept')}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'dept'
-                          ? 'bg-slate-900 text-white font-semibold'
+                          ? 'bg-brand text-white font-semibold'
                           : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       }`}
                     >
@@ -233,7 +233,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       onClick={() => onOpenMasterDataTab?.('fakultas')}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'fakultas'
-                          ? 'bg-slate-900 text-white font-semibold'
+                          ? 'bg-brand text-white font-semibold'
                           : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       }`}
                     >
@@ -246,7 +246,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       onClick={() => onOpenMasterDataTab?.('prodi')}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'prodi'
-                          ? 'bg-slate-900 text-white font-semibold'
+                          ? 'bg-brand text-white font-semibold'
                           : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       }`}
                     >
@@ -259,7 +259,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       onClick={() => onOpenMasterDataTab?.('pj')}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'pj'
-                          ? 'bg-slate-900 text-white font-semibold'
+                          ? 'bg-brand text-white font-semibold'
                           : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       }`}
                     >
@@ -285,7 +285,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => handleNavClick('profile', onOpenProfile)}
                 className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                   activeSection === 'profile'
-                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
@@ -324,7 +324,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             title="Kelola profil & ubah kata sandi Anda"
             className="flex items-center gap-2.5 min-w-0 text-left hover:bg-slate-100/80 p-1 rounded-lg transition-colors flex-1"
           >
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
               {user.avatarUrl ? (
                 <img src={user.avatarUrl} alt={user.namaLengkap} className="w-full h-full object-cover" />
               ) : (

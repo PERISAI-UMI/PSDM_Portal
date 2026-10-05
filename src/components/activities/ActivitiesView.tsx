@@ -93,7 +93,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             <button
               type="button"
               onClick={onOpenCreateActivity}
-              className="px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs cursor-pointer"
+              className="px-4 py-2.5 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Buat Kegiatan</span>
@@ -162,7 +162,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari kegiatan berdasarkan nama, deskripsi, lokasi..."
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 transition-all"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand transition-all"
           />
         </div>
 
@@ -171,7 +171,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           <select
             value={modeFilter}
             onChange={(e) => setModeFilter(e.target.value as 'ALL' | 'OFFLINE' | 'ONLINE')}
-            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900"
+            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="ALL">Semua Format</option>
             <option value="OFFLINE">Offline (Tatap Muka)</option>

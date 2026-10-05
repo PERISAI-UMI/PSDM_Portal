@@ -186,7 +186,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                 setEditingMember(null);
                 setIsFormModalOpen(true);
               }}
-              className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tambah Anggota</span>
@@ -279,7 +279,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari nama, PRN, NIM, jabatan, atau prodi..."
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 transition-all"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand transition-all"
           />
         </div>
 
@@ -288,7 +288,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}
-            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900"
+            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="ALL">Semua Departemen</option>
             {departmentOptions.map((d) => (
@@ -302,7 +302,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <select
             value={selectedRole}
             onChange={(e) => setSelectedRole(e.target.value as any)}
-            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900"
+            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="ALL">Semua Role</option>
             <option value="SUPER_ADMIN">Super Admin</option>
@@ -347,7 +347,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                   {/* Top Bar: Avatar, PRN & Role */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm tracking-wider shadow-2xs overflow-hidden shrink-0">
+                      <div className="w-11 h-11 rounded-xl bg-brand text-white flex items-center justify-center font-bold text-sm tracking-wider shadow-2xs overflow-hidden shrink-0">
                         {user.avatarUrl ? (
                           <img src={user.avatarUrl} alt={user.namaLengkap} className="w-full h-full object-cover" />
                         ) : (
@@ -485,7 +485,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
                     <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+                          <div className="w-8 h-8 rounded-lg bg-brand text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
                             {user.avatarUrl ? (
                               <img src={user.avatarUrl} alt={user.namaLengkap} className="w-full h-full object-cover" />
                             ) : (

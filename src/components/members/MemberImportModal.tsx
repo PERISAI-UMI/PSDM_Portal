@@ -474,7 +474,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
             type="button"
             onClick={handleStartImport}
             disabled={parsedRows.length === 0 || validCount === 0 || isUploading || isProcessingFile}
-            className="px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+            className="px-5 py-2 text-xs font-semibold text-white bg-brand hover:bg-brand-700 rounded-lg transition-colors shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
           >
             <Upload className="w-3.5 h-3.5" />
             <span>
