@@ -132,7 +132,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-150">
       {/* Backdrop */}
       <div
         className="fixed inset-0"
@@ -140,8 +140,8 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Modal Dialog (Clean & Minimalist) */}
-      <div className="relative w-full sm:max-w-lg bg-surface rounded-t-2xl sm:rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden flex flex-col max-h-[88vh] z-10 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-150">
+      {/* Modal Dialog (Clean & Minimalist, Centered on all devices) */}
+      <div className="relative w-full max-w-lg bg-surface rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden flex flex-col max-h-[88vh] z-10 animate-in zoom-in-95 duration-150">
         
         {/* Header Bersih */}
         <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0 bg-surface">
