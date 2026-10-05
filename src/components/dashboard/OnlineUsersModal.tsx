@@ -141,15 +141,15 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
       />
 
       {/* Modal Dialog (Clean & Minimalist, Centered on all devices) */}
-      <div className="relative w-full max-w-lg bg-surface rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden flex flex-col max-h-[88vh] z-10 animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-lg bg-surface rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[88vh] z-10 animate-in zoom-in-95 duration-150">
         
         {/* Header Bersih */}
-        <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0 bg-surface">
+        <div className="px-4 sm:px-5 py-3.5 border-b border-slate-200/80 flex items-center justify-between shrink-0 bg-surface">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100">
+            <h2 className="text-sm sm:text-base font-semibold text-slate-900">
               Pengguna Online
             </h2>
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/40">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               {onlineCount}
             </span>
@@ -162,7 +162,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
               disabled={isRefreshing || isLoading}
               title="Segarkan"
               aria-label="Segarkan"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 cursor-pointer"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing || isLoading ? 'animate-spin' : ''}`} />
             </button>
@@ -171,7 +171,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
               onClick={onClose}
               title="Tutup"
               aria-label="Tutup"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -179,7 +179,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
         </div>
 
         {/* Input Pencarian Ringkas */}
-        <div className="p-3 sm:px-4 sm:py-2.5 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <div className="p-3 sm:px-4 sm:py-2.5 border-b border-slate-200/80 shrink-0">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
@@ -187,13 +187,13 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama, PRN, atau jabatan..."
-              className="w-full pl-9 pr-8 py-1.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-all text-slate-900 dark:text-slate-100 placeholder:text-slate-400"
+              className="w-full pl-9 pr-8 py-1.5 text-xs sm:text-sm bg-slate-100/70 border border-slate-200/80 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-all text-slate-900 placeholder:text-slate-400"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-700 rounded-full cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -213,7 +213,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
               return (
                 <div
                   key={u.id}
-                  className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/40 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800/60 transition-colors flex items-center justify-between gap-3"
+                  className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-colors flex items-center justify-between gap-3"
                 >
                   {/* Avatar & Identitas */}
                   <div className="flex items-center gap-3 min-w-0">
@@ -234,7 +234,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate">
+                        <span className="font-semibold text-sm text-slate-900 truncate">
                           {u.namaLengkap}
                         </span>
                         {getRoleBadge(u.role)}
@@ -244,8 +244,8 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                        <span className="font-mono text-[11px] text-slate-600 dark:text-slate-300 font-medium">
+                      <p className="text-xs text-slate-500 truncate mt-0.5">
+                        <span className="font-mono text-[11px] text-slate-700 font-medium">
                           {u.prn}
                         </span>
                         {u.jabatan ? ` • ${u.jabatan}` : ''}
@@ -259,7 +259,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                       <span>{formatRelativeTime(u.lastActiveAt)}</span>
                     </div>
-                    <div className="flex items-center justify-end gap-1 text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                    <div className="flex items-center justify-end gap-1 text-[11px] text-slate-400 mt-0.5">
                       {getDeviceIcon(primaryDevice?.userAgent)}
                       <span>{getDeviceLabel(primaryDevice?.userAgent)}</span>
                     </div>
@@ -271,7 +271,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
         </div>
 
         {/* Footer Minimalis */}
-        <div className="px-4 sm:px-5 py-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 shrink-0 bg-surface">
+        <div className="px-4 sm:px-5 py-2.5 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-400 shrink-0 bg-surface">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3 h-3" />
             <span>
@@ -285,7 +285,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-3 py-1 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="px-3 py-1 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             Tutup
           </button>
