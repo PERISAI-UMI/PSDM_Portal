@@ -3,7 +3,6 @@ import {
   Plus,
   Trash2,
   Pencil,
-  Link as LinkIcon,
   Building2,
   GraduationCap,
   Search,
@@ -237,91 +236,38 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header Dinamis sesuai menu aktif di sidebar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-slate-200/80">
         <div>
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
-              Master Data & Manajemen Struktur
+              {activeTab === 'dept' && 'Manajemen Departemen'}
+              {activeTab === 'fakultas' && 'Manajemen Fakultas'}
+              {activeTab === 'prodi' && 'Manajemen Jurusan / Program Studi'}
+              {activeTab === 'pj' && 'Penugasan PJ Departemen'}
             </h1>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
+              {activeTab === 'dept' && `${departments.length} Departemen`}
+              {activeTab === 'fakultas' && `${fakultas.length} Fakultas`}
+              {activeTab === 'prodi' && `${programStudi.length} Program Studi`}
+              {activeTab === 'pj' && `${pjMappings.length} Penugasan Aktif`}
+            </span>
           </div>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-            {isReadOnly
-              ? 'Daftar struktur organisasi untuk Departemen, Fakultas, Jurusan / Program Studi, serta Penugasan PJ.'
-              : 'Kelola penuh Departemen, Fakultas, Jurusan / Program Studi, serta Penugasan PJ.'}
+            {activeTab === 'dept' && (isReadOnly
+              ? 'Daftar departemen yang terdaftar di organisasi.'
+              : 'Kelola departemen, tambah departemen baru, perbarui nama, atau hapus departemen.')}
+            {activeTab === 'fakultas' && (isReadOnly
+              ? 'Daftar fakultas universitas yang terdaftar.'
+              : 'Kelola data fakultas universitas untuk pengelompokan program studi.')}
+            {activeTab === 'prodi' && (isReadOnly
+              ? 'Daftar program studi dan fakultas terkait.'
+              : 'Kelola program studi, asosiasikan ke fakultas, dan perbarui data.')}
+            {activeTab === 'pj' && (isReadOnly
+              ? 'Daftar penugasan Penanggung Jawab (PJ) per departemen.'
+              : 'Tugaskan Admin sebagai Penanggung Jawab (PJ) departemen tertentu.')}
           </p>
         </div>
-      </div>
-
-      {/* 4 Dedicated Tabs - Horizontally scrollable on mobile */}
-      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-px -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
-        {/* Tab 1: Departemen */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('dept')}
-          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-            activeTab === 'dept'
-              ? 'border-brand text-slate-900 font-bold'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <Building2 className="w-4 h-4" />
-          <span>Departemen</span>
-          <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
-            {departments.length}
-          </span>
-        </button>
-
-        {/* Tab 2: Fakultas */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('fakultas')}
-          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-            activeTab === 'fakultas'
-              ? 'border-brand text-slate-900 font-bold'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          <span>Fakultas</span>
-          <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
-            {fakultas.length}
-          </span>
-        </button>
-
-        {/* Tab 3: Jurusan / Program Studi */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('prodi')}
-          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-            activeTab === 'prodi'
-              ? 'border-brand text-slate-900 font-bold'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <GraduationCap className="w-4 h-4" />
-          <span>Jurusan / Prodi</span>
-          <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
-            {programStudi.length}
-          </span>
-        </button>
-
-        {/* Tab 4: Penugasan PJ */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('pj')}
-          className={`py-2.5 sm:pb-3 px-3 sm:px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-            activeTab === 'pj'
-              ? 'border-brand text-slate-900 font-bold'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <LinkIcon className="w-4 h-4" />
-          <span>Penugasan PJ</span>
-          <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700">
-            {pjMappings.length}
-          </span>
-        </button>
       </div>
 
       {/* ────────────────── TAB 1: DEPARTEMEN ────────────────── */}
