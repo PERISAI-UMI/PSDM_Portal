@@ -88,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header: perfectly aligned with h-14 Header */}
       <div className="h-14 px-4 border-b border-slate-200/80 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 p-1 flex items-center justify-center shadow-2xs shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 p-1 flex items-center justify-center shadow-2xs shrink-0 transition-colors">
             <img
               src="/favicon.ico"
               alt="Logo"
@@ -97,9 +97,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-slate-900 text-sm tracking-tight shrink-0">Portal PSDM</span>
+              <span className="font-semibold text-slate-900 text-sm tracking-normal shrink-0 brand-text">Portal PSDM</span>
             </div>
-            <p className="text-[11px] text-slate-500 truncate" title={user.departmentName || 'Departemen PSDM'}>
+            <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate" title={user.departmentName || 'Departemen PSDM'}>
               {user.departmentName || 'Departemen PSDM'}
             </p>
           </div>

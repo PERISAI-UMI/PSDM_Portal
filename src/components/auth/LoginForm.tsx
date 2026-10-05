@@ -25,7 +25,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, error }) => {
         {/* Brand Header */}
         <div className="text-center mb-7">
           <div className="flex justify-center mb-3">
-            <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/90 p-2 flex items-center justify-center shadow-xs">
+            <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-2 flex items-center justify-center shadow-xs transition-colors">
               <img
                 src="/favicon.ico"
                 alt="Logo Portal PSDM"
@@ -33,8 +33,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, error }) => {
               />
             </div>
           </div>
-          <h1 className="text-lg font-bold text-slate-900 tracking-tight">Portal PSDM</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Masuk untuk mengakses sistem</p>
+          <h1 className="text-lg font-semibold text-slate-900 tracking-normal brand-text">Portal PSDM</h1>
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">Masuk untuk mengakses sistem</p>
         </div>
 
         {error && (

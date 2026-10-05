@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
               <Menu className="w-5 h-5" />
             </button>
           )}
-          <span className="font-bold text-slate-900 text-sm">Portal PSDM</span>
+          <span className="font-semibold text-slate-900 text-sm tracking-normal brand-text">Portal PSDM</span>
         </div>
 
         {/* Desktop View Left (>= 1024px) */}
