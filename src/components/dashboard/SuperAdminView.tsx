@@ -153,100 +153,100 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
         <div
           onClick={() => onNavigateTo?.('activities')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Total Kegiatan</span>
-            <Calendar className="w-4 h-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Total Kegiatan</span>
+            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:text-slate-900 transition-colors shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {activities.length}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700 truncate">
             <span>Lihat kegiatan</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
 
         <div
           onClick={() => onNavigateTo?.('activities')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Rata-rata Kehadiran</span>
-            <UserCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Rata-rata Presensi</span>
+            <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {avgAttendanceRate}%
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">
             {totalBaseKehadiran > 0
-              ? `${totalHadir} Hadir/Telat • ${totalAlpa} Alpa`
-              : 'Belum ada data presensi'}
+              ? `${totalHadir} Hadir • ${totalAlpa} Alpa`
+              : 'Belum ada presensi'}
           </p>
         </div>
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Perlu Tindakan</span>
-            <Clock className="w-4 h-4 text-amber-500" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Perlu Tindakan</span>
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {pendingCount}
           </div>
-          <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
+          <p className="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800 truncate">
             <span>Menunggu tinjauan</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
 
         <div
           onClick={() => onNavigateTo?.('members')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Total Pengurus</span>
-            <Users className="w-4 h-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Total Pengurus</span>
+            <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:text-slate-900 transition-colors shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {allUsers.length}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700">
-            <span>Lihat data pengurus</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700 truncate">
+            <span>Lihat pengurus</span>
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
 
         {/* 5. Live Active Users (Khusus Super Admin & Inti) */}
         <div
           onClick={onOpenOnlineUsers}
-          className="col-span-2 sm:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-emerald-400/80 hover:shadow-xs transition-all cursor-pointer group relative overflow-hidden"
+          className="col-span-2 sm:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-emerald-400/80 hover:shadow-xs transition-all cursor-pointer group relative overflow-hidden flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Pengguna Aktif</span>
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Pengguna Aktif</span>
+            <div className="flex items-center gap-1.5 shrink-0">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <Activity className="w-4 h-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+              <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5 flex items-baseline gap-2">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5 flex items-baseline gap-2">
             <span>{onlineCount}</span>
-            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.2 rounded-full uppercase tracking-wider">
               Live
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-emerald-700">
-            <span>Siapa yang online</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-emerald-700 truncate">
+            <span>Daftar online</span>
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
       </div>

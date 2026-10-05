@@ -89,116 +89,116 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
 
       {/* Dynamic KPI Metrics based on Active Sub-menu */}
       {activeTab === 'pending' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div className="bg-surface rounded-xl border border-amber-200/80 p-4 shadow-2xs bg-gradient-to-br from-amber-50/40 to-transparent">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-amber-900">Perlu Tindakan / Diproses</span>
-              <Clock className="w-4 h-4 text-amber-500 animate-pulse" />
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
+          <div className="bg-surface rounded-xl border border-amber-200/80 p-3 sm:p-4 shadow-2xs bg-gradient-to-br from-amber-50/40 to-transparent flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-xs font-semibold text-amber-900 truncate">Perlu Tindakan</span>
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 animate-pulse shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-amber-950 tabular-nums tracking-tight mt-1.5">
+            <div className="text-xl sm:text-2xl font-bold text-amber-950 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {pendingCount}
             </div>
-            <p className="text-[11px] text-amber-700 font-medium mt-0.5">
+            <p className="text-[10px] sm:text-[11px] text-amber-700 font-medium mt-0.5 truncate">
               {currentUser.role === 'INTI'
-                ? 'Menunggu verifikasi oleh admin'
+                ? 'Menunggu verifikasi admin'
                 : isNonAdmin
-                ? 'Dalam antrean verifikasi tim PSDM'
-                : 'Menunggu keputusan persetujuan Anda'}
+                ? 'Antrean verifikasi PSDM'
+                : 'Menunggu keputusan Anda'}
             </p>
           </div>
 
-          <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Total Akumulasi Permohonan</span>
-              <FileText className="w-4 h-4 text-slate-400" />
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-xs font-medium text-slate-500 truncate">Total Permohonan</span>
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {permissions.length}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Termasuk permohonan yang telah diarsipkan</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Semua permohonan</p>
           </div>
         </div>
       ) : activeTab === 'history' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Total Arsip Selesai</span>
-              <FileText className="w-4 h-4 text-slate-400" />
+        <div className="grid grid-cols-3 gap-2 sm:gap-3.5">
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-2.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-[11px] sm:text-xs font-medium text-slate-500 truncate">Total Arsip</span>
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+            <div className="text-lg sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {approvedCount + rejectedCount}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Keputusan telah diputuskan</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Selesai diproses</p>
           </div>
 
-          <div className="bg-surface rounded-xl border border-emerald-200/60 p-4 shadow-2xs bg-gradient-to-br from-emerald-50/30 to-transparent">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-emerald-800">Disetujui</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+          <div className="bg-surface rounded-xl border border-emerald-200/60 p-2.5 sm:p-4 shadow-2xs bg-gradient-to-br from-emerald-50/30 to-transparent flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-[11px] sm:text-xs font-semibold text-emerald-800 truncate">Disetujui</span>
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-emerald-950 tabular-nums tracking-tight mt-1.5">
+            <div className="text-lg sm:text-2xl font-bold text-emerald-950 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {approvedCount}
             </div>
-            <p className="text-[11px] text-emerald-700 font-medium mt-0.5">Presensi telah disesuaikan</p>
+            <p className="text-[10px] sm:text-[11px] text-emerald-700 font-medium mt-0.5 truncate">Presensi sesuai</p>
           </div>
 
-          <div className="bg-surface rounded-xl border border-rose-200/60 p-4 shadow-2xs bg-gradient-to-br from-rose-50/30 to-transparent">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-rose-800">Ditolak</span>
-              <XCircle className="w-4 h-4 text-rose-500" />
+          <div className="bg-surface rounded-xl border border-rose-200/60 p-2.5 sm:p-4 shadow-2xs bg-gradient-to-br from-rose-50/30 to-transparent flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-[11px] sm:text-xs font-semibold text-rose-800 truncate">Ditolak</span>
+              <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-rose-950 tabular-nums tracking-tight mt-1.5">
+            <div className="text-lg sm:text-2xl font-bold text-rose-950 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {rejectedCount}
             </div>
-            <p className="text-[11px] text-rose-700 font-medium mt-0.5">Tidak memenuhi syarat</p>
+            <p className="text-[10px] sm:text-[11px] text-rose-700 font-medium mt-0.5 truncate">Tidak memenuhi</p>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Total Permohonan</span>
-              <FileText className="w-4 h-4 text-slate-400" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-xs font-medium text-slate-500 truncate">Total Permohonan</span>
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {permissions.length}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Semua riwayat permohonan</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Semua riwayat</p>
           </div>
 
-          <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Menunggu Verifikasi</span>
-              <Clock className="w-4 h-4 text-amber-500" />
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-xs font-medium text-slate-500 truncate">Menunggu</span>
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {pendingCount}
             </div>
-            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">
-              {currentUser.role === 'INTI' ? 'Menunggu verifikasi admin' : isNonAdmin ? 'Sedang diproses Admin' : 'Memerlukan persetujuan'}
+            <p className="text-[10px] sm:text-[11px] text-amber-600 font-medium mt-0.5 truncate">
+              {currentUser.role === 'INTI' ? 'Menunggu admin' : isNonAdmin ? 'Diproses PSDM' : 'Perlu respon'}
             </p>
           </div>
 
-          <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Disetujui</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-xs font-medium text-slate-500 truncate">Disetujui</span>
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {approvedCount}
             </div>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">Presensi telah disesuaikan</p>
+            <p className="text-[10px] sm:text-[11px] text-emerald-600 font-medium mt-0.5 truncate">Presensi sesuai</p>
           </div>
 
-          <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Ditolak</span>
-              <XCircle className="w-4 h-4 text-rose-500" />
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-xs font-medium text-slate-500 truncate">Ditolak</span>
+              <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500 shrink-0" />
             </div>
-            <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {rejectedCount}
             </div>
-            <p className="text-[11px] text-rose-600 dark:text-rose-400 font-medium mt-0.5">Tidak memenuhi syarat</p>
+            <p className="text-[10px] sm:text-[11px] text-rose-600 font-medium mt-0.5 truncate">Tidak memenuhi</p>
           </div>
         </div>
       )}

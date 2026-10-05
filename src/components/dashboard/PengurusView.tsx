@@ -63,57 +63,57 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Tingkat Kehadiran</span>
-            <UserCheck className="w-4 h-4 text-emerald-500" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Presensi Kehadiran</span>
+            <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {attendanceRate}%
           </div>
-          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">
+          <p className="text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 truncate">
             {hadirCount} dari {attendanceBase} kegiatan
           </p>
         </div>
 
-        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Hadir</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Hadir</span>
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {hadirCount}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">Kegiatan terpresensi</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Kegiatan terpresensi</p>
         </div>
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Izin / Sakit</span>
-            <Clock className="w-4 h-4 text-amber-500" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Izin / Sakit</span>
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {izinCount}
           </div>
-          <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
-            <span>Lihat riwayat perizinan</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+          <p className="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800 truncate">
+            <span>Riwayat izin</span>
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
 
-        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Tanpa Keterangan</span>
-            <AlertCircle className="w-4 h-4 text-rose-500" />
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Tanpa Keterangan</span>
+            <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {alphaCount}
           </div>
-          <p className="text-[11px] text-rose-600 dark:text-rose-400 font-medium mt-0.5">Presensi Alpha</p>
+          <p className="text-[10px] sm:text-[11px] text-rose-600 dark:text-rose-400 font-medium mt-0.5 truncate">Presensi Alpha</p>
         </div>
       </div>
 

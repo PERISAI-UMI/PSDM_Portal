@@ -122,69 +122,69 @@ export const AdminView: React.FC<AdminViewProps> = ({
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
         <div
           onClick={() => onNavigateTo?.('activities')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Agenda Kegiatan</span>
-            <Calendar className="w-4 h-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Agenda Kegiatan</span>
+            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:text-slate-900 transition-colors shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {publishedCount}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700 truncate">
             <span>Lihat kegiatan</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Izin Menunggu</span>
-            <Clock className="w-4 h-4 text-amber-500" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Izin Menunggu</span>
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {pendingCount}
           </div>
-          <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
+          <p className="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800 truncate">
             <span>Menunggu verifikasi</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Total Izin Binaan</span>
-            <CheckCircle2 className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Total Izin Binaan</span>
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:text-slate-900 shrink-0" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
             {myAssignedPermissions.length}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">Riwayat departemen</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Riwayat departemen</p>
         </div>
 
         <div
           onClick={() => onNavigateTo?.('members')}
-          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Direktori Anggota</span>
-            <Users className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Direktori Anggota</span>
+            <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:text-slate-900 shrink-0" />
           </div>
-          <div className="text-sm font-bold text-slate-900 tracking-tight mt-2">
+          <div className="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-1 sm:mt-1.5 truncate">
             Data Anggota
           </div>
-          <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 group-hover:text-slate-700">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-slate-700 truncate">
             <span>Lihat anggota</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
       </div>
