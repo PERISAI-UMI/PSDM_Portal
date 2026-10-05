@@ -9,6 +9,7 @@ interface PermissionListTableProps {
   currentUser: AuthUser;
   onReview?: (permissionId: string, status: PermissionStatus) => Promise<void>;
   onDelete?: (permissionId: string) => Promise<void>;
+  filterMode?: 'all' | 'pending' | 'history';
 }
 
 export const PermissionListTable: React.FC<PermissionListTableProps> = ({
@@ -16,9 +17,12 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
   currentUser,
   onReview,
   onDelete,
+  filterMode = 'all',
 }) => {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>(
+    filterMode === 'pending' ? 'PENDING' : 'ALL'
+  );
   const [previewPermission, setPreviewPermission] = useState<PermissionRecord | null>(null);
   const [confirmDeletePermission, setConfirmDeletePermission] = useState<PermissionRecord | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -68,7 +72,13 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
   if (permissions.length === 0) {
     return (
       <div className="p-8 text-center bg-surface rounded-xl border border-slate-200/80 shadow-2xs">
-        <p className="text-xs text-slate-500">Tidak ada data perizinan yang tercatat saat ini.</p>
+        <p className="text-xs text-slate-500">
+          {filterMode === 'pending'
+            ? 'Tidak ada permohonan izin yang menunggu tindakan saat ini.'
+            : filterMode === 'history'
+            ? 'Belum ada riwayat perizinan yang tersimpan saat ini.'
+            : 'Tidak ada data perizinan yang tercatat saat ini.'}
+        </p>
       </div>
     );
   }
@@ -88,43 +98,57 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
           />
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-          {(
-            [
-              { id: 'ALL', label: 'Semua' },
-              { id: 'PENDING', label: 'Menunggu' },
-              { id: 'APPROVED', label: 'Disetujui' },
-              { id: 'REJECTED', label: 'Ditolak' },
-            ] as const
-          ).map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setStatusFilter(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-                statusFilter === tab.id
-                  ? 'bg-brand text-white shadow-2xs'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        {filterMode === 'pending' ? (
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-amber-50 text-amber-700 border border-amber-200/80 inline-flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" />
+              Menunggu Tindakan ({permissions.length})
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+            {(filterMode === 'history'
+              ? ([
+                  { id: 'ALL', label: 'Semua Arsip' },
+                  { id: 'APPROVED', label: 'Disetujui' },
+                  { id: 'REJECTED', label: 'Ditolak' },
+                ] as const)
+              : ([
+                  { id: 'ALL', label: 'Semua' },
+                  { id: 'PENDING', label: 'Menunggu' },
+                  { id: 'APPROVED', label: 'Disetujui' },
+                  { id: 'REJECTED', label: 'Ditolak' },
+                ] as const)
+            ).map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setStatusFilter(tab.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  statusFilter === tab.id
+                    ? 'bg-brand text-white shadow-2xs'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {filteredPermissions.length === 0 ? (
         <div className="p-8 text-center bg-surface rounded-xl border border-slate-200/80 shadow-2xs">
           <p className="text-xs text-slate-500">
-            Tidak ada permohonan yang sesuai dengan filter pencarian.
+            Tidak ada permohonan yang sesuai dengan kriteria pencarian.
           </p>
           <button
             type="button"
             onClick={() => {
               setSearch('');
-              setStatusFilter('ALL');
+              setStatusFilter(filterMode === 'pending' ? 'PENDING' : 'ALL');
             }}
-            className="mt-2 text-xs font-semibold text-slate-900 hover:underline"
+            className="mt-2 text-xs font-semibold text-slate-900 hover:underline cursor-pointer"
           >
             Reset Filter
           </button>

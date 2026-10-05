@@ -16,6 +16,9 @@ import {
   UserCheck,
   BookOpen,
   GraduationCap,
+  Clock,
+  CheckCircle2,
+  KeyRound,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
@@ -34,6 +37,10 @@ interface SidebarProps {
   onSelectSection?: (sectionId: string) => void;
   onOpenMasterDataTab?: (tab: 'dept' | 'fakultas' | 'prodi' | 'pj') => void;
   activeMasterDataTab?: 'dept' | 'fakultas' | 'prodi' | 'pj';
+  onOpenProfileTab?: (tab: 'profile' | 'security') => void;
+  activeProfileTab?: 'profile' | 'security';
+  onOpenPermissionTab?: (tab: 'pending' | 'history') => void;
+  activePermissionTab?: 'pending' | 'history';
   counts?: {
     activitiesCount: number;
     pendingPermissionsCount: number;
@@ -55,6 +62,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectSection,
   onOpenMasterDataTab,
   activeMasterDataTab = 'dept',
+  onOpenProfileTab,
+  activeProfileTab = 'profile',
+  onOpenPermissionTab,
+  activePermissionTab = 'pending',
   counts = { activitiesCount: 0, pendingPermissionsCount: 0 },
 }) => {
   const getInitials = (name: string) => {
@@ -148,27 +159,80 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </button>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('permissions')}
-              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
-                activeSection === 'permissions'
-                  ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <FileText className="w-4 h-4 text-slate-500" />
-                <span>
-                  {user.role !== 'SUPER_ADMIN' && user.role !== 'ADMIN' ? 'Perizinan' : 'Verifikasi Izin'}
-                </span>
-              </div>
-              {counts.pendingPermissionsCount > 0 && (
-                <span className="text-[11px] font-semibold bg-accent text-ink px-1.5 py-0.2 rounded">
-                  {counts.pendingPermissionsCount}
-                </span>
+            {/* Perizinan dengan Sub-menu Dropdown */}
+            <div className="space-y-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenPermissionTab) {
+                    onOpenPermissionTab(activePermissionTab || 'pending');
+                  } else {
+                    handleNavClick('permissions');
+                  }
+                }}
+                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                  activeSection === 'permissions'
+                    ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <FileText className="w-4 h-4 text-slate-500" />
+                  <span>
+                    {user.role !== 'SUPER_ADMIN' && user.role !== 'ADMIN' ? 'Perizinan' : 'Verifikasi Izin'}
+                  </span>
+                </div>
+                {counts.pendingPermissionsCount > 0 && (
+                  <span className="text-[11px] font-semibold bg-accent text-ink px-1.5 py-0.2 rounded">
+                    {counts.pendingPermissionsCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Sub-menu Perizinan when active */}
+              {activeSection === 'permissions' && (
+                <div className="pl-5 pr-1 py-1 space-y-1 border-l-2 border-slate-200 ml-4">
+                  <button
+                    type="button"
+                    onClick={() => onOpenPermissionTab?.('pending')}
+                    className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center justify-between cursor-pointer ${
+                      activePermissionTab === 'pending'
+                        ? 'bg-brand text-white font-semibold'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>{user.role === 'PENGURUS' ? 'Izin Diproses' : 'Perlu Tindakan'}</span>
+                    </div>
+                    {counts.pendingPermissionsCount > 0 && (
+                      <span
+                        className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
+                          activePermissionTab === 'pending'
+                            ? 'bg-white/20 text-white'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {counts.pendingPermissionsCount}
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => onOpenPermissionTab?.('history')}
+                    className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                      activePermissionTab === 'history'
+                        ? 'bg-brand text-white font-semibold'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Riwayat & Arsip</span>
+                  </button>
+                </div>
               )}
-            </button>
+            </div>
 
             {/* Member Directory: For all roles except PENGURUS */}
             {user.role !== 'PENGURUS' && (
@@ -280,21 +344,59 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </span>
           <nav className="space-y-0.5">
             {onOpenProfile && (
-              <button
-                type="button"
-                onClick={() => handleNavClick('profile', onOpenProfile)}
-                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                  activeSection === 'profile'
-                    ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <User className="w-4 h-4 text-slate-500" />
-                  <span>Profil</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-              </button>
+              <div className="space-y-0.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenProfileTab) {
+                      onOpenProfileTab(activeProfileTab || 'profile');
+                    } else {
+                      handleNavClick('profile', onOpenProfile);
+                    }
+                  }}
+                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                    activeSection === 'profile'
+                      ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <User className="w-4 h-4 text-slate-500" />
+                    <span>Profil & Akun</span>
+                  </div>
+                </button>
+
+                {/* Sub-menu Profil when active */}
+                {activeSection === 'profile' && (
+                  <div className="pl-5 pr-1 py-1 space-y-1 border-l-2 border-slate-200 ml-4">
+                    <button
+                      type="button"
+                      onClick={() => onOpenProfileTab?.('profile')}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeProfileTab === 'profile'
+                          ? 'bg-brand text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <User className="w-3.5 h-3.5" />
+                      <span>Biodata Diri</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onOpenProfileTab?.('security')}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeProfileTab === 'security'
+                          ? 'bg-brand text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <KeyRound className="w-3.5 h-3.5" />
+                      <span>Keamanan & Sandi</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             {onOpenAudit && user.role === 'SUPER_ADMIN' && (

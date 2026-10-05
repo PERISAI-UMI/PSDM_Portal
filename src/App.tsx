@@ -76,6 +76,8 @@ function MainAppContent() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<ActiveSection>(() => getSectionFromHash());
   const [masterDataTab, setMasterDataTab] = useState<MasterDataTab>('dept');
+  const [profileTab, setProfileTab] = useState<'profile' | 'security'>('profile');
+  const [permissionTab, setPermissionTab] = useState<'pending' | 'history'>('pending');
 
   // Real-time Online Users Presence State (Khusus Super Admin & Inti)
   const [onlinePresence, setOnlinePresence] = useState<OnlinePresenceData>({
@@ -596,7 +598,20 @@ function MainAppContent() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } : undefined}
         onOpenProfile={() => {
+          setProfileTab('profile');
           setActiveSection('profile');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        activeProfileTab={profileTab}
+        onOpenProfileTab={(tab) => {
+          setProfileTab(tab);
+          setActiveSection('profile');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        activePermissionTab={permissionTab}
+        onOpenPermissionTab={(tab) => {
+          setPermissionTab(tab);
+          setActiveSection('permissions');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onOpenAudit={() => setShowAuditModal(true)}
@@ -619,6 +634,12 @@ function MainAppContent() {
           if (currentUser.role !== 'SUPER_ADMIN' && sec === 'master-data') {
             return;
           }
+          if (sec === 'profile') {
+            setProfileTab('profile');
+          }
+          if (sec === 'permissions') {
+            setPermissionTab('pending');
+          }
           setActiveSection(sec as ActiveSection);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
@@ -634,6 +655,7 @@ function MainAppContent() {
           user={currentUser}
           onLogout={handleLogout}
           onOpenProfile={() => {
+            setProfileTab('profile');
             setActiveSection('profile');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
@@ -648,6 +670,7 @@ function MainAppContent() {
           {activeSection === 'profile' && (
             <ProfileView
               currentUser={currentUser}
+              activeTab={profileTab}
               onUpdateProfile={handleUpdateProfile}
               onChangePassword={handleChangePassword}
               onBackToDashboard={() => setActiveSection('dashboard')}
@@ -682,6 +705,7 @@ function MainAppContent() {
           {activeSection === 'permissions' && (
             <PermissionsView
               currentUser={currentUser}
+              activeTab={permissionTab}
               permissions={permissions}
               activities={activities}
               onReviewPermission={handleReviewPermission}

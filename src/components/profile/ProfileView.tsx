@@ -37,6 +37,7 @@ interface ProfileViewProps {
     newPass: string
   ) => Promise<{ success: boolean; message: string }>;
   onBackToDashboard?: () => void;
+  activeTab?: 'profile' | 'security';
 }
 
 export const ProfileView: React.FC<ProfileViewProps> = ({
@@ -44,8 +45,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onUpdateProfile,
   onChangePassword,
   onBackToDashboard,
+  activeTab = 'profile',
 }) => {
-  const [activeTab, setActiveTab] = useState<'profile' | 'security'>('profile');
 
   // Profile Form States
   const [namaLengkap, setNamaLengkap] = useState(currentUser.namaLengkap);
@@ -254,11 +255,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           )}
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Profil & Akun
+              {activeTab === 'profile' ? 'Biodata Diri & Identitas' : 'Keamanan Akun & Kata Sandi'}
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Kelola data diri dan keamanan akun Anda.
+            {activeTab === 'profile'
+              ? 'Kelola data diri, kontak, dan tautan media sosial Anda.'
+              : 'Perbarui kata sandi akun secara berkala untuk menjaga keamanan data organisasi.'}
           </p>
         </div>
 
@@ -273,8 +276,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
       </div>
 
-      {/* 2. Profile Photo & Identity Banner */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      {/* 2. Profile Photo & Identity Banner (Khusus Biodata Diri) */}
+      {activeTab === 'profile' && (
+        <>
+          <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 sm:gap-4">
           <div className="relative group shrink-0">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-brand text-white flex items-center justify-center font-bold text-xl sm:text-2xl shadow-sm overflow-hidden ring-4 ring-slate-100">
@@ -415,32 +420,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           </div>
         </div>
       </div>
-
-      {/* 3. Section Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-px">
-        <button
-          type="button"
-          onClick={() => setActiveTab('profile')}
-          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${activeTab === 'profile'
-              ? 'border-brand text-slate-900 font-bold'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-        >
-          <User className="w-4 h-4" />
-          <span>Profil</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('security')}
-          className={`py-2.5 sm:pb-3 px-3.5 border-b-2 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${activeTab === 'security'
-              ? 'border-brand text-slate-900 font-bold'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-        >
-          <KeyRound className="w-4 h-4" />
-          <span>Keamanan</span>
-        </button>
-      </div>
+      </>
+      )}
 
       {/* 4. Main Form Area */}
       {activeTab === 'profile' && (
