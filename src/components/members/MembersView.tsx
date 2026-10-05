@@ -165,15 +165,15 @@ export const MembersView: React.FC<MembersViewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+        <div className="flex items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
           {/* Super Admin Action: Import Anggota */}
           {isSuperAdmin && onImportMembers && (
             <button
               type="button"
               onClick={() => setIsImportModalOpen(true)}
-              className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+              className="flex-1 sm:flex-initial px-3 sm:px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer shrink-0 sm:shrink"
             >
-              <FileSpreadsheet className="w-4 h-4" />
+              <FileSpreadsheet className="w-4 h-4 shrink-0" />
               <span>Import</span>
             </button>
           )}
@@ -186,21 +186,21 @@ export const MembersView: React.FC<MembersViewProps> = ({
                 setEditingMember(null);
                 setIsFormModalOpen(true);
               }}
-              className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+              className="flex-1 sm:flex-initial px-3.5 sm:px-4 py-2 rounded-lg bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer shrink-0 sm:shrink whitespace-nowrap"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 shrink-0" />
               <span>Tambah Anggota</span>
             </button>
           )}
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg shrink-0 ml-auto sm:ml-0">
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${viewMode === 'grid'
-                ? 'bg-surface text-slate-900 shadow-2xs'
-                : 'text-slate-500 hover:text-slate-900'
+              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${viewMode === 'grid'
+                ? 'bg-surface text-slate-900 dark:text-slate-100 shadow-2xs font-semibold'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               title="Tampilan Kartu"
             >
@@ -210,9 +210,9 @@ export const MembersView: React.FC<MembersViewProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${viewMode === 'table'
-                ? 'bg-surface text-slate-900 shadow-2xs'
-                : 'text-slate-500 hover:text-slate-900'
+              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${viewMode === 'table'
+                ? 'bg-surface text-slate-900 dark:text-slate-100 shadow-2xs font-semibold'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               title="Tampilan Tabel"
             >
