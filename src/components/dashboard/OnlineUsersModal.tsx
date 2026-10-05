@@ -82,29 +82,29 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
     switch (role) {
       case 'SUPER_ADMIN':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
-            <ShieldCheck className="w-3 h-3 text-purple-600" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-purple-50 text-purple-700 dark:text-purple-300 border border-purple-200">
+            <ShieldCheck className="w-3 h-3 text-purple-600 dark:text-purple-400" />
             SUPER ADMIN
           </span>
         );
       case 'INTI':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
-            <Shield className="w-3 h-3 text-brand-600" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-brand-50 text-brand-700 dark:text-brand-300 border border-brand-200">
+            <Shield className="w-3 h-3 text-brand-600 dark:text-brand-300" />
             BPH INTI
           </span>
         );
       case 'ADMIN':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-            <Shield className="w-3 h-3 text-blue-600" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 dark:text-blue-300 border border-blue-200">
+            <Shield className="w-3 h-3 text-blue-600 dark:text-blue-400" />
             ADMIN PJ
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
             PENGURUS
           </span>
         );
@@ -152,7 +152,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
       />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-3xl bg-surface rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="px-5 py-4 bg-gradient-to-r from-brand-700 via-brand to-brand-700 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -219,7 +219,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-white shrink-0">
+        <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-surface shrink-0">
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
@@ -282,7 +282,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
               return (
                 <div
                   key={u.id}
-                  className="bg-white rounded-xl border border-slate-200/90 p-3.5 hover:border-slate-300 hover:shadow-2xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className="bg-surface rounded-xl border border-slate-200/90 p-3.5 hover:border-slate-300 hover:shadow-2xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                 >
                   {/* User Profile Info */}
                   <div className="flex items-center gap-3 min-w-0">
@@ -299,7 +299,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                         )}
                       </div>
                       {/* Pulsing online badge */}
-                      <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></span>
+                      <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-surface"></span>
                     </div>
 
                     <div className="min-w-0 flex-1">
@@ -329,7 +329,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                         {getDeviceIcon(primaryDevice?.userAgent)}
                         <span>{getDeviceLabel(primaryDevice?.userAgent)}</span>
                       </div>
-                      <div className="text-[11px] text-emerald-600 font-medium flex items-center sm:justify-end gap-1 mt-0.5">
+                      <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center sm:justify-end gap-1 mt-0.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                         <span>Aktif {formatRelativeTime(u.lastActiveAt)}</span>
                       </div>
@@ -338,7 +338,7 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
                     {u.sessionCount > 1 && (
                       <span
                         title={`${u.sessionCount} perangkat aktif secara bersamaan`}
-                        className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 shrink-0"
+                        className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200 shrink-0"
                       >
                         {u.sessionCount} Sesi
                       </span>

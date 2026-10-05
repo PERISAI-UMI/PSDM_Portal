@@ -21,7 +21,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, error }) => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-4 bg-slate-50/50">
-      <div className="w-full max-w-sm bg-white rounded-2xl border border-slate-200/90 shadow-sm p-7 sm:p-8">
+      <div className="w-full max-w-sm bg-surface rounded-2xl border border-slate-200/90 shadow-sm p-7 sm:p-8">
         {/* Brand Header */}
         <div className="text-center mb-7">
           <div className="flex justify-center mb-3">
@@ -38,7 +38,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, error }) => {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+          <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 dark:text-rose-300 text-xs font-medium">
             {error}
           </div>
         )}

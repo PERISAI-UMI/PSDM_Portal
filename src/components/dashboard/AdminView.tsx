@@ -125,7 +125,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div
           onClick={() => onNavigateTo?.('activities')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Agenda Kegiatan</span>
@@ -142,7 +142,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Izin Menunggu</span>
@@ -151,7 +151,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {pendingCount}
           </div>
-          <p className="text-[11px] text-amber-600 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
+          <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
             <span>Menunggu verifikasi</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
@@ -159,7 +159,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Total Izin Binaan</span>
@@ -173,7 +173,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
         <div
           onClick={() => onNavigateTo?.('members')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Direktori Anggota</span>
@@ -192,7 +192,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
       {/* Two Column Layout: Upcoming Agenda & Pending Permissions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Agenda Box */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -274,14 +274,14 @@ export const AdminView: React.FC<AdminViewProps> = ({
         </div>
 
         {/* Pending Permissions Box */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-600" />
+                <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <h2 className="text-sm font-bold text-slate-900">Validasi Izin Binaan</h2>
                 {pendingCount > 0 && (
-                  <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800">
+                  <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 dark:text-amber-300">
                     {pendingCount}
                   </span>
                 )}
@@ -316,7 +316,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                         <span className="font-semibold text-xs text-slate-900 truncate">
                           {p.userName || p.userPrn || 'Anggota'}
                         </span>
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 border border-amber-200">
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200">
                           {p.jenisIzin}
                         </span>
                       </div>
@@ -329,7 +329,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       <button
                         type="button"
                         onClick={() => onReviewPermission(p.id, 'APPROVED')}
-                        className="p-1.5 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        className="p-1.5 rounded-md bg-emerald-50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 border border-emerald-200 transition-colors"
                         title="Setujui Izin"
                       >
                         <Check className="w-3.5 h-3.5" />
@@ -337,7 +337,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       <button
                         type="button"
                         onClick={() => onReviewPermission(p.id, 'REJECTED')}
-                        className="p-1.5 rounded-md bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors"
+                        className="p-1.5 rounded-md bg-rose-50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 border border-rose-200 transition-colors"
                         title="Tolak Izin"
                       >
                         <X className="w-3.5 h-3.5" />

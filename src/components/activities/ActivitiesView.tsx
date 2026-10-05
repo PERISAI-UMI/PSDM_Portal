@@ -104,7 +104,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Total Program Kerja</span>
             <Layers className="w-4 h-4 text-slate-400" />
@@ -115,7 +115,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           <p className="text-[11px] text-slate-400 mt-0.5">Seluruh agenda kegiatan</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Aktif & Publikasi</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -123,11 +123,11 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {publishedCount}
           </div>
-          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Tampil pada kalender anggota</p>
+          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">Tampil pada kalender anggota</p>
         </div>
 
         {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'INTI') && (
-          <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-slate-500">Draft Internal</span>
               <Clock className="w-4 h-4 text-amber-500" />
@@ -135,17 +135,17 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
               {draftCount}
             </div>
-            <p className="text-[11px] text-amber-600 font-medium mt-0.5">Belum dipublikasikan</p>
+            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">Belum dipublikasikan</p>
           </div>
         )}
 
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Mode Pelaksanaan</span>
             <Filter className="w-4 h-4 text-slate-400" />
           </div>
           <div className="text-xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5 flex items-baseline gap-2">
-            <span>{activities.filter((a) => a.mode === 'ONLINE').length} <span className="text-xs font-semibold text-sky-600">Online</span></span>
+            <span>{activities.filter((a) => a.mode === 'ONLINE').length} <span className="text-xs font-semibold text-sky-600 dark:text-sky-400">Online</span></span>
             <span className="text-slate-300 font-normal">/</span>
             <span>{activities.filter((a) => a.mode === 'OFFLINE').length} <span className="text-xs font-semibold text-slate-600">Offline</span></span>
           </div>
@@ -154,7 +154,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-surface p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
         <div className="relative flex-1 max-w-md">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
@@ -162,7 +162,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari kegiatan berdasarkan nama, deskripsi, lokasi..."
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand transition-all"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-surface focus:outline-none focus:ring-1 focus:ring-brand transition-all"
           />
         </div>
 
@@ -171,7 +171,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           <select
             value={modeFilter}
             onChange={(e) => setModeFilter(e.target.value as 'ALL' | 'OFFLINE' | 'ONLINE')}
-            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
+            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="ALL">Semua Format</option>
             <option value="OFFLINE">Offline (Tatap Muka)</option>
@@ -194,7 +194,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
                   onClick={() => setStatusFilter(tab.id)}
                   className={`px-3 py-1.5 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
                     statusFilter === tab.id
-                      ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                      ? 'bg-surface text-slate-900 shadow-2xs font-semibold'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -208,7 +208,7 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
 
       {/* Activities Grid */}
       {filteredActivities.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+        <div className="p-12 text-center bg-surface rounded-xl border border-slate-200/80 shadow-2xs">
           <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
           <h3 className="text-sm font-semibold text-slate-800">Tidak ada kegiatan ditemukan</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">

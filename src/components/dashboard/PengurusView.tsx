@@ -64,7 +64,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
 
       {/* Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Tingkat Kehadiran</span>
             <UserCheck className="w-4 h-4 text-emerald-500" />
@@ -72,12 +72,12 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {attendanceRate}%
           </div>
-          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">
+          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">
             {hadirCount} dari {attendanceBase} kegiatan
           </p>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Hadir</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -90,7 +90,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Izin / Sakit</span>
@@ -99,13 +99,13 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {izinCount}
           </div>
-          <p className="text-[11px] text-amber-600 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
+          <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
             <span>Lihat riwayat perizinan</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Tanpa Keterangan</span>
             <AlertCircle className="w-4 h-4 text-rose-500" />
@@ -113,14 +113,14 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {alphaCount}
           </div>
-          <p className="text-[11px] text-rose-600 font-medium mt-0.5">Presensi Alpha</p>
+          <p className="text-[11px] text-rose-600 dark:text-rose-400 font-medium mt-0.5">Presensi Alpha</p>
         </div>
       </div>
 
       {/* Two Columns: Upcoming Agenda & Recent Permissions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Agenda Box */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
         </div>
 
         {/* Recent Permissions Box */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -216,10 +216,10 @@ export const PengurusView: React.FC<PengurusViewProps> = ({
                 recentPermissions.map((p) => {
                   const badgeClass =
                     p.status === 'APPROVED'
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200'
                       : p.status === 'REJECTED'
-                        ? 'bg-rose-50 text-rose-700 border-rose-200'
-                        : 'bg-amber-50 text-amber-700 border-amber-200';
+                        ? 'bg-rose-50 text-rose-700 dark:text-rose-300 border-rose-200'
+                        : 'bg-amber-50 text-amber-700 dark:text-amber-300 border-amber-200';
 
                   const badgeText =
                     p.status === 'APPROVED'

@@ -156,7 +156,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
         <div
           onClick={() => onNavigateTo?.('activities')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Total Kegiatan</span>
@@ -173,11 +173,11 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
 
         <div
           onClick={() => onNavigateTo?.('activities')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Rata-rata Kehadiran</span>
-            <UserCheck className="w-4 h-4 text-emerald-600" />
+            <UserCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {avgAttendanceRate}%
@@ -191,7 +191,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
 
         <div
           onClick={() => onNavigateTo?.('permissions')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Perlu Tindakan</span>
@@ -200,7 +200,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {pendingCount}
           </div>
-          <p className="text-[11px] text-amber-600 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
+          <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center gap-1 group-hover:text-amber-800">
             <span>Menunggu tinjauan</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
           </p>
@@ -208,7 +208,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
 
         <div
           onClick={() => onNavigateTo?.('members')}
-          className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
+          className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Total Pengurus</span>
@@ -226,7 +226,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
         {/* 5. Live Active Users (Khusus Super Admin & Inti) */}
         <div
           onClick={onOpenOnlineUsers}
-          className="col-span-2 sm:col-span-1 bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-emerald-400/80 hover:shadow-xs transition-all cursor-pointer group relative overflow-hidden"
+          className="col-span-2 sm:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-emerald-400/80 hover:shadow-xs transition-all cursor-pointer group relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Pengguna Aktif</span>
@@ -235,12 +235,12 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <Activity className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+              <Activity className="w-4 h-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
             </div>
           </div>
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5 flex items-baseline gap-2">
             <span>{onlineCount}</span>
-            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
               Live
             </span>
           </div>
@@ -254,7 +254,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
       {/* Two Column Layout: Upcoming Agenda & Pending Permissions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Agenda Box */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -292,7 +292,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                           </h3>
                           <span
                             className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${act.isPublished
-                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200'
                                 : 'bg-slate-100 text-slate-600'
                               }`}
                           >
@@ -356,14 +356,14 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
         </div>
 
         {/* Pending Permissions Box */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-600" />
+                <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <h2 className="text-sm font-bold text-slate-900">Perizinan Perlu Validasi</h2>
                 {pendingCount > 0 && (
-                  <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800">
+                  <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 dark:text-amber-300">
                     {pendingCount}
                   </span>
                 )}
@@ -396,7 +396,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                         <span className="font-semibold text-xs text-slate-900 truncate">
                           {p.userName || p.userPrn || 'Anggota'}
                         </span>
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 border border-amber-200">
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200">
                           {p.jenisIzin}
                         </span>
                       </div>
@@ -410,7 +410,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                         <button
                           type="button"
                           onClick={() => onReviewPermission(p.id, 'APPROVED')}
-                          className="p-1.5 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                          className="p-1.5 rounded-md bg-emerald-50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 border border-emerald-200 transition-colors"
                           title="Setujui Izin"
                         >
                           <Check className="w-3.5 h-3.5" />
@@ -418,14 +418,14 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                         <button
                           type="button"
                           onClick={() => onReviewPermission(p.id, 'REJECTED')}
-                          className="p-1.5 rounded-md bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors"
+                          className="p-1.5 rounded-md bg-rose-50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 border border-rose-200 transition-colors"
                           title="Tolak Izin"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     ) : (
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 shrink-0">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200 shrink-0">
                         Menunggu
                       </span>
                     )}
@@ -455,7 +455,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           onClick={() => onNavigateTo?.('members')}
-          className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
+          className="bg-surface p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
@@ -474,7 +474,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
         {currentUser.role === 'SUPER_ADMIN' ? (
           <div
             onClick={() => onNavigateTo?.('master-data')}
-            className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
+            className="bg-surface p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
@@ -492,7 +492,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
         ) : (
           <div
             onClick={() => onNavigateTo?.('activities')}
-            className="bg-white p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
+            className="bg-surface p-4.5 rounded-xl border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">

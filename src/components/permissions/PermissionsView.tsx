@@ -52,7 +52,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
 
       {/* KPI Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Total Permohonan</span>
             <FileText className="w-4 h-4 text-slate-400" />
@@ -63,7 +63,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
           <p className="text-[11px] text-slate-400 mt-0.5">Semua riwayat permohonan</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Menunggu Verifikasi</span>
             <Clock className="w-4 h-4 text-amber-500" />
@@ -71,12 +71,12 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {pendingCount}
           </div>
-          <p className="text-[11px] text-amber-600 font-medium mt-0.5">
+          <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">
             {currentUser.role === 'INTI' ? 'Menunggu verifikasi admin' : isNonAdmin ? 'Sedang diproses Admin' : 'Memerlukan persetujuan'}
           </p>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Disetujui</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -84,10 +84,10 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {approvedCount}
           </div>
-          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Presensi telah disesuaikan</p>
+          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">Presensi telah disesuaikan</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs">
+        <div className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Ditolak</span>
             <XCircle className="w-4 h-4 text-rose-500" />
@@ -95,7 +95,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
           <div className="text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1.5">
             {rejectedCount}
           </div>
-          <p className="text-[11px] text-rose-600 font-medium mt-0.5">Tidak memenuhi syarat</p>
+          <p className="text-[11px] text-rose-600 dark:text-rose-400 font-medium mt-0.5">Tidak memenuhi syarat</p>
         </div>
       </div>
 

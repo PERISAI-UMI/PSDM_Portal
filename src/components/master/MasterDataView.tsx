@@ -329,7 +329,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Create Dept Form (Hidden for Read-Only) */}
           {!isReadOnly && (
-            <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="lg:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs">
               <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
                 <Plus className="w-4 h-4 text-slate-900" />
                 <h2 className="text-sm font-bold text-slate-900">Tambah Departemen Baru</h2>
@@ -346,7 +346,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     onChange={(e) => setNewDeptName(e.target.value)}
                     placeholder="Contoh: Riset & Teknologi"
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                 </div>
 
@@ -363,7 +363,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           )}
 
           {/* List Departemen with Edit & Delete */}
-          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
+          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-slate-900" />
@@ -380,7 +380,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   value={deptSearch}
                   onChange={(e) => setDeptSearch(e.target.value)}
                   placeholder="Cari departemen..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
                 />
               </div>
             </div>
@@ -412,7 +412,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         <button
                           type="button"
                           onClick={() => openEditModal({ type: 'dept', id: d.id, name: d.nama })}
-                          className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                          className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-surface rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
                           title="Edit Departemen"
                         >
                           <Pencil className="w-3.5 h-3.5" />
@@ -440,7 +440,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Create Fakultas Form (Hidden for Read-Only) */}
           {!isReadOnly && (
-            <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="lg:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs">
               <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
                 <Plus className="w-4 h-4 text-slate-900" />
                 <h2 className="text-sm font-bold text-slate-900">Tambah Fakultas Baru</h2>
@@ -457,7 +457,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     onChange={(e) => setNewFakultasName(e.target.value)}
                     placeholder="Contoh: Fakultas Ilmu Komputer (FIKOM)"
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                 </div>
 
@@ -474,7 +474,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           )}
 
           {/* List Fakultas with Edit & Delete */}
-          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
+          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-slate-900" />
@@ -491,7 +491,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   value={fakultasSearch}
                   onChange={(e) => setFakultasSearch(e.target.value)}
                   placeholder="Cari fakultas..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
                 />
               </div>
             </div>
@@ -530,7 +530,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                             setProdiFakultasFilter(f.id);
                             setActiveTab('prodi');
                           }}
-                          className="px-2.5 py-1.5 min-h-[36px] text-[11px] font-medium text-slate-700 bg-white hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1.5 min-h-[36px] text-[11px] font-medium text-slate-700 bg-surface hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors cursor-pointer flex items-center gap-1"
                           title="Lihat jurusan di fakultas ini"
                         >
                           <Layers className="w-3 h-3" />
@@ -541,7 +541,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                             <button
                               type="button"
                               onClick={() => openEditModal({ type: 'fakultas', id: f.id, name: f.nama })}
-                              className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                              className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-surface rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
                               title="Edit Fakultas"
                             >
                               <Pencil className="w-3.5 h-3.5" />
@@ -571,7 +571,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Create Prodi Form (Hidden for Read-Only) */}
           {!isReadOnly && (
-            <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="lg:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs">
               <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
                 <Plus className="w-4 h-4 text-slate-900" />
                 <h2 className="text-sm font-bold text-slate-900">Tambah Jurusan Baru</h2>
@@ -586,7 +586,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={selectedFakultasForProdi}
                     onChange={(e) => setSelectedFakultasForProdi(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {fakultas.map((f) => (
                       <option key={f.id} value={f.id}>
@@ -606,7 +606,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     onChange={(e) => setNewProdiName(e.target.value)}
                     placeholder="Contoh: S1 Teknik Informatika"
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   />
                 </div>
 
@@ -623,7 +623,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           )}
 
           {/* List Prodi with Filter, Edit & Delete */}
-          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
+          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
             <div className="flex flex-col gap-3 pb-3 mb-4 border-b border-slate-100">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -644,7 +644,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={prodiSearch}
                     onChange={(e) => setProdiSearch(e.target.value)}
                     placeholder="Cari nama jurusan..."
-                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full"
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface focus:outline-none focus:ring-1 focus:ring-brand w-full"
                   />
                 </div>
 
@@ -653,7 +653,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   <select
                     value={prodiFakultasFilter}
                     onChange={(e) => setProdiFakultasFilter(e.target.value)}
-                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full"
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface focus:outline-none focus:ring-1 focus:ring-brand w-full"
                   >
                     <option value="">Semua Fakultas</option>
                     {fakultas.map((f) => (
@@ -688,7 +688,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                             {p.nama}
                           </span>
                           <span className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
-                            <span className="px-2 py-0.2 rounded bg-white text-slate-700 font-semibold border border-slate-200 text-[10px]">
+                            <span className="px-2 py-0.2 rounded bg-surface text-slate-700 font-semibold border border-slate-200 text-[10px]">
                               {parentFak?.nama || 'Fakultas'}
                             </span>
                           </span>
@@ -707,7 +707,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                                 fakultasId: p.fakultasId,
                               })
                             }
-                            className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+                            className="p-2 sm:p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-surface rounded-lg border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
                             title="Edit Jurusan / Pindah Fakultas"
                           >
                             <Pencil className="w-3.5 h-3.5" />
@@ -742,7 +742,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Form Assign PJ (Hidden for Read-Only) */}
           {!isReadOnly && (
-            <div className="lg:col-span-1 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+            <div className="lg:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs">
               <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100">
                 <UserCheck className="w-4 h-4 text-slate-900" />
                 <h2 className="text-sm font-bold text-slate-900">Tugaskan PJ Baru</h2>
@@ -757,7 +757,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={selectedAdmin}
                     onChange={(e) => setSelectedAdmin(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {admins.length === 0 ? (
                       <option value="">Tidak ada akun Admin</option>
@@ -779,7 +779,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={selectedDept}
                     onChange={(e) => setSelectedDept(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {departments.length === 0 ? (
                       <option value="">Tidak ada data Departemen</option>
@@ -806,7 +806,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           )}
 
           {/* List Penugasan PJ */}
-          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
+          <div className={`${isReadOnly ? 'lg:col-span-3' : 'lg:col-span-2'} bg-surface rounded-xl border border-slate-200/80 p-5 shadow-xs`}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-slate-900" />
@@ -823,7 +823,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   value={pjSearch}
                   onChange={(e) => setPjSearch(e.target.value)}
                   placeholder="Cari admin atau departemen..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
+                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
                 />
               </div>
             </div>
@@ -856,7 +856,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                         </div>
                         <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
                           <span>Membina:</span>
-                          <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-semibold text-[11px] border border-blue-200/60">
+                          <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:text-blue-300 font-semibold text-[11px] border border-blue-200/60">
                             {m.departmentName || 'Departemen'}
                           </span>
                         </div>
@@ -884,7 +884,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
       {/* ────────────────── REUSABLE EDIT MODAL ────────────────── */}
       {editingTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-brand/40 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-surface rounded-2xl border border-slate-200 shadow-xl w-full max-w-md max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Pencil className="w-4 h-4 text-slate-900" />
@@ -913,7 +913,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     value={editFakultasId}
                     onChange={(e) => setEditFakultasId(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                   >
                     {fakultas.map((f) => (
                       <option key={f.id} value={f.id}>
@@ -934,7 +934,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   onChange={(e) => setEditName(e.target.value)}
                   required
                   autoFocus
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand"
                 />
               </div>
 
@@ -962,9 +962,9 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
       {/* ────────────────── REUSABLE DELETE MODAL ────────────────── */}
       {deletingTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-brand/40 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-sm max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-surface rounded-2xl border border-slate-200 shadow-xl w-full max-w-sm max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="p-5 text-center space-y-3">
-              <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+              <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-600 dark:text-rose-400 flex items-center justify-center mx-auto">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
@@ -975,7 +975,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   Apakah Anda yakin ingin menghapus {deletingTarget.type === 'dept' ? 'Departemen' : deletingTarget.type === 'fakultas' ? 'Fakultas' : 'Jurusan'}{' '}
                   <span className="font-semibold text-slate-900">"{deletingTarget.name}"</span>?
                 </p>
-                <p className="text-[11px] text-amber-700 bg-amber-50 rounded-lg p-2 mt-2 text-left">
+                <p className="text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 rounded-lg p-2 mt-2 text-left">
                   ⚠️ Perhatian: Data yang masih digunakan atau berelasi dengan anggota pengurus aktif tidak dapat dihapus.
                 </p>
               </div>

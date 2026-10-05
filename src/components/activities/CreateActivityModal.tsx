@@ -149,7 +149,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
-      <div className="bg-white w-full max-w-lg rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] overflow-y-auto">
+      <div className="bg-surface w-full max-w-lg rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] overflow-y-auto">
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             {isEditing ? (
@@ -171,7 +171,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
         </div>
 
         {errorMessage && (
-          <div className="mt-3 p-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg">
+          <div className="mt-3 p-3 text-xs text-rose-700 dark:text-rose-300 bg-rose-50 border border-rose-200 rounded-lg">
             {errorMessage}
           </div>
         )}
@@ -201,7 +201,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                   mode === 'OFFLINE'
                     ? 'bg-brand text-white border-brand shadow-2xs'
-                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                    : 'bg-surface text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
                 <MapPin className="w-4 h-4" />
@@ -214,7 +214,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                   mode === 'ONLINE'
                     ? 'bg-brand text-white border-brand shadow-2xs'
-                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                    : 'bg-surface text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
                 <Video className="w-4 h-4" />
@@ -269,7 +269,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 value={activityDate}
                 onChange={(e) => setActivityDate(e.target.value)}
                 required
-                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-white cursor-pointer"
+                className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-surface cursor-pointer"
               />
             </div>
 
@@ -281,7 +281,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 <select
                   value={activityHour}
                   onChange={(e) => setActivityHour(e.target.value)}
-                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-white font-medium cursor-pointer"
+                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-surface font-medium cursor-pointer"
                 >
                   {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
                     <option key={h} value={h}>
@@ -293,7 +293,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
                 <select
                   value={activityMinute}
                   onChange={(e) => setActivityMinute(e.target.value)}
-                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-white font-medium cursor-pointer"
+                  className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px] bg-surface font-medium cursor-pointer"
                 >
                   {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
                     <option key={m} value={m}>

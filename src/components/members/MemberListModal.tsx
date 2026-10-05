@@ -33,7 +33,7 @@ export const MemberListModal: React.FC<MemberListModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
-      <div className="bg-white w-full max-w-3xl rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] sm:max-h-[90vh] flex flex-col">
+      <div className="bg-surface w-full max-w-3xl rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] sm:max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-slate-900" />
@@ -68,7 +68,7 @@ export const MemberListModal: React.FC<MemberListModalProps> = ({
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}
-            className="px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 bg-white min-h-[42px]"
+            className="px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 bg-surface min-h-[42px]"
           >
             <option value="ALL">Semua Departemen</option>
             {departmentsList.map((d) => (
@@ -94,10 +94,10 @@ export const MemberListModal: React.FC<MemberListModalProps> = ({
                   <span
                     className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                       m.role === 'SUPER_ADMIN'
-                        ? 'bg-red-100 text-red-800'
+                        ? 'bg-red-100 text-red-800 dark:text-red-300'
                         : m.role === 'ADMIN'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-blue-100 text-blue-800 dark:text-blue-300'
+                        : 'bg-emerald-100 text-emerald-800 dark:text-emerald-300'
                     }`}
                   >
                     {m.role}

@@ -138,7 +138,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white w-full max-w-2xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200/80 my-8 max-h-[90vh] flex flex-col">
+      <div className="bg-surface w-full max-w-2xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200/80 my-8 max-h-[90vh] flex flex-col">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 shrink-0">
           <div>
@@ -163,8 +163,8 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
         {/* Modal Body */}
         <form onSubmit={handleSubmit} autoComplete="off" className="flex-1 overflow-y-auto py-4 space-y-5 pr-1">
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
@@ -188,7 +188,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   disabled={isEditing}
                   placeholder="Contoh: PRN0099"
                   required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white disabled:bg-slate-100 disabled:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand uppercase font-mono"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface disabled:bg-slate-100 disabled:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand uppercase font-mono"
                 />
               </div>
 
@@ -206,7 +206,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                     placeholder={isEditing ? 'Biarkan kosong jika tidak diubah' : 'Minimal 8 karakter'}
                     required={!isEditing}
                     minLength={password ? 8 : undefined}
-                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                   />
                   <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -232,7 +232,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   onChange={(e) => setNamaLengkap(e.target.value)}
                   placeholder="Nama sesuai KTM"
                   required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
 
@@ -249,7 +249,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@domain.com"
                     required
-                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                   />
                   <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -268,7 +268,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                     onChange={(e) => setNoTelp(e.target.value)}
                     placeholder="08xxxxxxxxxx"
                     required
-                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                   />
                   <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -286,7 +286,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   onChange={(e) => setNim(e.target.value)}
                   placeholder="Nomor Induk Mahasiswa"
                   required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
 
@@ -301,7 +301,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   value={tempatLahir}
                   onChange={(e) => setTempatLahir(e.target.value)}
                   placeholder="Kota kelahiran"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
 
@@ -315,7 +315,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   autoComplete="off"
                   value={tanggalLahir}
                   onChange={(e) => setTanggalLahir(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
             </div>
@@ -335,7 +335,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   value={departmentId}
                   onChange={(e) => setDepartmentId(e.target.value)}
                   required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 >
                   <option value="" disabled>-- Pilih Departemen --</option>
                   {departments.map((d) => (
@@ -354,7 +354,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   value={programStudiId}
                   onChange={(e) => setProgramStudiId(e.target.value)}
                   required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 >
                   <option value="" disabled>-- Pilih Program Studi --</option>
                   {programStudi.map((p) => (
@@ -377,7 +377,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   onChange={(e) => setJabatan(e.target.value)}
                   placeholder="Contoh: Anggota Divisi / Staf"
                   required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
 
@@ -391,7 +391,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   value={role}
                   onChange={(e) => setRole(e.target.value as UserRole)}
                   required
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 >
                   <option value="" disabled>-- Pilih Role Sistem --</option>
                   <option value="PENGURUS">Pengurus (Standar)</option>
@@ -415,7 +415,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                     placeholder="Contoh: 2024"
                     min={2000}
                     max={2100}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                   />
                 </div>
                 <div>
@@ -431,7 +431,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                     placeholder="Contoh: 12"
                     min={1}
                     max={100}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                   />
                 </div>
               </div>
@@ -456,7 +456,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                     value={instagramUsername}
                     onChange={(e) => setInstagramUsername(e.target.value)}
                     placeholder="Akun Instagram (tanpa @)"
-                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                   />
                   <Instagram className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -474,7 +474,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
                     placeholder="https://linkedin.com/in/..."
-                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full px-3 py-2 pl-9 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                   />
                   <Globe className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -491,7 +491,7 @@ export const MemberFormModal: React.FC<MemberFormModalProps> = ({
                   onChange={(e) => setAlamat(e.target.value)}
                   rows={2}
                   placeholder="Alamat tempat tinggal saat ini"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-brand"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
             </div>

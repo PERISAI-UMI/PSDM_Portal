@@ -223,7 +223,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-xs">
-      <div className="bg-white w-full max-w-2xl rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200/80 max-h-[92vh] sm:max-h-[90vh] flex flex-col">
+      <div className="bg-surface w-full max-w-2xl rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200/80 max-h-[92vh] sm:max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
@@ -261,7 +261,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <span className="text-slate-600">{currentUser.departmentName || 'Organisasi'}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-white text-slate-600 border border-slate-200">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-surface text-slate-600 border border-slate-200">
               PRN: {currentUser.prn}
             </span>
             <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-200 text-slate-800">
@@ -305,7 +305,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="relative group shrink-0">
-                  <div className="w-14 h-14 rounded-xl bg-brand text-white flex items-center justify-center font-bold text-lg shadow-2xs overflow-hidden ring-2 ring-white">
+                  <div className="w-14 h-14 rounded-xl bg-brand text-white flex items-center justify-center font-bold text-lg shadow-2xs overflow-hidden ring-2 ring-surface">
                     {avatarUrl ? (
                       <img src={avatarUrl} alt={currentUser.namaLengkap} className="w-full h-full object-cover" />
                     ) : (
@@ -363,7 +363,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     type="button"
                     onClick={() => setShowDeleteAvatarConfirm(true)}
                     disabled={isUploadingAvatar}
-                    className="p-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors cursor-pointer disabled:opacity-50"
+                    className="p-1.5 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 border border-rose-200 transition-colors cursor-pointer disabled:opacity-50"
                     title="Hapus foto"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -373,22 +373,22 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             {avatarError && (
-              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
                 <span>{avatarError}</span>
               </div>
             )}
 
             {profileSuccess && (
-              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span>{profileSuccess}</span>
               </div>
             )}
 
             {profileError && (
-              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
                 <span>{profileError}</span>
               </div>
             )}
@@ -564,15 +564,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <form onSubmit={handleSavePassword} className="flex-1 overflow-y-auto pr-1 space-y-4">
 
             {passwordSuccess && (
-              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span>{passwordSuccess}</span>
               </div>
             )}
 
             {passwordError && (
-              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
                 <span>{passwordError}</span>
               </div>
             )}
@@ -641,7 +641,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 }`}
               />
               {confirmPassword && newPassword !== confirmPassword && (
-                <p className="text-[11px] text-rose-600 mt-1">Konfirmasi kata sandi tidak cocok.</p>
+                <p className="text-[11px] text-rose-600 dark:text-rose-400 mt-1">Konfirmasi kata sandi tidak cocok.</p>
               )}
             </div>
 

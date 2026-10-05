@@ -2,9 +2,12 @@ import {
   Menu,
   User,
   RefreshCw,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 import { RealtimeClockWidget } from './RealtimeClockWidget.tsx';
+import { useTheme } from '../../utils/theme.ts';
 
 interface HeaderProps {
   user: AuthUser;
@@ -24,8 +27,9 @@ export const Header: React.FC<HeaderProps> = ({
   onManualSync,
   lastSyncedAt: _lastSyncedAt,
 }) => {
+  const { isDark, toggleTheme } = useTheme();
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 h-14">
+    <header className="sticky top-0 z-30 bg-surface/95 backdrop-blur-md border-b border-slate-200/80 h-14">
       <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
         {/* Mobile & Tablet View (< 1024px) */}
         <div className="flex items-center gap-2.5 lg:hidden">
@@ -51,6 +55,21 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Realtime WITA Clock Widget */}
           <RealtimeClockWidget />
 
+          {/* Theme Toggle: Terang <-> Gelap */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-1.5 rounded-lg border border-slate-200/80 bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer shadow-2xs"
+            title={isDark ? 'Mode gelap aktif (Klik untuk beralih ke mode terang)' : 'Mode terang aktif (Klik untuk beralih ke mode gelap)'}
+            aria-label={isDark ? 'Beralih ke mode terang' : 'Beralih ke mode gelap'}
+          >
+            {isDark ? (
+              <Sun className="w-3.5 h-3.5 text-accent" />
+            ) : (
+              <Moon className="w-3.5 h-3.5 text-slate-600" />
+            )}
+          </button>
+
           {/* Real-time Live Status Badge */}
           <button
             type="button"
@@ -73,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
             <RefreshCw
               className={`w-3 h-3 text-slate-400 group-hover:text-slate-700 transition-transform duration-300 ${
-                isLiveSyncing ? 'animate-spin text-brand-600' : 'group-hover:rotate-180'
+                isLiveSyncing ? 'animate-spin text-brand-600 dark:text-brand-300' : 'group-hover:rotate-180'
               }`}
             />
           </button>

@@ -26,12 +26,12 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 animate-in zoom-in-95 duration-150">
+      <div className="bg-surface w-full max-w-md rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 animate-in zoom-in-95 duration-150">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                isDanger ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 text-slate-700'
+                isDanger ? 'bg-rose-50 text-rose-600 dark:text-rose-400' : 'bg-slate-100 text-slate-700'
               }`}
             >
               <AlertTriangle className="w-5 h-5" />

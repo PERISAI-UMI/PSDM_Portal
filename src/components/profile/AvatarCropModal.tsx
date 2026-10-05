@@ -217,7 +217,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/70 p-3 sm:p-4 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-md rounded-2xl p-4 sm:p-5 shadow-2xl border border-slate-200/90 flex flex-col max-h-[95vh] overflow-hidden">
+      <div className="bg-surface w-full max-w-md rounded-2xl p-4 sm:p-5 shadow-2xl border border-slate-200/90 flex flex-col max-h-[95vh] overflow-hidden">
         {/* Header Modal */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>

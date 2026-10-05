@@ -232,31 +232,31 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
     switch (st) {
       case 'HADIR':
         return (
-          <span className="px-3 py-1 text-xs font-bold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span className="px-3 py-1 text-xs font-bold rounded-md bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200">
             HADIR
           </span>
         );
       case 'TELAT':
         return (
-          <span className="px-3 py-1 text-xs font-bold rounded-md bg-amber-50 text-amber-700 border border-amber-200">
+          <span className="px-3 py-1 text-xs font-bold rounded-md bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200">
             TELAT
           </span>
         );
       case 'ALPHA':
         return (
-          <span className="px-3 py-1 text-xs font-bold rounded-md bg-rose-50 text-rose-700 border border-rose-200">
+          <span className="px-3 py-1 text-xs font-bold rounded-md bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200">
             ALPHA
           </span>
         );
       case 'IZIN':
         return (
-          <span className="px-3 py-1 text-xs font-bold rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="px-3 py-1 text-xs font-bold rounded-md bg-blue-50 text-blue-700 dark:text-blue-300 border border-blue-200">
             IZIN
           </span>
         );
       case 'SAKIT':
         return (
-          <span className="px-3 py-1 text-xs font-bold rounded-md bg-purple-50 text-purple-700 border border-purple-200">
+          <span className="px-3 py-1 text-xs font-bold rounded-md bg-purple-50 text-purple-700 dark:text-purple-300 border border-purple-200">
             SAKIT
           </span>
         );
@@ -271,7 +271,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
-      <div className="bg-white w-full max-w-3xl rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] sm:max-h-[88vh] flex flex-col">
+      <div className="bg-surface w-full max-w-3xl rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] sm:max-h-[88vh] flex flex-col">
         <div className="flex items-start justify-between pb-3 sm:pb-4 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">
@@ -295,8 +295,8 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
 
         {/* Lock Alert Banner */}
         {activity.isLocked && (
-          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2.5 shrink-0">
-            <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 dark:text-amber-300 text-xs flex items-center gap-2.5 shrink-0">
+            <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
             <div>
               <span className="font-bold">Presensi telah dikunci.</span>
             </div>
@@ -318,17 +318,17 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
 
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 justify-between sm:justify-end">
             <span className="text-xs text-slate-500 font-medium whitespace-nowrap">
-              Hadir: <strong className="text-emerald-700 font-bold">{hadirCount}</strong> / {usersList.length}
+              Hadir: <strong className="text-emerald-700 dark:text-emerald-300 font-bold">{hadirCount}</strong> / {usersList.length}
             </span>
 
             {currentAdmin.role === 'SUPER_ADMIN' && (
               <button
                 type="button"
                 onClick={() => setShowImportModal(true)}
-                className="px-3.5 py-2.5 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                className="px-3.5 py-2.5 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-700 dark:text-brand-300 border border-brand-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
                 title="Import presensi dari Excel / CSV"
               >
-                <FileSpreadsheet className="w-3.5 h-3.5 text-brand-600" />
+                <FileSpreadsheet className="w-3.5 h-3.5 text-brand-600 dark:text-brand-300" />
                 <span>Import Excel</span>
               </button>
             )}
@@ -338,7 +338,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
                 type="button"
                 onClick={handleExport}
                 disabled={exporting}
-                className="px-3.5 py-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
+                className="px-3.5 py-2.5 rounded-lg bg-surface hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[42px] cursor-pointer shadow-xs active:scale-95"
                 title="Export presensi ke CSV"
               >
                 <Download className="w-3.5 h-3.5 text-slate-600" />
@@ -502,11 +502,11 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
       {/* Custom Integrated Confirmation Modal for Reset */}
       {showResetConfirmModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 flex flex-col animate-in zoom-in-95 duration-150">
+          <div className="bg-surface w-full max-w-md rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 flex flex-col animate-in zoom-in-95 duration-150">
             {/* Header with Danger/Warning Accent */}
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shrink-0 shadow-2xs">
+                <div className="w-11 h-11 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0 shadow-2xs">
                   <RotateCcw className="w-5 h-5" />
                 </div>
                 <div>
@@ -543,7 +543,7 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
               </div>
               <div className="flex items-center justify-between text-slate-600">
                 <span className="font-medium">Sudah tercatat:</span>
-                <span className="font-semibold text-rose-600">
+                <span className="font-semibold text-rose-600 dark:text-rose-400">
                   {(search.trim() ? filteredUsers : usersList).filter((u) => attendancesMap[u.id]).length} Presensi akan dihapus
                 </span>
               </div>

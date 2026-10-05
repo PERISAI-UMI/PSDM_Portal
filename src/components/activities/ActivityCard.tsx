@@ -41,14 +41,14 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   const hadirPercent = totalKehadiranBase > 0 ? Math.round((totalHadir / totalKehadiranBase) * 100) : 0;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all flex flex-col justify-between group">
+    <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all flex flex-col justify-between group">
       <div>
         {/* Header Badges */}
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex flex-wrap items-center gap-1.5">
             {activity.mode === 'ONLINE' ? (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200 flex items-center gap-1">
-                <Globe className="w-3 h-3 text-sky-600" />
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 dark:text-sky-300 border border-sky-200 flex items-center gap-1">
+                <Globe className="w-3 h-3 text-sky-600 dark:text-sky-400" />
                 <span>Online</span>
               </span>
             ) : (
@@ -59,8 +59,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             )}
 
             {activity.isLocked && (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                <Lock className="w-3 h-3 text-amber-600" />
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200 flex items-center gap-1">
+                <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                 <span>Terkunci</span>
               </span>
             )}
@@ -76,7 +76,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                 }}
                 className={`text-[11px] font-medium px-2 py-0.5 rounded-md border transition-colors ${
                   activity.isPublished
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                    ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200 hover:bg-emerald-100'
                     : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
                 }`}
                 title="Klik untuk mengubah status publikasi"
@@ -87,7 +87,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
               <span
                 className={`text-[11px] font-medium px-2 py-0.5 rounded-md border ${
                   activity.isPublished
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200'
                     : 'bg-slate-100 text-slate-600 border-slate-200'
                 }`}
               >
@@ -137,7 +137,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 hover:text-brand-800 hover:underline bg-brand-50/70 px-2 py-0.5 rounded-md border border-brand-100 transition-colors"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-300 hover:text-brand-800 hover:underline bg-brand-50/70 px-2 py-0.5 rounded-md border border-brand-100 transition-colors"
                 title="Buka tautan pertemuan daring"
               >
                 <Video className="w-3 h-3 text-brand-500" />
@@ -222,7 +222,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
               onClick={() => onToggleLock(activity.id, Boolean(activity.isLocked))}
               className={`p-2 rounded-lg transition-colors cursor-pointer ${
                 activity.isLocked
-                  ? 'text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200'
+                  ? 'text-amber-600 dark:text-amber-400 bg-amber-50 hover:bg-amber-100 border border-amber-200'
                   : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
               }`}
               title={activity.isLocked ? 'Buka Kunci Presensi' : 'Kunci Presensi (Admin hanya bisa melihat)'}

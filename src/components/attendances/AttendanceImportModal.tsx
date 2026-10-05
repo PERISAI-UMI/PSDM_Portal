@@ -315,26 +315,26 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
   const getStatusBadge = (st: AttendanceStatus) => {
     switch (st) {
       case 'HADIR':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">HADIR</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200">HADIR</span>;
       case 'IZIN':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">IZIN</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-50 text-blue-700 dark:text-blue-300 border border-blue-200">IZIN</span>;
       case 'SAKIT':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">SAKIT</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-purple-50 text-purple-700 dark:text-purple-300 border border-purple-200">SAKIT</span>;
       case 'ALPHA':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">ALPHA</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200">ALPHA</span>;
       case 'TELAT':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">TELAT</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200">TELAT</span>;
     }
   };
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-2xl rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200 flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-150">
+      <div className="bg-surface w-full max-w-2xl rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200 flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-150">
         {/* Modal Header */}
         <div className="flex items-start justify-between pb-4 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-200 flex items-center justify-center text-brand-600">
+              <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-200 flex items-center justify-center text-brand-600 dark:text-brand-300">
                 <FileSpreadsheet className="w-4 h-4" />
               </div>
               <div>
@@ -371,7 +371,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                 <select
                   value={selectedActivityId}
                   onChange={(e) => setSelectedActivityId(e.target.value)}
-                  className="w-full text-xs sm:text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand bg-white"
+                  className="w-full text-xs sm:text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand bg-surface"
                 >
                   {activities.map((act) => (
                     <option key={act.id} value={act.id}>
@@ -380,7 +380,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                   ))}
                 </select>
               ) : (
-                <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs">
+                <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 dark:text-amber-300 text-xs">
                   Belum ada agenda kegiatan. Buat kegiatan baru terlebih dahulu.
                 </div>
               )}
@@ -404,14 +404,14 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                   <button
                     type="button"
                     onClick={handleDownloadTemplate}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-semibold shrink-0 cursor-pointer shadow-2xs transition-all active:scale-95"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-semibold shrink-0 cursor-pointer shadow-2xs transition-all active:scale-95"
                   >
-                    <Download className="w-3.5 h-3.5 text-brand-600" />
+                    <Download className="w-3.5 h-3.5 text-brand-600 dark:text-brand-300" />
                     <span>Unduh Template .xlsx</span>
                   </button>
                 </div>
 
-                <div className="bg-white rounded-lg p-2 border border-slate-200 text-[11px] text-slate-600 flex items-center gap-2">
+                <div className="bg-surface rounded-lg p-2 border border-slate-200 text-[11px] text-slate-600 flex items-center gap-2">
                   <span className="font-semibold text-slate-700">Status:</span>
                   <span>HADIR</span>
                   <span>•</span>
@@ -434,7 +434,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                   onClick={() => fileInputRef.current?.click()}
                   className="border-2 border-dashed border-slate-300 hover:border-brand-400 bg-slate-50 hover:bg-brand-50/30 rounded-xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5"
                 >
-                  <div className="w-10 h-10 rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center text-brand-600">
+                  <div className="w-10 h-10 rounded-full bg-surface shadow-xs border border-slate-200 flex items-center justify-center text-brand-600 dark:text-brand-300">
                     <UploadCloud className="w-5 h-5" />
                   </div>
                   <div className="text-xs font-semibold text-slate-700">
@@ -458,7 +458,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
               )}
 
               {errorText && (
-                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorText}</span>
                 </div>
@@ -473,7 +473,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
               <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <div className="flex items-center gap-2 text-xs">
                   <span className="font-semibold text-slate-700">Berkas:</span>
-                  <span className="font-mono text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200 truncate max-w-[200px]">
+                  <span className="font-mono text-slate-900 bg-surface px-2 py-0.5 rounded border border-slate-200 truncate max-w-[200px]">
                     {fileName}
                   </span>
                 </div>
@@ -490,9 +490,9 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
               {/* Metrik Statistik */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <div className="bg-emerald-50/70 border border-emerald-200 rounded-lg p-2.5">
-                  <span className="text-[10px] text-emerald-700 font-bold block">VALID</span>
-                  <span className="text-lg font-bold text-emerald-900">{validCount}</span>
-                  <span className="text-[10px] text-emerald-600 block mt-0.5">Siap diimpor</span>
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold block">VALID</span>
+                  <span className="text-lg font-bold text-emerald-900 dark:text-emerald-300">{validCount}</span>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block mt-0.5">Siap diimpor</span>
                 </div>
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
                   <span className="text-[10px] text-slate-600 font-bold block">HADIR</span>
@@ -504,7 +504,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                   <span className="text-lg font-bold text-slate-900">{statusStats.IZIN + statusStats.SAKIT}</span>
                   <span className="text-[10px] text-slate-500 block mt-0.5">Pengurus</span>
                 </div>
-                <div className={`${invalidCount > 0 ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-slate-50 border-slate-200 text-slate-900'} border rounded-lg p-2.5`}>
+                <div className={`${invalidCount > 0 ? 'bg-rose-50 border-rose-200 text-rose-900 dark:text-rose-300' : 'bg-slate-50 border-slate-200 text-slate-900'} border rounded-lg p-2.5`}>
                   <span className="text-[10px] font-bold block">TIDAK VALID</span>
                   <span className="text-lg font-bold">{invalidCount}</span>
                   <span className="text-[10px] opacity-75 block mt-0.5">Dilewati</span>
@@ -518,7 +518,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                     type="button"
                     onClick={() => setFilterTab('ALL')}
                     className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                      filterTab === 'ALL' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                      filterTab === 'ALL' ? 'bg-surface text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     Semua ({parsedRows.length})
@@ -527,7 +527,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                     type="button"
                     onClick={() => setFilterTab('VALID')}
                     className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                      filterTab === 'VALID' ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                      filterTab === 'VALID' ? 'bg-surface text-emerald-700 dark:text-emerald-300 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     Valid ({validCount})
@@ -537,7 +537,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                       type="button"
                       onClick={() => setFilterTab('INVALID')}
                       className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                        filterTab === 'INVALID' ? 'bg-white text-rose-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        filterTab === 'INVALID' ? 'bg-surface text-rose-700 dark:text-rose-300 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       Bermasalah ({invalidCount})
@@ -583,7 +583,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                           {row.matchedUser ? (
                             <span>{row.matchedUser.namaLengkap}</span>
                           ) : (
-                            <span className="text-rose-600 flex items-center gap-1">
+                            <span className="text-rose-600 dark:text-rose-400 flex items-center gap-1">
                               <AlertTriangle className="w-3 h-3 shrink-0" />
                               <span>{row.rawName}</span>
                             </span>
@@ -593,7 +593,7 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
                           {row.isValid ? (
                             getStatusBadge(row.status)
                           ) : (
-                            <span className="text-[10px] text-rose-600 font-medium">
+                            <span className="text-[10px] text-rose-600 dark:text-rose-400 font-medium">
                               Tidak Ditemukan
                             </span>
                           )}
@@ -612,12 +612,12 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
           {/* Step 3: Hasil Berhasil */}
           {importResult && (
             <div className="p-6 text-center space-y-2">
-              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <h3 className="text-base font-bold text-slate-900">Presensi Berhasil Diimpor</h3>
               <p className="text-xs text-slate-600 max-w-md mx-auto">
-                <strong className="text-emerald-700 font-bold">{importResult.successCount}</strong> data presensi berhasil disimpan.
+                <strong className="text-emerald-700 dark:text-emerald-300 font-bold">{importResult.successCount}</strong> data presensi berhasil disimpan.
                 {importResult.skippedCount > 0 && (
                   <span className="block mt-1 text-slate-400">
                     ({importResult.skippedCount} baris tidak valid dilewati).

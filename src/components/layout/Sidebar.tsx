@@ -73,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-white text-slate-800 border-r border-slate-200 select-none">
+    <div className="flex flex-col h-full bg-surface text-slate-800 border-r border-slate-200 select-none">
       {/* Brand Header: perfectly aligned with h-14 Header */}
       <div className="h-14 px-4 border-b border-slate-200/80 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -118,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavClick('dashboard')}
               className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                 activeSection === 'dashboard'
-                  ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                  ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
@@ -133,7 +133,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavClick('activities')}
               className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                 activeSection === 'activities'
-                  ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                  ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
@@ -153,7 +153,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavClick('permissions')}
               className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                 activeSection === 'permissions'
-                  ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                  ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
@@ -177,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => handleNavClick('members')}
                 className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
                   activeSection === 'members'
-                    ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                    ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
@@ -202,7 +202,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }}
                   className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                     activeSection === 'master-data'
-                      ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                      ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
@@ -285,7 +285,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => handleNavClick('profile', onOpenProfile)}
                 className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                   activeSection === 'profile'
-                    ? 'bg-slate-100 text-ink font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                    ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
@@ -373,7 +373,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           />
 
           {/* Off-canvas Panel */}
-          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl z-10 animate-in slide-in-from-left duration-200">
+          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-surface shadow-xl z-10 animate-in slide-in-from-left duration-200">
             {sidebarContent}
           </div>
         </div>

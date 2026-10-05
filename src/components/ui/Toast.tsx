@@ -52,7 +52,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 ? 'bg-brand text-white border-brand-500'
                 : toast.type === 'error'
                 ? 'bg-rose-900 text-white border-rose-800'
-                : 'bg-white text-slate-900 border-slate-200'
+                : 'bg-surface text-slate-900 border-slate-200'
             }`}
           >
             <div className="flex items-center gap-2.5">

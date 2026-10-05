@@ -67,7 +67,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
 
   if (permissions.length === 0) {
     return (
-      <div className="p-8 text-center bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+      <div className="p-8 text-center bg-surface rounded-xl border border-slate-200/80 shadow-2xs">
         <p className="text-xs text-slate-500">Tidak ada data perizinan yang tercatat saat ini.</p>
       </div>
     );
@@ -76,7 +76,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
   return (
     <div className="space-y-3">
       {/* Search & Status Filters */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-surface p-3 rounded-xl border border-slate-200/80 shadow-2xs">
         <div className="relative flex-1 max-w-sm">
           <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
           <input
@@ -114,7 +114,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
       </div>
 
       {filteredPermissions.length === 0 ? (
-        <div className="p-8 text-center bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+        <div className="p-8 text-center bg-surface rounded-xl border border-slate-200/80 shadow-2xs">
           <p className="text-xs text-slate-500">
             Tidak ada permohonan yang sesuai dengan filter pencarian.
           </p>
@@ -138,7 +138,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
               return (
                 <div
                   key={`mob-${p.id}`}
-                  className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs space-y-3"
+                  className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs space-y-3"
                 >
                   {/* Card Header: User & Status Badge */}
                   <div className="flex items-start justify-between gap-2">
@@ -151,19 +151,19 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
 
                     <div>
                       {p.status === 'PENDING' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200/60">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200/60">
                           <Clock className="w-3 h-3" />
                           Pending
                         </span>
                       )}
                       {p.status === 'APPROVED' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60">
                           <Check className="w-3 h-3" />
                           Disetujui
                         </span>
                       )}
                       {p.status === 'REJECTED' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200/60">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200/60">
                           <X className="w-3 h-3" />
                           Ditolak
                         </span>
@@ -192,10 +192,10 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                             setImgError(false);
                             setZoom(false);
                           }}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 transition-colors cursor-pointer shadow-2xs"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 hover:bg-brand-100 text-brand-700 dark:text-brand-300 border border-brand-200 transition-colors cursor-pointer shadow-2xs"
                           title="Lihat bukti izin"
                         >
-                          <Eye className="w-3.5 h-3.5 text-brand-600" />
+                          <Eye className="w-3.5 h-3.5 text-brand-600 dark:text-brand-300" />
                           Bukti
                         </button>
                       ) : (
@@ -222,7 +222,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onReview?.(p.id, 'REJECTED')}
-                        className="min-h-[40px] py-2 px-3 rounded-lg bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+                        className="min-h-[40px] py-2 px-3 rounded-lg bg-surface hover:bg-rose-50 text-rose-700 dark:text-rose-300 border border-slate-200 hover:border-rose-200 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                         Tolak
@@ -236,7 +236,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         className="w-full min-h-[38px] py-1.5 px-3 rounded-lg bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-slate-200 hover:border-amber-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
                         title="Batalkan status izin dan kembalikan ke Pending"
                       >
-                        <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
+                        <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                         Batalkan Keputusan (Reset ke Pending)
                       </button>
                     </div>
@@ -255,7 +255,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                       <button
                         type="button"
                         onClick={() => setConfirmDeletePermission(p)}
-                        className="text-xs text-rose-600 hover:text-rose-700 font-medium inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors"
+                        className="text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 font-medium inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         Hapus Data Izin
@@ -268,7 +268,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
           </div>
 
           {/* Desktop & Tablet Table Layout (Hidden on mobile) */}
-          <div className="hidden md:block bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-2xs">
+          <div className="hidden md:block bg-surface rounded-xl border border-slate-200/80 overflow-hidden shadow-2xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs min-w-[720px]">
                 <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-medium">
@@ -316,10 +316,10 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                                 setImgError(false);
                                 setZoom(false);
                               }}
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 transition-colors cursor-pointer shadow-2xs"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 hover:bg-brand-100 text-brand-700 dark:text-brand-300 border border-brand-200 transition-colors cursor-pointer shadow-2xs"
                               title="Lihat bukti izin"
                             >
-                              <Eye className="w-3.5 h-3.5 text-brand-600" />
+                              <Eye className="w-3.5 h-3.5 text-brand-600 dark:text-brand-300" />
                               Bukti
                             </button>
                           ) : (
@@ -328,19 +328,19 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         </td>
                         <td className="py-3.5 px-4 whitespace-nowrap">
                           {p.status === 'PENDING' && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-amber-50 text-amber-700 border border-amber-200/60">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200/60">
                               <Clock className="w-3 h-3" />
                               Pending
                             </span>
                           )}
                           {p.status === 'APPROVED' && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60">
                               <Check className="w-3 h-3" />
                               Disetujui
                             </span>
                           )}
                           {p.status === 'REJECTED' && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-rose-50 text-rose-700 border border-rose-200/60">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200/60">
                               <X className="w-3 h-3" />
                               Ditolak
                             </span>
@@ -362,7 +362,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                                   <button
                                     type="button"
                                     onClick={() => onReview?.(p.id, 'REJECTED')}
-                                    className="px-2.5 py-1 rounded-md bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
+                                    className="px-2.5 py-1 rounded-md bg-surface hover:bg-rose-50 text-rose-700 dark:text-rose-300 border border-slate-200 hover:border-rose-200 font-medium text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
                                   >
                                     <X className="w-3 h-3" />
                                     Tolak
@@ -372,10 +372,10 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => onReview?.(p.id, 'PENDING')}
-                                  className="px-2.5 py-1 rounded-md bg-white hover:bg-amber-50 text-slate-600 hover:text-amber-800 border border-slate-200 hover:border-amber-300 font-medium text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+                                  className="px-2.5 py-1 rounded-md bg-surface hover:bg-amber-50 text-slate-600 hover:text-amber-800 border border-slate-200 hover:border-amber-300 font-medium text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
                                   title="Batalkan status izin dan kembalikan ke Pending"
                                 >
-                                  <RotateCcw className="w-3 h-3 text-amber-600" />
+                                  <RotateCcw className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                                   Batalkan
                                 </button>
                               ) : (
@@ -395,7 +395,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => setConfirmDeletePermission(p)}
-                                  className="p-1 rounded-md bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-300 transition-colors cursor-pointer shadow-2xs"
+                                  className="p-1 rounded-md bg-surface hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-300 transition-colors cursor-pointer shadow-2xs"
                                   title="Hapus data izin"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
@@ -421,7 +421,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
           onClick={() => setPreviewPermission(null)}
         >
           <div
-            className="bg-white w-full max-w-2xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200/80 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+            className="bg-surface w-full max-w-2xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200/80 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -467,7 +467,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
 
               {imgError ? (
                 <div className="text-center p-6 space-y-2 max-w-sm">
-                  <p className="text-xs font-semibold text-rose-700">Berkas tidak dapat ditampilkan sebagai gambar</p>
+                  <p className="text-xs font-semibold text-rose-700 dark:text-rose-300">Berkas tidak dapat ditampilkan sebagai gambar</p>
                   <p className="text-[11px] text-slate-500">
                     Format berkas mungkin berupa dokumen atau link dapat diakses langsung.
                   </p>
@@ -499,7 +499,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
             </div>
 
             {/* Modal Footer / Details */}
-            <div className="px-5 py-3 border-t border-slate-100 bg-white flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+            <div className="px-5 py-3 border-t border-slate-100 bg-surface flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
               <div className="space-y-0.5">
                 <div className="text-slate-500 text-[11px]">
                   <span className="font-semibold text-slate-700">Alasan: </span>
@@ -530,7 +530,7 @@ export const PermissionListTable: React.FC<PermissionListTableProps> = ({
                         await onReview?.(previewPermission.id, 'REJECTED');
                         setPreviewPermission(null);
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 font-medium text-xs flex items-center gap-1 transition-colors"
+                      className="px-3 py-1.5 rounded-lg bg-surface hover:bg-rose-50 text-rose-700 dark:text-rose-300 border border-slate-200 hover:border-rose-200 font-medium text-xs flex items-center gap-1 transition-colors"
                     >
                       <X className="w-3.5 h-3.5" />
                       Tolak

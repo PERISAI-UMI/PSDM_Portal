@@ -88,14 +88,14 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-xs">
-      <div className="bg-white w-full max-w-xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200/80 max-h-[90vh] overflow-y-auto flex flex-col animate-in fade-in zoom-in-95">
+      <div className="bg-surface w-full max-w-xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200/80 max-h-[90vh] overflow-y-auto flex flex-col animate-in fade-in zoom-in-95">
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-slate-100">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               {activity.mode === 'ONLINE' ? (
-                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200 flex items-center gap-1">
-                  <Globe className="w-3 h-3 text-sky-600" />
+                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-sky-50 text-sky-700 dark:text-sky-300 border border-sky-200 flex items-center gap-1">
+                  <Globe className="w-3 h-3 text-sky-600 dark:text-sky-400" />
                   <span>Online</span>
                 </span>
               ) : (
@@ -106,8 +106,8 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               )}
 
               {activity.isLocked && (
-                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                  <Lock className="w-3 h-3 text-amber-600" />
+                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200 flex items-center gap-1">
+                  <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                   <span>Terkunci</span>
                 </span>
               )}
@@ -115,7 +115,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               <span
                 className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-md border ${
                   activity.isPublished
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200'
                     : 'bg-slate-100 text-slate-600 border-slate-200'
                 }`}
               >
@@ -137,8 +137,8 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
 
         {/* Lock Alert Banner */}
         {activity.isLocked && (
-          <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2.5">
-            <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+          <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 dark:text-amber-300 text-xs flex items-center gap-2.5">
+            <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
             <div>
               <span className="font-bold">Presensi telah dikunci.</span>
             </div>
@@ -180,9 +180,9 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
           ) : (
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-sky-50/70 border border-sky-100 text-xs">
               <div className="flex items-center gap-2.5">
-                <Globe className="w-4 h-4 text-sky-600 shrink-0" />
+                <Globe className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0" />
                 <div>
-                  <div className="text-[10px] text-sky-600 font-medium">Format Pertemuan</div>
+                  <div className="text-[10px] text-sky-600 dark:text-sky-400 font-medium">Format Pertemuan</div>
                   <div className="font-semibold text-slate-800 mt-0.5">
                     Pertemuan Daring (Zoom / Google Meet)
                   </div>
@@ -210,7 +210,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
               Deskripsi
             </div>
-            <div className="text-xs sm:text-sm text-slate-700 bg-white p-3 rounded-xl border border-slate-200/70 leading-relaxed whitespace-pre-wrap shadow-2xs">
+            <div className="text-xs sm:text-sm text-slate-700 bg-surface p-3 rounded-xl border border-slate-200/70 leading-relaxed whitespace-pre-wrap shadow-2xs">
               {activity.deskripsi || 'Tidak ada deskripsi untuk kegiatan ini.'}
             </div>
           </div>
@@ -260,24 +260,24 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
             {/* Legend Breakdown Grid */}
             <div className="grid grid-cols-5 gap-1 sm:gap-2 mt-2.5 text-center">
               <div className="px-1 py-1.5 sm:p-2 rounded-lg bg-emerald-50/60 border border-emerald-100 min-w-0">
-                <div className="text-[9px] sm:text-[10px] text-emerald-700 font-medium truncate">Hadir</div>
-                <div className="text-xs sm:text-sm font-bold text-emerald-800 tabular-nums">{summary.HADIR}</div>
+                <div className="text-[9px] sm:text-[10px] text-emerald-700 dark:text-emerald-300 font-medium truncate">Hadir</div>
+                <div className="text-xs sm:text-sm font-bold text-emerald-800 dark:text-emerald-300 tabular-nums">{summary.HADIR}</div>
               </div>
               <div className="px-1 py-1.5 sm:p-2 rounded-lg bg-amber-50/60 border border-amber-100 min-w-0">
-                <div className="text-[9px] sm:text-[10px] text-amber-700 font-medium truncate">Telat</div>
-                <div className="text-xs sm:text-sm font-bold text-amber-800 tabular-nums">{summary.TELAT || 0}</div>
+                <div className="text-[9px] sm:text-[10px] text-amber-700 dark:text-amber-300 font-medium truncate">Telat</div>
+                <div className="text-xs sm:text-sm font-bold text-amber-800 dark:text-amber-300 tabular-nums">{summary.TELAT || 0}</div>
               </div>
               <div className="px-1 py-1.5 sm:p-2 rounded-lg bg-blue-50/60 border border-blue-100 min-w-0">
-                <div className="text-[9px] sm:text-[10px] text-blue-700 font-medium truncate">Izin</div>
-                <div className="text-xs sm:text-sm font-bold text-blue-800 tabular-nums">{summary.IZIN}</div>
+                <div className="text-[9px] sm:text-[10px] text-blue-700 dark:text-blue-300 font-medium truncate">Izin</div>
+                <div className="text-xs sm:text-sm font-bold text-blue-800 dark:text-blue-300 tabular-nums">{summary.IZIN}</div>
               </div>
               <div className="px-1 py-1.5 sm:p-2 rounded-lg bg-purple-50/60 border border-purple-100 min-w-0">
-                <div className="text-[9px] sm:text-[10px] text-purple-700 font-medium truncate">Sakit</div>
-                <div className="text-xs sm:text-sm font-bold text-purple-800 tabular-nums">{summary.SAKIT}</div>
+                <div className="text-[9px] sm:text-[10px] text-purple-700 dark:text-purple-300 font-medium truncate">Sakit</div>
+                <div className="text-xs sm:text-sm font-bold text-purple-800 dark:text-purple-300 tabular-nums">{summary.SAKIT}</div>
               </div>
               <div className="px-1 py-1.5 sm:p-2 rounded-lg bg-rose-50/60 border border-rose-100 min-w-0">
-                <div className="text-[9px] sm:text-[10px] text-rose-700 font-medium truncate">Alpha</div>
-                <div className="text-xs sm:text-sm font-bold text-rose-800 tabular-nums">{summary.ALPHA}</div>
+                <div className="text-[9px] sm:text-[10px] text-rose-700 dark:text-rose-300 font-medium truncate">Alpha</div>
+                <div className="text-xs sm:text-sm font-bold text-rose-800 dark:text-rose-300 tabular-nums">{summary.ALPHA}</div>
               </div>
             </div>
           </div>
@@ -316,14 +316,14 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                   onClick={() => onToggleLock(activity.id, Boolean(activity.isLocked))}
                   className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs ${
                     activity.isLocked
-                      ? 'bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100'
+                      ? 'bg-amber-50 border-amber-300 text-amber-800 dark:text-amber-300 hover:bg-amber-100'
                       : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                   }`}
                   title={activity.isLocked ? 'Buka kunci presensi' : 'Kunci presensi (Admin hanya bisa melihat)'}
                 >
                   {activity.isLocked ? (
                     <>
-                      <Unlock className="w-3.5 h-3.5 text-amber-600" />
+                      <Unlock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                       <span>Buka Kunci Presensi</span>
                     </>
                   ) : (
@@ -339,10 +339,10 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowImportModal(true)}
-                  className="px-3 py-1.5 rounded-lg border border-brand-200 bg-brand-50/60 hover:bg-brand-100 text-xs font-semibold text-brand-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 rounded-lg border border-brand-200 bg-brand-50/60 hover:bg-brand-100 text-xs font-semibold text-brand-700 dark:text-brand-300 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   title="Import presensi dari berkas Excel / CSV"
                 >
-                  <FileSpreadsheet className="w-3.5 h-3.5 text-brand-600" />
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-brand-600 dark:text-brand-300" />
                   <span>Import Presensi</span>
                 </button>
               )}
@@ -365,7 +365,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                     onClose();
                     onDelete(activity.id);
                   }}
-                  className="px-3 py-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 border border-rose-200/60 hover:border-rose-300 transition-colors flex items-center gap-1 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 border border-rose-200/60 hover:border-rose-300 transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Hapus</span>

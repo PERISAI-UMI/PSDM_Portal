@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Mode gelap berbasis class: <html class="dark"> (diatur oleh src/utils/theme.ts) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
@@ -7,6 +10,11 @@
      60%  canvas  #F7F7F7  (latar utama) + surface #FFFFFF (card/modal)
      30%  ink     #303841  (teks & elemen gelap) + brand #2E4750 (struktural)
      10%  accent  #F6C90E  (CTA, badge, indikator aktif)
+
+     Token TETAP di kedua mode (tidak di-override di .dark):
+       ink    → teks di atas tombol kuning
+       canvas → teks terang di atas permukaan brand
+       accent → CTA
   ─────────────────────────────────────────────────────────────── */
   --color-canvas: #F7F7F7;
   --color-surface: #FFFFFF;
@@ -46,15 +54,87 @@
   --color-slate-900: #303841;
   --color-slate-950: #252B32;
 
-  /* Shadow lembut ber-tint ink agar surface putih terpisah jelas dari canvas */
-  --shadow-2xs: 0 1px 2px 0 rgb(48 56 65 / 0.06), 0 1px 1px 0 rgb(48 56 65 / 0.03);
-  --shadow-xs: 0 1px 3px 0 rgb(48 56 65 / 0.07), 0 1px 2px -1px rgb(48 56 65 / 0.05);
-  --shadow-sm: 0 2px 6px -1px rgb(48 56 65 / 0.08), 0 1px 3px -1px rgb(48 56 65 / 0.05);
-  --shadow: 0 2px 6px -1px rgb(48 56 65 / 0.08), 0 1px 3px -1px rgb(48 56 65 / 0.05);
-  --shadow-md: 0 4px 10px -2px rgb(48 56 65 / 0.08), 0 2px 4px -2px rgb(48 56 65 / 0.05);
-  --shadow-lg: 0 10px 20px -4px rgb(48 56 65 / 0.10), 0 4px 8px -4px rgb(48 56 65 / 0.05);
-  --shadow-xl: 0 18px 32px -8px rgb(48 56 65 / 0.14), 0 8px 12px -6px rgb(48 56 65 / 0.06);
-  --shadow-2xl: 0 28px 56px -12px rgb(48 56 65 / 0.22);
+  /* Shadow lembut. Tailwind meng-inline nilai shadow saat build, jadi warna &
+     intensitasnya diarahkan ke variabel runtime (--sh-rgb, --sh-k) agar bisa
+     berubah di mode gelap. */
+  --shadow-2xs: 0 1px 2px 0 rgb(var(--sh-rgb) / calc(0.06 * var(--sh-k))), 0 1px 1px 0 rgb(var(--sh-rgb) / calc(0.03 * var(--sh-k)));
+  --shadow-xs: 0 1px 3px 0 rgb(var(--sh-rgb) / calc(0.07 * var(--sh-k))), 0 1px 2px -1px rgb(var(--sh-rgb) / calc(0.05 * var(--sh-k)));
+  --shadow-sm: 0 2px 6px -1px rgb(var(--sh-rgb) / calc(0.08 * var(--sh-k))), 0 1px 3px -1px rgb(var(--sh-rgb) / calc(0.05 * var(--sh-k)));
+  --shadow: 0 2px 6px -1px rgb(var(--sh-rgb) / calc(0.08 * var(--sh-k))), 0 1px 3px -1px rgb(var(--sh-rgb) / calc(0.05 * var(--sh-k)));
+  --shadow-md: 0 4px 10px -2px rgb(var(--sh-rgb) / calc(0.08 * var(--sh-k))), 0 2px 4px -2px rgb(var(--sh-rgb) / calc(0.05 * var(--sh-k)));
+  --shadow-lg: 0 10px 20px -4px rgb(var(--sh-rgb) / calc(0.10 * var(--sh-k))), 0 4px 8px -4px rgb(var(--sh-rgb) / calc(0.05 * var(--sh-k)));
+  --shadow-xl: 0 18px 32px -8px rgb(var(--sh-rgb) / calc(0.14 * var(--sh-k))), 0 8px 12px -6px rgb(var(--sh-rgb) / calc(0.06 * var(--sh-k)));
+  --shadow-2xl: 0 28px 56px -12px rgb(var(--sh-rgb) / calc(0.22 * var(--sh-k)));
+}
+
+:root {
+  --sh-rgb: 48 56 65;
+  --sh-k: 1;
+  color-scheme: light;
+}
+
+/* ── Mode Gelap ──────────────────────────────────────────────────
+   Hanya nilai token yang berubah; class di komponen tetap sama.
+   60%  canvas #1B2026 + surface #232A31
+   30%  teks #ECEEF0 + brand #3E5F6B (dicerahkan agar terlihat di gelap)
+   10%  accent #F6C90E (tetap)
+─────────────────────────────────────────────────────────────── */
+.dark {
+  color-scheme: dark;
+  --sh-rgb: 0 0 0;
+  --sh-k: 5;
+
+  --color-surface: #232A31;
+
+  /* Netral di-invert: teks utama jadi terang, latar halus jadi gelap */
+  --color-slate-50: #1B2026;
+  --color-slate-100: #2A323A;
+  --color-slate-200: #343D46;
+  --color-slate-300: #414B55;
+  --color-slate-400: #7D8790;
+  --color-slate-500: #98A2AB;
+  --color-slate-600: #A9B2BA;
+  --color-slate-700: #C5CCD2;
+  --color-slate-800: #DCE0E4;
+  --color-slate-900: #ECEEF0;
+  --color-slate-950: #F7F7F7;
+
+  /* Brand: tombol dicerahkan, hover lebih terang; tint jadi transparan */
+  --color-brand: #3E5F6B;
+  --color-brand-600: #3E5F6B;
+  --color-brand-700: #4A6E7B;
+  --color-brand-500: #5A7F8C;
+  --color-brand-300: #9DBDC8;
+  --color-brand-50: rgb(106 140 152 / 0.12);
+  --color-brand-100: rgb(106 140 152 / 0.20);
+  --color-brand-200: rgb(106 140 152 / 0.35);
+
+  /* Warna status: latar tint terang → tint transparan gelap (makna tetap).
+     Teks shade gelap (-600..-900) mendapat varian dark:text-*-300/400 di komponen. */
+  --color-rose-50: rgb(244 63 94 / 0.10);
+  --color-rose-100: rgb(244 63 94 / 0.16);
+  --color-rose-200: rgb(244 63 94 / 0.30);
+  --color-red-50: rgb(239 68 68 / 0.10);
+  --color-red-100: rgb(239 68 68 / 0.16);
+  --color-red-200: rgb(239 68 68 / 0.30);
+  --color-emerald-50: rgb(16 185 129 / 0.10);
+  --color-emerald-100: rgb(16 185 129 / 0.16);
+  --color-emerald-200: rgb(16 185 129 / 0.30);
+  --color-amber-50: rgb(245 158 11 / 0.10);
+  --color-amber-100: rgb(245 158 11 / 0.16);
+  --color-amber-200: rgb(245 158 11 / 0.30);
+  --color-sky-50: rgb(14 165 233 / 0.10);
+  --color-sky-100: rgb(14 165 233 / 0.16);
+  --color-sky-200: rgb(14 165 233 / 0.30);
+  --color-blue-50: rgb(59 130 246 / 0.10);
+  --color-blue-100: rgb(59 130 246 / 0.16);
+  --color-blue-200: rgb(59 130 246 / 0.30);
+  --color-purple-50: rgb(168 85 247 / 0.10);
+  --color-purple-100: rgb(168 85 247 / 0.16);
+  --color-purple-200: rgb(168 85 247 / 0.30);
+  --color-violet-50: rgb(139 92 246 / 0.10);
+  --color-violet-100: rgb(139 92 246 / 0.16);
+  --color-violet-200: rgb(139 92 246 / 0.30);
 }
 
 @layer base {
@@ -64,8 +144,9 @@
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: var(--color-ink);
-    background-color: var(--color-canvas);
+    color: var(--color-slate-900);
+    background-color: var(--color-slate-50);
+    transition: background-color 150ms ease, color 150ms ease;
   }
   ::selection {
     background-color: var(--color-accent);

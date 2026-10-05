@@ -263,7 +263,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white w-full max-w-4xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200/80 my-8 max-h-[90vh] flex flex-col">
+      <div className="bg-surface w-full max-w-4xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200/80 my-8 max-h-[90vh] flex flex-col">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 shrink-0">
           <div>
@@ -299,7 +299,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
               <button
                 type="button"
                 onClick={handleDownloadTemplate}
-                className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-surface border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
               >
                 <Download className="w-3.5 h-3.5 text-slate-500" />
                 <span>Unduh Template .xlsx</span>
@@ -317,7 +317,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
                 accept=".xlsx,.xls,.csv"
                 className="hidden"
               />
-              <FileSpreadsheet className="w-8 h-8 text-emerald-600 mb-2" />
+              <FileSpreadsheet className="w-8 h-8 text-emerald-600 dark:text-emerald-400 mb-2" />
               <div className="text-xs font-bold text-slate-900">
                 {fileName ? fileName : 'Pilih berkas atau seret ke sini'}
               </div>
@@ -329,8 +329,8 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
 
           {/* Status Messages */}
           {errorText && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
               <span>{errorText}</span>
             </div>
           )}
@@ -338,14 +338,14 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
           {importResult && (
             <div className={`p-4 rounded-xl text-xs sm:text-sm space-y-2 border ${
               importResult.importedCount > 0 || (importResult.updatedCount && importResult.updatedCount > 0)
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                : 'bg-amber-50 border-amber-200 text-amber-900'
+                ? 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:text-emerald-300'
+                : 'bg-amber-50 border-amber-200 text-amber-900 dark:text-amber-300'
             }`}>
               <div className="flex items-center gap-2 font-bold">
                 <CheckCircle2 className={`w-4 h-4 shrink-0 ${
                   importResult.importedCount > 0 || (importResult.updatedCount && importResult.updatedCount > 0)
-                    ? 'text-emerald-600'
-                    : 'text-amber-600'
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : 'text-amber-600 dark:text-amber-400'
                 }`} />
                 <span>Proses Import Selesai</span>
               </div>
@@ -366,7 +366,7 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
                   </span>
                 )}
                 {importResult.skippedCount > 0 && (
-                  <span className="text-rose-700 font-semibold">
+                  <span className="text-rose-700 dark:text-rose-300 font-semibold">
                     ({importResult.skippedCount} dilewati).
                   </span>
                 )}
@@ -382,12 +382,12 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
                     {importResult.errors.map((err, idx) => (
                       <div
                         key={idx}
-                        className="text-[11px] text-slate-700 flex items-start gap-2 bg-white/90 p-2 rounded-lg border border-slate-200 shadow-2xs"
+                        className="text-[11px] text-slate-700 flex items-start gap-2 bg-surface/90 p-2 rounded-lg border border-slate-200 shadow-2xs"
                       >
                         <span className="font-mono font-bold text-slate-900 shrink-0 bg-slate-100 px-1.5 py-0.5 rounded">
                           {err.prn}
                         </span>
-                        <span className="text-rose-600 font-medium">{err.reason}</span>
+                        <span className="text-rose-600 dark:text-rose-400 font-medium">{err.reason}</span>
                       </div>
                     ))}
                   </div>
@@ -402,11 +402,11 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-900">
                   <span>Pratinjau Data ({parsedRows.length} Baris)</span>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:text-emerald-300">
                     {validCount} Siap
                   </span>
                   {invalidCount > 0 && (
-                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">
+                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 dark:text-rose-300">
                       {invalidCount} Galat
                     </span>
                   )}
@@ -431,13 +431,13 @@ export const MemberImportModal: React.FC<MemberImportModalProps> = ({
                       <tr key={i} className="hover:bg-slate-50/50">
                         <td className="py-2 px-3">
                           {r.status === 'valid' ? (
-                            <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
+                            <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
                               <CheckCircle2 className="w-3.5 h-3.5" />
                               <span>Valid</span>
                             </span>
                           ) : (
                             <span
-                              className="inline-flex items-center gap-1 text-[11px] text-rose-600 font-medium"
+                              className="inline-flex items-center gap-1 text-[11px] text-rose-600 dark:text-rose-400 font-medium"
                               title={r.validationMessage}
                             >
                               <AlertTriangle className="w-3.5 h-3.5" />

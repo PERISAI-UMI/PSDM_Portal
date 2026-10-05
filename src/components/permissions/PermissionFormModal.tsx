@@ -100,7 +100,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
-      <div className="bg-white w-full max-w-md rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] overflow-y-auto">
+      <div className="bg-surface w-full max-w-md rounded-2xl p-4 sm:p-6 shadow-xl border border-slate-200 max-h-[92vh] overflow-y-auto">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <FileText className="w-5 h-5 text-slate-900" />
@@ -122,7 +122,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
               value={activityId}
               onChange={(e) => setActivityId(e.target.value)}
               required
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand min-h-[40px] bg-white"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand min-h-[40px] bg-surface"
             >
               {activities.map((act) => (
                 <option key={act.id} value={act.id} disabled={Boolean(act.isLocked)}>
@@ -131,8 +131,8 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
               ))}
             </select>
             {isActivityLocked && (
-              <div className="flex items-center gap-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-xs mt-2">
-                <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+              <div className="flex items-center gap-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 dark:text-amber-300 text-xs mt-2">
+                <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>Kegiatan telah dikunci oleh Super Admin. Pengajuan izin sudah ditutup.</span>
               </div>
             )}
@@ -143,7 +143,7 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
             <select
               value={jenisIzin}
               onChange={(e) => setJenisIzin(e.target.value)}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand min-h-[40px] bg-white"
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand min-h-[40px] bg-surface"
             >
               <option value="SAKIT">Sakit</option>
               <option value="TUGAS_AKADEMIK">Tugas Akademik</option>
@@ -189,14 +189,14 @@ export const PermissionFormModal: React.FC<PermissionFormModalProps> = ({
             </label>
 
             {uploadError && (
-              <div className="mt-1.5 text-[11px] text-rose-600 font-medium">
+              <div className="mt-1.5 text-[11px] text-rose-600 dark:text-rose-400 font-medium">
                 {uploadError}
               </div>
             )}
 
             {evidenceUrl && !uploading && (
               <div className="mt-1.5 space-y-0.5">
-                <div className="flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
+                <div className="flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
                   <CheckCircle className="w-3.5 h-3.5" />
                   <span>Bukti tersimpan di Object Storage</span>
                 </div>

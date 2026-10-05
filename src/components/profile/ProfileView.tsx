@@ -274,7 +274,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       </div>
 
       {/* 2. Profile Photo & Identity Banner */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 sm:gap-4">
           <div className="relative group shrink-0">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-brand text-white flex items-center justify-center font-bold text-xl sm:text-2xl shadow-sm overflow-hidden ring-4 ring-slate-100">
@@ -356,7 +356,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               type="button"
               onClick={() => setShowDeleteAvatarConfirm(true)}
               disabled={isUploadingAvatar}
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200/80 transition-colors cursor-pointer disabled:opacity-50 min-h-[38px]"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 hover:bg-rose-50 border border-rose-200/80 transition-colors cursor-pointer disabled:opacity-50 min-h-[38px]"
               title="Hapus foto profil"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -367,8 +367,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       </div>
 
       {avatarError && (
-        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
           <span>{avatarError}</span>
         </div>
       )}
@@ -446,15 +446,15 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       {activeTab === 'profile' && (
         <form onSubmit={handleSaveProfile} className="space-y-6">
           {profileSuccess && (
-            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm flex items-center gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>{profileSuccess}</span>
             </div>
           )}
 
           {profileError && (
-            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs sm:text-sm flex items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
               <span>{profileError}</span>
             </div>
           )}
@@ -475,7 +475,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   value={namaLengkap}
                   onChange={(e) => setNamaLengkap(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -489,7 +489,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -505,7 +505,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={noTelp}
                     onChange={(e) => setNoTelp(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -529,7 +529,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   value={nim}
                   onChange={(e) => setNim(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -544,7 +544,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   min={2000}
                   max={2100}
                   required
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -557,7 +557,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   value={tempatLahir}
                   onChange={(e) => setTempatLahir(e.target.value)}
                   placeholder="Kota kelahiran"
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
 
@@ -569,7 +569,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   type="date"
                   value={tanggalLahir}
                   onChange={(e) => setTanggalLahir(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                 />
               </div>
             </div>
@@ -592,7 +592,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={instagramUsername}
                     onChange={(e) => setInstagramUsername(e.target.value)}
                     placeholder="@username"
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Instagram className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -608,7 +608,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
                     placeholder="linkedin.com/in/username"
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -624,7 +624,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     onChange={(e) => setAlamat(e.target.value)}
                     rows={2}
                     placeholder="Alamat domisili saat ini"
-                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                    className="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                   />
                   <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -659,15 +659,15 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       {activeTab === 'security' && (
         <div className="space-y-6">
           {passwordSuccess && (
-            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm flex items-center gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>{passwordSuccess}</span>
             </div>
           )}
 
           {passwordError && (
-            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 dark:text-rose-300 text-xs sm:text-sm flex items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
               <span>{passwordError}</span>
             </div>
           )}
@@ -691,7 +691,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Masukkan kata sandi saat ini"
                       required
-                      className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                      className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                     />
                     <button
                       type="button"
@@ -716,7 +716,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                         placeholder="Minimal 6 karakter"
                         required
                         minLength={6}
-                        className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
+                        className="w-full px-3.5 py-2 pr-10 text-xs sm:text-sm rounded-lg border border-slate-300 text-slate-900 bg-surface focus:outline-none focus:ring-2 focus:ring-brand/10 focus:border-brand transition-all"
                       />
                       <button
                         type="button"
@@ -738,13 +738,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Ulangi kata sandi baru"
                       required
-                      className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border text-slate-900 bg-white focus:outline-none focus:ring-2 transition-all ${confirmPassword && newPassword !== confirmPassword
+                      className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border text-slate-900 bg-surface focus:outline-none focus:ring-2 transition-all ${confirmPassword && newPassword !== confirmPassword
                           ? 'border-rose-300 focus:ring-rose-200'
                           : 'border-slate-300 focus:ring-brand/10 focus:border-brand'
                         }`}
                     />
                     {confirmPassword && newPassword !== confirmPassword && (
-                      <p className="text-[11px] text-rose-600 mt-1">Konfirmasi kata sandi tidak cocok.</p>
+                      <p className="text-[11px] text-rose-600 dark:text-rose-400 mt-1">Konfirmasi kata sandi tidak cocok.</p>
                     )}
                   </div>
                 </div>

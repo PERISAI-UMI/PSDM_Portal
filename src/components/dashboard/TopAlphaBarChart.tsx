@@ -53,16 +53,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     subtitle: 'Monitoring akumulasi ketidakhadiran tanpa keterangan untuk bahan evaluasi kedisiplinan Pengurus.',
     unit: 'Alpa',
     footerNote: 'Pengurus dengan alpa tinggi dapat ditindaklanjuti untuk surat peringatan (SP) atau pembinaan.',
-    iconColor: 'text-rose-600',
-    activePillClass: 'bg-rose-50 text-rose-700 border-rose-300 font-semibold shadow-2xs',
+    iconColor: 'text-rose-600 dark:text-rose-400',
+    activePillClass: 'bg-rose-50 text-rose-700 dark:text-rose-300 border-rose-300 font-semibold shadow-2xs',
     barColors: {
       rank1: 'bg-gradient-to-t from-rose-600 via-rose-500 to-rose-400',
       rank2: 'bg-gradient-to-t from-rose-500 via-rose-500 to-rose-400',
       rankRest: 'bg-gradient-to-t from-rose-400 via-rose-400 to-rose-300',
     },
     hoverBorder: 'ring-rose-400/40',
-    hoverText: 'text-rose-700',
-    breakdownBadge: 'text-rose-700 bg-rose-50 border-rose-200/90',
+    hoverText: 'text-rose-700 dark:text-rose-300',
+    breakdownBadge: 'text-rose-700 dark:text-rose-300 bg-rose-50 border-rose-200/90',
     breakdownBar: 'bg-rose-500',
     emptyTitle: 'Kedisiplinan Sempurna',
     emptySubtitle: 'Tidak ditemukan catatan alpa pada Pengurus. Seluruh presensi terekam hadir, izin, atau sakit.',
@@ -75,16 +75,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     subtitle: 'Apresiasi Pengurus dengan partisipasi dan komitmen kehadiran kegiatan tertinggi.',
     unit: 'Hadir',
     footerNote: 'Pengurus teladan dapat dipertimbangkan untuk apresiasi atau sertifikasi kepengurusan terbaik.',
-    iconColor: 'text-emerald-600',
-    activePillClass: 'bg-emerald-50 text-emerald-700 border-emerald-300 font-semibold shadow-2xs',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    activePillClass: 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-300 font-semibold shadow-2xs',
     barColors: {
       rank1: 'bg-gradient-to-t from-emerald-600 via-emerald-500 to-emerald-400',
       rank2: 'bg-gradient-to-t from-emerald-500 via-emerald-500 to-emerald-400',
       rankRest: 'bg-gradient-to-t from-emerald-400 via-emerald-400 to-emerald-300',
     },
     hoverBorder: 'ring-emerald-400/40',
-    hoverText: 'text-emerald-700',
-    breakdownBadge: 'text-emerald-700 bg-emerald-50 border-emerald-200/90',
+    hoverText: 'text-emerald-700 dark:text-emerald-300',
+    breakdownBadge: 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 border-emerald-200/90',
     breakdownBar: 'bg-emerald-500',
     emptyTitle: 'Belum Ada Presensi Hadir',
     emptySubtitle: 'Belum ada catatan presensi hadir yang tersimpan untuk Pengurus.',
@@ -97,16 +97,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     subtitle: 'Monitoring ketepatan waktu presensi untuk evaluasi efisiensi jadwal kegiatan.',
     unit: 'Telat',
     footerNote: 'Keterlambatan berulang dapat dievaluasi pada sesi review kedisiplinan Pengurus.',
-    iconColor: 'text-amber-600',
-    activePillClass: 'bg-amber-50 text-amber-700 border-amber-300 font-semibold shadow-2xs',
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    activePillClass: 'bg-amber-50 text-amber-700 dark:text-amber-300 border-amber-300 font-semibold shadow-2xs',
     barColors: {
       rank1: 'bg-gradient-to-t from-amber-600 via-amber-500 to-amber-400',
       rank2: 'bg-gradient-to-t from-amber-500 via-amber-500 to-amber-400',
       rankRest: 'bg-gradient-to-t from-amber-400 via-amber-400 to-amber-300',
     },
     hoverBorder: 'ring-amber-400/40',
-    hoverText: 'text-amber-700',
-    breakdownBadge: 'text-amber-700 bg-amber-50 border-amber-200/90',
+    hoverText: 'text-amber-700 dark:text-amber-300',
+    breakdownBadge: 'text-amber-700 dark:text-amber-300 bg-amber-50 border-amber-200/90',
     breakdownBar: 'bg-amber-500',
     emptyTitle: 'Waktu Presensi Sangat Tepat',
     emptySubtitle: 'Tidak ditemukan Pengurus yang hadir terlambat pada kegiatan.',
@@ -119,16 +119,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     subtitle: 'Rekapitulasi Pengurus dengan permohonan izin atau dispensasi kegiatan resmi.',
     unit: 'Izin',
     footerNote: 'Pengurus dengan izin teratur tetap menjaga tanggung jawab penugasan organisasi.',
-    iconColor: 'text-sky-600',
-    activePillClass: 'bg-sky-50 text-sky-700 border-sky-300 font-semibold shadow-2xs',
+    iconColor: 'text-sky-600 dark:text-sky-400',
+    activePillClass: 'bg-sky-50 text-sky-700 dark:text-sky-300 border-sky-300 font-semibold shadow-2xs',
     barColors: {
       rank1: 'bg-gradient-to-t from-sky-600 via-sky-500 to-sky-400',
       rank2: 'bg-gradient-to-t from-sky-500 via-sky-500 to-sky-400',
       rankRest: 'bg-gradient-to-t from-sky-400 via-sky-400 to-sky-300',
     },
     hoverBorder: 'ring-sky-400/40',
-    hoverText: 'text-sky-700',
-    breakdownBadge: 'text-sky-700 bg-sky-50 border-sky-200/90',
+    hoverText: 'text-sky-700 dark:text-sky-300',
+    breakdownBadge: 'text-sky-700 dark:text-sky-300 bg-sky-50 border-sky-200/90',
     breakdownBar: 'bg-sky-500',
     emptyTitle: 'Tidak Ada Presensi Izin',
     emptySubtitle: 'Belum ada Pengurus yang mengajukan permohonan izin pada kegiatan.',
@@ -141,16 +141,16 @@ const CATEGORIES: Record<AttendanceCategory, CategoryConfig> = {
     subtitle: 'Pemantauan kondisi kesehatan Pengurus untuk koordinasi dan pendampingan internal.',
     unit: 'Sakit',
     footerNote: 'Data kesehatan Pengurus untuk perhatian tim PSDM dan penyesuaian penugasan.',
-    iconColor: 'text-violet-600',
-    activePillClass: 'bg-violet-50 text-violet-700 border-violet-300 font-semibold shadow-2xs',
+    iconColor: 'text-violet-600 dark:text-violet-400',
+    activePillClass: 'bg-violet-50 text-violet-700 dark:text-violet-300 border-violet-300 font-semibold shadow-2xs',
     barColors: {
       rank1: 'bg-gradient-to-t from-violet-600 via-violet-500 to-violet-400',
       rank2: 'bg-gradient-to-t from-violet-500 via-violet-500 to-violet-400',
       rankRest: 'bg-gradient-to-t from-violet-400 via-violet-400 to-violet-300',
     },
     hoverBorder: 'ring-violet-400/40',
-    hoverText: 'text-violet-700',
-    breakdownBadge: 'text-violet-700 bg-violet-50 border-violet-200/90',
+    hoverText: 'text-violet-700 dark:text-violet-300',
+    breakdownBadge: 'text-violet-700 dark:text-violet-300 bg-violet-50 border-violet-200/90',
     breakdownBar: 'bg-violet-500',
     emptyTitle: 'Pengurus Prima',
     emptySubtitle: 'Tidak tercatat izin sakit pada Pengurus selama periode kegiatan.',
@@ -198,7 +198,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
   const uniqueGridSteps = Array.from(new Set(gridSteps)).sort((a, b) => b - a);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-2xs">
+    <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs">
       {/* Header Widget */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
         <div>
@@ -224,7 +224,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
               type="button"
               onClick={() => setViewMode('vertical')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${viewMode === 'vertical'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  ? 'bg-surface text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
                 }`}
               title="Grafik Batang Vertikal"
@@ -236,7 +236,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
               type="button"
               onClick={() => setViewMode('horizontal')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${viewMode === 'horizontal'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  ? 'bg-surface text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
                 }`}
               title="Grafik Batang Horizontal"
@@ -248,7 +248,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
               type="button"
               onClick={() => setViewMode('list')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${viewMode === 'list'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  ? 'bg-surface text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
                 }`}
               title="Tampilan Rincian Seluruh Pengurus"
@@ -273,7 +273,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
               onClick={() => setActiveCategory(catKey)}
               className={`px-3 py-1 rounded-lg text-xs transition-all border cursor-pointer ${isActive
                   ? cat.activePillClass
-                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  : 'bg-surface border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
             >
               <span>{cat.label}</span>
@@ -432,7 +432,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 onMouseEnter={() => setHoveredUser(item.userId)}
                 className={`p-2.5 rounded-xl border transition-all cursor-pointer ${isHovered
                     ? 'bg-slate-50/90 border-slate-300 shadow-2xs'
-                    : 'bg-white border-slate-100 hover:border-slate-200'
+                    : 'bg-surface border-slate-100 hover:border-slate-200'
                   }`}
               >
                 <div className="flex items-center justify-between gap-3 mb-1.5">
@@ -486,7 +486,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                 <div
                   key={item.userId}
                   onMouseEnter={() => setHoveredUser(item.userId)}
-                  className={`p-3 sm:p-3.5 flex items-center justify-between gap-3 transition-colors ${isHovered ? 'bg-slate-50' : 'bg-white hover:bg-slate-50/80'
+                  className={`p-3 sm:p-3.5 flex items-center justify-between gap-3 transition-colors ${isHovered ? 'bg-slate-50' : 'bg-surface hover:bg-slate-50/80'
                     }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -504,7 +504,7 @@ export const TopAlphaBarChart: React.FC<TopAlphaBarChartProps> = ({
                         <span>{item.prn ? `${item.prn} • ` : ''}{item.dept || 'PSDM'}</span>
                         <span className="text-slate-300">•</span>
                         <span className="text-slate-400 text-[10px]">
-                          Presensi: <b className="text-emerald-600">{item.hadir} H</b> / <b className="text-amber-600">{item.telat} T</b> / <b className="text-sky-600">{item.izin} I</b> / <b className="text-violet-600">{item.sakit} S</b> / <b className="text-rose-600">{item.alpa} A</b>
+                          Presensi: <b className="text-emerald-600 dark:text-emerald-400">{item.hadir} H</b> / <b className="text-amber-600 dark:text-amber-400">{item.telat} T</b> / <b className="text-sky-600 dark:text-sky-400">{item.izin} I</b> / <b className="text-violet-600 dark:text-violet-400">{item.sakit} S</b> / <b className="text-rose-600 dark:text-rose-400">{item.alpa} A</b>
                         </span>
                       </div>
                     </div>
