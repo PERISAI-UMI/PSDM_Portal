@@ -13,7 +13,6 @@ import {
   X,
   FileText,
   AlertCircle,
-  Eye,
   Activity,
 } from 'lucide-react';
 import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus, AttendanceRecord } from '../../types/index.ts';
@@ -319,10 +318,9 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                             e.stopPropagation();
                             onOpenAttendance(act);
                           }}
-                          className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0 flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0 cursor-pointer"
                         >
-                          <Eye className="w-3 h-3" />
-                          <span>Rekap</span>
+                          Rekap
                         </button>
                       ) : (
                         <button
