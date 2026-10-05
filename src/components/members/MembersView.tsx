@@ -113,7 +113,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
       case 'ADMIN':
         return { label: 'Admin', className: 'bg-blue-50 text-blue-700 dark:text-blue-300 border-blue-200' };
       case 'INTI':
-        return { label: 'Pengurus Inti', className: 'bg-purple-50 text-purple-700 dark:text-purple-300 border-purple-200' };
+        return { label: 'Inti', className: 'bg-purple-50 text-purple-700 dark:text-purple-300 border-purple-200' };
       case 'PENGURUS':
       default:
         return { label: 'Pengurus', className: 'bg-slate-50 text-slate-700 border-slate-200' };
@@ -308,7 +308,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           >
             <option value="ALL">Semua Role</option>
             <option value="SUPER_ADMIN">Super Admin</option>
-            <option value="INTI">Pengurus Inti</option>
+            <option value="INTI">Inti</option>
             <option value="ADMIN">Admin</option>
             <option value="PENGURUS">Pengurus</option>
           </select>

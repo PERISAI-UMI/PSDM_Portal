@@ -82,13 +82,13 @@ export const OnlineUsersModal: React.FC<OnlineUsersModalProps> = ({
       case 'INTI':
         return (
           <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300">
-            BPH Inti
+            Inti
           </span>
         );
       case 'ADMIN':
         return (
           <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
-            Admin PJ
+            Admin
           </span>
         );
       default:

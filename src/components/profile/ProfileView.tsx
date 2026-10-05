@@ -229,7 +229,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       case 'ADMIN':
         return { label: 'Staf PSDM', badge: 'Admin' };
       case 'INTI':
-        return { label: 'Pengurus Inti Organisasi', badge: 'Pengurus Inti' };
+        return { label: 'Pengurus Inti Organisasi', badge: 'Inti' };
       case 'PENGURUS':
       default:
         return { label: 'Pengurus Organisasi', badge: 'Pengurus' };

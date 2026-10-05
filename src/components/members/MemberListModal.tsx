@@ -94,13 +94,15 @@ export const MemberListModal: React.FC<MemberListModalProps> = ({
                   <span
                     className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                       m.role === 'SUPER_ADMIN'
-                        ? 'bg-red-100 text-red-800 dark:text-red-300'
+                        ? 'bg-rose-100 text-rose-800 dark:text-rose-300'
+                        : m.role === 'INTI'
+                        ? 'bg-purple-100 text-purple-800 dark:text-purple-300'
                         : m.role === 'ADMIN'
                         ? 'bg-blue-100 text-blue-800 dark:text-blue-300'
                         : 'bg-emerald-100 text-emerald-800 dark:text-emerald-300'
                     }`}
                   >
-                    {m.role}
+                    {m.role === 'SUPER_ADMIN' ? 'Super Admin' : m.role === 'INTI' ? 'Inti' : m.role === 'ADMIN' ? 'Admin' : 'Pengurus'}
                   </span>
                 </div>
                 <div className="text-xs text-slate-600 font-medium mt-1">
