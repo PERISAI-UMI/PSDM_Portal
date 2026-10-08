@@ -224,9 +224,16 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       className="py-3 flex items-center justify-between gap-3 hover:bg-slate-50 px-2 rounded-lg transition-colors cursor-pointer"
                     >
                       <div className="min-w-0">
-                        <h3 className="font-semibold text-xs text-slate-900 truncate">
-                          {act.nama}
-                        </h3>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <h3 className="font-semibold text-xs text-slate-900 truncate">
+                            {act.nama}
+                          </h3>
+                          {(act.categoryName || act.category?.nama) && (
+                            <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-brand-50 text-brand-700 border border-brand-200/80 shrink-0">
+                              {act.categoryName || act.category?.nama}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-[11px] text-slate-500 mt-0.5">
                           {startDate.toLocaleDateString('id-ID', {
                             timeZone: 'Asia/Makassar',

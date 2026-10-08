@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Clock, UserCheck, FileText, Trash2, CheckCircle2, MapPin, Globe, Video, Lock, Unlock, Pencil } from 'lucide-react';
+import { Calendar, Clock, UserCheck, FileText, Trash2, MapPin, Globe, Video, Lock, Unlock, Pencil, Layers } from 'lucide-react';
 import type { ActivityItem, UserRole } from '../../types/index.ts';
 import { formatWitaDate, formatWitaTime } from '../../utils/date.ts';
 
@@ -39,6 +39,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   const totalHadir = summary.HADIR + (summary.TELAT || 0);
   const totalKehadiranBase = totalHadir + summary.ALPHA;
   const hadirPercent = totalKehadiranBase > 0 ? Math.round((totalHadir / totalKehadiranBase) * 100) : 0;
+  const categoryDisplayName = activity.categoryName || activity.category?.nama;
 
   return (
     <div className="bg-surface rounded-xl border border-slate-200/80 p-5 shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all flex flex-col justify-between group">
@@ -55,29 +56,40 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         }}
       >
         {/* Header Badges */}
-        <div className="flex items-start justify-between gap-2 mb-3">
+        <div className="flex items-start justify-between gap-2 mb-2.5">
           <div className="flex flex-wrap items-center gap-1.5">
+            {/* Category Badge */}
+            {categoryDisplayName && (
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 border border-brand-200/80 flex items-center gap-1">
+                <Layers className="w-3 h-3 text-brand-600 shrink-0" />
+                <span>{categoryDisplayName}</span>
+              </span>
+            )}
+
+            {/* Mode Badge */}
             {activity.mode === 'ONLINE' ? (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 dark:text-sky-300 border border-sky-200 flex items-center gap-1">
-                <Globe className="w-3 h-3 text-sky-600 dark:text-sky-400" />
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200 flex items-center gap-1">
+                <Globe className="w-3 h-3 text-sky-600 shrink-0" />
                 <span>Online</span>
               </span>
             ) : (
               <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-slate-500" />
+                <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
                 <span>Offline</span>
               </span>
             )}
 
+            {/* Locked Badge */}
             {activity.isLocked && (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200 flex items-center gap-1">
-                <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                <Lock className="w-3 h-3 text-amber-600 shrink-0" />
                 <span>Terkunci</span>
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-1.5">
+          {/* Published/Draft Status */}
+          <div className="flex items-center gap-1.5 shrink-0">
             {userRole === 'SUPER_ADMIN' ? (
               <button
                 type="button"
@@ -85,12 +97,12 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                   e.stopPropagation();
                   onTogglePublish?.(activity.id, activity.isPublished);
                 }}
-                className={`text-[11px] font-medium px-2 py-0.5 rounded-md border transition-colors ${
+                className={`text-[11px] font-medium px-2 py-0.5 rounded-md border transition-colors cursor-pointer ${
                   activity.isPublished
-                    ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200 hover:bg-emerald-100'
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
                     : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
                 }`}
-                title="Klik untuk mengubah status publikasi"
+                title="Ubah status publikasi"
               >
                 {activity.isPublished ? 'Dipublikasikan' : 'Draft'}
               </button>
@@ -98,7 +110,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
               <span
                 className={`text-[11px] font-medium px-2 py-0.5 rounded-md border ${
                   activity.isPublished
-                    ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200'
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                     : 'bg-slate-100 text-slate-600 border-slate-200'
                 }`}
               >
@@ -109,24 +121,26 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         </div>
 
         {/* Title & Description */}
-        <div>
-          <h3 className="text-sm font-semibold text-slate-900 leading-snug line-clamp-1 mb-1 group-hover:text-brand-600 transition-colors">
+        <div className="mb-3">
+          <h3 className="text-sm font-bold text-slate-900 leading-snug line-clamp-1 mb-1 group-hover:text-brand transition-colors">
             {activity.nama}
           </h3>
-          <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">
-            {activity.deskripsi || 'Klik untuk melihat agenda dan detail kegiatan lengkap.'}
-          </p>
+          {activity.deskripsi && activity.deskripsi.trim() ? (
+            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+              {activity.deskripsi}
+            </p>
+          ) : null}
         </div>
 
         {/* Schedule & Location Meta */}
-        <div className="space-y-1.5 mb-3.5 text-xs text-slate-500 font-normal">
+        <div className="space-y-1.5 mb-3 text-xs text-slate-500 font-normal">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <span>{formattedDate}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <span>{formattedTime}</span>
             </div>
           </div>
@@ -145,10 +159,10 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-300 hover:text-brand-800 hover:underline bg-brand-50/70 px-2 py-0.5 rounded-md border border-brand-100 transition-colors"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 hover:text-brand-800 hover:underline bg-brand-50/70 px-2 py-0.5 rounded-md border border-brand-100 transition-colors"
                 title="Buka tautan pertemuan daring"
               >
-                <Video className="w-3 h-3 text-brand-500" />
+                <Video className="w-3 h-3 text-brand-500 shrink-0" />
                 <span>Buka Link Pertemuan ↗</span>
               </a>
             </div>
@@ -156,10 +170,10 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         </div>
 
         {/* Mini Attendance Progress Bar */}
-        <div className="mb-3.5">
-          <div className="flex items-center justify-between text-[11px] mb-1">
+        <div className="mb-2.5">
+          <div className="flex items-center justify-between text-[11px] mb-1.5">
             <span className="text-slate-500 font-medium">Presensi Terkini</span>
-            <span className="font-bold text-slate-800 tabular-nums">
+            <span className="font-bold text-slate-900 tabular-nums">
               {totalHadir} Hadir ({hadirPercent}%)
             </span>
           </div>
@@ -177,32 +191,32 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         </div>
 
         {/* Attendance Breakdown Strip */}
-        <div className="grid grid-cols-5 gap-1 p-2 rounded-lg bg-slate-50 border border-slate-100 text-center mb-4">
+        <div className="grid grid-cols-5 gap-1 p-2 rounded-lg bg-slate-50/80 border border-slate-100 text-center mb-3.5">
           <div className="min-w-0">
-            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Hadir</div>
-            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.HADIR}</div>
+            <div className="text-[10px] text-slate-500 font-medium truncate">Hadir</div>
+            <div className="text-xs font-bold text-emerald-600 tabular-nums">{summary.HADIR}</div>
           </div>
           <div className="min-w-0">
-            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Telat</div>
-            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.TELAT || 0}</div>
+            <div className="text-[10px] text-slate-500 font-medium truncate">Telat</div>
+            <div className="text-xs font-bold text-amber-600 tabular-nums">{summary.TELAT || 0}</div>
           </div>
           <div className="min-w-0">
-            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Izin</div>
-            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.IZIN}</div>
+            <div className="text-[10px] text-slate-500 font-medium truncate">Izin</div>
+            <div className="text-xs font-bold text-blue-600 tabular-nums">{summary.IZIN}</div>
           </div>
           <div className="min-w-0">
-            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Sakit</div>
-            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.SAKIT}</div>
+            <div className="text-[10px] text-slate-500 font-medium truncate">Sakit</div>
+            <div className="text-xs font-bold text-purple-600 tabular-nums">{summary.SAKIT}</div>
           </div>
           <div className="min-w-0">
-            <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium truncate">Alpha</div>
-            <div className="text-[11px] sm:text-xs font-bold text-slate-900 tabular-nums">{summary.ALPHA}</div>
+            <div className="text-[10px] text-slate-500 font-medium truncate">Alpha</div>
+            <div className="text-xs font-bold text-rose-600 tabular-nums">{summary.ALPHA}</div>
           </div>
         </div>
       </div>
 
       {/* Action Footer */}
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
         {userRole === 'SUPER_ADMIN' && (onEdit || onToggleLock) && (
           <div className="flex items-center gap-1 shrink-0">
             {onEdit && (
@@ -222,10 +236,10 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                 onClick={() => onToggleLock(activity.id, Boolean(activity.isLocked))}
                 className={`p-2 rounded-lg transition-colors cursor-pointer ${
                   activity.isLocked
-                    ? 'text-amber-600 dark:text-amber-400 bg-amber-50 hover:bg-amber-100 border border-amber-200'
+                    ? 'text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200'
                     : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
                 }`}
-                title={activity.isLocked ? 'Buka Kunci Presensi' : 'Kunci Presensi (Admin hanya bisa melihat)'}
+                title={activity.isLocked ? 'Buka Kunci Presensi' : 'Kunci Presensi'}
               >
                 {activity.isLocked ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
               </button>
@@ -244,9 +258,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             }`}
           >
             {activity.isLocked && (userRole === 'ADMIN' || userRole === 'INTI') ? (
-              <>
-                <span>Lihat Daftar Hadir</span>
-              </>
+              <span>Lihat Presensi</span>
             ) : (
               <>
                 <UserCheck className="w-3.5 h-3.5" />
@@ -260,9 +272,9 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           activity.isLocked ? (
             <div
               className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 border border-slate-200 text-slate-500 text-xs font-medium flex items-center justify-center gap-1.5 select-none"
-              title="Kegiatan telah dikunci. Pengajuan izin sudah ditutup."
+              title="Presensi telah dikunci."
             >
-              <span>Izin Ditutup</span>
+              <span>Presensi Dikunci</span>
             </div>
           ) : (
             <button
@@ -280,8 +292,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           <button
             type="button"
             onClick={() => onDelete(activity.id)}
-            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
-            title="Hapus"
+            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0 cursor-pointer"
+            title="Hapus Kegiatan"
           >
             <Trash2 className="w-4 h-4" />
           </button>

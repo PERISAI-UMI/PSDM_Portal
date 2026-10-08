@@ -284,13 +284,18 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                       className="py-3 flex items-center justify-between gap-3 hover:bg-slate-50 px-2 rounded-lg transition-colors cursor-pointer"
                     >
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 flex-wrap">
                           <h3 className="font-semibold text-xs text-slate-900 truncate">
                             {act.nama}
                           </h3>
+                          {(act.categoryName || act.category?.nama) && (
+                            <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-brand-50 text-brand-700 border border-brand-200/80 shrink-0">
+                              {act.categoryName || act.category?.nama}
+                            </span>
+                          )}
                           <span
                             className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${act.isPublished
-                                ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                 : 'bg-slate-100 text-slate-600'
                               }`}
                           >

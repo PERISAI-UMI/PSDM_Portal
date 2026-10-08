@@ -43,9 +43,20 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL');
   const [modeFilter, setModeFilter] = useState<'ALL' | 'OFFLINE' | 'ONLINE'>('ALL');
+  const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
 
   const publishedCount = activities.filter((a) => a.isPublished).length;
   const draftCount = activities.filter((a) => !a.isPublished).length;
+
+  const categoryOptions = React.useMemo(() => {
+    const map = new Map<string, string>();
+    activities.forEach((act) => {
+      if (act.categoryName) {
+        map.set(act.categoryId || act.categoryName, act.categoryName);
+      }
+    });
+    return Array.from(map.entries()).map(([id, nama]) => ({ id, nama }));
+  }, [activities]);
 
   const filteredActivities = activities.filter((act) => {
     const matchesStatus =
@@ -55,16 +66,22 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
 
     const matchesMode = modeFilter === 'ALL' || act.mode === modeFilter;
 
+    const matchesCategory =
+      categoryFilter === 'ALL' ||
+      act.categoryId === categoryFilter ||
+      act.categoryName === categoryFilter;
+
     const query = search.toLowerCase().trim();
-    if (!query) return matchesStatus && matchesMode;
+    if (!query) return matchesStatus && matchesMode && matchesCategory;
 
     const matchesSearch =
       act.nama.toLowerCase().includes(query) ||
+      (act.categoryName && act.categoryName.toLowerCase().includes(query)) ||
       (act.deskripsi && act.deskripsi.toLowerCase().includes(query)) ||
       (act.lokasi && act.lokasi.toLowerCase().includes(query)) ||
       act.mode.toLowerCase().includes(query);
 
-    return matchesStatus && matchesMode && matchesSearch;
+    return matchesStatus && matchesMode && matchesCategory && matchesSearch;
   });
 
   return (
@@ -167,11 +184,27 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {/* Category Filter */}
+          {categoryOptions.length > 0 && (
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand cursor-pointer"
+            >
+              <option value="ALL">Semua Kategori</option>
+              {categoryOptions.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.nama}
+                </option>
+              ))}
+            </select>
+          )}
+
           {/* Mode Filter */}
           <select
             value={modeFilter}
             onChange={(e) => setModeFilter(e.target.value as 'ALL' | 'OFFLINE' | 'ONLINE')}
-            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
+            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand cursor-pointer"
           >
             <option value="ALL">Semua Format</option>
             <option value="OFFLINE">Offline (Tatap Muka)</option>
@@ -212,19 +245,20 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({
           <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
           <h3 className="text-sm font-semibold text-slate-800">Tidak ada kegiatan ditemukan</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            {search || statusFilter !== 'ALL' || modeFilter !== 'ALL'
+            {search || statusFilter !== 'ALL' || modeFilter !== 'ALL' || categoryFilter !== 'ALL'
               ? 'Tidak ada kegiatan yang sesuai dengan filter pencarian Anda.'
               : 'Belum ada agenda kegiatan yang terdaftar dalam sistem.'}
           </p>
-          {(search || statusFilter !== 'ALL' || modeFilter !== 'ALL') && (
+          {(search || statusFilter !== 'ALL' || modeFilter !== 'ALL' || categoryFilter !== 'ALL') && (
             <button
               type="button"
               onClick={() => {
                 setSearch('');
                 setStatusFilter('ALL');
                 setModeFilter('ALL');
+                setCategoryFilter('ALL');
               }}
-              className="mt-3 px-3 py-1.5 text-xs text-slate-600 font-medium hover:text-slate-900 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+              className="mt-3 px-3 py-1.5 text-xs text-slate-600 font-medium hover:text-slate-900 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
             >
               Reset Filter
             </button>

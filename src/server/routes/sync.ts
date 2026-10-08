@@ -3,6 +3,7 @@ import { eq, and, desc, sql, inArray } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   activities,
+  activityCategories,
   attendances,
   permissions,
   users,
@@ -77,6 +78,8 @@ syncRouter.get('/live', async (c) => {
       .select({
         id: activities.id,
         nama: activities.nama,
+        categoryId: activities.categoryId,
+        categoryName: activityCategories.nama,
         deskripsi: activities.deskripsi,
         mode: activities.mode,
         lokasi: activities.lokasi,
@@ -91,6 +94,7 @@ syncRouter.get('/live', async (c) => {
       })
       .from(activities)
       .innerJoin(users, eq(activities.createdBy, users.id))
+      .leftJoin(activityCategories, eq(activities.categoryId, activityCategories.id))
       .orderBy(desc(activities.startDate));
 
     const actList = actConditions.length > 0
