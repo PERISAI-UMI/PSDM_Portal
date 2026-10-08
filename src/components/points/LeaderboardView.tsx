@@ -3,6 +3,7 @@ import {
   Search,
   Users,
   ChevronRight,
+  RefreshCw,
 } from 'lucide-react';
 import type { AuthUser, DepartmentItem, LeaderboardEntry } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
