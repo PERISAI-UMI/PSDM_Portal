@@ -144,7 +144,7 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
             </div>
             <div>
               <h2 className="text-base font-bold text-slate-900">
-                Buku Besar Poin Kehadiran
+                Riwayat Poin Anggota
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
                 {userName || 'Anggota'} {userPrn ? `(${userPrn})` : ''}

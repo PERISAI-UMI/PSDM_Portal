@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Award, Save, RefreshCw, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { X, Award, Save, RefreshCw, ShieldCheck } from 'lucide-react';
 import type { PointConfig } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { broadcastRealtimeEvent } from '../../utils/realtime.ts';
@@ -126,14 +126,9 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
               <Award className="w-5 h-5 text-ink" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-slate-900">
-                  Pengaturan Bobot Poin
-                </h2>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-accent/20 text-ink border border-accent/40">
-                  Super Admin
-                </span>
-              </div>
+              <h2 className="text-base font-bold text-slate-900">
+                Pengaturan Bobot Poin
+              </h2>
               <p className="text-xs text-slate-500 mt-0.5">
                 Tentukan bobot perolehan poin kehadiran anggota
               </p>
@@ -147,14 +142,6 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
-
-        {/* Notifikasi Immutability Guardrail */}
-        <div className="mx-6 mt-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 shrink-0">
-          <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-          <div className="text-xs text-slate-700 leading-relaxed">
-            <span className="font-bold text-slate-900">Catatan Keabadian Riwayat:</span> Perubahan bobot di sini hanya akan berlaku untuk pencatatan presensi berikutnya. Data dan perolehan poin yang telah tercatat di masa lalu tidak akan berubah.
-          </div>
         </div>
 
         {/* Content Body */}
