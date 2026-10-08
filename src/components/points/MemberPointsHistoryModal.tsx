@@ -137,53 +137,53 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
       {/* Modal Card */}
       <div className="relative z-10 bg-surface w-full max-w-xl rounded-xl shadow-xl border border-slate-200/80 max-h-[88vh] flex flex-col overflow-hidden isolate transform-gpu animate-in zoom-in-95 duration-150">
         {/* Header Modal */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80 bg-surface shrink-0">
-          <div>
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200/80 bg-surface shrink-0">
+          <div className="min-w-0 pr-2">
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate">
               Riwayat Poin Anggota
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5 truncate">
               {userName || 'Anggota'} {userPrn ? `(${userPrn})` : ''}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content Body */}
-        <div className="p-6 modal-scroll flex-1">
+        <div className="p-4 sm:p-6 modal-scroll flex-1">
           {error && (
-            <div className="p-3 mb-4 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-700 dark:text-rose-400 text-xs font-semibold">
+            <div className="p-3 mb-4 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-700 text-xs font-semibold">
               {error}
             </div>
           )}
 
           {loading ? (
             <div className="py-16 flex flex-col items-center justify-center gap-3 text-slate-400">
-              <RefreshCw className="w-6 h-6 animate-spin text-brand dark:text-accent" />
+              <RefreshCw className="w-6 h-6 animate-spin text-brand" />
               <p className="text-xs font-medium">Memuat riwayat perolehan poin...</p>
             </div>
           ) : data ? (
             <div className="space-y-4">
               {/* Total Summary Card */}
-              <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200 flex items-center justify-between">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 flex items-center justify-between gap-3">
                 <div>
-                  <span className="text-xs font-semibold text-slate-500">
+                  <span className="text-[11px] sm:text-xs font-semibold text-slate-500">
                     Akumulasi Poin Aktif
                   </span>
-                  <div className="text-2xl font-black text-slate-900 mt-0.5">
-                    {data.totalPoints} <span className="text-xs font-semibold text-slate-500">Poin</span>
+                  <div className="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">
+                    {data.totalPoints} <span className="text-xs font-medium text-slate-500">Poin</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs font-medium text-slate-500">Total Kegiatan</span>
-                  <div className="text-sm font-bold text-slate-800">
-                    {data.history.length} Presensi
+                  <span className="text-[11px] sm:text-xs font-medium text-slate-500">Total Presensi</span>
+                  <div className="text-xs sm:text-sm font-bold text-slate-800">
+                    {data.history.length} Kegiatan
                   </div>
                 </div>
               </div>
@@ -199,14 +199,14 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
                     Belum ada riwayat pencatatan kehadiran untuk anggota ini.
                   </div>
                 ) : (
-                  <div className="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden bg-surface">
+                  <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden bg-surface">
                     {data.history.map((item) => (
                       <div
                         key={item.id}
-                        className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/60 transition-colors [content-visibility:auto] [contain-intrinsic-size:auto_54px]"
+                        className="p-3 sm:p-3.5 flex items-center justify-between gap-2.5 sm:gap-3 hover:bg-slate-50/60 transition-colors [content-visibility:auto] [contain-intrinsic-size:auto_54px]"
                       >
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                             <span className="font-bold text-xs text-slate-900 truncate">
                               {item.activityName}
                             </span>
@@ -223,11 +223,11 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
                         {/* Awarded Points Badge */}
                         <div className="shrink-0 text-right">
                           <span
-                            className={`inline-block px-2.5 py-1 rounded-lg text-xs font-extrabold ${
+                            className={`inline-block px-2.5 py-1 rounded-lg text-xs font-bold ${
                               item.awardedPoints > 0
-                                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20'
+                                ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20'
                                 : item.awardedPoints < 0
-                                ? 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20'
+                                ? 'bg-rose-500/10 text-rose-700 border border-rose-500/20'
                                 : 'bg-slate-100 text-slate-600 border border-slate-200'
                             }`}
                           >
@@ -244,11 +244,11 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/60 flex justify-end shrink-0">
+        <div className="px-4 sm:px-6 py-3 sm:py-3.5 border-t border-slate-100 bg-slate-50/60 flex justify-end shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer min-h-[38px]"
+            className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer min-h-[36px]"
           >
             Tutup
           </button>

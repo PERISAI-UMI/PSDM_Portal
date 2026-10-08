@@ -17,6 +17,7 @@ import {
   Lock,
   Unlock,
   Pencil,
+  Layers,
 } from 'lucide-react';
 import type { ActivityItem, UserRole, AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
@@ -112,8 +113,9 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               )}
 
               {(activity.categoryName || activity.category?.nama) && (
-                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md border bg-slate-100 text-slate-800 border-slate-200">
-                  {activity.categoryName || activity.category?.nama}
+                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md border bg-brand-50 text-brand-700 border-brand-200/80 flex items-center gap-1">
+                  <Layers className="w-3 h-3 text-brand-600 shrink-0" />
+                  <span>{activity.categoryName || activity.category?.nama}</span>
                 </span>
               )}
 
