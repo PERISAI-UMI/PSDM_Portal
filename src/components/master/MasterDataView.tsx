@@ -15,7 +15,6 @@ import {
   Filter,
   RefreshCw,
   Download,
-  Upload,
   Calendar,
   FileSpreadsheet,
   CheckCircle2,
@@ -31,9 +30,8 @@ import type {
   PointsLogRow,
 } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
-import { PointsLogImportModal } from '../points/PointsLogImportModal.tsx';
 
-export type MasterDataTab = 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category';
+export type MasterDataTab = 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category' | 'points-log';
 
 interface MasterDataViewProps {
   currentUser?: AuthUser;
@@ -258,7 +256,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   const [logEndDate, setLogEndDate] = useState('');
   const [logSearch, setLogSearch] = useState('');
   const [logJenisFilter, setLogJenisFilter] = useState<'ALL' | 'Reward' | 'Punishment'>('ALL');
-  const [isPointsLogImportOpen, setIsPointsLogImportOpen] = useState(false);
 
   const loadPointsLog = async (startDate?: string, endDate?: string) => {
     if (currentUser?.role !== 'SUPER_ADMIN') return;
@@ -274,7 +271,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   };
 
   useEffect(() => {
-    if (activeTab === 'category' && currentUser?.role === 'SUPER_ADMIN') {
+    if (activeTab === 'points-log' && currentUser?.role === 'SUPER_ADMIN') {
       loadPointsLog(logStartDate, logEndDate);
     }
   }, [activeTab, logStartDate, logEndDate, currentUser?.role]);
@@ -479,6 +476,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
               {activeTab === 'prodi' && 'Manajemen Jurusan / Program Studi'}
               {activeTab === 'pj' && 'Penugasan PJ Departemen'}
               {activeTab === 'category' && 'Kategori Kegiatan & Bobot Poin'}
+              {activeTab === 'points-log' && 'Buku Besar Poin Presensi'}
             </h1>
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
               {activeTab === 'dept' && `${departments.length} Departemen`}
@@ -486,6 +484,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
               {activeTab === 'prodi' && `${programStudi.length} Program Studi`}
               {activeTab === 'pj' && `${pjMappings.length} Penugasan Aktif`}
               {activeTab === 'category' && `${categories.length} Kategori`}
+              {activeTab === 'points-log' && `${filteredPointsLog.length} Rekor`}
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -504,49 +503,9 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
             {activeTab === 'category' && (isReadOnly
               ? 'Daftar kategori lingkup kegiatan beserta bobot poin absensi (Hadir, Izin, Sakit, Alpha, Telat).'
               : 'Kelola kategori lingkup kegiatan dan konfigurasi bobot poin absensi untuk tiap kategori.')}
+            {activeTab === 'points-log' && 'Pencatatan, audit, dan ekspor mutasi poin presensi organisasi sesuai format SOP.'}
           </p>
         </div>
-      </div>
-
-      {/* Responsive Tab Switcher Pill Bar (Smooth touch horizontal scroll across mobile, tablet & desktop) */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 no-scrollbar border-b border-slate-200/80 -mx-1 px-1">
-        {[
-          { id: 'dept', label: 'Departemen', icon: Building2, count: departments.length },
-          { id: 'fakultas', label: 'Fakultas', icon: GraduationCap, count: fakultas.length },
-          { id: 'prodi', label: 'Program Studi', icon: BookOpen, count: programStudi.length },
-          { id: 'pj', label: 'Penugasan PJ', icon: UserCheck, count: pjMappings.length },
-          { id: 'category', label: 'Kategori & Poin', icon: Layers, count: categories.length },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => {
-                setActiveTab(tab.id as MasterDataTab);
-                onTabChange?.(tab.id as MasterDataTab);
-              }}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
-                isActive
-                  ? 'bg-slate-900 text-white shadow-2xs dark:bg-brand-500 dark:text-white'
-                  : 'bg-surface text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5 shrink-0" />
-              <span>{tab.label}</span>
-              <span
-                className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                  isActive
-                    ? 'bg-white/20 text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-                }`}
-              >
-                {tab.count}
-              </span>
-            </button>
-          );
-        })}
       </div>
 
       {/* ────────────────── TAB 1: DEPARTEMEN ────────────────── */}
@@ -1350,55 +1309,47 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
             )}
           </div>
         </div>
+        </div>
+      )}
 
-          {/* Bagian B: Buku Besar Poin (Super Admin Points Log) */}
-          {currentUser?.role === 'SUPER_ADMIN' && (
-            <div className="bg-surface rounded-2xl border border-slate-200/80 p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
-              {/* Header Buku Besar Poin & Tombol Aksi */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-4 border-b border-slate-200/80">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-brand text-white flex items-center justify-center shrink-0 shadow-2xs">
-                    <BookMarked className="w-5 h-5 text-accent" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-                        Buku Besar Poin (Points Log)
-                      </h2>
-                      <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
-                        {filteredPointsLog.length} Rekor
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      Pencatatan, audit, dan ekspor-impor mutasi poin presensi organisasi sesuai format SOP.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Tombol Aksi: Import & Export Excel */}
-                <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setIsPointsLogImportOpen(true)}
-                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer min-h-[38px]"
-                    title="Import data mutasi poin dari berkas .xlsx, .xls, atau .csv"
-                  >
-                    <Upload className="w-3.5 h-3.5 shrink-0" />
-                    <span>Import Excel</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleExportPointsLog}
-                    disabled={filteredPointsLog.length === 0}
-                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer disabled:opacity-50 min-h-[38px]"
-                    title="Download data buku besar poin ke format Excel (.xlsx)"
-                  >
-                    <Download className="w-3.5 h-3.5 shrink-0" />
-                    <span>Export Excel</span>
-                  </button>
-                </div>
+      {/* ────────────────── TAB 6: BUKU BESAR POIN (SUPER ADMIN POINTS LOG) ────────────────── */}
+      {activeTab === 'points-log' && currentUser?.role === 'SUPER_ADMIN' && (
+        <div className="bg-surface rounded-2xl border border-slate-200/80 p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
+          {/* Header Buku Besar Poin & Tombol Aksi */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-4 border-b border-slate-200/80">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-brand text-white flex items-center justify-center shrink-0 shadow-2xs">
+                <BookMarked className="w-5 h-5 text-accent" />
               </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                    Buku Besar Poin (Points Log)
+                  </h2>
+                  <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                    {filteredPointsLog.length} Rekor
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Pencatatan, audit, dan ekspor mutasi poin presensi organisasi sesuai format SOP.
+                </p>
+              </div>
+            </div>
+
+            {/* Tombol Aksi: Export Excel ONLY */}
+            <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+              <button
+                type="button"
+                onClick={handleExportPointsLog}
+                disabled={filteredPointsLog.length === 0}
+                className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer disabled:opacity-50 min-h-[38px]"
+                title="Download data buku besar poin ke format Excel (.xlsx)"
+              >
+                <Download className="w-3.5 h-3.5 shrink-0" />
+                <span>Export Excel</span>
+              </button>
+            </div>
+          </div>
 
               {/* Filter Rentang Tanggal, Preset & Pencarian */}
               <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 p-3 sm:p-3.5 bg-slate-50/70 rounded-xl border border-slate-200/80">
@@ -1639,8 +1590,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
               </div>
             </div>
           )}
-        </div>
-      )}
 
       {/* ────────────────── REUSABLE EDIT MODAL ────────────────── */}
       {editingTarget && (
@@ -1937,16 +1886,6 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           </div>
         </div>
       )}
-
-      {/* ────────────────── POINTS LOG IMPORT MODAL ────────────────── */}
-      <PointsLogImportModal
-        isOpen={isPointsLogImportOpen}
-        onClose={() => setIsPointsLogImportOpen(false)}
-        onSuccess={() => {
-          loadPointsLog(logStartDate, logEndDate);
-          loadCategories();
-        }}
-      />
     </div>
   );
 };

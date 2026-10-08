@@ -22,6 +22,7 @@ import {
   Trophy,
   Award,
   Layers,
+  BookMarked,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
@@ -38,8 +39,8 @@ interface SidebarProps {
   onLogout: () => void;
   activeSection?: string;
   onSelectSection?: (sectionId: string) => void;
-  onOpenMasterDataTab?: (tab: 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category') => void;
-  activeMasterDataTab?: 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category';
+  onOpenMasterDataTab?: (tab: 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category' | 'points-log') => void;
+  activeMasterDataTab?: 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category' | 'points-log';
   onOpenProfileTab?: (tab: 'profile' | 'security') => void;
   activeProfileTab?: 'profile' | 'security';
   onOpenPermissionTab?: (tab: 'pending' | 'history') => void;
@@ -300,7 +301,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div className="pl-5 pr-1 py-1 space-y-1 border-l-2 border-slate-200 ml-4">
                     <button
                       type="button"
-                      onClick={() => onOpenMasterDataTab?.('dept')}
+                      onClick={() => {
+                        onOpenMasterDataTab?.('dept');
+                        onCloseMobile();
+                      }}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'dept'
                           ? 'bg-brand text-white font-semibold'
@@ -313,7 +317,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => onOpenMasterDataTab?.('fakultas')}
+                      onClick={() => {
+                        onOpenMasterDataTab?.('fakultas');
+                        onCloseMobile();
+                      }}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'fakultas'
                           ? 'bg-brand text-white font-semibold'
@@ -326,7 +333,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => onOpenMasterDataTab?.('prodi')}
+                      onClick={() => {
+                        onOpenMasterDataTab?.('prodi');
+                        onCloseMobile();
+                      }}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'prodi'
                           ? 'bg-brand text-white font-semibold'
@@ -339,7 +349,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => onOpenMasterDataTab?.('pj')}
+                      onClick={() => {
+                        onOpenMasterDataTab?.('pj');
+                        onCloseMobile();
+                      }}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'pj'
                           ? 'bg-brand text-white font-semibold'
@@ -352,7 +365,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => onOpenMasterDataTab?.('category')}
+                      onClick={() => {
+                        onOpenMasterDataTab?.('category');
+                        onCloseMobile();
+                      }}
                       className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
                         activeMasterDataTab === 'category'
                           ? 'bg-brand text-white font-semibold'
@@ -360,7 +376,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       }`}
                     >
                       <Layers className="w-3.5 h-3.5" />
-                      <span>Kategori & Poin</span>
+                      <span>Kategori Kegiatan</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onOpenMasterDataTab?.('points-log');
+                        onCloseMobile();
+                      }}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeMasterDataTab === 'points-log'
+                          ? 'bg-brand text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <BookMarked className="w-3.5 h-3.5" />
+                      <span>Buku Besar Poin</span>
                     </button>
                   </div>
                 )}

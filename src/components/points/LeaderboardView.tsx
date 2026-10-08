@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import {
   Search,
-  RefreshCw,
   Users,
   ChevronRight,
 } from 'lucide-react';
@@ -20,7 +19,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
 }) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Filters
@@ -42,9 +40,8 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
     setSelectedUserForHistory(user);
   };
 
-  const loadLeaderboard = async (isManual = false) => {
-    if (isManual) setRefreshing(true);
-    else setLoading(true);
+  const loadLeaderboard = async () => {
+    setLoading(true);
     setError(null);
 
     try {
@@ -57,7 +54,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
       setError(err?.message || 'Gagal memuat data klasemen poin');
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
@@ -99,19 +95,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
           <p className="text-xs text-slate-500 mt-1">
             Peringkat keaktifan kehadiran organisasi berbasis akumulasi poin per lingkup kegiatan.
           </p>
-        </div>
-
-        <div className="flex items-center gap-2 sm:gap-2.5 self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => loadLeaderboard(true)}
-            disabled={loading || refreshing}
-            className="px-3.5 py-2 rounded-lg border border-slate-300 bg-surface text-slate-700 text-xs font-semibold hover:bg-slate-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs disabled:opacity-50"
-            title="Segarkan data klasemen"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-brand' : ''}`} />
-            <span>Segarkan</span>
-          </button>
         </div>
       </div>
 
