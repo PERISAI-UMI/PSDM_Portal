@@ -134,22 +134,17 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
         aria-hidden="true"
       />
 
-      {/* Modal Card: Terisolasi (isolate) secara mandiri dari layer blur di belakangnya */}
-      <div className="relative z-10 bg-surface w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200/90 max-h-[88vh] flex flex-col overflow-hidden isolate transform-gpu animate-in zoom-in-95 duration-150">
+      {/* Modal Card */}
+      <div className="relative z-10 bg-surface w-full max-w-xl rounded-xl shadow-xl border border-slate-200/80 max-h-[88vh] flex flex-col overflow-hidden isolate transform-gpu animate-in zoom-in-95 duration-150">
         {/* Header Modal */}
-        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/60 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent text-ink flex items-center justify-center font-bold shadow-xs">
-              <Award className="w-5 h-5 text-ink" />
-            </div>
-            <div>
-              <h2 className="text-base font-bold text-slate-900">
-                Riwayat Poin Anggota
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {userName || 'Anggota'} {userPrn ? `(${userPrn})` : ''}
-              </p>
-            </div>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80 bg-surface shrink-0">
+          <div>
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+              Riwayat Poin Anggota
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {userName || 'Anggota'} {userPrn ? `(${userPrn})` : ''}
+            </p>
           </div>
           <button
             type="button"
@@ -160,7 +155,7 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
           </button>
         </div>
 
-        {/* Content Body dengan smooth modal-scroll hardware acceleration */}
+        {/* Content Body */}
         <div className="p-6 modal-scroll flex-1">
           {error && (
             <div className="p-3 mb-4 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-700 dark:text-rose-400 text-xs font-semibold">

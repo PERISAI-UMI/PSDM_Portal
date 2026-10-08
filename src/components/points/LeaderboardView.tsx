@@ -1,14 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import {
-  Trophy,
-  Award,
   Medal,
-  Settings,
   Search,
-  Filter,
   RefreshCw,
-  TrendingUp,
-  User,
   Users,
   ChevronRight,
   Sparkles,
@@ -20,13 +14,11 @@ import { MemberPointsHistoryModal } from './MemberPointsHistoryModal.tsx';
 interface LeaderboardViewProps {
   currentUser: AuthUser;
   departments: DepartmentItem[];
-  onOpenCategories?: () => void;
 }
 
 export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
   currentUser,
   departments,
-  onOpenCategories,
 }) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,7 +37,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
     prn: string;
   } | null>(null);
 
-  const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
   const canViewHistory = currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN';
 
   const handleOpenHistory = (user: { id: string; nama: string; prn: string }) => {
@@ -76,7 +67,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
     loadLeaderboard();
   }, [selectedDept, selectedGen]);
 
-  // Filter pencarian nama/PRN
+  // Filter pencarian nama/PRN/NIM
   const filteredData = useMemo(() => {
     if (!searchQuery.trim()) return leaderboard;
     const q = searchQuery.toLowerCase();
@@ -101,52 +92,39 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header Halaman */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
+      {/* Page Header - Seragam dengan modul lain */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-accent text-ink flex items-center justify-center font-bold shadow-xs">
-              <Trophy className="w-5 h-5 text-ink" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-900">
-                Klasemen & Poin Anggota
-              </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Peringkat keaktifan kehadiran organisasi berbasis akumulasi poin
-              </p>
-            </div>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Klasemen & Poin Anggota
+            </h1>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
+              {leaderboard.length} Pengurus
+            </span>
           </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Peringkat keaktifan kehadiran organisasi berbasis akumulasi poin per lingkup kegiatan.
+          </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 self-start sm:self-auto">
           <button
             type="button"
             onClick={() => loadLeaderboard(true)}
             disabled={loading || refreshing}
-            className="px-3 py-2 rounded-xl border border-slate-300 bg-surface text-slate-700 text-xs font-semibold hover:bg-slate-100 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            className="px-3.5 py-2 rounded-lg border border-slate-300 bg-surface text-slate-700 text-xs font-semibold hover:bg-slate-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs disabled:opacity-50"
             title="Segarkan data klasemen"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-brand' : ''}`} />
-            <span className="hidden sm:inline">Refresh</span>
+            <span>Segarkan</span>
           </button>
-
-          {isSuperAdmin && onOpenCategories && (
-            <button
-              type="button"
-              onClick={onOpenCategories}
-              className="px-3.5 py-2 rounded-xl bg-accent hover:bg-accent-600 text-ink text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
-            >
-              <Settings className="w-3.5 h-3.5 text-ink" />
-              <span>Kelola Kategori & Poin</span>
-            </button>
-          )}
         </div>
       </div>
 
-      {/* Top 3 Podium (Visual Excellence & 60-30-10 palette) */}
+      {/* Top 3 Podium */}
       {!loading && topThree.length > 0 && !selectedDept && !searchQuery && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Juara 2 (Silver) */}
           {topThree[1] && (
             <div
@@ -157,16 +135,16 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   prn: topThree[1].prn,
                 })
               }
-              className={`order-2 md:order-1 p-5 rounded-2xl bg-surface border border-slate-200 ${
-                canViewHistory ? 'hover:border-slate-300 hover:shadow-md cursor-pointer' : ''
-              } shadow-xs transition-all relative overflow-hidden group flex flex-col justify-between`}
+              className={`order-2 md:order-1 p-5 rounded-xl bg-surface border border-slate-200/80 ${
+                canViewHistory ? 'hover:border-slate-300 hover:shadow-xs cursor-pointer' : ''
+              } shadow-2xs transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 shadow-2xs">
+              <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 shadow-2xs">
                 <Medal className="w-3.5 h-3.5 text-slate-400" />
-                <span>#2 Silver</span>
+                <span>#2 Perak</span>
               </div>
               <div className="flex items-center gap-3 mt-4">
-                <div className="w-12 h-12 rounded-full ring-2 ring-slate-300 bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
+                <div className="w-12 h-12 rounded-full ring-2 ring-slate-200 bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
                   {topThree[1].avatarUrl ? (
                     <img src={topThree[1].avatarUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -174,7 +152,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-amber-600 transition-colors">
+                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-brand transition-colors">
                     {topThree[1].namaLengkap}
                   </h3>
                   <p className="text-xs text-slate-500 truncate mt-0.5">
@@ -184,14 +162,14 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
               </div>
               <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-xs font-medium text-slate-500">Perolehan Poin:</span>
-                <span className="text-lg font-black text-slate-900">
-                  {topThree[1].totalPoints} <span className="text-xs font-semibold text-slate-500">Pts</span>
+                <span className="text-lg font-bold text-slate-900">
+                  {topThree[1].totalPoints} <span className="text-xs font-normal text-slate-500">Pts</span>
                 </span>
               </div>
             </div>
           )}
 
-          {/* Juara 1 (Gold / Champion with Accent Color #F6C90E) */}
+          {/* Juara 1 (Gold / Champion) */}
           {topThree[0] && (
             <div
               onClick={() =>
@@ -201,16 +179,16 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   prn: topThree[0].prn,
                 })
               }
-              className={`order-1 md:order-2 p-6 rounded-2xl bg-surface border-2 border-accent shadow-md ${
-                canViewHistory ? 'hover:shadow-lg cursor-pointer' : ''
+              className={`order-1 md:order-2 p-5 rounded-xl bg-surface border-2 border-accent/80 shadow-xs ${
+                canViewHistory ? 'hover:shadow-sm cursor-pointer' : ''
               } transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-ink text-xs font-black shadow-xs">
+              <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-accent text-ink text-xs font-bold shadow-2xs">
                 <Sparkles className="w-3.5 h-3.5 text-ink" />
-                <span>#1 Champion</span>
+                <span>#1 Juara</span>
               </div>
               <div className="flex items-center gap-3.5 mt-4">
-                <div className="w-14 h-14 rounded-full ring-3 ring-accent bg-accent/20 text-ink flex items-center justify-center font-black text-base shrink-0 overflow-hidden shadow-xs">
+                <div className="w-13 h-13 rounded-full ring-2 ring-accent bg-accent/20 text-ink flex items-center justify-center font-bold text-base shrink-0 overflow-hidden shadow-2xs">
                   {topThree[0].avatarUrl ? (
                     <img src={topThree[0].avatarUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -218,18 +196,18 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-extrabold text-base text-slate-900 truncate group-hover:text-amber-600 transition-colors">
+                  <h3 className="font-bold text-base text-slate-900 truncate group-hover:text-brand transition-colors">
                     {topThree[0].namaLengkap}
                   </h3>
-                  <p className="text-xs text-slate-600 font-medium truncate mt-0.5">
+                  <p className="text-xs text-slate-600 truncate mt-0.5">
                     {topThree[0].departmentName || 'Anggota'} • {topThree[0].jabatan}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-600">Total Akumulasi:</span>
-                <span className="text-2xl font-black text-amber-600 dark:text-accent">
-                  {topThree[0].totalPoints} <span className="text-xs font-bold text-slate-500">Pts</span>
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-600">Total Akumulasi:</span>
+                <span className="text-xl font-bold text-slate-900">
+                  {topThree[0].totalPoints} <span className="text-xs font-normal text-slate-500">Pts</span>
                 </span>
               </div>
             </div>
@@ -245,16 +223,16 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   prn: topThree[2].prn,
                 })
               }
-              className={`order-3 md:order-3 p-5 rounded-2xl bg-surface border border-slate-200 ${
-                canViewHistory ? 'hover:border-slate-300 hover:shadow-md cursor-pointer' : ''
-              } shadow-xs transition-all relative overflow-hidden group flex flex-col justify-between`}
+              className={`order-3 md:order-3 p-5 rounded-xl bg-surface border border-slate-200/80 ${
+                canViewHistory ? 'hover:border-slate-300 hover:shadow-xs cursor-pointer' : ''
+              } shadow-2xs transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-500/25 shadow-2xs">
+              <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold border border-amber-500/20 shadow-2xs">
                 <Medal className="w-3.5 h-3.5 text-amber-600" />
-                <span>#3 Bronze</span>
+                <span>#3 Perunggu</span>
               </div>
               <div className="flex items-center gap-3 mt-4">
-                <div className="w-12 h-12 rounded-full ring-2 ring-amber-500/40 bg-amber-500/10 text-amber-800 dark:text-amber-200 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
+                <div className="w-12 h-12 rounded-full ring-2 ring-amber-500/30 bg-amber-500/10 text-amber-800 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
                   {topThree[2].avatarUrl ? (
                     <img src={topThree[2].avatarUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -262,7 +240,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-amber-600 transition-colors">
+                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-brand transition-colors">
                     {topThree[2].namaLengkap}
                   </h3>
                   <p className="text-xs text-slate-500 truncate mt-0.5">
@@ -272,8 +250,8 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
               </div>
               <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-xs font-medium text-slate-500">Perolehan Poin:</span>
-                <span className="text-lg font-black text-slate-900">
-                  {topThree[2].totalPoints} <span className="text-xs font-semibold text-slate-500">Pts</span>
+                <span className="text-lg font-bold text-slate-900">
+                  {topThree[2].totalPoints} <span className="text-xs font-normal text-slate-500">Pts</span>
                 </span>
               </div>
             </div>
@@ -282,58 +260,54 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
       )}
 
       {/* Filter Bar & Search */}
-      <div className="p-4 rounded-2xl bg-surface border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-surface p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
+        <div className="relative flex-1 max-w-md">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
             type="text"
-            placeholder="Cari anggota (nama / PRN / NIM)..."
+            placeholder="Cari anggota (nama, PRN, atau NIM)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-surface text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-surface focus:outline-none focus:ring-1 focus:ring-brand text-slate-900 placeholder:text-slate-400 transition-all"
           />
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Filter Departemen */}
-          <div className="flex-1 sm:flex-initial">
-            <select
-              value={selectedDept}
-              onChange={(e) => setSelectedDept(e.target.value)}
-              className="w-full sm:w-48 px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent cursor-pointer"
-            >
-              <option value="">Semua Departemen</option>
-              {departments.map((dept) => (
-                <option key={dept.id} value={dept.id}>
-                  {dept.nama}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={selectedDept}
+            onChange={(e) => setSelectedDept(e.target.value)}
+            className="px-3 py-2 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand cursor-pointer"
+          >
+            <option value="">Semua Departemen</option>
+            {departments.map((dept) => (
+              <option key={dept.id} value={dept.id}>
+                {dept.nama}
+              </option>
+            ))}
+          </select>
 
           {/* Filter Generasi */}
-          <div className="w-28 sm:w-32">
-            <select
-              value={selectedGen}
-              onChange={(e) => setSelectedGen(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent cursor-pointer"
-            >
-              <option value="">Semua Gen</option>
-              <option value="23">Gen 23</option>
-              <option value="24">Gen 24</option>
-              <option value="25">Gen 25</option>
-              <option value="26">Gen 26</option>
-            </select>
-          </div>
+          <select
+            value={selectedGen}
+            onChange={(e) => setSelectedGen(e.target.value)}
+            className="px-3 py-2 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand cursor-pointer"
+          >
+            <option value="">Semua Generasi</option>
+            <option value="23">Gen 23</option>
+            <option value="24">Gen 24</option>
+            <option value="25">Gen 25</option>
+            <option value="26">Gen 26</option>
+          </select>
         </div>
       </div>
 
-      {/* Tabel Klasemen Poin (Responsive Mobile: overflow-x-auto) */}
-      <div className="rounded-2xl border border-slate-200 bg-surface shadow-2xs overflow-hidden">
+      {/* Tabel Klasemen Poin */}
+      <div className="bg-surface rounded-xl border border-slate-200/80 shadow-2xs overflow-hidden">
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
-            <RefreshCw className="w-8 h-8 animate-spin text-brand dark:text-accent" />
-            <p className="text-xs font-medium">Memuat tabel klasemen poin...</p>
+            <RefreshCw className="w-7 h-7 animate-spin text-brand" />
+            <p className="text-xs font-medium">Memuat klasemen poin...</p>
           </div>
         ) : filteredData.length === 0 ? (
           <div className="py-16 text-center text-slate-400">
@@ -343,17 +317,17 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/80 text-slate-600 border-b border-slate-200 font-semibold uppercase text-[10px] tracking-wider">
+              <thead className="bg-slate-50/75 text-slate-500 border-b border-slate-200/80 text-[11px] font-semibold uppercase tracking-wider">
                 <tr>
-                  <th className="px-4 py-3.5 w-16 text-center">Rank</th>
-                  <th className="px-4 py-3.5">Anggota</th>
-                  <th className="px-4 py-3.5">Departemen & Jabatan</th>
-                  <th className="px-4 py-3.5 text-center">Hadir</th>
-                  <th className="px-4 py-3.5 text-center">Telat</th>
-                  <th className="px-4 py-3.5 text-center">Izin / Sakit</th>
-                  <th className="px-4 py-3.5 text-center">Alpha</th>
-                  <th className="px-4 py-3.5 text-right font-bold">Total Poin</th>
-                  <th className="px-4 py-3.5 w-10"></th>
+                  <th className="px-4 py-3 w-16 text-center">Rank</th>
+                  <th className="px-4 py-3">Anggota</th>
+                  <th className="px-4 py-3">Departemen & Jabatan</th>
+                  <th className="px-4 py-3 text-center">Hadir</th>
+                  <th className="px-4 py-3 text-center">Telat</th>
+                  <th className="px-4 py-3 text-center">Izin / Sakit</th>
+                  <th className="px-4 py-3 text-center">Alpha</th>
+                  <th className="px-4 py-3 text-right font-bold">Total Poin</th>
+                  <th className="px-4 py-3 w-10"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -375,16 +349,16 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       }
                       className={`${
                         canViewHistory
-                          ? 'hover:bg-slate-50 cursor-pointer'
+                          ? 'hover:bg-slate-50/80 cursor-pointer'
                           : 'cursor-default'
                       } transition-colors ${
                         isCurrent ? 'bg-accent/10 font-medium' : ''
                       }`}
                     >
                       {/* Peringkat */}
-                      <td className="px-4 py-3 text-center whitespace-nowrap">
+                      <td className="px-4 py-3.5 text-center whitespace-nowrap">
                         {isRank1 ? (
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent text-ink font-black text-xs shadow-2xs">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent text-ink font-bold text-xs shadow-2xs">
                             1
                           </span>
                         ) : isRank2 ? (
@@ -392,7 +366,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                             2
                           </span>
                         ) : isRank3 ? (
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200 font-bold text-xs">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-800 font-bold text-xs">
                             3
                           </span>
                         ) : (
@@ -401,7 +375,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       </td>
 
                       {/* Info Anggota */}
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      <td className="px-4 py-3.5 whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
                           <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-[11px] shrink-0 overflow-hidden shadow-2xs">
                             {row.avatarUrl ? (
@@ -414,7 +388,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                             <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                               {row.namaLengkap}
                               {isCurrent && (
-                                <span className="text-[10px] bg-accent text-ink px-1.5 py-0.2 rounded font-black">
+                                <span className="text-[10px] bg-accent text-ink px-1.5 py-0.2 rounded font-bold">
                                   Anda
                                 </span>
                               )}
@@ -427,7 +401,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       </td>
 
                       {/* Departemen & Jabatan */}
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      <td className="px-4 py-3.5 whitespace-nowrap">
                         <div className="font-medium text-slate-800">
                           {row.departmentName || '-'}
                         </div>
@@ -437,31 +411,31 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       </td>
 
                       {/* Hadir */}
-                      <td className="px-4 py-3 text-center whitespace-nowrap">
-                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                      <td className="px-4 py-3.5 text-center whitespace-nowrap">
+                        <span className="font-semibold text-emerald-600">
                           {row.hadirCount}
                         </span>
                       </td>
 
                       {/* Telat */}
-                      <td className="px-4 py-3 text-center whitespace-nowrap">
-                        <span className="font-semibold text-amber-600 dark:text-amber-400">
+                      <td className="px-4 py-3.5 text-center whitespace-nowrap">
+                        <span className="font-semibold text-amber-600">
                           {row.telatCount}
                         </span>
                       </td>
 
                       {/* Izin/Sakit */}
-                      <td className="px-4 py-3 text-center whitespace-nowrap">
+                      <td className="px-4 py-3.5 text-center whitespace-nowrap">
                         <span className="text-slate-700 font-medium">
                           {row.izinCount + row.sakitCount}
                         </span>
                       </td>
 
                       {/* Alpha */}
-                      <td className="px-4 py-3 text-center whitespace-nowrap">
+                      <td className="px-4 py-3.5 text-center whitespace-nowrap">
                         <span
                           className={`font-semibold ${
-                            row.alphaCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400'
+                            row.alphaCount > 0 ? 'text-rose-600' : 'text-slate-400'
                           }`}
                         >
                           {row.alphaCount}
@@ -469,13 +443,13 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       </td>
 
                       {/* Total Poin */}
-                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
                         <span
-                          className={`inline-block px-2.5 py-1 rounded-lg font-black text-xs ${
+                          className={`inline-block px-2.5 py-1 rounded-lg font-bold text-xs ${
                             row.totalPoints > 0
-                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20'
+                              ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20'
                               : row.totalPoints < 0
-                              ? 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20'
+                              ? 'bg-rose-500/10 text-rose-700 border border-rose-500/20'
                               : 'bg-slate-100 text-slate-600 border border-slate-200'
                           }`}
                         >
@@ -484,7 +458,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       </td>
 
                       {/* Action Chevron */}
-                      <td className="px-4 py-3 text-right whitespace-nowrap text-slate-400">
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap text-slate-400">
                         {canViewHistory && <ChevronRight className="w-4 h-4 ml-auto" />}
                       </td>
                     </tr>
