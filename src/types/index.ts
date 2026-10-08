@@ -68,8 +68,53 @@ export interface AttendanceRecord {
   userDepartmentId?: string;
   userDepartmentName?: string;
   status: AttendanceStatus;
+  awardedPoints?: number;
   recordedBy: string;
   recordedAt: string | Date;
+}
+
+export interface PointConfig {
+  hadirPoints: number;
+  izinPoints: number;
+  sakitPoints: number;
+  alphaPoints: number;
+  telatPoints: number;
+}
+
+export interface LeaderboardEntry {
+  rank: number;
+  userId: string;
+  namaLengkap: string;
+  prn: string;
+  nim: string | null;
+  avatarUrl?: string | null;
+  generasi: number;
+  departmentId: string | null;
+  departmentName: string | null;
+  jabatan: string;
+  totalPoints: number;
+  hadirCount: number;
+  izinCount: number;
+  sakitCount: number;
+  alphaCount: number;
+  telatCount: number;
+  totalActivities: number;
+}
+
+export interface MemberPointHistoryItem {
+  id: string;
+  activityId: string;
+  activityName: string;
+  activityDate: string | Date;
+  status: AttendanceStatus;
+  awardedPoints: number;
+  recordedAt: string | Date;
+}
+
+export interface MemberPointsHistoryData {
+  userId: string;
+  totalPoints: number;
+  history: MemberPointHistoryItem[];
 }
 
 export interface PermissionRecord {

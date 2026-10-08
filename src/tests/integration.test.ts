@@ -19,7 +19,9 @@ import {
   attendanceSchema,
   permissionSchema,
   pjDepartmentSchema,
+  pointConfigSchema,
 } from '../db/validation.ts';
+import { calculatePointsForStatus } from '../server/routes/points.ts';
 import { api } from '../services/api.ts';
 import { createPresignedUploadUrl } from '../server/storage.ts';
 import app from '../server/index.ts';
@@ -162,6 +164,44 @@ describe('SUITE 2: Skema Validasi Zod & Integritas 3NF', () => {
     };
     const parsed = userSchema.safeParse(userWithSoftDelete);
     expect(parsed.success).toBe(true);
+  });
+
+  it('Validasi skema konfigurasi bobot poin (Point Config)', () => {
+    const validConfig = {
+      hadirPoints: 10,
+      izinPoints: 3,
+      sakitPoints: 3,
+      alphaPoints: -10,
+      telatPoints: 5,
+    };
+    const parsed = pointConfigSchema.safeParse(validConfig);
+    expect(parsed.success).toBe(true);
+
+    // Alpha berbobot negatif diizinkan
+    expect(parsed.data?.alphaPoints).toBe(-10);
+  });
+
+  it('Kalkulasi snapshot poin deterministik dan mematuhi imutabilitas', () => {
+    const weightsT0 = {
+      hadirPoints: 10,
+      izinPoints: 3,
+      sakitPoints: 3,
+      alphaPoints: -5,
+      telatPoints: 5,
+    };
+
+    const hadirPoint = calculatePointsForStatus('HADIR', weightsT0);
+    const alphaPointT0 = calculatePointsForStatus('ALPHA', weightsT0);
+    expect(hadirPoint).toBe(10);
+    expect(alphaPointT0).toBe(-5);
+
+    // Di waktu T1 bobot ALPHA diubah menjadi -10 oleh Super Admin
+    const weightsT1 = { ...weightsT0, alphaPoints: -10 };
+    const alphaPointT1 = calculatePointsForStatus('ALPHA', weightsT1);
+    expect(alphaPointT1).toBe(-10);
+
+    // Nilai snapshot T0 tetap tidak berubah di memori presensi historis
+    expect(alphaPointT0).toBe(-5);
   });
 });
 

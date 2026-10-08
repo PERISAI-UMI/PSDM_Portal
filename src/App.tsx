@@ -21,6 +21,7 @@ import { PengurusView } from './components/dashboard/PengurusView.tsx';
 import { ActivitiesView } from './components/activities/ActivitiesView.tsx';
 import { PermissionsView } from './components/permissions/PermissionsView.tsx';
 import { MembersView } from './components/members/MembersView.tsx';
+import { LeaderboardView } from './components/points/LeaderboardView.tsx';
 import { CreateActivityModal } from './components/activities/CreateActivityModal.tsx';
 import { AttendanceScannerModal } from './components/attendances/AttendanceScannerModal.tsx';
 import { PermissionFormModal } from './components/permissions/PermissionFormModal.tsx';
@@ -34,9 +35,9 @@ import { OnlineUsersModal } from './components/dashboard/OnlineUsersModal.tsx';
 import { ToastProvider, useToast } from './components/ui/Toast.tsx';
 import type { OnlinePresenceData } from './types/index.ts';
 
-type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data' | 'profile';
+type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'leaderboard' | 'master-data' | 'profile';
 
-const VALID_SECTIONS: ActiveSection[] = ['dashboard', 'activities', 'permissions', 'members', 'master-data', 'profile'];
+const VALID_SECTIONS: ActiveSection[] = ['dashboard', 'activities', 'permissions', 'members', 'leaderboard', 'master-data', 'profile'];
 
 const getSectionFromHash = (): ActiveSection => {
   if (typeof window === 'undefined') return 'dashboard';
@@ -771,7 +772,15 @@ function MainAppContent() {
             />
           )}
 
-          {/* 4. Master Data Layout (Super Admin only) */}
+          {/* 4. Leaderboard & Points Layout (Available for ALL roles) */}
+          {activeSection === 'leaderboard' && (
+            <LeaderboardView
+              currentUser={currentUser}
+              departments={departments}
+            />
+          )}
+
+          {/* 5. Master Data Layout (Super Admin only) */}
           {activeSection === 'master-data' && currentUser.role === 'SUPER_ADMIN' && (
             <MasterDataView
               currentUser={currentUser}

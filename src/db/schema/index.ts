@@ -5,4 +5,5 @@ export * from './system.ts';
 export * from './activities.ts';
 export * from './attendances.ts';
 export * from './permissions.ts';
+export * from './pointConfigs.ts';
 export * from './relations.ts';

@@ -14,6 +14,7 @@ import {
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
 import { createPresignedUploadUrl } from '../storage.ts';
 import { invalidateSyncCache } from './sync.ts';
+import { getActivePointWeights, calculatePointsForStatus } from './points.ts';
 
 export const permissionsRouter = new Hono<AppEnv>();
 
@@ -293,6 +294,8 @@ permissionsRouter.patch(
     // Sinkronisasi status absensi jika izin disetujui (APPROVED) secara atomik
     if (status === 'APPROVED') {
       const attendanceStatus = perm.jenisIzin.toUpperCase().includes('SAKIT') ? 'SAKIT' : 'IZIN';
+      const pointWeights = await getActivePointWeights(db);
+      const awardedPoints = calculatePointsForStatus(attendanceStatus, pointWeights);
 
       await db
         .insert(attendances)
@@ -301,6 +304,7 @@ permissionsRouter.patch(
           activityId: perm.activityId,
           userId: perm.userId,
           status: attendanceStatus,
+          awardedPoints,
           recordedBy: reviewer.id,
           recordedAt: now,
         })
@@ -308,6 +312,7 @@ permissionsRouter.patch(
           target: [attendances.activityId, attendances.userId],
           set: {
             status: sql`excluded.status`,
+            awardedPoints: sql`excluded.awarded_points`,
             recordedBy: sql`excluded.recorded_by`,
             recordedAt: sql`excluded.recorded_at`,
           },

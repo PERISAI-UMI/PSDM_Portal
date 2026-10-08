@@ -10,6 +10,9 @@ import type {
   AttendanceStatus,
   PermissionStatus,
   OnlinePresenceData,
+  PointConfig,
+  LeaderboardEntry,
+  MemberPointsHistoryData,
 } from '../types/index.ts';
 
 const TOKEN_KEY = 'psdm_auth_token';
@@ -673,5 +676,38 @@ export const api = {
   // ================= ONLINE USERS MONITORING =================
   async getOnlineUsers(): Promise<OnlinePresenceData> {
     return request<OnlinePresenceData>('/api/users/online');
+  },
+
+  // ================= POINTS SYSTEM & LEADERBOARD =================
+  async getPointsConfig(): Promise<PointConfig> {
+    const res = await request<{ success: boolean; data: PointConfig }>('/api/points/config');
+    return res.data;
+  },
+
+  async updatePointsConfig(data: PointConfig): Promise<{ success: boolean; message: string; data: PointConfig }> {
+    return request<{ success: boolean; message: string; data: PointConfig }>('/api/points/config', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async getPointsLeaderboard(params?: {
+    departmentId?: string;
+    generasi?: number;
+    limit?: number;
+  }): Promise<LeaderboardEntry[]> {
+    const query = new URLSearchParams();
+    if (params?.departmentId) query.set('departmentId', params.departmentId);
+    if (params?.generasi) query.set('generasi', String(params.generasi));
+    if (params?.limit) query.set('limit', String(params.limit));
+
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    const res = await request<{ success: boolean; data: LeaderboardEntry[] }>(`/api/points/leaderboard${qs}`);
+    return res.data || [];
+  },
+
+  async getMemberPointsHistory(userId: string): Promise<MemberPointsHistoryData> {
+    const res = await request<{ success: boolean; data: MemberPointsHistoryData }>(`/api/points/history/${userId}`);
+    return res.data;
   },
 };

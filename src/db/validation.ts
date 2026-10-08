@@ -73,6 +73,7 @@ export const attendanceSchema = z.object({
   activityId: z.string().min(1, 'Activity ID wajib diisi'),
   userId: z.string().min(1, 'User ID wajib diisi'),
   status: z.enum(attendanceStatusEnum),
+  awardedPoints: z.number().int().default(0),
   recordedBy: z.string().min(1, 'Admin pencatat wajib diisi'),
   recordedAt: z.coerce.date().optional(),
 });
@@ -83,6 +84,7 @@ export const recordAttendanceBatchSchema = z.object({
     z.object({
       userId: z.string().min(1),
       status: z.enum(attendanceStatusEnum),
+      force: z.boolean().optional(),
     })
   ).min(1, 'Minimal satu data absensi harus disertakan'),
 });
@@ -113,6 +115,17 @@ export const requestPermissionSchema = permissionSchema.pick({
 export const reviewPermissionSchema = z.object({
   status: z.enum(['APPROVED', 'REJECTED'] as const),
 });
+
+// Point Config Validation
+export const pointConfigSchema = z.object({
+  hadirPoints: z.number().int(),
+  izinPoints: z.number().int(),
+  sakitPoints: z.number().int(),
+  alphaPoints: z.number().int(),
+  telatPoints: z.number().int(),
+});
+
+export const updatePointConfigSchema = pointConfigSchema;
 
 // PJ Department Assignment Validation
 export const pjDepartmentSchema = z.object({

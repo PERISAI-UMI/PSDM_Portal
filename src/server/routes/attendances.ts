@@ -13,6 +13,7 @@ import {
 } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
 import { invalidateSyncCache } from './sync.ts';
+import { getActivePointWeights, calculatePointsForStatus } from './points.ts';
 
 export const attendancesRouter = new Hono<AppEnv>();
 
@@ -297,6 +298,10 @@ const handleRecordSingleAttendance = async (c: any) => {
   const now = new Date();
   const newId = crypto.randomUUID();
 
+  // Hitung snapshot poin berdasarkan bobot aktif saat ini
+  const pointWeights = await getActivePointWeights(db);
+  const awardedPoints = calculatePointsForStatus(status, pointWeights);
+
   await db
     .insert(attendances)
     .values({
@@ -304,6 +309,7 @@ const handleRecordSingleAttendance = async (c: any) => {
       activityId,
       userId,
       status,
+      awardedPoints,
       recordedBy: currentAdmin.id,
       recordedAt: now,
     })
@@ -311,6 +317,7 @@ const handleRecordSingleAttendance = async (c: any) => {
       target: [attendances.activityId, attendances.userId],
       set: {
         status: sql`excluded.status`,
+        awardedPoints: sql`excluded.awarded_points`,
         recordedBy: sql`excluded.recorded_by`,
         recordedAt: sql`excluded.recorded_at`,
       },
@@ -321,7 +328,7 @@ const handleRecordSingleAttendance = async (c: any) => {
   return c.json({
     success: true,
     message: 'Status kehadiran berhasil disimpan',
-    data: { id: newId, status },
+    data: { id: newId, status, awardedPoints },
   });
 };
 
@@ -400,6 +407,9 @@ attendancesRouter.post(
       }
     }
 
+    // Ambil bobot poin aktif untuk kalkulasi snapshot batch
+    const pointWeights = await getActivePointWeights(db);
+
     // Eksekusi batch upsert (1 network roundtrip untuk efisiensi edge)
     const chunkSize = 50;
     for (let i = 0; i < itemsToProcess.length; i += chunkSize) {
@@ -412,6 +422,7 @@ attendancesRouter.post(
             activityId,
             userId: item.userId,
             status: item.status,
+            awardedPoints: calculatePointsForStatus(item.status, pointWeights),
             recordedBy: currentAdmin.id,
             recordedAt: now,
           }))
@@ -420,6 +431,7 @@ attendancesRouter.post(
           target: [attendances.activityId, attendances.userId],
           set: {
             status: sql`excluded.status`,
+            awardedPoints: sql`excluded.awarded_points`,
             recordedBy: sql`excluded.recorded_by`,
             recordedAt: sql`excluded.recorded_at`,
           },

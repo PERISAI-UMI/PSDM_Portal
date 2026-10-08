@@ -16,6 +16,7 @@ export const attendances = sqliteTable(
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     status: text('status', { enum: attendanceStatusEnum }).notNull(),
+    awardedPoints: integer('awarded_points').notNull().default(0),
     recordedBy: text('recorded_by')
       .notNull()
       .references(() => users.id, { onDelete: 'restrict' }),
