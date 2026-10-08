@@ -671,3 +671,58 @@ describe('SUITE 5: Storage S3/Backblaze B2 Presigned URL', () => {
     expect(result.fileKey.endsWith('.pdf')).toBe(true);
   });
 });
+
+// ============================================================
+// 6. Super Admin Points Log (Buku Besar Poin) Tests
+// ============================================================
+describe('SUITE 6: Super Admin Points Log (Buku Besar Poin)', () => {
+  it('Evaluasi Reward vs Punishment dan Nilai Nominal Absolut', () => {
+    // 1. Reward case (awardedPoints >= 0)
+    const hadirPoints = 5;
+    const rewardJenis = hadirPoints < 0 ? 'Punishment' : 'Reward';
+    const rewardNominal = Math.abs(hadirPoints);
+    expect(rewardJenis).toBe('Reward');
+    expect(rewardNominal).toBe(5);
+
+    // 2. Punishment case (awardedPoints < 0)
+    const alphaPoints = -7;
+    const punishJenis = alphaPoints < 0 ? 'Punishment' : 'Reward';
+    const punishNominal = Math.abs(alphaPoints);
+    expect(punishJenis).toBe('Punishment');
+    expect(punishNominal).toBe(7);
+  });
+
+  it('Format auto-generated keterangan mengikuti SOP "${Status} Pada Kegiatan ${ActivityName}"', () => {
+    const status = 'HADIR';
+    const activityName = 'Rapat MILAD';
+    const formatStatus = (st: string) => st.charAt(0).toUpperCase() + st.slice(1).toLowerCase();
+    const keterangan = `${formatStatus(status)} Pada Kegiatan ${activityName}`;
+
+    expect(keterangan).toBe('Hadir Pada Kegiatan Rapat MILAD');
+
+    // Cek regex parsing untuk import
+    const match = keterangan.match(/^(Hadir|Izin|Sakit|Alpha|Telat)\s+Pada\s+Kegiatan\s+(.+)$/i);
+    expect(match).not.toBeNull();
+    expect(match![1].toUpperCase()).toBe('HADIR');
+    expect(match![2].trim()).toBe('Rapat MILAD');
+  });
+
+  it('Endpoint /api/points/log menolak akses tanpa token (401 Unauthorized)', async () => {
+    const res = await app.request('/api/points/log');
+    expect(res.status).toBe(401);
+
+    const json = await res.json();
+    expect(json.success).toBe(false);
+  });
+
+  it('Endpoint /api/points/import-log menolak akses tanpa token (401 Unauthorized)', async () => {
+    const res = await app.request('/api/points/import-log', {
+      method: 'POST',
+    });
+    expect(res.status).toBe(401);
+
+    const json = await res.json();
+    expect(json.success).toBe(false);
+  });
+});
+

@@ -14,6 +14,8 @@ import type {
   PointConfig,
   LeaderboardEntry,
   MemberPointsHistoryData,
+  PointsLogRow,
+  PointsLogImportResult,
 } from '../types/index.ts';
 
 const TOKEN_KEY = 'psdm_auth_token';
@@ -762,4 +764,28 @@ export const api = {
       method: 'POST',
     });
   },
+
+  // ================= POINTS LOG (BUKU BESAR POIN) =================
+  async getPointsLog(params?: { startDate?: string; endDate?: string }): Promise<PointsLogRow[]> {
+    const query = new URLSearchParams();
+    if (params?.startDate) query.set('startDate', params.startDate);
+    if (params?.endDate) query.set('endDate', params.endDate);
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    const res = await request<{ success: boolean; data: PointsLogRow[] }>(`/api/points/log${qs}`);
+    return res.data || [];
+  },
+
+  async importPointsLog(file: File): Promise<{
+    success: boolean;
+    message: string;
+    data: PointsLogImportResult;
+  }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return request<{ success: boolean; message: string; data: PointsLogImportResult }>('/api/points/import-log', {
+      method: 'POST',
+      body: formData,
+    });
+  },
 };
+

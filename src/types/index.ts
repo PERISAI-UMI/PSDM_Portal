@@ -210,3 +210,24 @@ export interface OnlinePresenceData {
   users: OnlineUserItem[];
 }
 
+export interface PointsLogRow {
+  id: string;
+  tanggal: string; // YYYY-MM-DD
+  nama: string; // nama_lengkap
+  prn?: string;
+  jenis: 'Reward' | 'Punishment';
+  nominal: number; // Math.abs(points)
+  keterangan: string; // "${Status} Pada Kegiatan ${ActivityName}"
+  status?: AttendanceStatus;
+  activityName?: string;
+  awardedPoints?: number;
+  activityDate?: string | Date;
+}
+
+export interface PointsLogImportResult {
+  importedCount: number;
+  updatedCount: number;
+  skippedCount: number;
+  errors: { row: number; nama?: string; reason: string }[];
+}
+

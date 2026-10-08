@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, sql, desc, and } from 'drizzle-orm';
+import { eq, sql, desc, and, gte, lte } from 'drizzle-orm';
+import * as XLSX from 'xlsx';
 import type { AppEnv } from '../types.ts';
 import {
   pointConfigs,
@@ -374,3 +375,340 @@ pointsRouter.get(
     return c.json({ success: false, message: 'Gagal memuat riwayat poin anggota' }, 500);
   }
 });
+
+// ============================================================================
+// SUPER ADMIN POINTS LOG (BUKU BESAR POIN)
+// ============================================================================
+
+// GET /api/points/log (Lihat & Filter Buku Besar Poin Organisasi)
+pointsRouter.get(
+  '/log',
+  requireRole(['SUPER_ADMIN']),
+  async (c) => {
+    const db = c.get('db');
+    const startDateParam = c.req.query('startDate');
+    const endDateParam = c.req.query('endDate');
+
+    try {
+      const conditions = [];
+
+      if (startDateParam) {
+        const start = new Date(startDateParam.includes('T') ? startDateParam : `${startDateParam}T00:00:00.000Z`);
+        if (!isNaN(start.getTime())) {
+          conditions.push(gte(activities.startDate, start));
+        }
+      }
+
+      if (endDateParam) {
+        const end = new Date(endDateParam.includes('T') ? endDateParam : `${endDateParam}T23:59:59.999Z`);
+        if (!isNaN(end.getTime())) {
+          conditions.push(lte(activities.startDate, end));
+        }
+      }
+
+      const query = db
+        .select({
+          id: attendances.id,
+          activityId: attendances.activityId,
+          activityName: activities.nama,
+          activityDate: activities.startDate,
+          userId: attendances.userId,
+          namaLengkap: users.namaLengkap,
+          prn: users.prn,
+          status: attendances.status,
+          awardedPoints: attendances.awardedPoints,
+          recordedAt: attendances.recordedAt,
+        })
+        .from(attendances)
+        .innerJoin(activities, eq(attendances.activityId, activities.id))
+        .innerJoin(users, eq(attendances.userId, users.id))
+        .orderBy(desc(activities.startDate), desc(attendances.recordedAt));
+
+      const rows = conditions.length > 0 ? await query.where(and(...conditions)).all() : await query.all();
+
+      const formatStatusTitle = (st: string) => {
+        switch (st?.toUpperCase()) {
+          case 'HADIR': return 'Hadir';
+          case 'IZIN': return 'Izin';
+          case 'SAKIT': return 'Sakit';
+          case 'ALPHA': return 'Alpha';
+          case 'TELAT': return 'Telat';
+          default: return st || 'Hadir';
+        }
+      };
+
+      const logData = rows.map((r: any) => {
+        const pts = Number(r.awardedPoints || 0);
+        const jenis = pts < 0 ? 'Punishment' : 'Reward';
+        const nominal = Math.abs(pts);
+        const dateObj = new Date(r.activityDate);
+        const y = dateObj.getFullYear();
+        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const d = String(dateObj.getDate()).padStart(2, '0');
+        const tanggal = `${y}-${m}-${d}`;
+        const keterangan = `${formatStatusTitle(r.status)} Pada Kegiatan ${r.activityName}`;
+
+        return {
+          id: r.id,
+          tanggal,
+          nama: r.namaLengkap,
+          prn: r.prn,
+          jenis,
+          nominal,
+          keterangan,
+          status: r.status,
+          activityName: r.activityName,
+          awardedPoints: pts,
+          activityDate: r.activityDate,
+        };
+      });
+
+      return c.json({
+        success: true,
+        data: logData,
+      });
+    } catch (err: any) {
+      console.error('Error fetching points log:', err);
+      return c.json({ success: false, message: 'Gagal memuat buku besar poin' }, 500);
+    }
+  }
+);
+
+// POST /api/points/import-log (Impor Buku Besar Poin dari Excel/CSV - Match strictly nama_lengkap)
+pointsRouter.post(
+  '/import-log',
+  requireRole(['SUPER_ADMIN']),
+  async (c) => {
+    const db = c.get('db');
+    const currentUser = c.get('user');
+
+    try {
+      const body = await c.req.parseBody();
+      const file = body['file'];
+
+      if (!file || !(file instanceof File)) {
+        return c.json({ success: false, message: 'Berkas file (.xlsx, .xls, .csv) tidak ditemukan' }, 400);
+      }
+
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      if (!firstSheetName) {
+        return c.json({ success: false, message: 'Lembar kerja (sheet) kosong' }, 400);
+      }
+
+      const worksheet = workbook.Sheets[firstSheetName];
+      const rawRows = XLSX.utils.sheet_to_json<Record<string, any>>(worksheet, { defval: '' });
+
+      if (rawRows.length === 0) {
+        return c.json({ success: false, message: 'Tidak ada baris data dalam berkas yang diunggah' }, 400);
+      }
+
+      // Ambil seluruh users untuk exact match nama_lengkap
+      const allUsers = await db
+        .select({
+          id: users.id,
+          namaLengkap: users.namaLengkap,
+          prn: users.prn,
+        })
+        .from(users)
+        .all();
+
+      const userMap = new Map<string, typeof allUsers[0]>();
+      for (const u of allUsers) {
+        userMap.set(u.namaLengkap.trim().toLowerCase(), u);
+      }
+
+      // Ambil seluruh activities dan categories
+      const allActivities = await db.select().from(activities).all();
+      const allCategories = await db.select().from(activityCategories).all();
+      const defaultCategory = allCategories.find((cat: any) => cat.nama.includes('Internal')) || allCategories[0];
+
+      let importedCount = 0;
+      let updatedCount = 0;
+      let skippedCount = 0;
+      const errors: { row: number; nama?: string; reason: string }[] = [];
+
+      for (let i = 0; i < rawRows.length; i++) {
+        const row = rawRows[i];
+        const rowNum = i + 2; // Row number in Excel
+
+        // Cari nama lengkap
+        const rawNama = String(
+          row['NAMA'] ||
+          row['Nama'] ||
+          row['Nama Lengkap'] ||
+          row['NAMA LENGKAP'] ||
+          row['Name'] ||
+          row['nama'] ||
+          ''
+        ).trim();
+
+        if (!rawNama) {
+          skippedCount++;
+          errors.push({ row: rowNum, reason: 'Kolom Nama kosong' });
+          continue;
+        }
+
+        // Strict matching by nama_lengkap
+        const matchedUser = userMap.get(rawNama.toLowerCase());
+        if (!matchedUser) {
+          skippedCount++;
+          errors.push({
+            row: rowNum,
+            nama: rawNama,
+            reason: `Pengurus "${rawNama}" tidak ditemukan dalam database`,
+          });
+          continue;
+        }
+
+        // Ekstraksi Status & Nama Kegiatan
+        const rawKeterangan = String(
+          row['KETERANGAN'] ||
+          row['Keterangan'] ||
+          row['Description'] ||
+          row['keterangan'] ||
+          ''
+        ).trim();
+
+        const explicitStatus = String(
+          row['STATUS'] ||
+          row['Status'] ||
+          row['Status Presensi'] ||
+          row['Absensi'] ||
+          ''
+        ).trim().toUpperCase();
+
+        const explicitActivity = String(
+          row['KEGIATAN'] ||
+          row['Kegiatan'] ||
+          row['Activity'] ||
+          row['Nama Kegiatan'] ||
+          ''
+        ).trim();
+
+        const explicitJenis = String(row['JENIS'] || row['Jenis'] || '').trim();
+
+        let parsedStatus: AttendanceStatus = 'HADIR';
+        let parsedActivityName = 'Kegiatan Organisasi';
+
+        // Format SOP: "${Status} Pada Kegiatan ${ActivityName}"
+        const match = rawKeterangan.match(/^(Hadir|Izin|Sakit|Alpha|Telat)\s+Pada\s+Kegiatan\s+(.+)$/i);
+        if (match) {
+          const matchedSt = match[1].toUpperCase();
+          if (['HADIR', 'IZIN', 'SAKIT', 'ALPHA', 'TELAT'].includes(matchedSt)) {
+            parsedStatus = matchedSt as AttendanceStatus;
+          }
+          parsedActivityName = match[2].trim();
+        } else {
+          // Fallback parsing
+          if (['HADIR', 'IZIN', 'SAKIT', 'ALPHA', 'TELAT'].includes(explicitStatus)) {
+            parsedStatus = explicitStatus as AttendanceStatus;
+          } else if (explicitStatus === 'ALPA') {
+            parsedStatus = 'ALPHA';
+          } else if (explicitJenis.toLowerCase() === 'punishment') {
+            parsedStatus = 'ALPHA';
+          }
+
+          if (explicitActivity) {
+            parsedActivityName = explicitActivity;
+          } else if (rawKeterangan) {
+            parsedActivityName = rawKeterangan;
+          }
+        }
+
+        // Parse tanggal
+        const rawTanggal = row['TANGGAL'] || row['Tanggal'] || row['Date'] || row['tanggal'];
+        let activityDate = new Date();
+        if (rawTanggal) {
+          if (typeof rawTanggal === 'number') {
+            // Excel serial date format
+            activityDate = new Date((rawTanggal - 25569) * 86400 * 1000);
+          } else {
+            const parsedD = new Date(rawTanggal);
+            if (!isNaN(parsedD.getTime())) {
+              activityDate = parsedD;
+            }
+          }
+        }
+
+        // Cari atau buat kegiatan
+        let targetAct = allActivities.find(
+          (a: any) => a.nama.trim().toLowerCase() === parsedActivityName.toLowerCase()
+        );
+
+        if (!targetAct) {
+          const newActId = crypto.randomUUID();
+          const newActData = {
+            id: newActId,
+            nama: parsedActivityName,
+            categoryId: defaultCategory ? defaultCategory.id : 'default',
+            mode: 'OFFLINE' as const,
+            isLocked: false,
+            isPublished: true,
+            startDate: activityDate,
+            endDate: activityDate,
+            createdBy: currentUser.id,
+            createdAt: new Date(),
+          };
+          await db.insert(activities).values(newActData);
+          targetAct = newActData as any;
+          allActivities.push(targetAct);
+        }
+
+        // Hitung bobot poin berdasarkan kategori kegiatan
+        const weights = await getPointWeightsForActivity(db, targetAct.id);
+        const awardedPoints = calculatePointsForStatus(parsedStatus, weights);
+
+        // Cek apakah presensi sudah ada
+        const existingAtt = await db
+          .select()
+          .from(attendances)
+          .where(and(eq(attendances.activityId, targetAct.id), eq(attendances.userId, matchedUser.id)))
+          .limit(1);
+
+        if (existingAtt.length > 0) {
+          await db
+            .update(attendances)
+            .set({
+              status: parsedStatus,
+              awardedPoints,
+              recordedBy: currentUser.id,
+              recordedAt: new Date(),
+            })
+            .where(eq(attendances.id, existingAtt[0].id));
+          updatedCount++;
+        } else {
+          await db.insert(attendances).values({
+            id: crypto.randomUUID(),
+            activityId: targetAct.id,
+            userId: matchedUser.id,
+            status: parsedStatus,
+            awardedPoints,
+            recordedBy: currentUser.id,
+            recordedAt: new Date(),
+          });
+          importedCount++;
+        }
+      }
+
+      invalidateSyncCache();
+
+      return c.json({
+        success: true,
+        message: `Import selesai: ${importedCount} data baru, ${updatedCount} diperbarui${
+          skippedCount > 0 ? `, ${skippedCount} dilewati` : ''
+        }`,
+        data: {
+          importedCount,
+          updatedCount,
+          skippedCount,
+          errors,
+        },
+      });
+    } catch (err: any) {
+      console.error('Error importing points log:', err);
+      return c.json({ success: false, message: err?.message || 'Gagal mengimpor buku besar poin' }, 500);
+    }
+  }
+);
