@@ -756,4 +756,10 @@ export const api = {
       method: 'DELETE',
     });
   },
+
+  async recalculateAllPoints(): Promise<{ success: boolean; message: string }> {
+    return request<{ success: boolean; message: string }>('/api/points/recalculate', {
+      method: 'POST',
+    });
+  },
 };

@@ -211,6 +211,51 @@ pointsRouter.put(
   }
 );
 
+// POST /api/points/recalculate (SUPER_ADMIN ONLY - Sinkronisasi Ulang Poin Seluruh Presensi)
+pointsRouter.post(
+  '/recalculate',
+  requireRole(['SUPER_ADMIN']),
+  async (c) => {
+    const db = c.get('db');
+    try {
+      await db.run(sql`
+        UPDATE attendances
+        SET awarded_points = (
+          SELECT CASE attendances.status
+            WHEN 'HADIR' THEN COALESCE(ac.hadir_points, 3)
+            WHEN 'IZIN' THEN COALESCE(ac.izin_points, 0)
+            WHEN 'SAKIT' THEN COALESCE(ac.sakit_points, 0)
+            WHEN 'ALPHA' THEN COALESCE(ac.alpha_points, -5)
+            WHEN 'TELAT' THEN COALESCE(ac.telat_points, -1)
+            ELSE 0
+          END
+          FROM activities a
+          LEFT JOIN activity_categories ac ON a.category_id = ac.id
+          WHERE a.id = attendances.activity_id
+        )
+        WHERE EXISTS (
+          SELECT 1 FROM activities a WHERE a.id = attendances.activity_id
+        );
+      `);
+
+      invalidateSyncCache();
+
+      return c.json({
+        success: true,
+        message: 'Seluruh poin riwayat presensi berhasil disesuaikan ulang berdasarkan kategori kegiatan!',
+      });
+    } catch (err: any) {
+      return c.json(
+        {
+          success: false,
+          message: err?.message || 'Gagal melakukan kalkulasi ulang poin',
+        },
+        500
+      );
+    }
+  }
+);
+
 // GET /api/points/leaderboard (Klasemen Poin Anggota - SUPER_ADMIN, ADMIN, INTI)
 pointsRouter.get(
   '/leaderboard',

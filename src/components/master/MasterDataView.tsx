@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   Layers,
   Filter,
+  RefreshCw,
 } from 'lucide-react';
 import type {
   FakultasItem,
@@ -223,6 +224,20 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
       alert(err?.message || 'Gagal menghapus kategori');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const [recalculating, setRecalculating] = useState(false);
+  const handleRecalculatePoints = async () => {
+    if (!window.confirm('Sesuaikan ulang seluruh poin riwayat presensi berdasarkan kategori kegiatan yang aktif saat ini?')) return;
+    try {
+      setRecalculating(true);
+      const res = await api.recalculateAllPoints();
+      alert(res.message || 'Poin riwayat presensi berhasil disesuaikan ulang!');
+    } catch (err: any) {
+      alert(err.message || 'Gagal menyesuaikan ulang poin');
+    } finally {
+      setRecalculating(false);
     }
   };
 
@@ -1079,15 +1094,29 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                 </span>
               </div>
 
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
-                <input
-                  type="text"
-                  value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.target.value)}
-                  placeholder="Cari kategori..."
-                  className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-56"
-                />
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:flex-initial">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                  <input
+                    type="text"
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    placeholder="Cari kategori..."
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface focus:outline-none focus:ring-1 focus:ring-brand w-full sm:w-48"
+                  />
+                </div>
+                {!isReadOnly && (
+                  <button
+                    type="button"
+                    onClick={handleRecalculatePoints}
+                    disabled={recalculating}
+                    title="Sesuaikan ulang seluruh poin presensi berdasarkan kategori kegiatan aktif"
+                    className="px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-surface hover:bg-slate-50 text-slate-700 flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${recalculating ? 'animate-spin text-brand' : ''}`} />
+                    <span className="hidden sm:inline">Sinkron Poin</span>
+                  </button>
+                )}
               </div>
             </div>
 
