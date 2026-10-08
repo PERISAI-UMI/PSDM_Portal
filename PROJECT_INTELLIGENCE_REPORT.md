@@ -1,9 +1,9 @@
 # PROJECT INTELLIGENCE REPORT
 **Comprehensive Legacy Project Reverse Engineering & System Discovery**
 *Repository: PSDM-PORTAL (PSDM.web 2.0)*
-*Investigation Date: 2026-09-25*
+*Investigation Date: 2026-10-09 (Updated from initial discovery 2026-09-25)*
 *Author: Senior Software Architect & Security Auditor*
-*Operating Mode: Read-Only System Archaeologist*
+*Operating Mode: System Architect & Full-Stack Engineer*
 
 ---
 
@@ -13,7 +13,7 @@ PSDM-PORTAL (branded internally as **PSDM.web 2.0**) is an enterprise-grade web 
 
 The stack combines a **React 19** Single-Page Application (SPA) compiled with **Vite 8** and styled with **Tailwind CSS v4** on the frontend, and a **Hono v4** edge API backend targeted for **Cloudflare Workers**. Data persistence is handled by **Turso Database (distributed libSQL / SQLite)** managed via **Drizzle ORM** in a strict **Third Normal Form (3NF)** relational schema. File assets (such as student medical/academic absence excuse documents and user avatars) are handled through **Backblaze B2 Cloud Object Storage** utilizing both S3-compatible presigned URLs and an authenticated edge streaming proxy.
 
-The application implements a strict 4-tier Role-Based Access Control (RBAC) model (`SUPER_ADMIN`, `ADMIN`, `PENGURUS`, and `INTI`) with fine-grained department delegation (`pj_departments`). The codebase demonstrates high development maturity, featuring WebCrypto PBKDF2 hashing, sliding-window session management, in-memory micro-caching, client-side Canvas image compression, adaptive tab polling, and in-app automated diagnostics. However, archaeological discovery also uncovered discrepancies between documentation and actual implementation, such as claims of QR-code scanning where only manual/batch checklist recording exists, and dormant dependencies (`@google/genai`) inherited from past iterations.
+The application implements a strict 4-tier Role-Based Access Control (RBAC) model (`SUPER_ADMIN`, `ADMIN`, `PENGURUS`, and `INTI`) with fine-grained department delegation (`pj_departments`). The codebase demonstrates high development maturity, featuring WebCrypto PBKDF2 hashing, sliding-window session management, in-memory micro-caching, client-side Canvas image compression, adaptive tab polling, in-app automated diagnostics, and real-time online presence tracking exclusively for Super Admin. Recent architectural cycles successfully purged dormant legacy dependencies (e.g. `@google/genai`), fixed cross-platform test runner path bugs, hardened CORS controls, implemented a 60-30-10 color palette with system-aware Dark Mode, added physical back-button navigation via the History API, and introduced hierarchical sidebar dropdowns.
 
 ---
 
@@ -24,30 +24,30 @@ The application implements a strict 4-tier Role-Based Access Control (RBAC) mode
 | **Project Name** | **PSDM.web 2.0** (`psdm-portal` in `wrangler.toml`, `react-example` in `package.json`) |
 | **Project Type** | Full-Stack Web Application (SPA Frontend + Edge Serverless API Backend) |
 | **Primary Purpose** | Digital governance of student organization members, activities, attendance recording, and absence verification |
-| **Target Users** | Student organization leaders (Kadep PSDM, BPH / Pengurus Inti), department supervisors (Staf PSDM / Admin PJ), and active members (Pengurus) |
+| **Target Users** | Student organization leaders (Kadep PSDM, Inti / Executive Board), department supervisors (Staf PSDM / Admin PJ), and active members (Pengurus) |
 | **Main Problem Solved** | Eliminates manual paper/spreadsheet attendance tracking, chaotic absence permissions across messaging apps, and unauthorized cross-department permission reviews |
-| **Core Value Proposition** | Sub-50ms global response latency on edge serverless infrastructure, zero native C++ runtime lock-in, automated permission-to-attendance reconciliation, and tamper-resistant relational 3NF audit trails |
+| **Core Value Proposition** | Sub-50ms global response latency on edge serverless infrastructure, zero native C++ runtime lock-in, automated permission-to-attendance reconciliation, real-time presence auditing (Super Admin), and tamper-resistant relational 3NF audit trails |
 | **Application Domain** | Higher Education / Student Organization Governance (Human Resources & Activities Management) |
 | **Institutional Context** | Universitas Muslim Indonesia (UMI) Makassar, South Sulawesi (`Asia/Makassar` / WITA timezone) |
 | **Architecture Type** | Edge Serverless Monolith (Hono API backend + React 19 SPA static assets served via Cloudflare Workers `[assets]`) |
-| **Current Development Status** | **Production-Hardened / V2 Feature-Complete** (Type-checking 100% clean, integration test suite present, clean production scripts ready) |
+| **Current Development Status** | **Production-Hardened / V2.1 Feature-Complete** (Type-checking 100% clean, cross-platform test runner, dark mode 60-30-10 palette, real-time presence monitoring) |
 
 ---
 
 ## 3. What This Project Appears To Do
 
 ### One Sentence
-PSDM.web 2.0 is an edge-native organizational portal that automates student member directory management, activity scheduling, field attendance verification, and absence excuse workflows with role-delegated approvals on Cloudflare Workers and Turso libSQL.
+PSDM.web 2.0 is an edge-native organizational portal that automates student member directory management, activity scheduling, field attendance verification, real-time presence tracking (Super Admin), and absence excuse workflows with role-delegated approvals on Cloudflare Workers and Turso libSQL.
 
 ### Short Description (3–5 Sentences)
-The system serves as the central digital portal for a student organization's Human Resource Development (PSDM) division. Organization executives (Super Admin and Inti) can configure university academic master data, register departments, assign staff as department supervisors (PJ), and schedule official events. Members (Pengurus) can view published activities, request absence leaves with compressed medical/academic evidence attachments, and track personal attendance rates. Staff supervisors (Admin) and Super Admins verify attendance in real-time and review absence requests, which automatically reconcile into official attendance records upon approval.
+The system serves as the central digital portal for a student organization's Human Resource Development (PSDM) division. Organization executives (Super Admin and Inti) can configure university academic master data, register departments, assign staff as department supervisors (PJ), and schedule official events. Super Admin additionally possesses exclusive real-time monitoring of actively browsing members. Members (Pengurus) can view published activities, request absence leaves with compressed medical/academic evidence attachments, and track personal attendance rates. Staff supervisors (Admin) and Super Admins verify attendance in real-time and review absence requests, which automatically reconcile into official attendance records upon approval.
 
 ### Detailed Description (User Perspective)
 From an end-user's perspective, access begins with a secure login using their Organization Registration Number (PRN / Nomor Registrasi) and password. 
 
 - **A regular member (Pengurus)** enters a focused personal dashboard displaying their attendance percentage, upcoming organization events, and their filed permission requests. If unable to attend an event, they submit an excuse form (e.g., Illness or Academic Assignment) with optional file upload. Their device automatically resizes and compresses photos before uploading to Backblaze B2. Once submitted, they see the real-time status of their request (`PENDING`, `APPROVED`, or `REJECTED`).
 - **A staff supervisor (Admin / Staf PSDM)** is assigned to supervise specific departments (e.g., Department of Research & Technology). On their dashboard, they only see leave requests originating from members within their assigned departments, preventing unauthorized interference in other divisions. During an event, Admins can open the attendance recorder, search for members, toggle statuses (`HADIR`, `IZIN`, `SAKIT`, `ALPHA`, `TELAT`), import attendance spreadsheets from Excel/CSV, or export final attendance logs to CSV.
-- **Organization Executives (Super Admin / Kadep & Pengurus Inti)** possess comprehensive oversight. Super Admin can lock activities to prevent retroactive attendance tampering, add or batch-import members from spreadsheets, manage academic faculties and departments, reassign supervisors, and monitor system health via a live diagnostic modal that tests Edge, Database, and S3 connectivity.
+- **Organization Executives (Super Admin / Kadep & Inti)** possess comprehensive oversight. Super Admin can lock activities to prevent retroactive attendance tampering, add or batch-import members from spreadsheets, manage academic faculties and departments, reassign supervisors, monitor live user sessions via an exclusive online users modal, and monitor system health via a live diagnostic modal that tests Edge, Database, and S3 connectivity.
 
 ---
 
@@ -57,12 +57,12 @@ Based on authentication logic, database models, and UI views, four distinct user
 
 1. **Super Administrator (Kepala Departemen PSDM / Kadep)**
    - *Profile*: Executive leader of the Human Resources division.
-   - *Needs*: Full system authority, master data setup, account creation/deletion, activity locking, and organization-wide analytics.
-   - *Evidence*: `src/components/dashboard/SuperAdminView.tsx`, `role === 'SUPER_ADMIN'`.
+   - *Needs*: Full system authority, master data setup, account creation/deletion, activity locking, exclusive real-time online presence monitoring, and organization-wide analytics.
+   - *Evidence*: `src/components/dashboard/SuperAdminView.tsx`, `role === 'SUPER_ADMIN'`, `src/components/dashboard/OnlineUsersModal.tsx`.
 
-2. **Pengurus Inti (Executive Board / BPH / Ketua Umum)**
+2. **Inti (Executive Board / Ketua Umum)**
    - *Profile*: Top executive leadership of the entire student union.
-   - *Needs*: Read-only transparency across all departments, attendance rankings, and activity oversight without day-to-day administrative burdens.
+   - *Needs*: Read-only transparency across all departments, attendance rankings, and activity oversight without day-to-day administrative burdens (online presence monitoring is strictly hidden and denied).
    - *Evidence*: `src/db/schema/users.ts:5`, `role === 'INTI'`, `requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI'])`.
 
 3. **Administrator (Staf PSDM / Penanggung Jawab Departemen)**
@@ -108,19 +108,24 @@ PSDM.web 2.0 directly solves these problems by providing an immutable, relationa
 │   ├── Department Supervisor Delegation (pj_departments M:N mapping)   │
 │   ├── Auto-Reconciliation of Approved Permissions to Attendance        │
 │   ├── Activity Tamper-Proof Lock (isLocked toggle by Super Admin)      │
+│   ├── Real-Time Active Users Presence Audit (/api/users/online) [SA]   │
 │   ├── CSV Attendance Export (Formatted with WITA timestamps)           │
 │   └── Excel/CSV Member & Attendance Batch Importer (xlsx)              │
 ├────────────────────────────────────────────────────────────────────────┤
 │  [SECONDARY & ENHANCEMENT FEATURES]                                    │
+│   ├── System Dark Mode & 60-30-10 Palette Engine (prefers-color-scheme)│
+│   ├── History API Back Button Routing (#section?modal=open)            │
+│   ├── Hierarchical Sidebar Submenus (Master Data, Perizinan, Profil)   │
+│   ├── Direct Clickable Activity Cards & Responsive Mobile KPIs         │
 │   ├── Real-Time Adaptive Tab Synchronization (BroadcastChannel + Hash) │
 │   ├── Client-Side Canvas WebP Image Compressor                         │
 │   ├── Live System Diagnostic & Connectivity Check (/api/diagnostics)   │
 │   ├── In-Browser Profile Avatar Cropper & Backblaze B2 Upload          │
 │   └── Top 10 Alpa Leaderboard / Attendance Bar Chart                   │
 ├────────────────────────────────────────────────────────────────────────┤
-│  [DORMANT / EXPERIMENTAL ARTIFACTS]                                    │
-│   ├── @google/genai Package (Installed but unused in code)            │
-│   └── QR-Code Camera Scanner (Named in docs/modals, but unbuilt)       │
+│  [CLEANED & LEGACY STATUS]                                             │
+│   ├── @google/genai Package [PURGED / REMOVED from package.json]       │
+│   └── QR-Code Camera Scanner (Named in docs/modals, strictly checklist)│
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -139,9 +144,11 @@ PSDM.web 2.0 directly solves these problems by providing an immutable, relationa
 | **Attendance Import** | Parse Excel/CSV spreadsheets and match NIM/PRN to record attendance | Admin, Super Admin | `AttendanceImportModal.tsx` | `POST /api/attendances/batch` | `attendances`, `users` | **Confirmed Working** | `src/components/attendances/AttendanceImportModal.tsx` |
 | **Attendance Export** | Export event attendance recap as UTF-8 BOM CSV with WITA date formatting | Admin, Super Admin | `AttendanceScannerModal.tsx` | `GET /api/attendances/export` | `attendances`, `activities`, `users`, `departments` | **Confirmed Working** | `src/server/routes/attendances.ts:148` |
 | **Attendance Reset** | Clear all or selected attendance entries for an activity | Admin, Super Admin | `AttendanceScannerModal.tsx` | `POST /api/attendances/reset` | `attendances` | **Confirmed Working** | `src/server/routes/attendances.ts:382` |
+| **Online Users Presence** | Real-time active users monitoring via 45s heartbeat and 5-min active window | Super Admin | `OnlineUsersModal.tsx` | `GET /api/users/online` | `sessions`, `users`, `departments` | **Confirmed Working** | `src/server/routes/users.ts:124`, `OnlineUsersModal.tsx` |
+| **Dark Mode & 60-30-10** | Dual theme engine, system preference detection, anti-FOUC script, header toggle | All | `Header.tsx`, `index.html` | N/A (Frontend/CSS) | N/A | **Confirmed Working** | `src/utils/theme.ts`, `src/index.css:6` |
 | **Permission Request** | Submit leave/sick request with file attachment for an event | Pengurus, Inti | `PermissionFormModal.tsx` | `POST /api/permissions` | `permissions`, `activities` | **Confirmed Working** | `src/server/routes/permissions.ts:137` |
-| **Permission Review** | Approve/Reject leave requests with automatic attendance sync | Admin (scoped), Super Admin | `PermissionsView.tsx`, `PermissionListTable.tsx` | `PATCH /api/permissions/:id/review` | `permissions`, `attendances`, `pj_departments` | **Confirmed Working** | `src/server/routes/permissions.ts:196` |
-| **Master Data CRUD** | Manage Faculties, Study Programs, Departments, and PJ delegations | Super Admin | `MasterDataView.tsx` | `/api/master/fakultas`, `/api/master/program-studi`, `/api/master/departments`, `/api/master/pj-departments` | `fakultas`, `program_studi`, `departments`, `pj_departments` | **Confirmed Working** | `src/server/routes/master.ts` |
+| **Permission Review** | Approve/Reject leave requests with automatic attendance sync & sub-tabs | Admin (scoped), Super Admin | `PermissionsView.tsx`, `PermissionListTable.tsx` | `PATCH /api/permissions/:id/review` | `permissions`, `attendances`, `pj_departments` | **Confirmed Working** | `src/server/routes/permissions.ts:196` |
+| **Master Data CRUD** | Manage Faculties, Study Programs, Departments, and PJ delegations via sidebar | Super Admin | `MasterDataView.tsx`, `Sidebar.tsx` | `/api/master/fakultas`, `/api/master/program-studi`, `/api/master/departments`, `/api/master/pj-departments` | `fakultas`, `program_studi`, `departments`, `pj_departments` | **Confirmed Working** | `src/server/routes/master.ts` |
 | **Member Directory** | List, search, filter members by department, role, or text | Admin, Super Admin, Inti | `MembersView.tsx` | `GET /api/users` | `users`, `departments`, `program_studi` | **Confirmed Working** | `src/server/routes/users.ts:63` |
 | **Member Management** | Create, edit, delete member records with FK cascade cleanup | Super Admin | `MemberFormModal.tsx` | `POST/PUT/DELETE /api/users/:id` | `users`, `activities`, `attendances`, `permissions`, `sessions` | **Confirmed Working** | `src/server/routes/users.ts:167` |
 | **Member Batch Import** | Bulk upsert members from Excel/CSV with chunked password hashing | Super Admin | `MemberImportModal.tsx` | `POST /api/users/batch-import` | `users` | **Confirmed Working** | `src/server/routes/users.ts:201` |
@@ -171,6 +178,7 @@ export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as cons
      - Manage academic master data (`fakultas`, `program_studi`, `departments`).
      - Assign Admins to departments (`pj_departments`).
      - Review or cancel any permission across all departments.
+     - Monitor real-time online active members (`GET /api/users/online`, exclusive to Super Admin).
      - Execute database diagnostics and production database resets.
 
 2. **`ADMIN` (Staf PSDM / Penanggung Jawab Departemen)**
@@ -181,16 +189,16 @@ export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as cons
      - Export attendance reports to CSV.
      - View member directory.
      - **Constraint**: Can ONLY review (`APPROVED`/`REJECTED`) permissions belonging to members in departments assigned to them in `pj_departments`. Attempting to review an unassigned department returns HTTP 403 (`src/server/routes/permissions.ts:232`).
-     - Cannot delete or lock activities, cannot edit master data, cannot create/delete user accounts.
+     - Cannot delete or lock activities, cannot edit master data, cannot create/delete user accounts, cannot monitor online active users.
 
-3. **`INTI` (BPH / Pengurus Inti / Ketua Umum)**
+3. **`INTI` (Executive Board / Ketua Umum)**
    - *Authority*: High-level executive read-only audit capability.
    - *Capabilities*:
      - Full read access to all activities (draft and published).
      - Full read access to member directory and master data.
      - Read-only visibility into all member permissions across all departments for supervisory inspection.
      - Can submit personal permissions for activities.
-     - Cannot record attendance, cannot approve permissions, cannot modify users or master data.
+     - Cannot record attendance, cannot approve permissions, cannot modify users or master data, cannot monitor online active users (denied).
 
 4. **`PENGURUS` (Anggota Organisasi)**
    - *Authority*: Standard member self-service privileges.
@@ -199,7 +207,7 @@ export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as cons
      - Submit leave/sick permission requests for upcoming activities (unless locked).
      - View personal attendance history and personal leave status.
      - Update personal profile details (phone, address, bio, avatar, password).
-     - Cannot view other members' permissions or attendance logs.
+     - Cannot view other members' permissions or attendance logs, cannot monitor online active users.
 
 ---
 
@@ -208,6 +216,7 @@ export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as cons
 | Capability / Resource | `SUPER_ADMIN` | `ADMIN` | `INTI` | `PENGURUS` | Code Evidence |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **View Dashboard** | Full Org Stats + Top 10 Alpa | Assigned Dept Stats + Top 10 Alpa | High-Level Org Stats | Personal Stats Only | `SuperAdminView.tsx`, `AdminView.tsx`, `PengurusView.tsx` |
+| **Monitor Online Users** | Yes | Denied | Denied | Denied | `src/server/routes/users.ts:124`, `OnlineUsersModal.tsx` |
 | **Manage Master Data** | Full CRUD | Denied | Denied | Denied | `src/server/routes/master.ts:34` |
 | **Assign PJ Departemen** | Yes | Denied | Denied | Denied | `src/server/routes/master.ts:270` |
 | **Create / Edit Activity** | Yes | Denied | Denied | Denied | `src/server/routes/activities.ts:210` |
@@ -285,16 +294,21 @@ export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as cons
 ## 11. Application Routes
 
 ### Frontend Navigation State
-The frontend is a React 19 Single Page Application. Routing is managed via the state variable `activeSection` inside `src/App.tsx:35` rather than a browser router library:
+The frontend is a React 19 Single Page Application. Routing is managed via the state variable `activeSection` inside `src/App.tsx:37` synchronized with the browser location hash (`window.location.hash`) rather than an external router package:
 
-| Section ID | Component Rendered | Role Required | Purpose |
-| :--- | :--- | :--- | :--- |
-| `dashboard` | `SuperAdminView`, `AdminView`, or `PengurusView` | Authenticated | Role-tailored home dashboard |
-| `activities` | `ActivitiesView` | Authenticated | List, search, filter, and inspect activities |
-| `permissions`| `PermissionsView` | Authenticated | View and review absence permission requests |
-| `members` | `MembersView` | `SUPER_ADMIN`, `ADMIN`, `INTI` | Organization member directory and Excel import |
-| `master-data`| `MasterDataView` | `SUPER_ADMIN` | Manage faculties, study programs, departments, PJs |
-| `profile` | `ProfileView` | Authenticated | Self-service profile, bio, avatar, and password update |
+| Section ID | Component Rendered | Role Required | Sub-Navigation / Tabs | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| `dashboard` | `SuperAdminView`, `AdminView`, or `PengurusView` | Authenticated | N/A | Role-tailored home dashboard & KPI cards |
+| `activities` | `ActivitiesView` | Authenticated | Direct clickable cards | List, search, filter, and inspect activities |
+| `permissions`| `PermissionsView` | Authenticated | `pending` / `history` tabs | View, submit, and review absence permission requests |
+| `members` | `MembersView` | `SUPER_ADMIN`, `ADMIN`, `INTI` | Grid/Table toggle | Organization member directory and Excel import |
+| `master-data`| `MasterDataView` | `SUPER_ADMIN` | `dept` / `fakultas` / `prodi` / `pj` | Manage faculties, prodi, departments, PJs via sidebar |
+| `profile` | `ProfileView` | Authenticated | `profile` / `security` tabs | Self-service profile, bio, avatar, and password update |
+
+### Mobile Navigation & History API Synchronization
+- **Hash-Driven Navigation**: Navigating sections updates `window.location.hash` (`#dashboard`, `#activities`, `#permissions`, etc.).
+- **Hardware Back-Button Integration**: When any modal or the mobile drawer opens, `App.tsx:139` pushes a synthetic state (`#${section}?modal=open`) to the browser History API. Pressing the physical Android back button triggers `popstate`, closing the open modal/drawer instead of unintentionally closing the webpage or exiting the app.
+- **Sidebar Dropdown Hierarchy**: The desktop/mobile sidebar features expandable dropdowns with item count badges for Master Data, Perizinan, and Profil.
 
 ---
 
@@ -303,21 +317,22 @@ The frontend is a React 19 Single Page Application. Routing is managed via the s
 All API endpoints reside under `/api/*` and use JSON request/response formats unless downloading files.
 
 | Method | Endpoint | Handler File | Auth Required | Role Required | Request Body / Query | Success Response | Error Codes |
-| :--- | :--- | :--- | :---: | :---: | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- | :---: | :--- | :--- | :--- |
 | **GET** | `/api/health` | `server/index.ts:37` | No | Any | None | `{ status: "ok", edgeRuntime: string }` | None |
 | **POST** | `/api/auth/login` | `server/routes/auth.ts:26` | No | Any | `{ prn, password }` | `{ success: true, data: { user, token } }` | 400, 401, 429 |
 | **POST** | `/api/auth/logout` | `server/routes/auth.ts:116`| No | Any | None | `{ success: true, message: "Logout berhasil" }` | 200 |
 | **GET** | `/api/auth/me` | `server/routes/auth.ts:140`| Yes | Any | None | `{ success: true, data: { user, expiresAt } }` | 401 |
 | **POST** | `/api/auth/change-password` | `server/routes/auth.ts:176`| Yes | Any | `{ oldPassword, newPassword }` | `{ success: true, message: string }` | 400, 401, 404 |
 | **GET** | `/api/users` | `server/routes/users.ts:63`| Yes | Super Admin, Admin, Inti | `?departmentId=&role=&search=` | `{ success: true, data: User[] }` | 401, 403 |
-| **GET** | `/api/users/:id` | `server/routes/users.ts:120`| Yes | Scoped (Self or Admin/SA) | None | `{ success: true, data: User }` | 401, 403, 404 |
-| **POST** | `/api/users` | `server/routes/users.ts:167`| Yes | Super Admin | `createUserSchema` | `{ success: true, data: { id, prn } }` (201) | 400, 401, 403 |
-| **POST** | `/api/users/batch-import` | `server/routes/users.ts:201`| Yes | Super Admin | `{ users: UserInput[] }` | `{ success: true, data: { importedCount, updatedCount, errors } }` | 400, 401, 403, 500 |
-| **PUT** | `/api/users/profile` | `server/routes/users.ts:451`| Yes | Any (Self) | `updateUserSelfSchema` | `{ success: true, data: User }` | 400, 401 |
-| **POST** | `/api/users/profile/avatar` | `server/routes/users.ts:481`| Yes | Any (Self) | `multipart/form-data` (`file`) | `{ success: true, data: { avatarUrl, user } }` | 400, 401, 500 |
-| **DELETE**| `/api/users/profile/avatar` | `server/routes/users.ts:579`| Yes | Any (Self) | None | `{ success: true, data: { avatarUrl: null } }` | 401 |
-| **PUT** | `/api/users/:id` | `server/routes/users.ts:599`| Yes | Super Admin or Self | `updateUserAdminSchema` | `{ success: true, data: User }` | 400, 401, 403 |
-| **DELETE**| `/api/users/:id` | `server/routes/users.ts:659`| Yes | Super Admin | None | `{ success: true, message: string }` | 400, 401, 403, 500 |
+| **GET** | `/api/users/online` | `server/routes/users.ts:124`| Yes | Super Admin | None | `{ success: true, onlineCount, activeSessionsCount, timestamp, users: [...] }` | 401, 403 |
+| **GET** | `/api/users/:id` | `server/routes/users.ts:167`| Yes | Scoped (Self or Admin/SA) | None | `{ success: true, data: User }` | 401, 403, 404 |
+| **POST** | `/api/users` | `server/routes/users.ts:214`| Yes | Super Admin | `createUserSchema` | `{ success: true, data: { id, prn } }` (201) | 400, 401, 403 |
+| **POST** | `/api/users/batch-import` | `server/routes/users.ts:248`| Yes | Super Admin | `{ users: UserInput[] }` | `{ success: true, data: { importedCount, updatedCount, errors } }` | 400, 401, 403, 500 |
+| **PUT** | `/api/users/profile` | `server/routes/users.ts:498`| Yes | Any (Self) | `updateUserSelfSchema` | `{ success: true, data: User }` | 400, 401 |
+| **POST** | `/api/users/profile/avatar` | `server/routes/users.ts:528`| Yes | Any (Self) | `multipart/form-data` (`file`) | `{ success: true, data: { avatarUrl, user } }` | 400, 401, 500 |
+| **DELETE**| `/api/users/profile/avatar` | `server/routes/users.ts:626`| Yes | Any (Self) | None | `{ success: true, data: { avatarUrl: null } }` | 401 |
+| **PUT** | `/api/users/:id` | `server/routes/users.ts:646`| Yes | Super Admin or Self | `updateUserAdminSchema` | `{ success: true, data: User }` | 400, 401, 403 |
+| **DELETE**| `/api/users/:id` | `server/routes/users.ts:706`| Yes | Super Admin | None | `{ success: true, message: string }` | 400, 401, 403, 500 |
 | **GET** | `/api/activities` | `server/routes/activities.ts:52`| Yes | Any (Scoped) | `?from=&to=&mode=` | `{ success: true, data: ActivityWithSummary[] }` | 401 |
 | **GET** | `/api/activities/:id` | `server/routes/activities.ts:135`| Yes | Any (Scoped) | None | `{ success: true, data: ActivityWithDetail }` | 401, 403, 404 |
 | **POST** | `/api/activities` | `server/routes/activities.ts:209`| Yes | Super Admin | `createActivitySchema` | `{ success: true, data: { id, nama } }` (201) | 400, 401, 403 |
@@ -363,7 +378,8 @@ All API endpoints reside under `/api/*` and use JSON request/response formats un
 - **Backend API**: **Hono v4** (`hono@^4.13.8`) on Cloudflare Workers edge runtime.
 - **Frontend SPA**: **React 19** (`react@^19.0.1`, `react-dom@^19.0.1`).
 - **Build Engine**: **Vite 8** (`vite@^8.3.0`) with `@vitejs/plugin-react@^6.1.1`.
-- **CSS Engine**: **Tailwind CSS v4** (`tailwindcss@^4.3.3`, `@tailwindcss/vite@^4.3.3`).
+- **CSS Engine**: **Tailwind CSS v4** (`tailwindcss@^4.3.3`, `@tailwindcss/vite@^4.3.3`) featuring `@custom-variant dark` and 60-30-10 color token architecture.
+- **Typography**: Google Font **Poppins** with anti-aliasing optimizations for dark mode font clarity.
 - **Icons**: **Lucide React** (`lucide-react@^0.546.0`).
 - **Motion / Animations**: **Motion v12** (`motion@^12.23.24`).
 - **Spreadsheet Processing**: **SheetJS (xlsx)** (`xlsx@^0.18.5`) loaded dynamically.
@@ -371,7 +387,7 @@ All API endpoints reside under `/api/*` and use JSON request/response formats un
 - **Database Client & ORM**: `@libsql/client@^0.18.0`, `drizzle-orm@^0.45.2`, `drizzle-kit@^0.31.10`.
 - **Storage Client**: Modular AWS SDK v3 (`@aws-sdk/client-s3@^3.1136.0`, `@aws-sdk/s3-request-presigner@^3.1136.0`).
 - **Crypto & Hashing**: Web standard `SubtleCrypto` (PBKDF2 SHA-256). Zero Node.js `crypto` binary dependencies.
-- **Dead / Unused**: `@google/genai@^2.4.0` (present in `package.json`, never imported).
+- **Legacy Dependencies Cleanup**: `@google/genai` was **fully purged and uninstalled** in commit `6753a60`.
 
 ---
 
@@ -408,6 +424,7 @@ PSDM.web 2.0 uses a modern **Edge Serverless Monolithic Architecture**:
 2. **Third Normal Form (3NF) Relational Modeling**: Academic faculties, study programs, and departments are completely normalized. Data redundancy is strictly prohibited.
 3. **Resilient Micro-Caching**:
    - Authentication sessions cached in isolate memory for 15 seconds to withstand page load query spikes (`SESSION_CACHE_TTL_MS = 15_000`).
+   - Throttled presence heartbeat: Updates session `updatedAt` in Turso if older than 45 seconds to keep active session queries accurate without write storms.
    - Real-time sync data cached for 4 seconds with hash checking (`SYNC_CACHE_TTL_MS = 4000`).
    - Backblaze B2 authorization tokens cached for 12 hours (`expiresAt: now + 12 * 60 * 60 * 1000`).
 4. **Adaptive Client Polling**: The React frontend uses a 20-second active poll that automatically pauses when browser tabs are hidden, paired with cross-tab instant messaging via the `BroadcastChannel` API.
@@ -420,10 +437,12 @@ PSDM.web 2.0 uses a modern **Edge Serverless Monolithic Architecture**:
 flowchart TD
     subgraph Client["Client Browser (React 19)"]
         UI[React UI Components]
+        Theme[Theme Hook & Dark Mode]
         State[App State & Context]
         Compressor[Canvas WebP Compressor]
         Broadcast[BroadcastChannel API]
         UI --> State
+        UI --> Theme
         UI --> Compressor
         State --> Broadcast
     end
@@ -431,9 +450,9 @@ flowchart TD
     subgraph Edge["Cloudflare Workers Runtime"]
         Worker[worker.js Entry]
         Hono[Hono Router]
-        CorsMW[CORS Middleware]
+        CorsMW[Hardened CORS Middleware]
         RateMW[Rate Limiter (10 req/min)]
-        AuthMW[Auth & Micro-Cache Middleware]
+        AuthMW[Auth & Micro-Cache + Presence Heartbeat]
         DbMW[libSQL Connection Factory]
         
         Worker --> CorsMW --> RateMW --> DbMW --> AuthMW --> Hono
@@ -446,7 +465,7 @@ flowchart TD
 
     Client -- "Fetch API (Bearer / Cookie)" --> Edge
     Compressor -- "Direct Presigned Upload" --> B2
-    AuthMW -- "Query Token & User" --> Turso
+    AuthMW -- "Query Token & User / Heartbeat" --> Turso
     Hono -- "Drizzle ORM Queries" --> Turso
     Hono -- "Streaming Proxy / Upload" --> B2
 ```
@@ -455,19 +474,24 @@ flowchart TD
 
 ## 16. Frontend Analysis
 
-- **Entry Point**: `src/main.tsx` renders `src/App.tsx` wrapped in `ToastProvider`.
-- **Component Design System**:
-  - Pure Tailwind CSS v4 utility classes with standard slate/emerald/amber/rose color semantics.
-  - Custom modals (`CreateActivityModal`, `ActivityDetailModal`, `AttendanceScannerModal`, `AttendanceImportModal`, `PermissionFormModal`, `MemberFormModal`, `MemberImportModal`, `ProfileModal`, `AvatarCropModal`, `AuditModal`, `ConfirmModal`).
-  - No bloated UI libraries (Radix, Shadcn, MUI, AntD); everything is custom-crafted with native HTML5 dialogs/drawers and Tailwind transitions.
+- **Entry Point**: `src/main.tsx` renders `src/App.tsx` wrapped in `ToastProvider`. `index.html` includes an inline anti-FOUC script ensuring dark mode class application prior to initial layout paint.
+- **Design System & Aesthetics**:
+  - Strict **60-30-10 Color Architecture**: 60% Canvas/Surface, 30% Ink/Brand, 10% Accent (amber/yellow `#F6C90E`).
+  - Native **Dark Mode** support toggled via header control or defaulting to OS `prefers-color-scheme`.
+  - Pure Tailwind CSS v4 `@custom-variant dark` utility system with custom soft shadows (`--shadow-*`).
+  - Font styling hardened with `.brand-text` anti-aliasing to avoid subpixel color fringing in Windows Dark Mode.
+  - Custom modals (`CreateActivityModal`, `ActivityDetailModal`, `AttendanceScannerModal`, `AttendanceImportModal`, `PermissionFormModal`, `MemberFormModal`, `MemberImportModal`, `ProfileModal`, `AvatarCropModal`, `AuditModal`, `OnlineUsersModal`, `ConfirmModal`).
+  - No bloated third-party UI libraries (Radix, Shadcn, MUI, AntD); completely handcrafted with native HTML5 dialogs/drawers and Tailwind transitions.
 - **State Architecture**:
   - Centralized in `src/App.tsx`.
-  - State variables: `currentUser`, `activities`, `permissions`, `attendances`, `allUsers`, `fakultas`, `prodi`, `departments`, `pjMappings`.
+  - State variables: `currentUser`, `activities`, `permissions`, `attendances`, `allUsers`, `fakultas`, `prodi`, `departments`, `pjMappings`, `onlinePresence`.
   - Sub-views communicate via props and callback handlers (`reloadData`, `syncRealtime`).
-- **Responsive Layout**:
-  - Persistent sidebar on screens $\ge$ 1024px (`lg:flex lg:w-64`).
+- **Responsive Layout & Mobile Polish**:
+  - Persistent sidebar on screens $\ge$ 1024px (`lg:flex lg:w-64`) with collapsible submenus for Master Data, Perizinan, and Profil.
   - Slide-in mobile drawer on screens $<$ 1024px (`lg:hidden`).
-  - Mobile bottom action sheets and touch-friendly target sizes (min 44px).
+  - Hardware back-button routing integrated via HTML5 History API (`#section?modal=open`).
+  - Side-by-side responsive KPI metrics grid across all dashboards on mobile screens.
+  - Direct clickable activity card surfaces and full-width balanced mobile action buttons.
 
 ---
 
@@ -476,10 +500,10 @@ flowchart TD
 - **Routing Engine**: `src/server/index.ts` instantiates `const app = new Hono<AppEnv>()`.
 - **Middlewares**:
   - `logger()`: Structured console access logging.
-  - `cors()`: Dynamic reflection with strict credential support (`credentials: true`, explicit origin matching).
+  - `cors()`: Hardened dynamic origin validator (`credentials: true`). In production, checks against configured `ALLOWED_ORIGIN` domains and blocks unlisted origins; in development, reflects request origin.
   - `dbMiddleware`: Initializes Turso client per request using Cloudflare environment bindings (`c.env.TURSO_DATABASE_URL`).
   - `rateLimiter`: Protects `/api/auth/login` from brute-force attempts.
-  - `authMiddleware`: Extracts cookie or Bearer header, validates expiry, loads user + department associations, and caches in isolate RAM.
+  - `authMiddleware`: Extracts session cookie or Bearer token, validates expiry, loads user + department associations with 15s in-memory micro-cache, and executes a 45s throttled presence heartbeat updating `sessions.updatedAt`.
   - `requireRole`: Intercepts forbidden role requests with HTTP 403.
 - **Global Error Handling**: `app.onError` catches unhandled server exceptions, extracts nested error causes, and emits formatted JSON (`src/server/index.ts:62`).
 
@@ -659,6 +683,7 @@ erDiagram
   1. Primary: HTTP-Only cookie `psdm_session` (`SameSite=Lax`, `Secure` in production, `maxAge: 7 * 24 * 60 * 60`).
   2. Fallback: `Authorization: Bearer <token>` header for non-browser / testing clients.
 - **Sliding Session Expiration**: `GET /api/auth/me` checks remaining validity; if under 5 days, automatically extends expiration to 7 days (`src/server/routes/auth.ts:151`).
+- **Presence Heartbeat**: `authMiddleware` throttles session `updatedAt` renewal to every 45 seconds to support real-time presence monitoring without database write saturation.
 - **Brute-Force Protection**: `/api/auth/login` is governed by an in-memory sliding-window rate limiter (10 attempts per minute per IP).
 
 ---
@@ -681,10 +706,9 @@ erDiagram
 3. **Backblaze B2 Cloud Storage**:
    - S3-Compatible API via `@aws-sdk/client-s3` for presigned upload URLs.
    - Native B2 JSON API (`https://api.backblazeb2.com/b2api/v2/b2_authorize_account`, `b2_get_upload_url`) for server-side direct uploads.
-4. **Google AI Studio / Gemini API**:
-   - Documented in `.env.example` and `metadata.json`.
-   - Package `@google/genai` is installed.
-   - **Investigation Result**: Completely dormant. No actual imports exist in the TypeScript source code.
+4. **Google AI Studio / Gemini API (PURGED)**:
+   - Initial repository prototype included `@google/genai`.
+   - **Status**: The dependency has been **completely uninstalled and removed** from `package.json` in commit `6753a60`. No Gemini AI calls exist in application code.
 
 ---
 
@@ -720,7 +744,7 @@ VARIABLES:
 - B2_ENDPOINT = "https://s3.us-west-004.backblazeb2.com"
 - B2_REGION = "us-west-004"
 - TURSO_DATABASE_URL = "libsql://..."
-- ALLOWED_ORIGIN = ""
+- ALLOWED_ORIGIN = "https://psdm-portal.pages.dev"
 ============================================================
 ```
 No plaintext credentials or tokens were found committed in git tracked files.
@@ -756,7 +780,8 @@ No plaintext credentials or tokens were found committed in git tracked files.
 | `tsconfig.json` | TypeScript compiler options (strict, ESNext, bundling) | Build time | None | Root file |
 | `drizzle.config.ts` | Drizzle Kit migrations targeting Turso | Dev & CI | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` | Root file |
 | `package.json` | Dependency definitions and build scripts | All | None | Root file |
-| `metadata.json` | AI Studio container capability descriptor | Tooling | None | Root file |
+| `.vscode/settings.json`| Configures CSS linter to ignore Tailwind v4 at-rules | IDE / Dev | None | Root file |
+| `metadata.json` | AI Studio container capability descriptor (legacy) | Tooling | None | Root file |
 
 ---
 
@@ -777,10 +802,11 @@ No plaintext credentials or tokens were found committed in git tracked files.
 - `vite`: Active (Dev server and production bundler).
 - `xlsx`: Active (Spreadsheet reading and writing).
 - `zod`: Active (Data validation).
-- `@google/genai`: **UNUSED / DEAD DEPENDENCY** (Installed in `package.json` line 19, but never imported in any source file).
+- *(Note: `@google/genai` was purged in commit `6753a60`)*.
 
 ### Development Dependencies (`devDependencies`)
 - `@types/node`, `@types/react`, `@types/react-dom`: Active (Type support).
+- `autoprefixer`: Active (CSS vendor prefixing).
 - `drizzle-kit`: Active (Database push and migration runner).
 - `esbuild`: Active (Fast bundler used by tsx/vite).
 - `tsx`: Active (TypeScript script executor for tests and seed scripts).
@@ -800,8 +826,8 @@ No plaintext credentials or tokens were found committed in git tracked files.
   4. *Hono Edge*: Health endpoint HTTP 200 verification.
   5. *Storage*: S3 presigned URL generation.
 - **Empirical Execution Findings**:
-  - Running `npm run test:integration` standalone exits immediately because line 352 checks `import.meta.url === file://${process.argv[1]}` which evaluates to false on Windows due to backslash vs forward slash differences (`C:\` vs `file:///C:/`).
-  - When executed with `runAllIntegrationTests()` directly, Suites 1, 2, 4, and 5 pass (11 tests pass). Suite 3 tests make live HTTP calls to `http://localhost:3000` via `api.getPermissions()`, which fails with `ECONNREFUSED` if the dev server is not concurrently running.
+  - Running `npm run test:integration` standalone on Windows **now executes cleanly** because the path check on line 354 was fixed via `fileURLToPath(import.meta.url) === path.resolve(process.argv[1])` in commit `6753a60`.
+  - When executed without a running dev server, Suites 1, 2, 4, and 5 pass completely (11/14 pass). Suite 3 tests make live HTTP calls to `http://localhost:3000` via `api.getPermissions()`, which fails with `ECONNREFUSED` if the dev server is not concurrently active.
 
 ---
 
@@ -830,12 +856,12 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ## 32. Security Audit
 
-| Finding | Classification | Location | Evidence & Impact | Remediation |
+| Finding | Classification | Location | Evidence & Impact | Remediation / Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Login Rate Limiter per Isolate** | Low / Medium | `src/server/middleware/rateLimiter.ts` | The rate limiter uses an in-memory `Map` per Cloudflare Worker isolate. In a multi-colo edge deployment, attackers can distribute requests across different edge nodes to bypass the 10 req/min limit. | Implement Cloudflare Rate Limiting rules at the WAF / CDN level or utilize Cloudflare KV / Durable Objects for shared counters. |
 | **Path Traversal Guard in Storage Proxy** | Informational | `src/server/routes/storage.ts:250` | `if (!decodedKey \|\| decodedKey.includes('..'))` correctly prevents directory traversal on B2 file fetching. | Retain existing check; add strict regex matching `^[a-zA-Z0-9_\-\/.]+$`. |
-| **CORS Origin Reflection** | Low | `src/server/index.ts:28` | When `ALLOWED_ORIGIN` is unset, CORS reflects `origin \|\| null` with `credentials: true`. Acceptable in dev/workers.dev, but risky in production. | Always enforce a non-empty `ALLOWED_ORIGIN` in production `wrangler.toml`. |
-| **Cascading Account Deletion** | Low | `src/server/routes/users.ts:669` | When a user is deleted, their activities and recorded attendances are reassigned to the executing Super Admin before deleting the user. This is deliberate to prevent orphaned records, but alters audit history. | Add an `is_active` soft-delete flag instead of physically deleting user rows. |
+| **CORS Origin Policy** | Low (Hardened) | `src/server/index.ts:28` | Previously reflected arbitrary origins. Now hardened: in production, strictly validates against comma-separated `ALLOWED_ORIGIN` list; default set to `https://psdm-portal.pages.dev` in `wrangler.toml`. | **Hardened**; maintain domain list in production secrets. |
+| **Cascading Account Deletion** | Low | `src/server/routes/users.ts:706` | When a user is deleted, their activities and recorded attendances are reassigned to the executing Super Admin before deleting the user. This is deliberate to prevent orphaned records, but alters audit history. | Add an `is_active` soft-delete flag instead of physically deleting user rows. |
 
 ---
 
@@ -843,6 +869,7 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 - **Edge Execution**: Average API processing time under 10ms (measured at 3–8ms during integration tests).
 - **Session Micro-Caching**: Avoids redundant Turso roundtrips by holding verified sessions in memory for 15s.
+- **Throttled Presence Heartbeat**: Updates session timestamps only once every 45s, minimizing database writes while supporting live user tracking.
 - **Adaptive Sync Hash**: The `/api/sync/live` endpoint computes a lightweight signature string. When no changes occur, response size is only ~70 bytes with HTTP 200 `changed: false`.
 - **Client-Side Image Optimization**: High-resolution mobile camera uploads (3MB–10MB) are compressed to ~150KB WebP on an offscreen HTML5 Canvas before touching the network.
 - **Dynamic Module Loading**: Heavy packages like `xlsx` (SheetJS) are only fetched over the network when the user explicitly triggers the Import modal.
@@ -858,12 +885,16 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ---
 
-## 35. Accessibility
+## 35. Accessibility, Visual Design & Theme Engine
 
-- **Semantic Elements**: High use of semantic `<header>`, `<aside>`, `<nav>`, `<button>`, `<input>`, and table tags.
-- **Aria Labels**: Modal close buttons and icon-only triggers feature `aria-label` attributes (`aria-label="Tutup menu sidebar"`).
-- **Visual Contrast**: Dark slate typography (`text-slate-900`) against crisp white and light slate backgrounds (`bg-slate-50`) ensures high contrast compliance.
-- **Focus Indicators**: Standard Tailwind focus rings (`focus:ring-2 focus:ring-slate-900`).
+- **60-30-10 Design Token System**:
+  - **60% Canvas / Surface**: `#F7F7F7` / `#FFFFFF` (Light); `#1B2026` / `#232A31` (Dark).
+  - **30% Ink / Brand**: `#303841` / `#2E4750` (Light); `#ECEEF0` / `#3E5F6B` (Dark).
+  - **10% Accent**: `#F6C90E` (primary buttons, active tabs, highlight badges).
+- **System-Aware Dark Mode**: 2-state theme switcher defaulting to `prefers-color-scheme`, stored in localStorage (`psdm-theme`), with an inline anti-FOUC script in `index.html` preventing screen flashing.
+- **Font Rendering & Anti-Aliasing**: `.brand-text` applies GPU layer compositing and grayscale smoothing to eliminate subpixel color fringing in Windows Dark Mode.
+- **Responsive Mobile Polish**: Side-by-side KPI cards on mobile screens across all dashboards; full-width balanced action buttons.
+- **Semantic HTML & Focus Indicators**: Semantic elements used throughout, paired with standard focus rings (`focus:ring-2 focus:ring-slate-900 dark:focus:ring-accent`).
 
 ---
 
@@ -880,6 +911,7 @@ No plaintext credentials or tokens were found committed in git tracked files.
 ## 37. Observability
 
 - **API Logging**: Hono standard `logger()` outputs method, path, HTTP status, and response duration to stdout / Cloudflare tail logs.
+- **Real-Time Active Users Presence**: `src/components/dashboard/OnlineUsersModal.tsx` and `GET /api/users/online` allow Super Admin exclusively to inspect active users within the last 5 minutes (inaccessible to Inti, Admin, or Pengurus).
 - **Live Diagnostics Modal**: `src/components/audit/AuditModal.tsx` provides an interactive real-time panel accessible from the Super Admin dashboard to ping Cloudflare Workers, Turso Database, and Backblaze B2 latency live.
 - **Error Capture**: Global unhandled exception handler in `src/server/index.ts:62` captures stack traces and cause messages.
 
@@ -896,18 +928,19 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ## 39. Technical Debt
 
-1. **Dead Dependency in `package.json`**: `@google/genai` is installed but never used. Should be removed to keep lockfiles clean.
-2. **Windows Path Bug in Test Runner**: `src/tests/integration.test.ts:352` fails to trigger `runAllIntegrationTests()` on Windows due to unnormalized path separators.
-3. **Absence of Unit Test Framework**: Tests are written in a custom runner file rather than using a standard framework like Vitest or Jest.
-4. **Hardcoded University Academic Seed**: Academic data in `seed.ts` is explicitly tied to Universitas Muslim Indonesia (UMI). A multi-tenant or configurable setup would be required for other institutions.
+1. **Absence of Mocked Unit Test Framework**: Tests in `src/tests/integration.test.ts` mix pure unit validations (Suites 1, 2) with live HTTP network calls against `http://localhost:3000` (Suite 3). Migrating to Vitest with `app.request()` context mocks would allow 100% offline, deterministic CI/CD testing.
+2. **Hardcoded University Academic Seed**: Academic faculty and department seeds in `seed.ts` are explicitly tied to Universitas Muslim Indonesia (UMI Makassar). Making this multi-tenant or configurable via environment profiles would improve reusability.
+3. **Physical User Deletion Cascading**: Deleting a user in `src/server/routes/users.ts:706` reassigns authored activities and recorded attendances to Super Admin. Introducing an `is_active` soft-delete flag would preserve historical audit authenticity.
+4. *(Resolved)*: **Dead Dependency in `package.json`**: `@google/genai` has been completely purged and removed in commit `6753a60`.
+5. *(Resolved)*: **Windows Path Bug in Test Runner**: `src/tests/integration.test.ts:354` was fixed via `fileURLToPath` normalization in commit `6753a60`.
 
 ---
 
 ## 40. Dead / Legacy Code
 
-1. **`@google/genai`**: Installed dependency with zero code imports.
+1. **`@google/genai` [PURGED]**: Uninstalled from `package.json` and pruned from `package-lock.json`.
 2. **`metadata.json`**: AI Studio artifact defining `"majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]` which is completely unused by the active application.
-3. **`server.js` reference in `package.json:10`**: `"clean": "rm -rf dist server.js"`. `server.js` was likely an old Express or Node entry point from an earlier prototype that has since been replaced by `src/server/index.ts`.
+3. **`server.js` reference in `package.json:10`**: `"clean": "rm -rf dist server.js"`. `server.js` was an old Express or Node entry point from an earlier prototype replaced by `src/server/index.ts`.
 
 ---
 
@@ -924,12 +957,12 @@ No plaintext credentials or tokens were found committed in git tracked files.
 #### 2. Integration Test Results
 - **DOCUMENTATION SAYS (`HANDOVER.md:70`)**: "Seluruh 14 skenario pengujian integrasi otomatis telah lulus 100% tanpa kegagalan... Suite 3: RBAC Policy Engine terbukti ketat."
 - **IMPLEMENTATION SHOWS**: Running `tsx src/tests/integration.test.ts` without an active HTTP server on port 3000 causes Suite 3 to fail with `ECONNREFUSED` because the test makes network requests against `http://localhost:3000`.
-- **CONCLUSION**: The documentation reflects an environment where the dev server was pre-launched with a live database, not a self-contained unit test.
+- **CONCLUSION**: The documentation reflects an environment where the dev server was pre-launched with a live database, not a self-contained unit test. The runner itself now executes cleanly on all operating systems.
 - **CONFIDENCE**: **CONFIRMED**.
 
 #### 3. Google Gemini Capabilities
 - **DOCUMENTATION SAYS (`metadata.json`, `.env.example`)**: "Required for Gemini AI API calls. AI Studio automatically injects this."
-- **IMPLEMENTATION SHOWS**: Zero imports of `@google/genai` or Gemini API calls in any file under `src/`.
+- **IMPLEMENTATION SHOWS**: Zero imports of `@google/genai` or Gemini API calls in any file under `src/`. The package has since been removed.
 - **CONCLUSION**: Legacy artifact from an initial AI Studio project template.
 - **CONFIDENCE**: **CONFIRMED**.
 
@@ -937,32 +970,33 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ## 42. Git / Project History
 
-- **Total Commits**: 96 commits.
+- **Total Commits**: 111 commits.
 - **First Commit**: `a6d08bd` (Initial commit), followed by `26deb8c` (*feat: initialize PSDM.web 2.0 project structure*).
 - **Evolutionary Trajectory**:
   1. *Phase 1*: Initialization and migration of lockfile to npm (`8d40bc6`).
   2. *Phase 2*: Replacement of Cloudflare Pages `[site]` with modern Cloudflare Workers `[assets]` (`e0dcce3`).
   3. *Phase 3*: Production deployment hardening and Turso 3NF relational modeling (`b824f33`).
   4. *Phase 4*: Implementation of real-time polling, canvas image compression, and Backblaze B2 streaming proxy.
-  5. *Phase 5*: Recent UI refinements (tooltip clipping fixes, Top 10 Alpa bar chart, INTI role additions, activity locking).
-  6. *Latest Commit*: `4438e67` (*feat(prod): audit kesiapan produksi V2, optimasi skalabilitas, dan penyesuaian RBAC INTI*).
+  5. *Phase 5*: UI refinements (tooltip clipping fixes, Top 10 Alpa bar chart, INTI role additions, activity locking).
+  6. *Phase 6*: Cross-platform test runner path fix, dead dependency purging (`@google/genai`), hardened CORS, and mobile back-button routing via History API (`6753a60`).
+  7. *Phase 7*: Real-time online active users monitoring for Super Admin (`75889d3`, `c429113`), 60-30-10 color palette tokens (`9d61905`), system-aware Dark Mode with anti-FOUC (`5b079f7`), VS Code Tailwind v4 lint suppression (`db9c58b`), sidebar submenu dropdowns (`d866578`, `6ec894b`), mobile KPI responsive layouts (`8d9bc1b`), simplified Inti role label (`c2795af`), clickable activity cards (`4d51a89`), and dark mode font anti-chromatic aberration (`44bc8ba`).
+- **Latest Commit**: `44bc8ba` (*fix(branding): atasi chromatic aberration font di dark mode dan selaraskan logo container*).
 
 ---
 
 ## 43. Known Problems
 
 ### Functional
-- Standalone execution of `npm run test:integration` produces zero output on Windows unless invoked with direct script evaluation due to path format differences.
+- Standalone execution of `npm run test:integration` passes Suites 1, 2, 4, and 5 (11/14), but Suite 3 requires a concurrently running dev server on `http://localhost:3000`.
 
 ### Documentation
 - Documentation claims QR attendance scanning exists, creating false expectations for stakeholders.
-- Documentation implies Gemini AI is used, which is completely false.
+- Documentation implies Gemini AI is used, which is obsolete template legacy.
 
-### Dependencies
-- `@google/genai` is an unnecessary 15MB dependency in `node_modules`.
-
-### Configuration
-- `wrangler.toml` leaves `ALLOWED_ORIGIN = ""` which defaults to reflecting any origin.
+### Resolved Issues
+- *(Resolved)*: Standalone execution of test runner on Windows was fixed (`fileURLToPath`).
+- *(Resolved)*: `@google/genai` dead dependency uninstalled.
+- *(Resolved)*: `ALLOWED_ORIGIN` in `wrangler.toml` preconfigured to `https://psdm-portal.pages.dev` and backend CORS hardened.
 
 ---
 
@@ -978,31 +1012,33 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ## 45. Recommended Recovery Plan
 
-### Stage 1 — Understand (Immediate)
-- Review this report and inspect `src/server/index.ts`, `src/App.tsx`, and `src/db/schema/index.ts`.
-- Recognize that the system is fully functional without any AI or QR dependencies.
+### Stage 1 — Understand (Completed)
+- Systematic codebase discovery, architecture analysis, and dependency audits executed.
 
-### Stage 2 — Stabilize & Clean Up
-- Remove `@google/genai` from `package.json` (`npm uninstall @google/genai`).
-- Clean up `.env.example` by removing the unused `GEMINI_API_KEY` and `APP_URL` variables.
-- Fix the Windows path check in `src/tests/integration.test.ts:352`:
-  ```typescript
-  import { fileURLToPath } from 'url';
-  if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]))
-  ```
+### Stage 2 — Stabilize & Clean Up (Completed)
+- [x] Remove `@google/genai` from `package.json` (`6753a60`).
+- [x] Fix the Windows path check in `src/tests/integration.test.ts:354` with `fileURLToPath` (`6753a60`).
+- [x] Implement browser History API modal navigation for mobile hardware back button (`6753a60`).
 
-### Stage 3 — Security Hardening
-- Set explicit production domain in `wrangler.toml` under `ALLOWED_ORIGIN`.
-- Evaluate implementing Cloudflare WAF rate limiting for `/api/auth/login`.
+### Stage 3 — Security Hardening (Completed)
+- [x] Set explicit production domain in `wrangler.toml` under `ALLOWED_ORIGIN` (`6753a60`).
+- [x] Harden CORS middleware to reject unauthorized origins in production (`6753a60`).
+- [ ] Evaluate implementing Cloudflare WAF rate limiting for `/api/auth/login`.
 
-### Stage 4 — Documentation Correction
-- Update `HANDOVER.md` to remove claims of QR code scanning and clarify that attendance input is performed via manual checklist or Excel/CSV batch import.
+### Stage 4 — UI/UX & Design System Modernization (Completed)
+- [x] Implement 60-30-10 color palette tokens in `src/index.css` (`9d61905`).
+- [x] Implement 2-state system preference Dark Mode with anti-FOUC script (`5b079f7`).
+- [x] Real-time online active users monitoring exclusively for Super Admin (`75889d3`, `c429113`).
+- [x] Restructure sidebar with hierarchical submenus for Master Data, Perizinan, and Profil (`d866578`, `6ec894b`).
+- [x] Make KPI metric cards responsive side-by-side on mobile devices (`8d9bc1b`).
+- [x] Simplify role label "BPH Inti / Pengurus Inti" to "Inti" (`c2795af`).
+- [x] Fix Windows dark mode font chromatic aberration via `.brand-text` (`44bc8ba`).
 
-### Stage 5 — Testing & CI
+### Stage 5 — Testing & CI (Upcoming)
 - Add Vitest for isolated in-memory unit tests that mock the Hono `app.request()` context without needing a live network port.
 - Create a GitHub Actions workflow (`.github/workflows/ci.yml`) to automatically run `npm run lint` and unit tests on pull requests.
 
-### Stage 6 — Production Release
+### Stage 6 — Production Release (Ready)
 - Execute `npx tsx src/db/clean-production.ts` against the live Turso database to purge demo accounts and retain a clean `SUPER_ADMIN`.
 - Run `npm run deploy` to publish to Cloudflare Workers.
 
@@ -1024,31 +1060,33 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ```
 c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
-├── .env.example                               # Environment template (contains Turso, B2, and legacy Gemini keys)
+├── .env.example                               # Environment template (Turso, B2, Session secrets)
 ├── .gitignore                                 # Git ignore patterns (node_modules, dist, .env, graphify-out)
+├── .vscode/
+│   └── settings.json                          # IDE configuration ignoring Tailwind v4 CSS at-rules
 ├── DEPLOYMENT.md                              # Edge serverless deployment guide (Cloudflare, Turso, B2)
 ├── HANDOVER.md                                # Project handover summary and architecture notes
 ├── PROJECT_INTELLIGENCE_REPORT.md             # This comprehensive reverse engineering report
 ├── drizzle.config.ts                          # Drizzle Kit configuration targeting Turso
-├── index.html                                 # Single-page application HTML entry point (Poppins font)
+├── index.html                                 # Single-page application HTML entry point (Poppins font, anti-FOUC)
 ├── metadata.json                              # AI Studio container metadata (legacy artifact)
-├── package.json                               # NPM project manifest (scripts and dependencies)
+├── package.json                               # NPM project manifest (cleaned of dead deps)
 ├── tsconfig.json                              # TypeScript compiler configuration
 ├── vite.config.ts                             # Vite 8 & Tailwind v4 bundler configuration
-├── wrangler.toml                              # Cloudflare Workers edge configuration & static assets routing
+├── wrangler.toml                              # Cloudflare Workers edge configuration, SPA routing & CORS
 │
 ├── public/
 │   └── favicon.ico                            # Portal favicon icon
 │
 ├── src/
-│   ├── App.tsx                                # Main application shell, state management, adaptive sync
-│   ├── index.css                              # Tailwind CSS v4 root stylesheet
+│   ├── App.tsx                                # Main application shell, state management, adaptive sync, History API
+│   ├── index.css                              # Tailwind CSS v4 root stylesheet (60-30-10 palette, dark tokens)
 │   ├── main.tsx                               # React 19 DOM mount entry point
 │   │
 │   ├── components/
 │   │   ├── activities/
 │   │   │   ├── ActivitiesView.tsx             # Program kerja calendar/list view with filter controls
-│   │   │   ├── ActivityCard.tsx               # Individual activity card with stats, lock banner, actions
+│   │   │   ├── ActivityCard.tsx               # Clickable card with stats, lock banner, actions
 │   │   │   ├── ActivityDetailModal.tsx        # Detail modal showing attendee stats and meeting links
 │   │   │   └── CreateActivityModal.tsx        # Modal form to schedule/edit activities
 │   │   │
@@ -1063,18 +1101,19 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │   │   └── LoginForm.tsx                  # PRN and password authentication form
 │   │   │
 │   │   ├── dashboard/
-│   │   │   ├── AdminView.tsx                  # Dashboard for Staf PSDM (assigned department scoped)
-│   │   │   ├── PengurusView.tsx               # Dashboard for regular members (personal stats & leave)
-│   │   │   ├── SuperAdminView.tsx             # Executive dashboard for Kadep PSDM (full org metrics)
+│   │   │   ├── AdminView.tsx                  # Dashboard for Staf PSDM (assigned department scoped, responsive KPIs)
+│   │   │   ├── OnlineUsersModal.tsx           # Real-time active users monitoring modal (Super Admin exclusive)
+│   │   │   ├── PengurusView.tsx               # Dashboard for regular members (personal stats & leave, responsive KPIs)
+│   │   │   ├── SuperAdminView.tsx             # Executive dashboard for Kadep PSDM (full org metrics, responsive KPIs)
 │   │   │   └── TopAlphaBarChart.tsx           # Visual bar chart ranking top member absence rates
 │   │   │
 │   │   ├── layout/
-│   │   │   ├── Header.tsx                     # Top navigation bar with live sync badge and clock
+│   │   │   ├── Header.tsx                     # Top navigation bar with live sync badge, theme toggle, and clock
 │   │   │   ├── RealtimeClockWidget.tsx        # Live digital clock showing Makassar WITA time
-│   │   │   └── Sidebar.tsx                    # Collapsible responsive navigation drawer
+│   │   │   └── Sidebar.tsx                    # Collapsible navigation drawer with submenu dropdowns
 │   │   │
 │   │   ├── master/
-│   │   │   └── MasterDataView.tsx             # Management for Faculties, Prodi, Departments, PJs
+│   │   │   └── MasterDataView.tsx             # Management for Faculties, Prodi, Departments, PJs (sidebar driven)
 │   │   │
 │   │   ├── members/
 │   │   │   ├── MemberFormModal.tsx            # Form to register or edit individual member profiles
@@ -1085,12 +1124,12 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │   ├── permissions/
 │   │   │   ├── PermissionFormModal.tsx        # Member leave filing form with image compression upload
 │   │   │   ├── PermissionListTable.tsx        # Table for admins to review and approve/reject leave requests
-│   │   │   └── PermissionsView.tsx            # Container view for absence permission workflows
+│   │   │   └── PermissionsView.tsx            # Container view with pending vs history tab separation
 │   │   │
 │   │   ├── profile/
 │   │   │   ├── AvatarCropModal.tsx            # Canvas-based circular profile photo cropper
 │   │   │   ├── ProfileModal.tsx               # Quick profile & password update modal
-│   │   │   └── ProfileView.tsx                # Dedicated user profile management view
+│   │   │   └── ProfileView.tsx                # Dedicated user profile view with profile & security tabs
 │   │   │
 │   │   └── ui/
 │   │       ├── ConfirmModal.tsx               # Reusable confirmation dialog for destructive actions
@@ -1120,7 +1159,7 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │   ├── types.ts                           # Hono environment bindings, variables, and user types
 │   │   │
 │   │   ├── middleware/
-│   │   │   ├── auth.ts                        # Session cookie authentication & in-memory micro-cache
+│   │   │   ├── auth.ts                        # Session authentication, 15s cache, and 45s presence heartbeat
 │   │   │   ├── db.ts                          # Request-scoped Turso DB injector
 │   │   │   └── rateLimiter.ts                 # In-memory sliding-window IP rate limiter
 │   │   │
@@ -1133,13 +1172,13 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │       ├── permissions.ts                 # Leave request & supervisor approval endpoints
 │   │       ├── storage.ts                     # File upload & private Backblaze B2 streaming proxy
 │   │       ├── sync.ts                        # Real-time live data aggregation & hash sync
-│   │       └── users.ts                       # Member directory, batch import, profile, avatar
+│   │       └── users.ts                       # Member directory, online users presence, batch import, profile
 │   │
 │   ├── services/
 │   │   └── api.ts                             # Frontend HTTP API client communicating with backend
 │   │
 │   ├── tests/
-│   │   └── integration.test.ts                # 14-scenario integration test suite
+│   │   └── integration.test.ts                # Cross-platform integration test suite (14 scenarios)
 │   │
 │   ├── types/
 │   │   └── index.ts                           # Shared frontend TypeScript interfaces
@@ -1148,33 +1187,36 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │       ├── date.ts                            # WITA (UTC+8 / Asia/Makassar) date & time formatters
 │       ├── imageCompressor.ts                 # Client-side Canvas WebP image compressor
 │       ├── realtime.ts                        # Cross-tab synchronization via BroadcastChannel
-│       └── storage.ts                         # File size formatters
+│       ├── storage.ts                         # File size formatters
+│       └── theme.ts                           # 2-state theme management (light/dark) & prefers-color-scheme hook
 ```
 
 ---
 
 ## 48. Final System Summary
 
-PSDM-PORTAL is a robust, well-structured, production-ready enterprise application for student organizational management. It is not an abandoned, broken, or obsolete project; on the contrary, it represents a highly modernized, state-of-the-art Edge Serverless application utilizing the latest available web technologies (React 19, Hono v4, Tailwind CSS v4, and Turso libSQL). Its architectural choices maximize execution speed while minimizing hosting costs. 
+PSDM-PORTAL is a robust, well-structured, production-ready enterprise application for student organizational management. It is not an abandoned, broken, or obsolete project; on the contrary, it represents a highly modernized, state-of-the-art Edge Serverless application utilizing the latest available web technologies (React 19, Hono v4, Tailwind CSS v4, and Turso libSQL). Its architectural choices maximize execution speed while minimizing hosting costs.
 
-A newly onboarded developer taking over this codebase can deploy with high confidence by simply setting the required environment variables on Cloudflare Workers and Turso, and disregarding legacy mentions of QR scanning and Gemini AI.
+Recent development iterations have elevated the user experience with a polished 60-30-10 color palette, native Dark Mode, real-time presence auditing, History API back-button navigation for mobile users, and a streamlined sidebar submenu navigation architecture. Dead dependencies have been purged and cross-platform compatibility has been verified.
+
+A newly onboarded developer taking over this codebase can deploy with high confidence by simply setting the required environment variables on Cloudflare Workers and Turso, disregarding historical mentions of QR scanning.
 
 ---
 
-## 51. FINAL EXECUTIVE SUMMARY
+## 49. Final Executive Summary
 
 - **Project**: PSDM.web 2.0 (`PSDM-PORTAL`) — Student Organization Human Resource & Attendance Management Portal.
 - **Stack**: React 19, Hono v4, Vite 8, Tailwind CSS v4, Turso (libSQL/SQLite), Drizzle ORM, WebCrypto API, Backblaze B2 (S3).
-- **Purpose**: Automating student organization member profiles, proker event scheduling, field attendance verification, and absence excuse workflows.
+- **Purpose**: Automating student organization member profiles, proker event scheduling, field attendance verification, real-time presence tracking (Super Admin), and absence excuse workflows.
 - **Users**: Student organization members, staff supervisors, and executives at Universitas Muslim Indonesia (UMI) Makassar.
-- **Roles**: `SUPER_ADMIN` (Full control), `ADMIN` (Supervises assigned departments), `PENGURUS` (Member self-service), `INTI` (Executive audit).
+- **Roles**: `SUPER_ADMIN` (Full control, live presence monitoring & audits), `ADMIN` (Supervises assigned departments), `PENGURUS` (Member self-service), `INTI` (Executive read-only oversight across departments).
 - **MVP**: Authentication, member directory, activity scheduling, attendance recording, absence filing with evidence, and supervisor approval sync.
-- **Major Features**: Automatic leave-to-attendance reconciliation, activity lock protection, CSV attendance export, Excel bulk importer, Canvas WebP image compression, edge file streaming proxy, and in-app health diagnostics.
+- **Major Features**: Automatic leave-to-attendance reconciliation, activity lock protection, CSV attendance export, Excel bulk importer, Canvas WebP image compression, edge file streaming proxy, real-time active users monitoring (Super Admin exclusive), and in-app health diagnostics.
+- **UI/UX Excellence**: 60-30-10 design system tokens, 2-state Dark Mode with anti-FOUC, sidebar submenu dropdowns, responsive side-by-side KPI cards on mobile, History API back-button routing, and clickable activity cards.
 - **Architecture**: Edge serverless monolith running Hono and React SPA static assets on Cloudflare Workers, talking to Turso libSQL and Backblaze B2.
 - **Database**: Turso distributed libSQL SQLite database structured in strict Third Normal Form (3NF) across 9 tables.
 - **External Services**: Cloudflare Workers, Turso Database, Backblaze B2 Object Storage.
-- **Security**: PBKDF2 SHA-256 (100k rounds) hashing, 256-bit random session tokens, HTTP-only sliding cookies, row-level supervisor access verification, login rate-limiting, and path traversal guards.
-- **Status**: Production-ready. 0 lint/type-check errors. Core flows 100% implemented and functional.
+- **Security**: PBKDF2 SHA-256 (100k rounds) hashing, 256-bit random session tokens, HTTP-only sliding cookies, row-level supervisor access verification, login rate-limiting, hardened production CORS origin validation, and path traversal guards.
+- **Status**: Production-Ready (V2.1). 0 lint/type-check errors. Cross-platform test runner verified. Dead packages purged.
 - **Deployment**: Targeted natively for Cloudflare Workers (`wrangler deploy`).
-- **Biggest Unknowns**: Remote Turso and Backblaze live production account access and whether physical camera QR scanning was truly desired over the implemented manual/Excel check-in.
-- **Immediate Next Steps**: Remove unused `@google/genai` package, update `HANDOVER.md` to remove QR scanner claims, set production `ALLOWED_ORIGIN`, and run `clean-production.ts` before public launch.
+- **Immediate Next Steps**: Add Vitest for in-memory offline unit test mocks, execute `clean-production.ts` on live Turso database before launch, and deploy to Cloudflare Workers.

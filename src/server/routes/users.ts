@@ -119,9 +119,9 @@ usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']), async (c) =>
 /**
  * GET /api/users/online
  * Real-time monitoring pengguna yang sedang aktif mengakses sistem.
- * Khusus role SUPER_ADMIN dan INTI.
+ * Khusus role SUPER_ADMIN saja.
  */
-usersRouter.get('/online', requireRole(['SUPER_ADMIN', 'INTI']), async (c) => {
+usersRouter.get('/online', requireRole(['SUPER_ADMIN']), async (c) => {
   const db = c.get('db');
   const now = new Date();
   const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);

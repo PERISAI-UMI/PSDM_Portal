@@ -79,7 +79,7 @@ function MainAppContent() {
   const [profileTab, setProfileTab] = useState<'profile' | 'security'>('profile');
   const [permissionTab, setPermissionTab] = useState<'pending' | 'history'>('pending');
 
-  // Real-time Online Users Presence State (Khusus Super Admin & Inti)
+  // Real-time Online Users Presence State (Khusus Super Admin)
   const [onlinePresence, setOnlinePresence] = useState<OnlinePresenceData>({
     success: false,
     onlineCount: 0,
@@ -355,9 +355,9 @@ function MainAppContent() {
     }
   }, [currentUser, activeSection]);
 
-  // Live presence poller untuk role Super Admin & Inti
+  // Live presence poller khusus role Super Admin
   const fetchOnlinePresence = useCallback(async () => {
-    if (!currentUserRef.current || (currentUserRef.current.role !== 'SUPER_ADMIN' && currentUserRef.current.role !== 'INTI')) return;
+    if (!currentUserRef.current || currentUserRef.current.role !== 'SUPER_ADMIN') return;
     try {
       setIsFetchingPresence(true);
       const data = await api.getOnlineUsers();
@@ -372,7 +372,7 @@ function MainAppContent() {
   }, []);
 
   useEffect(() => {
-    if (!currentUser || (currentUser.role !== 'SUPER_ADMIN' && currentUser.role !== 'INTI')) return;
+    if (!currentUser || currentUser.role !== 'SUPER_ADMIN') return;
 
     fetchOnlinePresence();
 
@@ -857,8 +857,8 @@ function MainAppContent() {
                   permissions={permissions}
                   attendances={attendances}
                   allUsers={allUsers}
-                  onlineCount={onlinePresence.onlineCount}
-                  onOpenOnlineUsers={() => setShowOnlineUsersModal(true)}
+                  onlineCount={currentUser.role === 'SUPER_ADMIN' ? onlinePresence.onlineCount : undefined}
+                  onOpenOnlineUsers={currentUser.role === 'SUPER_ADMIN' ? () => setShowOnlineUsersModal(true) : undefined}
                   onOpenCreateActivity={() => setShowCreateActivity(true)}
                   onOpenMasterData={() => setActiveSection('master-data')}
                   onOpenMemberList={() => setActiveSection('members')}
@@ -969,7 +969,7 @@ function MainAppContent() {
         />
       )}
 
-      {showOnlineUsersModal && (
+      {showOnlineUsersModal && currentUser?.role === 'SUPER_ADMIN' && (
         <OnlineUsersModal
           isOpen={showOnlineUsersModal}
           onClose={() => setShowOnlineUsersModal(false)}

@@ -152,7 +152,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
+      <div className={`grid grid-cols-2 ${currentUser.role === 'SUPER_ADMIN' ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-2 lg:grid-cols-4'} gap-2.5 sm:gap-3.5`}>
         <div
           onClick={() => onNavigateTo?.('activities')}
           className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
@@ -222,32 +222,34 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
           </p>
         </div>
 
-        {/* 5. Live Active Users (Khusus Super Admin & Inti) */}
-        <div
-          onClick={onOpenOnlineUsers}
-          className="col-span-2 sm:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-emerald-400/80 hover:shadow-xs transition-all cursor-pointer group relative overflow-hidden flex flex-col justify-between"
-        >
-          <div className="flex items-center justify-between gap-1">
-            <span className="text-xs font-medium text-slate-500 truncate">Pengguna Aktif</span>
-            <div className="flex items-center gap-1.5 shrink-0">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+        {/* 5. Live Active Users (Khusus Super Admin) */}
+        {currentUser.role === 'SUPER_ADMIN' && onOpenOnlineUsers && (
+          <div
+            onClick={onOpenOnlineUsers}
+            className="col-span-2 sm:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-emerald-400/80 hover:shadow-xs transition-all cursor-pointer group relative overflow-hidden flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-xs font-medium text-slate-500 truncate">Pengguna Aktif</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+              </div>
             </div>
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5 flex items-baseline gap-2">
+              <span>{onlineCount}</span>
+              <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.2 rounded-full uppercase tracking-wider">
+                Live
+              </span>
+            </div>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-emerald-700 truncate">
+              <span>Daftar online</span>
+              <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
+            </p>
           </div>
-          <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5 flex items-baseline gap-2">
-            <span>{onlineCount}</span>
-            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.2 rounded-full uppercase tracking-wider">
-              Live
-            </span>
-          </div>
-          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-emerald-700 truncate">
-            <span>Daftar online</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
-          </p>
-        </div>
+        )}
       </div>
 
       {/* Two Column Layout: Upcoming Agenda & Pending Permissions */}
