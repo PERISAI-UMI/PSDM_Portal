@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import {
-  Medal,
   Search,
   RefreshCw,
   Users,
   ChevronRight,
-  Sparkles,
 } from 'lucide-react';
 import type { AuthUser, DepartmentItem, LeaderboardEntry } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
@@ -79,11 +77,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
     );
   }, [leaderboard, searchQuery]);
 
-  // Top 3 Podium
-  const topThree = useMemo(() => {
-    return leaderboard.slice(0, 3);
-  }, [leaderboard]);
-
   const getInitials = (name: string) => {
     const parts = name.trim().split(/\s+/);
     if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
@@ -121,143 +114,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Top 3 Podium */}
-      {!loading && topThree.length > 0 && !selectedDept && !searchQuery && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Juara 2 (Silver) */}
-          {topThree[1] && (
-            <div
-              onClick={() =>
-                handleOpenHistory({
-                  id: topThree[1].userId,
-                  nama: topThree[1].namaLengkap,
-                  prn: topThree[1].prn,
-                })
-              }
-              className={`order-2 md:order-1 p-5 rounded-xl bg-surface border border-slate-200/80 ${
-                canViewHistory ? 'hover:border-slate-300 hover:shadow-xs cursor-pointer' : ''
-              } shadow-2xs transition-all relative overflow-hidden group flex flex-col justify-between`}
-            >
-              <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 shadow-2xs">
-                <Medal className="w-3.5 h-3.5 text-slate-400" />
-                <span>#2 Perak</span>
-              </div>
-              <div className="flex items-center gap-3 mt-4">
-                <div className="w-12 h-12 rounded-full ring-2 ring-slate-200 bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
-                  {topThree[1].avatarUrl ? (
-                    <img src={topThree[1].avatarUrl} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    getInitials(topThree[1].namaLengkap)
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-brand transition-colors">
-                    {topThree[1].namaLengkap}
-                  </h3>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">
-                    {topThree[1].departmentName || 'Anggota'}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">Perolehan Poin:</span>
-                <span className="text-lg font-bold text-slate-900">
-                  {topThree[1].totalPoints} <span className="text-xs font-normal text-slate-500">Pts</span>
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Juara 1 (Gold / Champion) */}
-          {topThree[0] && (
-            <div
-              onClick={() =>
-                handleOpenHistory({
-                  id: topThree[0].userId,
-                  nama: topThree[0].namaLengkap,
-                  prn: topThree[0].prn,
-                })
-              }
-              className={`order-1 md:order-2 p-5 rounded-xl bg-surface border-2 border-accent/80 shadow-xs ${
-                canViewHistory ? 'hover:shadow-sm cursor-pointer' : ''
-              } transition-all relative overflow-hidden group flex flex-col justify-between`}
-            >
-              <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-accent text-ink text-xs font-bold shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-ink" />
-                <span>#1 Juara</span>
-              </div>
-              <div className="flex items-center gap-3.5 mt-4">
-                <div className="w-13 h-13 rounded-full ring-2 ring-accent bg-accent/20 text-ink flex items-center justify-center font-bold text-base shrink-0 overflow-hidden shadow-2xs">
-                  {topThree[0].avatarUrl ? (
-                    <img src={topThree[0].avatarUrl} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    getInitials(topThree[0].namaLengkap)
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-base text-slate-900 truncate group-hover:text-brand transition-colors">
-                    {topThree[0].namaLengkap}
-                  </h3>
-                  <p className="text-xs text-slate-600 truncate mt-0.5">
-                    {topThree[0].departmentName || 'Anggota'} • {topThree[0].jabatan}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-600">Total Akumulasi:</span>
-                <span className="text-xl font-bold text-slate-900">
-                  {topThree[0].totalPoints} <span className="text-xs font-normal text-slate-500">Pts</span>
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Juara 3 (Bronze) */}
-          {topThree[2] && (
-            <div
-              onClick={() =>
-                handleOpenHistory({
-                  id: topThree[2].userId,
-                  nama: topThree[2].namaLengkap,
-                  prn: topThree[2].prn,
-                })
-              }
-              className={`order-3 md:order-3 p-5 rounded-xl bg-surface border border-slate-200/80 ${
-                canViewHistory ? 'hover:border-slate-300 hover:shadow-xs cursor-pointer' : ''
-              } shadow-2xs transition-all relative overflow-hidden group flex flex-col justify-between`}
-            >
-              <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold border border-amber-500/20 shadow-2xs">
-                <Medal className="w-3.5 h-3.5 text-amber-600" />
-                <span>#3 Perunggu</span>
-              </div>
-              <div className="flex items-center gap-3 mt-4">
-                <div className="w-12 h-12 rounded-full ring-2 ring-amber-500/30 bg-amber-500/10 text-amber-800 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
-                  {topThree[2].avatarUrl ? (
-                    <img src={topThree[2].avatarUrl} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    getInitials(topThree[2].namaLengkap)
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-brand transition-colors">
-                    {topThree[2].namaLengkap}
-                  </h3>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">
-                    {topThree[2].departmentName || 'Anggota'}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">Perolehan Poin:</span>
-                <span className="text-lg font-bold text-slate-900">
-                  {topThree[2].totalPoints} <span className="text-xs font-normal text-slate-500">Pts</span>
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Filter Bar & Search */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-surface p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
