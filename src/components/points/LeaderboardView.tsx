@@ -52,7 +52,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
       });
       setLeaderboard(data);
     } catch (err: any) {
-      setError(err?.message || 'Gagal memuat data klasemen poin');
+      setError(err?.message || 'Gagal memuat data poin anggota');
     } finally {
       setLoading(false);
     }
@@ -87,14 +87,14 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
         <div>
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Klasemen & Poin Anggota
+              Poin Anggota
             </h1>
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
               {leaderboard.length} Pengurus
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Peringkat keaktifan kehadiran organisasi berbasis akumulasi poin per lingkup kegiatan.
+            Monitoring akumulasi poin kehadiran pengurus organisasi per lingkup kegiatan.
           </p>
         </div>
       </div>
@@ -142,12 +142,12 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
         </div>
       </div>
 
-      {/* Kontainer Klasemen: Mobile Cards (md:hidden) & Desktop Table (hidden md:block) */}
+      {/* Kontainer Monitoring Poin: Mobile Cards (md:hidden) & Desktop Table (hidden md:block) */}
       <div className="bg-surface rounded-xl border border-slate-200/80 shadow-2xs overflow-hidden">
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
             <RefreshCw className="w-7 h-7 animate-spin text-brand" />
-            <p className="text-xs font-medium">Memuat klasemen poin...</p>
+            <p className="text-xs font-medium">Memuat data poin anggota...</p>
           </div>
         ) : filteredData.length === 0 ? (
           <div className="py-16 text-center text-slate-400">
@@ -160,9 +160,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
             <div className="md:hidden divide-y divide-slate-100">
               {filteredData.map((row) => {
                 const isCurrent = currentUser.id === row.userId;
-                const isRank1 = row.rank === 1;
-                const isRank2 = row.rank === 2;
-                const isRank3 = row.rank === 3;
 
                 return (
                   <div
@@ -178,28 +175,14 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       canViewHistory ? 'hover:bg-slate-50/80 active:bg-slate-100 cursor-pointer' : ''
                     } ${isCurrent ? 'bg-accent/10' : ''}`}
                   >
-                    {/* Header: Rank + Avatar + Name + Total Points */}
+                    {/* Header: No + Avatar + Name + Total Points */}
                     <div className="flex items-start justify-between gap-2.5">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        {/* Rank Badge */}
+                        {/* Nomor Urut */}
                         <div className="shrink-0">
-                          {isRank1 ? (
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent text-ink font-bold text-xs shadow-2xs">
-                              1
-                            </span>
-                          ) : isRank2 ? (
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-800 font-bold text-xs">
-                              2
-                            </span>
-                          ) : isRank3 ? (
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-800 font-bold text-xs">
-                              3
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-600 font-semibold text-xs">
-                              {row.rank}
-                            </span>
-                          )}
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-mono font-semibold text-xs">
+                            {row.rank}
+                          </span>
                         </div>
 
                         {/* Avatar */}
@@ -275,7 +258,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
               <table className="w-full min-w-[700px] text-left text-xs">
                 <thead className="bg-slate-50/75 text-slate-500 border-b border-slate-200/80 text-[11px] font-semibold uppercase tracking-wider">
                   <tr>
-                    <th className="px-4 py-3 w-16 text-center">Rank</th>
+                    <th className="px-4 py-3 w-16 text-center">No</th>
                     <th className="px-4 py-3">Anggota</th>
                     <th className="px-4 py-3">Departemen & Jabatan</th>
                     <th className="px-4 py-3 text-center">Hadir</th>
@@ -289,9 +272,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                 <tbody className="divide-y divide-slate-100">
                   {filteredData.map((row) => {
                     const isCurrent = currentUser.id === row.userId;
-                    const isRank1 = row.rank === 1;
-                    const isRank2 = row.rank === 2;
-                    const isRank3 = row.rank === 3;
 
                     return (
                       <tr
@@ -311,23 +291,9 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                           isCurrent ? 'bg-accent/10 font-medium' : ''
                         }`}
                       >
-                        {/* Peringkat */}
+                        {/* Nomor Urut */}
                         <td className="px-4 py-3.5 text-center whitespace-nowrap">
-                          {isRank1 ? (
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent text-ink font-bold text-xs shadow-2xs">
-                              1
-                            </span>
-                          ) : isRank2 ? (
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-800 font-bold text-xs">
-                              2
-                            </span>
-                          ) : isRank3 ? (
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-800 font-bold text-xs">
-                              3
-                            </span>
-                          ) : (
-                            <span className="text-slate-600 font-semibold">{row.rank}</span>
-                          )}
+                          <span className="text-slate-500 font-mono text-xs">{row.rank}</span>
                         </td>
 
                         {/* Info Anggota */}

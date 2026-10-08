@@ -257,7 +257,7 @@ pointsRouter.post(
   }
 );
 
-// GET /api/points/leaderboard (Klasemen Poin Anggota - SUPER_ADMIN, ADMIN, INTI)
+// GET /api/points/leaderboard (Monitoring Poin Anggota - SUPER_ADMIN, ADMIN, INTI)
 pointsRouter.get(
   '/leaderboard',
   requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']),
@@ -330,7 +330,7 @@ pointsRouter.get(
       });
     } catch (err: any) {
       console.error('Error fetching points leaderboard:', err);
-      return c.json({ success: false, message: 'Gagal memuat data klasemen poin' }, 500);
+      return c.json({ success: false, message: 'Gagal memuat data poin anggota' }, 500);
     }
   }
 );

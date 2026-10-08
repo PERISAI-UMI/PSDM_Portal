@@ -238,7 +238,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </div>
 
-            {/* Klasemen & Poin: Hanya untuk SUPER_ADMIN, ADMIN, dan INTI (PENGURUS tidak memiliki akses) */}
+            {/* Monitoring Poin Anggota: Hanya untuk SUPER_ADMIN, ADMIN, dan INTI */}
             {user.role !== 'PENGURUS' && (
               <button
                 type="button"
@@ -249,8 +249,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Trophy className="w-4 h-4 text-slate-500" />
-                <span>Klasemen & Poin</span>
+                <Award className="w-4 h-4 text-slate-500" />
+                <span>Poin</span>
               </button>
             )}
 
