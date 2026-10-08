@@ -158,13 +158,13 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
           ) : (
             <form id="points-config-form" onSubmit={handleSubmit} className="space-y-4">
               {/* HADIR */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex items-center justify-between gap-4">
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                     <label className="text-sm font-semibold text-slate-900 dark:text-white">HADIR (Tepat Waktu)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Poin kehadiran standar per kegiatan</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin kehadiran standar per kegiatan</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -172,19 +172,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.hadirPoints}
                     onChange={(e) => handleChange('hadirPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
                   />
                 </div>
               </div>
 
               {/* TELAT */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex items-center justify-between gap-4">
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                     <label className="text-sm font-semibold text-slate-900 dark:text-white">TELAT (Hadir Terlambat)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Poin dispensasi terlambat hadir</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin dispensasi terlambat hadir</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -192,19 +192,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.telatPoints}
                     onChange={(e) => handleChange('telatPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
                   />
                 </div>
               </div>
 
               {/* IZIN */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex items-center justify-between gap-4">
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                     <label className="text-sm font-semibold text-slate-900 dark:text-white">IZIN (Disetujui)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Poin surat perizinan yang disetujui</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin surat perizinan yang disetujui</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -212,19 +212,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.izinPoints}
                     onChange={(e) => handleChange('izinPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
                   />
                 </div>
               </div>
 
               {/* SAKIT */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex items-center justify-between gap-4">
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
                     <label className="text-sm font-semibold text-slate-900 dark:text-white">SAKIT (Dengan Bukti)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Poin sakit dengan surat dokter</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin sakit dengan surat dokter</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -232,19 +232,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.sakitPoints}
                     onChange={(e) => handleChange('sakitPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
                   />
                 </div>
               </div>
 
               {/* ALPHA */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex items-center justify-between gap-4">
+              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
                     <label className="text-sm font-semibold text-slate-900 dark:text-white">ALPHA (Tanpa Keterangan)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Poin penalti ketidakhadiran (bisa bernilai minus)</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin penalti ketidakhadiran (bisa bernilai minus)</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -252,7 +252,7 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.alphaPoints}
                     onChange={(e) => handleChange('alphaPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
                   />
                 </div>
               </div>

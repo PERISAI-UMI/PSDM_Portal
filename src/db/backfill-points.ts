@@ -164,9 +164,6 @@ async function runBackfill() {
   }
 }
 
-// Jalankan jika dieksekusi langsung
-if (import.meta.url.endsWith(process.argv[1] || '')) {
-  runBackfill();
-}
+runBackfill();
 
 export { runBackfill };

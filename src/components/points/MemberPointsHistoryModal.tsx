@@ -155,18 +155,18 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
           ) : data ? (
             <div className="space-y-4">
               {/* Total Summary Card */}
-              <div className="p-4 rounded-xl bg-brand/5 dark:bg-brand/10 border border-brand/20 flex items-center justify-between">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-300">
                     Akumulasi Poin Aktif
                   </span>
-                  <div className="text-2xl font-black text-brand dark:text-accent mt-0.5">
-                    {data.totalPoints} <span className="text-xs font-semibold text-slate-500">Poin</span>
+                  <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
+                    {data.totalPoints} <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Poin</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Total Kegiatan</span>
-                  <div className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-300">Total Kegiatan</span>
+                  <div className="text-sm font-bold text-slate-800 dark:text-slate-100">
                     {data.history.length} Event
                   </div>
                 </div>
@@ -174,20 +174,20 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
 
               {/* List Riwayat Transaksi */}
               <div className="space-y-2">
-                <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-slate-600 dark:text-slate-200 uppercase tracking-wider">
                   Riwayat Per Kegiatan
                 </h3>
 
                 {data.history.length === 0 ? (
-                  <div className="text-center py-8 text-xs text-slate-400 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                  <div className="text-center py-8 text-xs text-slate-400 dark:text-slate-400 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
                     Belum ada riwayat pencatatan kehadiran untuk anggota ini.
                   </div>
                 ) : (
-                  <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900/40">
+                  <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900/60">
                     {data.history.map((item) => (
                       <div
                         key={item.id}
-                        className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                        className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
                             </span>
                             {getStatusBadge(item.status)}
                           </div>
-                          <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
+                          <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 dark:text-slate-400">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
                               {formatDate(item.activityDate)}
@@ -212,7 +212,7 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
                                 ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300'
                                 : item.awardedPoints < 0
                                 ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300'
-                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                             }`}
                           >
                             {item.awardedPoints > 0 ? `+${item.awardedPoints}` : item.awardedPoints} Pts
