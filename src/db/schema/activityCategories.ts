@@ -5,7 +5,9 @@ export const activityCategories = sqliteTable(
   'activity_categories',
   {
     id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
-    name: text('name').notNull(),
+    nama: text('nama').notNull(),
+    deskripsi: text('deskripsi'),
+    name: text('name'),
     description: text('description'),
     hadirPoints: integer('hadir_points').notNull().default(3),
     izinPoints: integer('izin_points').notNull().default(0),
@@ -18,7 +20,7 @@ export const activityCategories = sqliteTable(
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
   },
   (table) => [
-    index('activity_categories_name_idx').on(table.name),
+    index('activity_categories_nama_idx').on(table.nama),
   ]
 );
 
