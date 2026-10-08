@@ -12,6 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "vitest run",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "tsx src/db/backfill-points.ts",
     "seed": "tsx src/db/seed.ts",
     "deploy": "wrangler deploy"
   },

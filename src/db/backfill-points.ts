@@ -29,6 +29,34 @@ async function runBackfill() {
   const db = drizzle(client);
 
   try {
+    // 0. DDL: Pastikan kolom is_active dan deleted_at ada di tabel users (Soft Delete)
+    console.log('0. Memastikan kolom Soft Delete di tabel users...');
+    try {
+      await client.execute(`
+        ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1;
+      `);
+      console.log('   Kolom is_active berhasil ditambahkan.');
+    } catch (err: any) {
+      if (err.message?.includes('duplicate column') || err.message?.includes('already exists')) {
+        console.log('   Kolom is_active sudah ada sebelumnya.');
+      } else {
+        console.warn('   Catatan DDL is_active:', err.message);
+      }
+    }
+
+    try {
+      await client.execute(`
+        ALTER TABLE users ADD COLUMN deleted_at INTEGER;
+      `);
+      console.log('   Kolom deleted_at berhasil ditambahkan.');
+    } catch (err: any) {
+      if (err.message?.includes('duplicate column') || err.message?.includes('already exists')) {
+        console.log('   Kolom deleted_at sudah ada sebelumnya.');
+      } else {
+        console.warn('   Catatan DDL deleted_at:', err.message);
+      }
+    }
+
     // 1. DDL: Pastikan tabel point_configs ada
     console.log('1. Memastikan tabel point_configs...');
     await client.execute(`
