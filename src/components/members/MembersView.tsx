@@ -285,12 +285,12 @@ export const MembersView: React.FC<MembersViewProps> = ({
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           {/* Department Filter */}
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}
-            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
+            className="flex-1 sm:flex-initial px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand min-h-[36px] sm:min-h-0"
           >
             <option value="ALL">Semua Departemen</option>
             {departmentOptions.map((d) => (
@@ -304,7 +304,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
           <select
             value={selectedRole}
             onChange={(e) => setSelectedRole(e.target.value as any)}
-            className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
+            className="flex-1 sm:flex-initial px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand min-h-[36px] sm:min-h-0"
           >
             <option value="ALL">Semua Role</option>
             <option value="SUPER_ADMIN">Super Admin</option>

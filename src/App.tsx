@@ -785,6 +785,7 @@ function MainAppContent() {
             <MasterDataView
               currentUser={currentUser}
               initialTab={masterDataTab}
+              onTabChange={(tab) => setMasterDataTab(tab)}
               fakultas={fakultas}
               programStudi={prodi}
               departments={departments}

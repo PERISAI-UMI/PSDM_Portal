@@ -558,8 +558,8 @@ export const AttendanceImportModal: React.FC<AttendanceImportModalProps> = ({
               </div>
 
               {/* Preview Table: Kolom PRN, Nama, Status Presensi, Catatan */}
-              <div className="border border-slate-200 rounded-xl overflow-hidden max-h-56 overflow-y-auto">
-                <table className="w-full text-left text-xs border-collapse">
+              <div className="border border-slate-200 rounded-xl overflow-x-auto max-h-56 overflow-y-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[540px]">
                   <thead className="bg-slate-50 text-slate-600 sticky top-0 border-b border-slate-200 z-10">
                     <tr>
                       <th className="py-2 px-3 font-semibold w-12">Baris</th>

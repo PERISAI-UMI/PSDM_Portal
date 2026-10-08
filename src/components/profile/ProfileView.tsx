@@ -266,7 +266,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
 
         {/* User Badges */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <div className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono">
             PRN: <span className="font-bold text-slate-900">{currentUser.prn}</span>
           </div>
