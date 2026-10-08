@@ -240,9 +240,6 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
             </div>
             <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5 flex items-baseline gap-2">
               <span>{onlineCount}</span>
-              <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.2 rounded-full uppercase tracking-wider">
-                Live
-              </span>
             </div>
             <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 group-hover:text-emerald-700 truncate">
               <span>Daftar online</span>

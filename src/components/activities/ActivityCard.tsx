@@ -260,7 +260,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           activity.isLocked ? (
             <div
               className="flex-1 py-1.5 px-3 min-h-[36px] rounded-lg bg-slate-100 border border-slate-200 text-slate-500 text-xs font-medium flex items-center justify-center gap-1.5 select-none"
-              title="Kegiatan telah dikunci oleh Super Admin. Pengajuan izin sudah ditutup."
+              title="Kegiatan telah dikunci. Pengajuan izin sudah ditutup."
             >
               <span>Izin Ditutup</span>
             </div>

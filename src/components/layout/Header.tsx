@@ -70,29 +70,18 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Real-time Live Status Badge */}
+          {/* Refresh / Sync Button */}
           <button
             type="button"
             onClick={onManualSync}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/80 transition-all cursor-pointer shadow-2xs group"
-            title="Real-time aktif: Data disinkronkan otomatis tanpa perlu refresh. Klik untuk sinkronisasi instan."
+            disabled={isLiveSyncing}
+            className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer flex items-center justify-center min-w-[34px] min-h-[34px]"
+            title="Sinkronisasi data"
+            aria-label="Sinkronisasi data"
           >
-            <span className="relative flex h-2 w-2">
-              {isLiveSyncing ? (
-                <span className="animate-spin rounded-full h-2 w-2 border border-brand-600 border-t-transparent" />
-              ) : (
-                <>
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 duration-1000" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </>
-              )}
-            </span>
-            <span className="hidden sm:inline font-mono text-[10px]">
-              {isLiveSyncing ? 'Sinkronisasi...' : 'Live Real-time'}
-            </span>
             <RefreshCw
-              className={`w-3 h-3 text-slate-400 group-hover:text-slate-700 transition-transform duration-300 ${
-                isLiveSyncing ? 'animate-spin text-brand-600 dark:text-brand-300' : 'group-hover:rotate-180'
+              className={`w-3.5 h-3.5 ${
+                isLiveSyncing ? 'animate-spin text-brand' : ''
               }`}
             />
           </button>
