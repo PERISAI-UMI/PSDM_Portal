@@ -6,7 +6,10 @@ interface RateLimitRecord {
   resetAt: number;
 }
 
-// In-memory sliding window rate limiter per worker isolate
+// In-memory sliding window rate limiter per worker isolate.
+// Catatan Arsitektur: Pada Cloudflare Workers multi-isolate / distributed PoP,
+// counter ini memproteksi brute-force lokal per-isolate dengan low-overhead.
+// Untuk skala enterprise multi-colo, disarankan melapisinya dengan Cloudflare WAF / KV Rate Limiting.
 const rateLimitMap = new Map<string, RateLimitRecord>();
 
 // Bersihkan cache lama secara berkala agar memori isolate tetap bersih

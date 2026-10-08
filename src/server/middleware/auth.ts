@@ -50,6 +50,11 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
   const cached = sessionMicroCache.get(token);
   const nowMs = Date.now();
   if (cached && (nowMs - cached.cachedAt) < SESSION_CACHE_TTL_MS) {
+    if (cached.user?.isActive === false) {
+      sessionMicroCache.delete(token);
+      deleteCookie(c, SESSION_COOKIE_NAME, { path: '/' });
+      return c.json({ success: false, message: 'Unauthorized: Akun telah dinonaktifkan' }, 401);
+    }
     if (new Date(cached.session.expiresAt).getTime() > nowMs) {
       c.set('user', cached.user);
       c.set('session', cached.session);
@@ -103,13 +108,15 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
         linkedinUrl: users.linkedinUrl,
         instagramUsername: users.instagramUsername,
         avatarUrl: users.avatarUrl,
+        isActive: users.isActive,
+        deletedAt: users.deletedAt,
       },
     })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
     .leftJoin(departments, eq(users.departmentId, departments.id))
     .leftJoin(programStudi, eq(users.programStudiId, programStudi.id))
-    .where(and(eq(sessions.token, token), gt(sessions.expiresAt, new Date())))
+    .where(and(eq(sessions.token, token), gt(sessions.expiresAt, new Date()), eq(users.isActive, true)))
     .limit(1);
 
   if (!rows || rows.length === 0) {

@@ -57,6 +57,8 @@ authRouter.post(
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
       avatarUrl: users.avatarUrl,
+      isActive: users.isActive,
+      deletedAt: users.deletedAt,
     })
     .from(users)
     .leftJoin(departments, eq(users.departmentId, departments.id))
@@ -69,6 +71,12 @@ authRouter.post(
   }
 
   const user = foundUsers[0];
+
+  // Blokir login jika akun dalam status soft delete / nonaktif
+  if (!user.isActive) {
+    return c.json({ success: false, message: 'Akun Anda telah dinonaktifkan oleh Administrator' }, 403);
+  }
+
   const isMatch = await verifyPassword(password, user.passwordHash);
 
   if (!isMatch) {

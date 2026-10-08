@@ -748,7 +748,7 @@ function MainAppContent() {
                 try {
                   await api.deleteUser(id);
                   await reloadData(currentUser);
-                  showToast('Anggota berhasil dihapus!', 'success');
+                  showToast('Anggota berhasil dinonaktifkan (Soft Delete)! Riwayat transaksi tetap terjaga.', 'success');
                 } catch (err: any) {
                   showToast(err?.message || 'Gagal menghapus anggota', 'error');
                   throw err;

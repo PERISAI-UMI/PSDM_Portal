@@ -41,6 +41,9 @@ export const userSchema = z.object({
   angkatan: z.number().int().min(2000).max(2100),
   linkedinUrl: z.string().url('URL LinkedIn tidak valid').optional().nullable(),
   instagramUsername: z.string().optional().nullable(),
+  avatarUrl: z.string().optional().nullable(),
+  isActive: z.boolean().default(true).optional(),
+  deletedAt: z.union([z.date(), z.string(), z.null()]).optional(),
 });
 
 export const createUserSchema = userSchema.omit({ id: true });

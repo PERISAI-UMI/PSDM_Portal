@@ -8,6 +8,7 @@ import {
   activities,
   users,
   departments,
+  permissions,
   attendanceStatusEnum,
 } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
@@ -21,6 +22,7 @@ const recordSingleAttendanceSchema = z.object({
   activityId: z.string().min(1, 'Activity ID wajib diisi'),
   userId: z.string().min(1, 'User ID wajib diisi'),
   status: z.enum(attendanceStatusEnum),
+  force: z.boolean().optional().default(false), // Jika true, abaikan proteksi izin yang sudah disetujui
 });
 
 const recordBatchAttendanceSchema = z.object({
@@ -29,8 +31,10 @@ const recordBatchAttendanceSchema = z.object({
     z.object({
       userId: z.string().min(1, 'User ID wajib diisi'),
       status: z.enum(attendanceStatusEnum),
+      force: z.boolean().optional().default(false),
     })
   ).min(1, 'Minimal satu entri absensi'),
+  forceAll: z.boolean().optional().default(false),
 });
 
 // GET /api/attendances (Riwayat Absensi)
@@ -255,13 +259,39 @@ async function checkActivityLock(db: any, activityId: string, currentAdmin: any)
 // POST /api/attendances & POST /api/attendances/record (Pencatatan Absensi oleh Admin / Super Admin)
 // TIDAK BISA ABSEN MANDIRI OLEH PENGURUS
 const handleRecordSingleAttendance = async (c: any) => {
-  const { activityId, userId, status } = c.req.valid('json');
+  const { activityId, userId, status, force } = c.req.valid('json');
   const currentAdmin = c.get('user');
   const db = c.get('db');
 
   const lockError = await checkActivityLock(db, activityId, currentAdmin);
   if (lockError) {
     return c.json({ success: false, message: lockError }, 403);
+  }
+
+  // Proteksi Race Condition: Cek apakah user memiliki izin resmi APPROVED
+  if (!force) {
+    const approvedPerm = await db
+      .select({ id: permissions.id, jenisIzin: permissions.jenisIzin })
+      .from(permissions)
+      .where(
+        and(
+          eq(permissions.activityId, activityId),
+          eq(permissions.userId, userId),
+          eq(permissions.status, 'APPROVED')
+        )
+      )
+      .limit(1);
+
+    if (approvedPerm.length > 0 && status !== 'IZIN' && status !== 'SAKIT') {
+      return c.json(
+        {
+          success: false,
+          hasApprovedPermission: true,
+          message: `Anggota ini memiliki izin resmi yang telah disetujui (${approvedPerm[0].jenisIzin}). Gunakan opsi force untuk menimpa status kehadiran secara paksa.`,
+        },
+        409
+      );
+    }
   }
 
   const now = new Date();
@@ -315,7 +345,7 @@ attendancesRouter.post(
   requireRole(['SUPER_ADMIN', 'ADMIN']),
   zValidator('json', recordBatchAttendanceSchema),
   async (c) => {
-    const { activityId, items } = c.req.valid('json');
+    const { activityId, items, forceAll } = c.req.valid('json');
     const currentAdmin = c.get('user');
     const db = c.get('db');
 
@@ -337,10 +367,43 @@ attendancesRouter.post(
     }
     const uniqueItems = Array.from(uniqueMap.values());
 
+    // Proteksi Race Condition: Cek izin APPROVED yang sudah ada di database untuk kegiatan ini
+    let itemsToProcess = uniqueItems;
+    const skippedDueToPermission: string[] = [];
+
+    if (!forceAll) {
+      const approvedPermissions = await db
+        .select({ userId: permissions.userId, jenisIzin: permissions.jenisIzin })
+        .from(permissions)
+        .where(
+          and(
+            eq(permissions.activityId, activityId),
+            eq(permissions.status, 'APPROVED')
+          )
+        );
+
+      if (approvedPermissions.length > 0) {
+        const approvedUserMap = new Map<string, string>();
+        for (const p of approvedPermissions) {
+          approvedUserMap.set(p.userId, p.jenisIzin);
+        }
+
+        itemsToProcess = uniqueItems.filter((item) => {
+          if (item.force) return true;
+          const permType = approvedUserMap.get(item.userId);
+          if (permType && item.status !== 'IZIN' && item.status !== 'SAKIT') {
+            skippedDueToPermission.push(item.userId);
+            return false;
+          }
+          return true;
+        });
+      }
+    }
+
     // Eksekusi batch upsert (1 network roundtrip untuk efisiensi edge)
     const chunkSize = 50;
-    for (let i = 0; i < uniqueItems.length; i += chunkSize) {
-      const chunk = uniqueItems.slice(i, i + chunkSize);
+    for (let i = 0; i < itemsToProcess.length; i += chunkSize) {
+      const chunk = itemsToProcess.slice(i, i + chunkSize);
       await db
         .insert(attendances)
         .values(
@@ -365,9 +428,18 @@ attendancesRouter.post(
 
     invalidateSyncCache();
 
+    const permNotice =
+      skippedDueToPermission.length > 0
+        ? ` (${skippedDueToPermission.length} anggota dipertahankan status izin resminya)`
+        : '';
+
     return c.json({
       success: true,
-      message: `${uniqueItems.length} data absensi berhasil disimpan`,
+      message: `${itemsToProcess.length} data absensi berhasil disimpan${permNotice}`,
+      data: {
+        savedCount: itemsToProcess.length,
+        skippedDueToPermissionCount: skippedDueToPermission.length,
+      },
     });
   }
 );

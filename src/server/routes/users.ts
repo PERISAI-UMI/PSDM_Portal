@@ -65,9 +65,13 @@ usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']), async (c) =>
   const departmentId = c.req.query('departmentId');
   const role = c.req.query('role');
   const search = c.req.query('search');
+  const includeInactive = c.req.query('includeInactive') === 'true';
 
   let conditions = [];
 
+  if (!includeInactive) {
+    conditions.push(eq(users.isActive, true));
+  }
   if (departmentId) {
     conditions.push(eq(users.departmentId, departmentId));
   }
@@ -106,6 +110,8 @@ usersRouter.get('/', requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']), async (c) =>
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
       avatarUrl: users.avatarUrl,
+      isActive: users.isActive,
+      deletedAt: users.deletedAt,
     })
     .from(users)
     .innerJoin(departments, eq(users.departmentId, departments.id))
@@ -226,6 +232,8 @@ usersRouter.get('/:id', async (c) => {
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
       avatarUrl: users.avatarUrl,
+      isActive: users.isActive,
+      deletedAt: users.deletedAt,
     })
     .from(users)
     .innerJoin(departments, eq(users.departmentId, departments.id))
@@ -434,7 +442,17 @@ usersRouter.post('/batch-import', requireRole(['SUPER_ADMIN']), zValidator('json
               importedCount++;
             } catch (singleErr: any) {
               skippedCount++;
-              errors.push({ prn: singleRow.prn, reason: singleErr?.message || 'Gagal menyimpan ke database' });
+              const errMsg = singleErr?.message || '';
+              const isConstraintConflict =
+                errMsg.includes('UNIQUE constraint failed') ||
+                errMsg.includes('constraint failed') ||
+                errMsg.includes('already exists');
+
+              const friendlyReason = isConstraintConflict
+                ? `Data identitas (PRN/NIM/Email) sudah terdaftar di sistem atau terjadi konflik pemrosesan bersamaan`
+                : singleErr?.message || 'Gagal menyimpan ke database';
+
+              errors.push({ prn: singleRow.prn, reason: friendlyReason });
             }
           }
         }
@@ -514,6 +532,8 @@ async function getFullUserById(db: any, userId: string) {
       linkedinUrl: users.linkedinUrl,
       instagramUsername: users.instagramUsername,
       avatarUrl: users.avatarUrl,
+      isActive: users.isActive,
+      deletedAt: users.deletedAt,
     })
     .from(users)
     .innerJoin(departments, eq(users.departmentId, departments.id))
@@ -732,43 +752,96 @@ usersRouter.put('/:id', async (c) => {
   });
 });
 
-// DELETE /api/users/:id (SUPER_ADMIN ONLY)
+// DELETE /api/users/:id (SOFT DELETE - SUPER_ADMIN ONLY)
 usersRouter.delete('/:id', requireRole(['SUPER_ADMIN']), async (c) => {
   const id = c.req.param('id');
   const currentUser = c.get('user');
   const db = c.get('db');
 
   if (currentUser.id === id) {
-    return c.json({ success: false, message: 'Tidak dapat menghapus akun Anda sendiri' }, 400);
+    return c.json({ success: false, message: 'Tidak dapat menonaktifkan akun Anda sendiri' }, 400);
+  }
+
+  const targetUsers = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  if (!targetUsers || targetUsers.length === 0) {
+    return c.json({ success: false, message: 'User tidak ditemukan' }, 404);
+  }
+
+  const target = targetUsers[0];
+  if (!target.isActive) {
+    return c.json({ success: false, message: 'Akun user sudah dalam status nonaktif' }, 400);
   }
 
   try {
-    // 1. Reassign activity creation to current Super Admin so activities aren't orphaned or blocked by FK restrict
-    await db.update(activities).set({ createdBy: currentUser.id }).where(eq(activities.createdBy, id));
+    const now = new Date();
 
-    // 2. Reassign attendance recorder to current Super Admin so attendance logs aren't blocked by FK restrict
-    await db.update(attendances).set({ recordedBy: currentUser.id }).where(eq(attendances.recordedBy, id));
+    // 1. Soft Delete: Tandai akun sebagai nonaktif tanpa menghapus data fisik
+    // Jejak audit: activities.createdBy, attendances.recordedBy, dan perizinan tetap utuh
+    await db
+      .update(users)
+      .set({
+        isActive: false,
+        deletedAt: now,
+      })
+      .where(eq(users.id, id));
 
-    // 3. Clear review reference in permissions
-    await db.update(permissions).set({ reviewedBy: null }).where(eq(permissions.reviewedBy, id));
-
-    // 4. Delete user's own attendances and permissions
-    await db.delete(attendances).where(eq(attendances.userId, id));
-    await db.delete(permissions).where(eq(permissions.userId, id));
-
-    // 5. Delete department assignments and active login sessions
-    await db.delete(pjDepartments).where(eq(pjDepartments.adminId, id));
+    // 2. Putus seluruh sesi aktif dan bersihkan cache agar user tidak dapat membuat request lagi
     await db.delete(sessions).where(eq(sessions.userId, id));
+    invalidateSessionCache();
 
-    // 6. Finally delete the user record
-    await db.delete(users).where(eq(users.id, id));
+    // 3. Cabut penugasan PJ jika user adalah Admin departemen
+    await db.delete(pjDepartments).where(eq(pjDepartments.adminId, id));
 
-    return c.json({ success: true, message: 'User anggota berhasil dihapus' });
+    return c.json({
+      success: true,
+      message: 'Akun anggota berhasil dinonaktifkan (Soft Delete). Seluruh data historis aktivitas dan presensi tetap terjaga.',
+    });
   } catch (err: any) {
     return c.json(
       {
         success: false,
-        message: `Gagal menghapus user anggota: ${err?.message || 'Galat relasi database'}`,
+        message: 'Gagal menonaktifkan user: ' + (err?.message || 'Database error'),
+      },
+      500
+    );
+  }
+});
+
+// PATCH /api/users/:id/restore (RESTORE SOFT-DELETED USER - SUPER_ADMIN ONLY)
+usersRouter.patch('/:id/restore', requireRole(['SUPER_ADMIN']), async (c) => {
+  const id = c.req.param('id');
+  const db = c.get('db');
+
+  const targetUsers = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  if (!targetUsers || targetUsers.length === 0) {
+    return c.json({ success: false, message: 'User tidak ditemukan' }, 404);
+  }
+
+  const target = targetUsers[0];
+  if (target.isActive) {
+    return c.json({ success: false, message: 'Akun user sudah dalam status aktif' }, 400);
+  }
+
+  try {
+    await db
+      .update(users)
+      .set({
+        isActive: true,
+        deletedAt: null,
+      })
+      .where(eq(users.id, id));
+
+    const updatedUser = await getFullUserById(db, id);
+    return c.json({
+      success: true,
+      message: 'Akun anggota berhasil diaktifkan kembali',
+      data: updatedUser,
+    });
+  } catch (err: any) {
+    return c.json(
+      {
+        success: false,
+        message: 'Gagal mengaktifkan kembali user: ' + (err?.message || 'Database error'),
       },
       500
     );

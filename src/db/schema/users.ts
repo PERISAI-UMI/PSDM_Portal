@@ -29,6 +29,8 @@ export const users = sqliteTable('users', {
   linkedinUrl: text('linkedin_url'),
   instagramUsername: text('instagram_username'),
   avatarUrl: text('avatar_url'),
+  isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' }),
 });
 
 export type User = typeof users.$inferSelect;

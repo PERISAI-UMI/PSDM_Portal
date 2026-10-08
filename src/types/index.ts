@@ -25,6 +25,8 @@ export interface AuthUser {
   linkedinUrl?: string | null;
   instagramUsername?: string | null;
   avatarUrl?: string | null;
+  isActive?: boolean;
+  deletedAt?: string | Date | null;
   pjDepartments?: {
     adminId: string;
     departmentId: string;

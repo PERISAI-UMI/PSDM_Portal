@@ -6,6 +6,11 @@ import { useToast } from '../ui/Toast.tsx';
 import { broadcastRealtimeEvent, subscribeRealtimeEvents } from '../../utils/realtime.ts';
 import { AttendanceImportModal } from './AttendanceImportModal.tsx';
 
+/**
+ * Modal Pencatatan & Verifikasi Presensi Lapangan
+ * Berfungsi sebagai tabel verifikasi checklist presensi berbasis pencarian NIM/Nama,
+ * pengubahan status individual/batch (Hadir/Izin/Sakit/Alpha/Telat), dan impor spreadsheet Excel.
+ */
 interface AttendanceScannerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -590,3 +595,6 @@ export const AttendanceScannerModal: React.FC<AttendanceScannerModalProps> = ({
     </div>
   );
 };
+
+export { AttendanceScannerModal as AttendanceRecordModal };
+

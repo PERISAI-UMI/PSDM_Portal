@@ -43,7 +43,7 @@
 | **Kelola Master Data** (Fakultas, Prodi, Dept) | âœ… Penuh | â Œ | â Œ |
 | **Delegasi Penugasan PJ Departemen** | âœ… Penuh | â Œ | â Œ |
 | **Buat / Edit / Publikasi Kegiatan Proker** | âœ… Penuh | â Œ (Hanya membaca) | â Œ (Hanya yang published) |
-| **Input Presensi Peserta (QR / NIM / Batch)** | âœ… Seluruh Proker | âœ… Seluruh Proker | â Œ |
+| **Input Presensi Peserta (Checklist Lapangan / NIM / Excel Batch)** | âœ… Seluruh Proker | âœ… Seluruh Proker | â Œ |
 | **Lihat Seluruh Izin Anggota** | âœ… Lintas Departemen | âš ï¸  Hanya Dept Binaan PJ | â Œ Hanya Izin Pribadi |
 | **Persetujuan Izin (ACC / Tolak)** | âœ… Bebas Semua Dept | âš ï¸  Hanya Dept Binaan PJ | â Œ |
 | **Auto-Sync Izin ke Presensi** | âœ… Otomatis | âœ… Otomatis | â Œ |

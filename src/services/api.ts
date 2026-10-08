@@ -251,6 +251,12 @@ export const api = {
     });
   },
 
+  async restoreUser(id: string): Promise<void> {
+    await request(`/api/users/${id}/restore`, {
+      method: 'PATCH',
+    });
+  },
+
   // ================= MASTER DATA =================
   async getMasterData(): Promise<{
     fakultas: FakultasItem[];

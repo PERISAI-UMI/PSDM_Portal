@@ -609,9 +609,9 @@ export const MembersView: React.FC<MembersViewProps> = ({
           isOpen={Boolean(deletingMember)}
           onClose={() => setDeletingMember(null)}
           onConfirm={handleDeleteConfirm}
-          title="Hapus Anggota"
-          message={`Apakah Anda yakin ingin menghapus akun anggota "${deletingMember.namaLengkap}" (${deletingMember.prn})? Data yang dihapus tidak dapat dipulihkan.`}
-          confirmLabel="Hapus Anggota"
+          title="Nonaktifkan Anggota"
+          message={`Apakah Anda yakin ingin menonaktifkan akun anggota "${deletingMember.namaLengkap}" (${deletingMember.prn})? Akun tidak dapat login kembali, namun seluruh riwayat aktivitas dan presensi historisnya tetap tersimpan utuh di sistem.`}
+          confirmLabel="Nonaktifkan"
           isDanger
         />
       )}
