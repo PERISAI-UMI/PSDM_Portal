@@ -127,7 +127,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
             type="button"
             onClick={() => loadLeaderboard(true)}
             disabled={loading || refreshing}
-            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-surface text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            className="px-3 py-2 rounded-xl border border-slate-300 bg-surface text-slate-700 text-xs font-semibold hover:bg-slate-100 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
             title="Segarkan data klasemen"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-brand' : ''}`} />
@@ -138,9 +138,9 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
             <button
               type="button"
               onClick={() => setIsConfigModalOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand/90 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-accent hover:bg-accent-600 text-ink text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
             >
-              <Settings className="w-3.5 h-3.5" />
+              <Settings className="w-3.5 h-3.5 text-ink" />
               <span>Atur Bobot Poin</span>
             </button>
           )}
@@ -160,16 +160,16 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   prn: topThree[1].prn,
                 })
               }
-              className={`order-2 md:order-1 p-5 rounded-2xl bg-surface border border-slate-200 dark:border-slate-700/80 ${
-                canViewHistory ? 'hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-md cursor-pointer' : ''
+              className={`order-2 md:order-1 p-5 rounded-2xl bg-surface border border-slate-200 ${
+                canViewHistory ? 'hover:border-slate-300 hover:shadow-md cursor-pointer' : ''
               } shadow-xs transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 text-xs font-bold border border-slate-200 dark:border-slate-600/60 shadow-2xs">
-                <Medal className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300" />
+              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 shadow-2xs">
+                <Medal className="w-3.5 h-3.5 text-slate-400" />
                 <span>#2 Silver</span>
               </div>
               <div className="flex items-center gap-3 mt-4">
-                <div className="w-12 h-12 rounded-full ring-2 ring-slate-300 dark:ring-slate-500 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
+                <div className="w-12 h-12 rounded-full ring-2 ring-slate-300 bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
                   {topThree[1].avatarUrl ? (
                     <img src={topThree[1].avatarUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -177,18 +177,18 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-sm text-slate-900 dark:text-white truncate group-hover:text-brand dark:group-hover:text-accent transition-colors">
+                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-amber-600 transition-colors">
                     {topThree[1].namaLengkap}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-300 truncate mt-0.5">
+                  <p className="text-xs text-slate-500 truncate mt-0.5">
                     {topThree[1].departmentName || 'Anggota'}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-300">Perolehan Poin:</span>
-                <span className="text-lg font-black text-slate-900 dark:text-white">
-                  {topThree[1].totalPoints} <span className="text-xs font-semibold text-slate-500 dark:text-slate-300">Pts</span>
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-500">Perolehan Poin:</span>
+                <span className="text-lg font-black text-slate-900">
+                  {topThree[1].totalPoints} <span className="text-xs font-semibold text-slate-500">Pts</span>
                 </span>
               </div>
             </div>
@@ -204,16 +204,16 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   prn: topThree[0].prn,
                 })
               }
-              className={`order-1 md:order-2 p-6 rounded-2xl bg-surface dark:bg-surface border-2 border-accent dark:border-accent shadow-md ${
+              className={`order-1 md:order-2 p-6 rounded-2xl bg-surface border-2 border-accent shadow-md ${
                 canViewHistory ? 'hover:shadow-lg cursor-pointer' : ''
               } transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
               <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-ink text-xs font-black shadow-xs">
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3.5 h-3.5 text-ink" />
                 <span>#1 Champion</span>
               </div>
               <div className="flex items-center gap-3.5 mt-4">
-                <div className="w-14 h-14 rounded-full ring-3 ring-accent bg-accent/20 dark:bg-accent/30 text-ink dark:text-accent flex items-center justify-center font-black text-base shrink-0 overflow-hidden shadow-xs">
+                <div className="w-14 h-14 rounded-full ring-3 ring-accent bg-accent/20 text-ink flex items-center justify-center font-black text-base shrink-0 overflow-hidden shadow-xs">
                   {topThree[0].avatarUrl ? (
                     <img src={topThree[0].avatarUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -221,18 +221,18 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-extrabold text-base text-slate-900 dark:text-white truncate group-hover:text-amber-600 dark:group-hover:text-accent transition-colors">
+                  <h3 className="font-extrabold text-base text-slate-900 truncate group-hover:text-amber-600 transition-colors">
                     {topThree[0].namaLengkap}
                   </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 font-medium truncate mt-0.5">
+                  <p className="text-xs text-slate-600 font-medium truncate mt-0.5">
                     {topThree[0].departmentName || 'Anggota'} • {topThree[0].jabatan}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3.5 border-t border-amber-200/80 dark:border-amber-700/50 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Total Akumulasi:</span>
+              <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-600">Total Akumulasi:</span>
                 <span className="text-2xl font-black text-amber-600 dark:text-accent">
-                  {topThree[0].totalPoints} <span className="text-xs font-bold text-slate-500 dark:text-slate-300">Pts</span>
+                  {topThree[0].totalPoints} <span className="text-xs font-bold text-slate-500">Pts</span>
                 </span>
               </div>
             </div>
@@ -248,16 +248,16 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   prn: topThree[2].prn,
                 })
               }
-              className={`order-3 md:order-3 p-5 rounded-2xl bg-surface border border-slate-200 dark:border-slate-700/80 ${
-                canViewHistory ? 'hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-md cursor-pointer' : ''
+              className={`order-3 md:order-3 p-5 rounded-2xl bg-surface border border-slate-200 ${
+                canViewHistory ? 'hover:border-slate-300 hover:shadow-md cursor-pointer' : ''
               } shadow-xs transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100/80 dark:bg-amber-900/40 text-amber-900 dark:text-amber-300 text-xs font-bold border border-amber-300/60 dark:border-amber-700/60 shadow-2xs">
-                <Medal className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
+              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-500/25 shadow-2xs">
+                <Medal className="w-3.5 h-3.5 text-amber-600" />
                 <span>#3 Bronze</span>
               </div>
               <div className="flex items-center gap-3 mt-4">
-                <div className="w-12 h-12 rounded-full ring-2 ring-amber-600/50 dark:ring-amber-500/50 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
+                <div className="w-12 h-12 rounded-full ring-2 ring-amber-500/40 bg-amber-500/10 text-amber-800 dark:text-amber-200 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden shadow-2xs">
                   {topThree[2].avatarUrl ? (
                     <img src={topThree[2].avatarUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -265,18 +265,18 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-sm text-slate-900 dark:text-white truncate group-hover:text-brand dark:group-hover:text-accent transition-colors">
+                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-amber-600 transition-colors">
                     {topThree[2].namaLengkap}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-300 truncate mt-0.5">
+                  <p className="text-xs text-slate-500 truncate mt-0.5">
                     {topThree[2].departmentName || 'Anggota'}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-300">Perolehan Poin:</span>
-                <span className="text-lg font-black text-slate-900 dark:text-white">
-                  {topThree[2].totalPoints} <span className="text-xs font-semibold text-slate-500 dark:text-slate-300">Pts</span>
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-500">Perolehan Poin:</span>
+                <span className="text-lg font-black text-slate-900">
+                  {topThree[2].totalPoints} <span className="text-xs font-semibold text-slate-500">Pts</span>
                 </span>
               </div>
             </div>
@@ -285,15 +285,15 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
       )}
 
       {/* Filter Bar & Search */}
-      <div className="p-4 rounded-2xl bg-surface border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="p-4 rounded-2xl bg-surface border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           <input
             type="text"
             placeholder="Cari anggota (nama / PRN / NIM)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-400 focus:ring-2 focus:ring-brand focus:border-brand"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-surface text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
           />
         </div>
 
@@ -303,7 +303,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
-              className="w-full sm:w-48 px-3 py-1.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand focus:border-brand cursor-pointer"
+              className="w-full sm:w-48 px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent cursor-pointer"
             >
               <option value="">Semua Departemen</option>
               {departments.map((dept) => (
@@ -319,7 +319,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
             <select
               value={selectedGen}
               onChange={(e) => setSelectedGen(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand focus:border-brand cursor-pointer"
+              className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent cursor-pointer"
             >
               <option value="">Semua Gen</option>
               <option value="23">Gen 23</option>
@@ -332,21 +332,21 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
       </div>
 
       {/* Tabel Klasemen Poin (Responsive Mobile: overflow-x-auto) */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-surface shadow-2xs overflow-hidden">
+      <div className="rounded-2xl border border-slate-200 bg-surface shadow-2xs overflow-hidden">
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
             <RefreshCw className="w-8 h-8 animate-spin text-brand dark:text-accent" />
             <p className="text-xs font-medium">Memuat tabel klasemen poin...</p>
           </div>
         ) : filteredData.length === 0 ? (
-          <div className="py-16 text-center text-slate-400 dark:text-slate-300">
+          <div className="py-16 text-center text-slate-400">
             <Users className="w-10 h-10 mx-auto mb-2 opacity-40" />
             <p className="text-xs font-semibold">Tidak ada data anggota yang sesuai dengan filter.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/70 dark:bg-slate-800/50 text-slate-600 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 font-semibold uppercase text-[10px] tracking-wider">
+              <thead className="bg-slate-50/80 text-slate-600 border-b border-slate-200 font-semibold uppercase text-[10px] tracking-wider">
                 <tr>
                   <th className="px-4 py-3.5 w-16 text-center">Rank</th>
                   <th className="px-4 py-3.5">Anggota</th>
@@ -359,7 +359,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                   <th className="px-4 py-3.5 w-10"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
+              <tbody className="divide-y divide-slate-100">
                 {filteredData.map((row) => {
                   const isCurrent = currentUser.id === row.userId;
                   const isRank1 = row.rank === 1;
@@ -378,10 +378,10 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       }
                       className={`${
                         canViewHistory
-                          ? 'hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer'
+                          ? 'hover:bg-slate-50 cursor-pointer'
                           : 'cursor-default'
                       } transition-colors ${
-                        isCurrent ? 'bg-brand/5 dark:bg-brand/20 font-medium' : ''
+                        isCurrent ? 'bg-accent/10 font-medium' : ''
                       }`}
                     >
                       {/* Peringkat */}
@@ -391,22 +391,22 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                             1
                           </span>
                         ) : isRank2 ? (
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold text-xs">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-800 font-bold text-xs">
                             2
                           </span>
                         ) : isRank3 ? (
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-900/20 text-amber-700 dark:text-amber-300 font-bold text-xs">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200 font-bold text-xs">
                             3
                           </span>
                         ) : (
-                          <span className="text-slate-600 dark:text-slate-300 font-semibold">{row.rank}</span>
+                          <span className="text-slate-600 font-semibold">{row.rank}</span>
                         )}
                       </td>
 
                       {/* Info Anggota */}
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 flex items-center justify-center font-bold text-[11px] shrink-0 overflow-hidden shadow-2xs">
+                          <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-[11px] shrink-0 overflow-hidden shadow-2xs">
                             {row.avatarUrl ? (
                               <img src={row.avatarUrl} alt="" className="w-full h-full object-cover" />
                             ) : (
@@ -414,15 +414,15 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                             )}
                           </div>
                           <div>
-                            <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                               {row.namaLengkap}
                               {isCurrent && (
-                                <span className="text-[10px] bg-brand dark:bg-accent text-white dark:text-ink px-1.5 py-0.2 rounded font-bold">
+                                <span className="text-[10px] bg-accent text-ink px-1.5 py-0.2 rounded font-black">
                                   Anda
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                            <div className="text-[11px] text-slate-500">
                               {row.prn} {row.nim ? `• NIM ${row.nim}` : ''}
                             </div>
                           </div>
@@ -431,10 +431,10 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
 
                       {/* Departemen & Jabatan */}
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="font-medium text-slate-800 dark:text-slate-200">
+                        <div className="font-medium text-slate-800">
                           {row.departmentName || '-'}
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                        <div className="text-[11px] text-slate-500">
                           {row.jabatan} (Gen {row.generasi})
                         </div>
                       </td>
@@ -455,7 +455,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
 
                       {/* Izin/Sakit */}
                       <td className="px-4 py-3 text-center whitespace-nowrap">
-                        <span className="text-slate-700 dark:text-slate-200 font-medium">
+                        <span className="text-slate-700 font-medium">
                           {row.izinCount + row.sakitCount}
                         </span>
                       </td>
@@ -464,7 +464,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                       <td className="px-4 py-3 text-center whitespace-nowrap">
                         <span
                           className={`font-semibold ${
-                            row.alphaCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400 dark:text-slate-400'
+                            row.alphaCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400'
                           }`}
                         >
                           {row.alphaCount}
@@ -476,18 +476,18 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                         <span
                           className={`inline-block px-2.5 py-1 rounded-lg font-black text-xs ${
                             row.totalPoints > 0
-                              ? 'bg-brand/10 dark:bg-accent/15 text-brand dark:text-accent font-extrabold'
+                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20'
                               : row.totalPoints < 0
-                              ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                              ? 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20'
+                              : 'bg-slate-100 text-slate-600 border border-slate-200'
                           }`}
                         >
-                          {row.totalPoints} Pts
+                          {row.totalPoints > 0 ? `+${row.totalPoints}` : row.totalPoints} Pts
                         </span>
                       </td>
 
-                      {/* Action Chevron (Hanya untuk SUPER_ADMIN & ADMIN yang bisa melihat riwayat) */}
-                      <td className="px-4 py-3 text-right whitespace-nowrap text-slate-400 dark:text-slate-300">
+                      {/* Action Chevron */}
+                      <td className="px-4 py-3 text-right whitespace-nowrap text-slate-400">
                         {canViewHistory && <ChevronRight className="w-4 h-4 ml-auto" />}
                       </td>
                     </tr>

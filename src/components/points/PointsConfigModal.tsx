@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Award, Save, RefreshCw, AlertTriangle, ShieldCheck } from 'lucide-react';
 import type { PointConfig } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
@@ -15,7 +15,6 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
   onClose,
   onConfigSaved,
 }) => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,24 +28,25 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
     telatPoints: 5,
   });
 
-  // Sinkronisasi native HTML5 <dialog>
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
     if (isOpen) {
-      if (!dialog.open) {
-        dialog.showModal();
-      }
       loadConfig();
     } else {
-      if (dialog.open) {
-        dialog.close();
-      }
       setError(null);
       setSuccessMessage(null);
     }
   }, [isOpen]);
+
+  // Listener tombol Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen && !submitting) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, submitting, onClose]);
 
   const loadConfig = async () => {
     setLoading(true);
@@ -85,7 +85,7 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
 
       setTimeout(() => {
         onClose();
-      }, 1200);
+      }, 1000);
     } catch (err: any) {
       setError(err?.message || 'Gagal menyimpan konfigurasi bobot poin');
     } finally {
@@ -93,27 +93,32 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
     }
   };
 
+  if (!isOpen) return null;
+
   return (
-    <dialog
-      ref={dialogRef}
-      onClose={onClose}
-      className="m-auto backdrop:bg-slate-900/60 backdrop:backdrop-blur-xs rounded-2xl p-0 shadow-2xl border border-slate-200 dark:border-slate-800 bg-surface text-slate-800 dark:text-slate-100 max-w-lg w-full max-h-[90vh] overflow-hidden"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 animate-in fade-in duration-200"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !submitting) onClose();
+      }}
     >
-      <div className="flex flex-col h-full max-h-[90vh]">
+      <div className="bg-surface w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200/90 max-h-[92vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
         {/* Header Modal */}
-        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40">
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/60">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/20 dark:bg-accent/30 text-ink flex items-center justify-center font-bold">
-              <Award className="w-5 h-5 text-amber-600 dark:text-accent" />
+            <div className="w-10 h-10 rounded-xl bg-accent text-ink flex items-center justify-center font-bold shadow-xs">
+              <Award className="w-5 h-5 text-ink" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                Pengaturan Bobot Poin
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-slate-900">
+                  Pengaturan Bobot Poin
+                </h2>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-accent/20 text-ink border border-accent/40">
                   Super Admin
                 </span>
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
                 Tentukan bobot perolehan poin kehadiran anggota
               </p>
             </div>
@@ -121,50 +126,51 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            disabled={submitting}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Notifikasi Immutability Guardrail */}
-        <div className="mx-6 mt-4 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-          <div className="text-xs text-amber-900 dark:text-amber-200/90 leading-relaxed">
-            <span className="font-semibold">Catatan Keabadian Riwayat:</span> Perubahan bobot di sini hanya akan berlaku untuk pencatatan presensi berikutnya. Data dan perolehan poin yang telah tercatat di masa lalu tidak akan berubah.
+        <div className="mx-6 mt-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+          <div className="text-xs text-slate-700 leading-relaxed">
+            <span className="font-bold text-slate-900">Catatan Keabadian Riwayat:</span> Perubahan bobot di sini hanya akan berlaku untuk pencatatan presensi berikutnya. Data dan perolehan poin yang telah tercatat di masa lalu tidak akan berubah.
           </div>
         </div>
 
         {/* Content Body */}
         <div className="p-6 overflow-y-auto flex-1">
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-medium">
+            <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-700 dark:text-rose-400 text-xs font-semibold">
               {error}
             </div>
           )}
 
           {successMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4" />
+            <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
               {successMessage}
             </div>
           )}
 
           {loading ? (
             <div className="py-12 flex flex-col items-center justify-center gap-3 text-slate-400">
-              <RefreshCw className="w-6 h-6 animate-spin text-brand" />
+              <RefreshCw className="w-6 h-6 animate-spin text-brand dark:text-accent" />
               <p className="text-xs">Memuat konfigurasi bobot poin...</p>
             </div>
           ) : (
-            <form id="points-config-form" onSubmit={handleSubmit} className="space-y-4">
+            <form id="points-config-form" onSubmit={handleSubmit} className="space-y-3.5">
               {/* HADIR */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
-                <div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between gap-4 transition-colors">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                    <label className="text-sm font-semibold text-slate-900 dark:text-white">HADIR (Tepat Waktu)</label>
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 shadow-xs"></span>
+                    <label className="text-sm font-bold text-slate-900 truncate">HADIR (Tepat Waktu)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin kehadiran standar per kegiatan</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Poin kehadiran standar per kegiatan</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -172,19 +178,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.hadirPoints}
                     onChange={(e) => handleChange('hadirPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-2 rounded-xl border border-slate-300 bg-surface text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
                   />
                 </div>
               </div>
 
               {/* TELAT */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
-                <div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between gap-4 transition-colors">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                    <label className="text-sm font-semibold text-slate-900 dark:text-white">TELAT (Hadir Terlambat)</label>
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 shadow-xs"></span>
+                    <label className="text-sm font-bold text-slate-900 truncate">TELAT (Hadir Terlambat)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin dispensasi terlambat hadir</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Poin dispensasi terlambat hadir</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -192,19 +198,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.telatPoints}
                     onChange={(e) => handleChange('telatPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-2 rounded-xl border border-slate-300 bg-surface text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
                   />
                 </div>
               </div>
 
               {/* IZIN */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
-                <div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between gap-4 transition-colors">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                    <label className="text-sm font-semibold text-slate-900 dark:text-white">IZIN (Disetujui)</label>
+                    <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 shadow-xs"></span>
+                    <label className="text-sm font-bold text-slate-900 truncate">IZIN (Disetujui)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin surat perizinan yang disetujui</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Poin surat perizinan yang disetujui</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -212,19 +218,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.izinPoints}
                     onChange={(e) => handleChange('izinPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-2 rounded-xl border border-slate-300 bg-surface text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
                   />
                 </div>
               </div>
 
               {/* SAKIT */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
-                <div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between gap-4 transition-colors">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
-                    <label className="text-sm font-semibold text-slate-900 dark:text-white">SAKIT (Dengan Bukti)</label>
+                    <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0 shadow-xs"></span>
+                    <label className="text-sm font-bold text-slate-900 truncate">SAKIT (Dengan Bukti)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin sakit dengan surat dokter</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Poin sakit dengan surat dokter</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -232,19 +238,19 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.sakitPoints}
                     onChange={(e) => handleChange('sakitPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-2 rounded-xl border border-slate-300 bg-surface text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
                   />
                 </div>
               </div>
 
               {/* ALPHA */}
-              <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 flex items-center justify-between gap-4">
-                <div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between gap-4 transition-colors">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                    <label className="text-sm font-semibold text-slate-900 dark:text-white">ALPHA (Tanpa Keterangan)</label>
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 shadow-xs"></span>
+                    <label className="text-sm font-bold text-slate-900 truncate">ALPHA (Tanpa Keterangan)</label>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">Poin penalti ketidakhadiran (bisa bernilai minus)</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Poin penalti ketidakhadiran (bisa minus)</p>
                 </div>
                 <div className="w-24 shrink-0">
                   <input
@@ -252,7 +258,7 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
                     value={formData.alphaPoints}
                     onChange={(e) => handleChange('alphaPoints', e.target.value)}
                     required
-                    className="w-full text-center px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                    className="w-full text-center px-3 py-2 rounded-xl border border-slate-300 bg-surface text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
                   />
                 </div>
               </div>
@@ -261,12 +267,12 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
         </div>
 
         {/* Modal Actions */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 flex items-center justify-end gap-3 shrink-0">
+        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/60 flex items-center justify-end gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer min-h-[40px]"
           >
             Batal
           </button>
@@ -274,22 +280,23 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
             type="submit"
             form="points-config-form"
             disabled={loading || submitting}
-            className="px-4.5 py-2 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand/90 transition-all flex items-center gap-2 shadow-xs cursor-pointer disabled:opacity-50"
+            className="px-5 py-2 rounded-xl bg-accent hover:bg-accent-600 text-ink text-xs font-bold transition-all flex items-center gap-2 shadow-xs cursor-pointer disabled:opacity-50 min-h-[40px] active:scale-95"
           >
             {submitting ? (
               <>
-                <RefreshCw className="w-4 h-4 animate-spin" />
+                <RefreshCw className="w-4 h-4 animate-spin text-ink" />
                 <span>Menyimpan...</span>
               </>
             ) : (
               <>
-                <Save className="w-4 h-4" />
+                <Save className="w-4 h-4 text-ink" />
                 <span>Simpan Konfigurasi</span>
               </>
             )}
           </button>
         </div>
       </div>
-    </dialog>
+    </div>
   );
 };
+
