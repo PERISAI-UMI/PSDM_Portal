@@ -5,6 +5,7 @@ import { eq, sql, desc, and } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
 import {
   pointConfigs,
+  activityCategories,
   attendances,
   activities,
   users,
@@ -18,6 +19,53 @@ import { invalidateSyncCache } from './sync.ts';
 export const pointsRouter = new Hono<AppEnv>();
 
 pointsRouter.use('*', authMiddleware);
+
+export async function getPointWeightsForActivity(
+  db: any,
+  activityId: string
+): Promise<{
+  hadirPoints: number;
+  izinPoints: number;
+  sakitPoints: number;
+  alphaPoints: number;
+  telatPoints: number;
+}> {
+  try {
+    const act = await db
+      .select({
+        hadirPoints: activityCategories.hadirPoints,
+        izinPoints: activityCategories.izinPoints,
+        sakitPoints: activityCategories.sakitPoints,
+        alphaPoints: activityCategories.alphaPoints,
+        telatPoints: activityCategories.telatPoints,
+      })
+      .from(activities)
+      .leftJoin(activityCategories, eq(activities.categoryId, activityCategories.id))
+      .where(eq(activities.id, activityId))
+      .limit(1);
+
+    if (act.length > 0 && act[0] && act[0].hadirPoints !== null && act[0].hadirPoints !== undefined) {
+      return {
+        hadirPoints: Number(act[0].hadirPoints),
+        izinPoints: Number(act[0].izinPoints),
+        sakitPoints: Number(act[0].sakitPoints),
+        alphaPoints: Number(act[0].alphaPoints),
+        telatPoints: Number(act[0].telatPoints),
+      };
+    }
+  } catch (err) {
+    console.warn('Gagal memuat point weights per kategori kegiatan:', err);
+  }
+
+  // Fallback default Lingkup Internal (hadir: 3, izin: 0, sakit: 0, alpha: -5, telat: -1)
+  return {
+    hadirPoints: 3,
+    izinPoints: 0,
+    sakitPoints: 0,
+    alphaPoints: -5,
+    telatPoints: -1,
+  };
+}
 
 // Cache in-memory micro-cache per isolate worker (TTL 60s)
 let cachedConfig: {

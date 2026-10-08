@@ -777,6 +777,10 @@ function MainAppContent() {
             <LeaderboardView
               currentUser={currentUser}
               departments={departments}
+              onOpenCategories={() => {
+                setActiveSection('master-data');
+                setMasterDataTab('category');
+              }}
             />
           )}
 

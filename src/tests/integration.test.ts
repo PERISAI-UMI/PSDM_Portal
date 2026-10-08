@@ -16,6 +16,7 @@ import { hashPassword, verifyPassword, generateSessionToken } from '../server/cr
 import {
   userSchema,
   activitySchema,
+  activityCategorySchema,
   attendanceSchema,
   permissionSchema,
   pjDepartmentSchema,
@@ -118,6 +119,7 @@ describe('SUITE 2: Skema Validasi Zod & Integritas 3NF', () => {
     const sampleActivity = {
       id: 'act-test-1',
       nama: 'Rapat Kerja Wilayah',
+      categoryId: 'cat-internal-default',
       deskripsi: 'Koordinasi program kerja tahunan',
       mode: 'OFFLINE',
       lokasi: 'Gedung Rektorat Lt. 3',
@@ -130,6 +132,58 @@ describe('SUITE 2: Skema Validasi Zod & Integritas 3NF', () => {
     };
     const parsed = activitySchema.safeParse(sampleActivity);
     expect(parsed.success).toBe(true);
+  });
+
+  it('Validasi skema kategori kegiatan & bobot 5 status absensi dasar', () => {
+    // 1. Lingkup Eksternal: hadir: 5, izin: 0, sakit: 0, alpha: -7, telat: -2
+    const catEksternal = {
+      id: 'cat-eksternal-default',
+      nama: 'Lingkup Eksternal',
+      deskripsi: 'Kegiatan di luar lingkup internal organisasi',
+      hadirPoints: 5,
+      izinPoints: 0,
+      sakitPoints: 0,
+      alphaPoints: -7,
+      telatPoints: -2,
+    };
+    expect(activityCategorySchema.safeParse(catEksternal).success).toBe(true);
+    expect(calculatePointsForStatus('HADIR', catEksternal)).toBe(5);
+    expect(calculatePointsForStatus('ALPHA', catEksternal)).toBe(-7);
+    expect(calculatePointsForStatus('TELAT', catEksternal)).toBe(-2);
+    expect(calculatePointsForStatus('IZIN', catEksternal)).toBe(0);
+    expect(calculatePointsForStatus('SAKIT', catEksternal)).toBe(0);
+
+    // 2. Lingkup Internal: hadir: 3, izin: 0, sakit: 0, alpha: -5, telat: -1
+    const catInternal = {
+      id: 'cat-internal-default',
+      nama: 'Lingkup Internal',
+      deskripsi: 'Kegiatan rutin internal organisasi',
+      hadirPoints: 3,
+      izinPoints: 0,
+      sakitPoints: 0,
+      alphaPoints: -5,
+      telatPoints: -1,
+    };
+    expect(activityCategorySchema.safeParse(catInternal).success).toBe(true);
+    expect(calculatePointsForStatus('HADIR', catInternal)).toBe(3);
+    expect(calculatePointsForStatus('ALPHA', catInternal)).toBe(-5);
+    expect(calculatePointsForStatus('TELAT', catInternal)).toBe(-1);
+
+    // 3. Lingkup Kepanitiaan: hadir: 2, izin: 0, sakit: 0, alpha: -3, telat: -1
+    const catKepanitiaan = {
+      id: 'cat-kepanitiaan-default',
+      nama: 'Lingkup Kepanitiaan',
+      deskripsi: 'Kegiatan kepanitiaan ad-hoc dan operasional',
+      hadirPoints: 2,
+      izinPoints: 0,
+      sakitPoints: 0,
+      alphaPoints: -3,
+      telatPoints: -1,
+    };
+    expect(activityCategorySchema.safeParse(catKepanitiaan).success).toBe(true);
+    expect(calculatePointsForStatus('HADIR', catKepanitiaan)).toBe(2);
+    expect(calculatePointsForStatus('ALPHA', catKepanitiaan)).toBe(-3);
+    expect(calculatePointsForStatus('TELAT', catKepanitiaan)).toBe(-1);
   });
 
   it('Validasi skema penugasan PJ Departemen', () => {

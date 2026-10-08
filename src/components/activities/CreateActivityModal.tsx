@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, CalendarPlus, MapPin, Video, Globe, Pencil } from 'lucide-react';
-import type { ActivityItem } from '../../types/index.ts';
+import { X, CalendarPlus, MapPin, Video, Globe, Pencil, Layers } from 'lucide-react';
+import type { ActivityItem, ActivityCategory } from '../../types/index.ts';
+import { api } from '../../services/api.ts';
 
 interface CreateActivityModalProps {
   isOpen: boolean;
@@ -43,6 +44,8 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
   creatorId,
   creatorName,
 }) => {
+  const [categories, setCategories] = useState<ActivityCategory[]>([]);
+  const [categoryId, setCategoryId] = useState('');
   const [nama, setNama] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
   const [mode, setMode] = useState<'OFFLINE' | 'ONLINE'>('OFFLINE');
@@ -55,9 +58,25 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Fetch categories on open
+  useEffect(() => {
+    if (isOpen) {
+      api.getActivityCategories().then((res) => {
+        setCategories(res);
+        if (!activityToEdit && res.length > 0 && !categoryId) {
+          const internalDefault = res.find((c) => c.nama.includes('Internal')) || res[0];
+          setCategoryId(internalDefault.id);
+        }
+      }).catch((err) => {
+        console.error('Gagal mengambil kategori kegiatan:', err);
+      });
+    }
+  }, [isOpen, activityToEdit]);
+
   useEffect(() => {
     if (activityToEdit) {
       setNama(activityToEdit.nama);
+      setCategoryId(activityToEdit.categoryId || '');
       setDeskripsi(activityToEdit.deskripsi || '');
       setMode(activityToEdit.mode);
       setLokasi(activityToEdit.lokasi || '');
@@ -95,6 +114,11 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
       return;
     }
 
+    if (!categoryId) {
+      setErrorMessage('Kategori kegiatan wajib dipilih');
+      return;
+    }
+
     if (mode === 'OFFLINE' && !lokasi.trim()) {
       setErrorMessage('Lokasi kegiatan wajib diisi untuk kegiatan offline');
       return;
@@ -116,6 +140,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
       if (isEditing && activityToEdit && onUpdate) {
         await onUpdate(activityToEdit.id, {
           nama: nama.trim(),
+          categoryId,
           deskripsi: deskripsi.trim() || null,
           mode,
           lokasi: mode === 'OFFLINE' ? lokasi.trim() : null,
@@ -127,6 +152,7 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
       } else {
         await onSubmit({
           nama: nama.trim(),
+          categoryId,
           deskripsi: deskripsi.trim() || null,
           mode,
           lokasi: mode === 'OFFLINE' ? lokasi.trim() : null,
@@ -146,6 +172,8 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
       setLoading(false);
     }
   };
+
+  const selectedCategory = categories.find((c) => c.id === categoryId);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
@@ -187,6 +215,40 @@ export const CreateActivityModal: React.FC<CreateActivityModalProps> = ({
               required
               className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px]"
             />
+          </div>
+
+          {/* Kategori Kegiatan & Bobot Poin */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Lingkup / Kategori Kegiatan *
+            </label>
+            <select
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              required
+              className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand min-h-[40px]"
+            >
+              <option value="" disabled>Pilih Lingkup Kegiatan</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.nama}
+                </option>
+              ))}
+            </select>
+            {selectedCategory && (
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 bg-slate-50 dark:bg-slate-800/40 p-2 rounded-lg border border-slate-200/80">
+                <span className="font-semibold text-slate-700 dark:text-slate-300">Bobot Poin:</span>
+                <span className="text-emerald-700 dark:text-emerald-400 font-medium">Hadir: +{selectedCategory.hadirPoints}</span>
+                <span className="text-slate-300 dark:text-slate-600">•</span>
+                <span>Izin: {selectedCategory.izinPoints}</span>
+                <span className="text-slate-300 dark:text-slate-600">•</span>
+                <span>Sakit: {selectedCategory.sakitPoints}</span>
+                <span className="text-slate-300 dark:text-slate-600">•</span>
+                <span className="text-rose-700 dark:text-rose-400 font-medium">Alpha: {selectedCategory.alphaPoints}</span>
+                <span className="text-slate-300 dark:text-slate-600">•</span>
+                <span className="text-amber-700 dark:text-amber-400 font-medium">Telat: {selectedCategory.telatPoints}</span>
+              </div>
+            )}
           </div>
 
           {/* Mode Pelaksanaan Selection */}

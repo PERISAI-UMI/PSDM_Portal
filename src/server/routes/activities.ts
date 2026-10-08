@@ -3,7 +3,7 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { eq, and, gte, lte, desc, sql, inArray } from 'drizzle-orm';
 import type { AppEnv } from '../types.ts';
-import { activities, attendances, users } from '../../db/schema/index.ts';
+import { activities, attendances, users, activityCategories } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
 import { invalidateSyncCache } from './sync.ts';
 
@@ -14,6 +14,7 @@ activitiesRouter.use('*', authMiddleware);
 const createActivitySchema = z
   .object({
     nama: z.string().min(3, 'Nama kegiatan minimal 3 karakter'),
+    categoryId: z.string().min(1, 'Kategori kegiatan wajib dipilih'),
     deskripsi: z.string().optional().nullable(),
     mode: z.enum(['OFFLINE', 'ONLINE']).default('OFFLINE'),
     lokasi: z.string().optional().nullable(),
@@ -38,6 +39,7 @@ const createActivitySchema = z
 
 const updateActivitySchema = z.object({
   nama: z.string().min(3).optional(),
+  categoryId: z.string().min(1).optional(),
   deskripsi: z.string().optional().nullable(),
   mode: z.enum(['OFFLINE', 'ONLINE']).optional(),
   lokasi: z.string().optional().nullable(),
@@ -77,6 +79,18 @@ activitiesRouter.get('/', async (c) => {
     .select({
       id: activities.id,
       nama: activities.nama,
+      categoryId: activities.categoryId,
+      categoryName: activityCategories.nama,
+      category: {
+        id: activityCategories.id,
+        nama: activityCategories.nama,
+        deskripsi: activityCategories.deskripsi,
+        hadirPoints: activityCategories.hadirPoints,
+        izinPoints: activityCategories.izinPoints,
+        sakitPoints: activityCategories.sakitPoints,
+        alphaPoints: activityCategories.alphaPoints,
+        telatPoints: activityCategories.telatPoints,
+      },
       deskripsi: activities.deskripsi,
       mode: activities.mode,
       lokasi: activities.lokasi,
@@ -91,6 +105,7 @@ activitiesRouter.get('/', async (c) => {
     })
     .from(activities)
     .innerJoin(users, eq(activities.createdBy, users.id))
+    .leftJoin(activityCategories, eq(activities.categoryId, activityCategories.id))
     .orderBy(desc(activities.startDate));
 
   const list = conditions.length > 0 ? await query.where(and(...conditions)).all() : await query.all();
@@ -141,6 +156,18 @@ activitiesRouter.get('/:id', async (c) => {
     .select({
       id: activities.id,
       nama: activities.nama,
+      categoryId: activities.categoryId,
+      categoryName: activityCategories.nama,
+      category: {
+        id: activityCategories.id,
+        nama: activityCategories.nama,
+        deskripsi: activityCategories.deskripsi,
+        hadirPoints: activityCategories.hadirPoints,
+        izinPoints: activityCategories.izinPoints,
+        sakitPoints: activityCategories.sakitPoints,
+        alphaPoints: activityCategories.alphaPoints,
+        telatPoints: activityCategories.telatPoints,
+      },
       deskripsi: activities.deskripsi,
       mode: activities.mode,
       lokasi: activities.lokasi,
@@ -155,6 +182,7 @@ activitiesRouter.get('/:id', async (c) => {
     })
     .from(activities)
     .innerJoin(users, eq(activities.createdBy, users.id))
+    .leftJoin(activityCategories, eq(activities.categoryId, activityCategories.id))
     .where(eq(activities.id, id))
     .limit(1);
 

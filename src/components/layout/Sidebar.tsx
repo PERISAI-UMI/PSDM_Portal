@@ -21,6 +21,7 @@ import {
   KeyRound,
   Trophy,
   Award,
+  Layers,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
@@ -37,8 +38,8 @@ interface SidebarProps {
   onLogout: () => void;
   activeSection?: string;
   onSelectSection?: (sectionId: string) => void;
-  onOpenMasterDataTab?: (tab: 'dept' | 'fakultas' | 'prodi' | 'pj') => void;
-  activeMasterDataTab?: 'dept' | 'fakultas' | 'prodi' | 'pj';
+  onOpenMasterDataTab?: (tab: 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category') => void;
+  activeMasterDataTab?: 'dept' | 'fakultas' | 'prodi' | 'pj' | 'category';
   onOpenProfileTab?: (tab: 'profile' | 'security') => void;
   activeProfileTab?: 'profile' | 'security';
   onOpenPermissionTab?: (tab: 'pending' | 'history') => void;
@@ -347,6 +348,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     >
                       <UserCheck className="w-3.5 h-3.5" />
                       <span>Penugasan PJ</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onOpenMasterDataTab?.('category')}
+                      className={`w-full text-left px-2 py-1.5 rounded-md text-[11px] transition-colors flex items-center gap-2 cursor-pointer ${
+                        activeMasterDataTab === 'category'
+                          ? 'bg-brand text-white font-semibold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <Layers className="w-3.5 h-3.5" />
+                      <span>Kategori & Poin</span>
                     </button>
                   </div>
                 )}

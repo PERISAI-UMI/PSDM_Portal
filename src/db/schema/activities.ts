@@ -1,5 +1,6 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 import { users } from './users.ts';
+import { activityCategories } from './activityCategories.ts';
 
 export const activities = sqliteTable(
   'activities',
@@ -7,6 +8,9 @@ export const activities = sqliteTable(
     id: text('id').primaryKey(),
     nama: text('nama').notNull(),
     deskripsi: text('deskripsi'),
+    categoryId: text('category_id')
+      .notNull()
+      .references(() => activityCategories.id, { onDelete: 'restrict' }),
     mode: text('mode', { enum: ['OFFLINE', 'ONLINE'] }).notNull().default('OFFLINE'),
     lokasi: text('lokasi'),
     meetingUrl: text('meeting_url'),
@@ -20,6 +24,7 @@ export const activities = sqliteTable(
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
   },
   (table) => [
+    index('activities_category_idx').on(table.categoryId),
     index('activities_start_date_idx').on(table.startDate),
     index('activities_is_published_idx').on(table.isPublished),
   ]

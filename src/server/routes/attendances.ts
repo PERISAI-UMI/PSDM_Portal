@@ -13,7 +13,7 @@ import {
 } from '../../db/schema/index.ts';
 import { authMiddleware, requireRole } from '../middleware/auth.ts';
 import { invalidateSyncCache } from './sync.ts';
-import { getActivePointWeights, calculatePointsForStatus } from './points.ts';
+import { getPointWeightsForActivity, calculatePointsForStatus } from './points.ts';
 
 export const attendancesRouter = new Hono<AppEnv>();
 
@@ -298,8 +298,8 @@ const handleRecordSingleAttendance = async (c: any) => {
   const now = new Date();
   const newId = crypto.randomUUID();
 
-  // Hitung snapshot poin berdasarkan bobot aktif saat ini
-  const pointWeights = await getActivePointWeights(db);
+  // Hitung snapshot poin berdasarkan bobot kategori kegiatan saat ini
+  const pointWeights = await getPointWeightsForActivity(db, activityId);
   const awardedPoints = calculatePointsForStatus(status, pointWeights);
 
   await db
@@ -407,8 +407,8 @@ attendancesRouter.post(
       }
     }
 
-    // Ambil bobot poin aktif untuk kalkulasi snapshot batch
-    const pointWeights = await getActivePointWeights(db);
+    // Ambil bobot poin berdasarkan kategori kegiatan untuk kalkulasi snapshot batch
+    const pointWeights = await getPointWeightsForActivity(db, activityId);
 
     // Eksekusi batch upsert (1 network roundtrip untuk efisiensi edge)
     const chunkSize = 50;

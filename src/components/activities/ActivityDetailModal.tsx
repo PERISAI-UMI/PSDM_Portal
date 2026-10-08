@@ -111,6 +111,12 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                 </span>
               )}
 
+              {(activity.categoryName || activity.category?.nama) && (
+                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md border bg-slate-100 text-slate-800 border-slate-200">
+                  {activity.categoryName || activity.category?.nama}
+                </span>
+              )}
+
               <span
                 className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-md border ${
                   activity.isPublished

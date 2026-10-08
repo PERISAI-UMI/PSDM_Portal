@@ -1,6 +1,7 @@
 import type {
   AuthUser,
   ActivityItem,
+  ActivityCategory,
   AttendanceRecord,
   PermissionRecord,
   DepartmentItem,
@@ -709,5 +710,50 @@ export const api = {
   async getMemberPointsHistory(userId: string): Promise<MemberPointsHistoryData> {
     const res = await request<{ success: boolean; data: MemberPointsHistoryData }>(`/api/points/history/${userId}`);
     return res.data;
+  },
+
+  // ================= ACTIVITY CATEGORIES =================
+  async getActivityCategories(): Promise<ActivityCategory[]> {
+    const res = await request<{ success: boolean; data: ActivityCategory[] }>('/api/master/activity-categories');
+    return res.data || [];
+  },
+
+  async createActivityCategory(data: {
+    nama: string;
+    deskripsi?: string | null;
+    hadirPoints: number;
+    izinPoints: number;
+    sakitPoints: number;
+    alphaPoints: number;
+    telatPoints: number;
+  }): Promise<{ success: boolean; message: string; data: ActivityCategory }> {
+    return request<{ success: boolean; message: string; data: ActivityCategory }>('/api/master/activity-categories', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async updateActivityCategory(
+    id: string,
+    data: {
+      nama?: string;
+      deskripsi?: string | null;
+      hadirPoints?: number;
+      izinPoints?: number;
+      sakitPoints?: number;
+      alphaPoints?: number;
+      telatPoints?: number;
+    }
+  ): Promise<{ success: boolean; message: string }> {
+    return request<{ success: boolean; message: string }>(`/api/master/activity-categories/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async deleteActivityCategory(id: string): Promise<{ success: boolean; message: string }> {
+    return request<{ success: boolean; message: string }>(`/api/master/activity-categories/${id}`, {
+      method: 'DELETE',
+    });
   },
 };

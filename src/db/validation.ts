@@ -51,9 +51,24 @@ export const updateUserSchema = userSchema.partial().omit({ id: true, prn: true 
 
 export const activityModeEnum = ['OFFLINE', 'ONLINE'] as const;
 
+export const activityCategorySchema = z.object({
+  id: z.string().min(1),
+  nama: z.string().min(2, 'Nama kategori minimal 2 karakter'),
+  deskripsi: z.string().optional().nullable(),
+  hadirPoints: z.number().int(),
+  izinPoints: z.number().int(),
+  sakitPoints: z.number().int(),
+  alphaPoints: z.number().int(),
+  telatPoints: z.number().int(),
+});
+
+export const createActivityCategorySchema = activityCategorySchema.omit({ id: true });
+export const updateActivityCategorySchema = createActivityCategorySchema.partial();
+
 export const activitySchema = z.object({
   id: z.string().min(1),
   nama: z.string().min(3, 'Nama kegiatan minimal 3 karakter'),
+  categoryId: z.string().min(1, 'Kategori kegiatan wajib dipilih'),
   deskripsi: z.string().optional().nullable(),
   mode: z.enum(activityModeEnum).default('OFFLINE'),
   lokasi: z.string().optional().nullable(),

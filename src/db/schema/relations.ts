@@ -4,6 +4,7 @@ import { departments } from './departments.ts';
 import { users } from './users.ts';
 import { sessions, pjDepartments } from './system.ts';
 import { activities } from './activities.ts';
+import { activityCategories } from './activityCategories.ts';
 import { attendances } from './attendances.ts';
 import { permissions } from './permissions.ts';
 
@@ -61,7 +62,15 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
+export const activityCategoriesRelations = relations(activityCategories, ({ many }) => ({
+  activities: many(activities),
+}));
+
 export const activitiesRelations = relations(activities, ({ one, many }) => ({
+  category: one(activityCategories, {
+    fields: [activities.categoryId],
+    references: [activityCategories.id],
+  }),
   creator: one(users, {
     fields: [activities.createdBy],
     references: [users.id],

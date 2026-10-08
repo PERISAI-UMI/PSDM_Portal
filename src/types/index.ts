@@ -34,10 +34,31 @@ export interface AuthUser {
   }[];
 }
 
+export interface ActivityCategory {
+  id: string;
+  nama: string;
+  deskripsi?: string | null;
+  name?: string;
+  description?: string | null;
+  hadirPoints: number;
+  izinPoints: number;
+  sakitPoints: number;
+  alphaPoints: number;
+  telatPoints: number;
+  activityCount?: number;
+  createdBy?: string | null;
+  updatedBy?: string | null;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
+
 export interface ActivityItem {
   id: string;
   nama: string;
   deskripsi?: string | null;
+  categoryId?: string;
+  categoryName?: string;
+  category?: ActivityCategory;
   mode: 'OFFLINE' | 'ONLINE';
   lokasi?: string | null;
   meetingUrl?: string | null;

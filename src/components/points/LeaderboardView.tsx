@@ -13,19 +13,20 @@ import {
   ChevronRight,
   Sparkles,
 } from 'lucide-react';
-import type { AuthUser, DepartmentItem, LeaderboardEntry, PointConfig } from '../../types/index.ts';
+import type { AuthUser, DepartmentItem, LeaderboardEntry } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
-import { PointsConfigModal } from './PointsConfigModal.tsx';
 import { MemberPointsHistoryModal } from './MemberPointsHistoryModal.tsx';
 
 interface LeaderboardViewProps {
   currentUser: AuthUser;
   departments: DepartmentItem[];
+  onOpenCategories?: () => void;
 }
 
 export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
   currentUser,
   departments,
+  onOpenCategories,
 }) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,7 +39,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
   const [selectedGen, setSelectedGen] = useState<string>('');
 
   // Modals state
-  const [isConfigModalOpen, setIsConfigModalOpen] = useState<boolean>(false);
   const [selectedUserForHistory, setSelectedUserForHistory] = useState<{
     id: string;
     nama: string;
@@ -131,14 +131,14 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
             <span className="hidden sm:inline">Refresh</span>
           </button>
 
-          {isSuperAdmin && (
+          {isSuperAdmin && onOpenCategories && (
             <button
               type="button"
-              onClick={() => setIsConfigModalOpen(true)}
+              onClick={onOpenCategories}
               className="px-3.5 py-2 rounded-xl bg-accent hover:bg-accent-600 text-ink text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
             >
               <Settings className="w-3.5 h-3.5 text-ink" />
-              <span>Atur Bobot Poin</span>
+              <span>Kelola Kategori & Poin</span>
             </button>
           )}
         </div>
@@ -495,15 +495,6 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
           </div>
         )}
       </div>
-
-      {/* Modal Pengaturan Bobot (Super Admin) */}
-      {isSuperAdmin && (
-        <PointsConfigModal
-          isOpen={isConfigModalOpen}
-          onClose={() => setIsConfigModalOpen(false)}
-          onConfigSaved={() => loadLeaderboard()}
-        />
-      )}
 
       {/* Modal Riwayat Poin Per Anggota */}
       <MemberPointsHistoryModal

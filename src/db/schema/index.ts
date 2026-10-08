@@ -2,6 +2,7 @@ export * from './academic.ts';
 export * from './departments.ts';
 export * from './users.ts';
 export * from './system.ts';
+export * from './activityCategories.ts';
 export * from './activities.ts';
 export * from './attendances.ts';
 export * from './permissions.ts';
