@@ -249,7 +249,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Trophy className="w-4 h-4 text-amber-500" />
+                <Trophy className="w-4 h-4 text-slate-500" />
                 <span>Klasemen & Poin</span>
               </button>
             )}

@@ -35,9 +35,9 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
 
   const getHeaderTitle = () => {
     if (activeTab === 'pending') {
-      if (currentUser.role === 'INTI') return 'Pengawasan Izin: Perlu Tindakan';
+      if (currentUser.role === 'INTI') return 'Pengawasan Izin';
       if (isNonAdmin) return 'Status Perizinan: Sedang Diproses';
-      return 'Verifikasi Perizinan: Perlu Tindakan';
+      return 'Verifikasi Perizinan';
     }
     if (activeTab === 'history') {
       return 'Riwayat & Arsip Perizinan';
@@ -90,15 +90,15 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
       {/* Dynamic KPI Metrics based on Active Sub-menu */}
       {activeTab === 'pending' ? (
         <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
-          <div className="bg-surface rounded-xl border border-amber-200/80 p-3 sm:p-4 shadow-2xs bg-gradient-to-br from-amber-50/40 to-transparent flex flex-col justify-between">
+          <div className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between gap-1">
-              <span className="text-xs font-semibold text-amber-900 truncate">Perlu Tindakan</span>
-              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 animate-pulse shrink-0" />
+              <span className="text-xs font-medium text-slate-500 truncate">Perlu Tindakan</span>
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" />
             </div>
-            <div className="text-xl sm:text-2xl font-bold text-amber-950 tabular-nums tracking-tight mt-1 sm:mt-1.5">
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 tabular-nums tracking-tight mt-1 sm:mt-1.5">
               {pendingCount}
             </div>
-            <p className="text-[10px] sm:text-[11px] text-amber-700 font-medium mt-0.5 truncate">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">
               {currentUser.role === 'INTI'
                 ? 'Menunggu verifikasi admin'
                 : isNonAdmin
