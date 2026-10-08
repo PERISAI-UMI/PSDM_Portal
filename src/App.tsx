@@ -772,8 +772,8 @@ function MainAppContent() {
             />
           )}
 
-          {/* 4. Leaderboard & Points Layout (Available for ALL roles) */}
-          {activeSection === 'leaderboard' && (
+          {/* 4. Leaderboard & Points Layout (SUPER_ADMIN, ADMIN, INTI only - PENGURUS ditolak) */}
+          {activeSection === 'leaderboard' && currentUser.role !== 'PENGURUS' && (
             <LeaderboardView
               currentUser={currentUser}
               departments={departments}

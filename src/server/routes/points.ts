@@ -163,90 +163,91 @@ pointsRouter.put(
   }
 );
 
-// GET /api/points/leaderboard (Klasemen Poin Anggota - Semua Role)
-pointsRouter.get('/leaderboard', async (c) => {
-  const db = c.get('db');
-  const departmentId = c.req.query('departmentId');
-  const generasiQuery = c.req.query('generasi');
-  const limitQuery = c.req.query('limit');
-  const limit = limitQuery ? Math.max(1, Math.min(200, parseInt(limitQuery, 10))) : 100;
+// GET /api/points/leaderboard (Klasemen Poin Anggota - SUPER_ADMIN, ADMIN, INTI)
+pointsRouter.get(
+  '/leaderboard',
+  requireRole(['SUPER_ADMIN', 'ADMIN', 'INTI']),
+  async (c) => {
+    const db = c.get('db');
+    const departmentId = c.req.query('departmentId');
+    const generasiQuery = c.req.query('generasi');
+    const limitQuery = c.req.query('limit');
+    const limit = limitQuery ? Math.max(1, Math.min(200, parseInt(limitQuery, 10))) : 100;
 
-  try {
-    // Ambil rekap agregasi per user aktif
-    const baseQuery = db
-      .select({
-        userId: users.id,
-        namaLengkap: users.namaLengkap,
-        prn: users.prn,
-        nim: users.nim,
-        avatarUrl: users.avatarUrl,
-        generasi: users.generasi,
-        departmentId: users.departmentId,
-        departmentName: departments.nama,
-        jabatan: users.jabatan,
-        totalPoints: sql<number>`COALESCE(SUM(${attendances.awardedPoints}), 0)`,
-        hadirCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'HADIR' THEN 1 ELSE 0 END), 0)`,
-        izinCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'IZIN' THEN 1 ELSE 0 END), 0)`,
-        sakitCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'SAKIT' THEN 1 ELSE 0 END), 0)`,
-        alphaCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'ALPHA' THEN 1 ELSE 0 END), 0)`,
-        telatCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'TELAT' THEN 1 ELSE 0 END), 0)`,
-        totalActivities: sql<number>`COALESCE(COUNT(${attendances.id}), 0)`,
-      })
-      .from(users)
-      .leftJoin(departments, eq(users.departmentId, departments.id))
-      .leftJoin(attendances, eq(users.id, attendances.userId))
-      .where(eq(users.isActive, true))
-      .groupBy(users.id)
-      .orderBy(desc(sql`COALESCE(SUM(${attendances.awardedPoints}), 0)`), desc(users.namaLengkap))
-      .limit(limit);
+    try {
+      // Ambil rekap agregasi per user aktif
+      const baseQuery = db
+        .select({
+          userId: users.id,
+          namaLengkap: users.namaLengkap,
+          prn: users.prn,
+          nim: users.nim,
+          avatarUrl: users.avatarUrl,
+          generasi: users.generasi,
+          departmentId: users.departmentId,
+          departmentName: departments.nama,
+          jabatan: users.jabatan,
+          totalPoints: sql<number>`COALESCE(SUM(${attendances.awardedPoints}), 0)`,
+          hadirCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'HADIR' THEN 1 ELSE 0 END), 0)`,
+          izinCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'IZIN' THEN 1 ELSE 0 END), 0)`,
+          sakitCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'SAKIT' THEN 1 ELSE 0 END), 0)`,
+          alphaCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'ALPHA' THEN 1 ELSE 0 END), 0)`,
+          telatCount: sql<number>`COALESCE(SUM(CASE WHEN ${attendances.status} = 'TELAT' THEN 1 ELSE 0 END), 0)`,
+          totalActivities: sql<number>`COALESCE(COUNT(${attendances.id}), 0)`,
+        })
+        .from(users)
+        .leftJoin(departments, eq(users.departmentId, departments.id))
+        .leftJoin(attendances, eq(users.id, attendances.userId))
+        .where(eq(users.isActive, true))
+        .groupBy(users.id)
+        .orderBy(desc(sql`COALESCE(SUM(${attendances.awardedPoints}), 0)`), desc(users.namaLengkap))
+        .limit(limit);
 
-    const rows = await baseQuery.all();
+      const rows = await baseQuery.all();
 
-    // Saring jika ada filter query params
-    let filtered = rows;
-    if (departmentId) {
-      filtered = filtered.filter((r: any) => r.departmentId === departmentId);
-    }
-    if (generasiQuery) {
-      const genNum = parseInt(generasiQuery, 10);
-      if (!isNaN(genNum)) {
-        filtered = filtered.filter((r: any) => r.generasi === genNum);
+      // Saring jika ada filter query params
+      let filtered = rows;
+      if (departmentId) {
+        filtered = filtered.filter((r: any) => r.departmentId === departmentId);
       }
+      if (generasiQuery) {
+        const genNum = parseInt(generasiQuery, 10);
+        if (!isNaN(genNum)) {
+          filtered = filtered.filter((r: any) => r.generasi === genNum);
+        }
+      }
+
+      // Berikan peringkat (Rank)
+      const rankedData = filtered.map((row: any, index: number) => ({
+        ...row,
+        rank: index + 1,
+        totalPoints: Number(row.totalPoints || 0),
+        hadirCount: Number(row.hadirCount || 0),
+        izinCount: Number(row.izinCount || 0),
+        sakitCount: Number(row.sakitCount || 0),
+        alphaCount: Number(row.alphaCount || 0),
+        telatCount: Number(row.telatCount || 0),
+        totalActivities: Number(row.totalActivities || 0),
+      }));
+
+      return c.json({
+        success: true,
+        data: rankedData,
+      });
+    } catch (err: any) {
+      console.error('Error fetching points leaderboard:', err);
+      return c.json({ success: false, message: 'Gagal memuat data klasemen poin' }, 500);
     }
-
-    // Berikan peringkat (Rank)
-    const rankedData = filtered.map((row: any, index: number) => ({
-      ...row,
-      rank: index + 1,
-      totalPoints: Number(row.totalPoints || 0),
-      hadirCount: Number(row.hadirCount || 0),
-      izinCount: Number(row.izinCount || 0),
-      sakitCount: Number(row.sakitCount || 0),
-      alphaCount: Number(row.alphaCount || 0),
-      telatCount: Number(row.telatCount || 0),
-      totalActivities: Number(row.totalActivities || 0),
-    }));
-
-    return c.json({
-      success: true,
-      data: rankedData,
-    });
-  } catch (err: any) {
-    console.error('Error fetching points leaderboard:', err);
-    return c.json({ success: false, message: 'Gagal memuat data klasemen poin' }, 500);
   }
-});
+);
 
-// GET /api/points/history/:userId (Buku Besar/Riwayat Perolehan Poin Per Anggota)
-pointsRouter.get('/history/:userId', async (c) => {
-  const db = c.get('db');
-  const targetUserId = c.req.param('userId');
-  const currentUser = c.get('user');
-
-  // RBAC: Pengurus hanya bisa melihat riwayat dirinya sendiri
-  if (currentUser.role === 'PENGURUS' && currentUser.id !== targetUserId) {
-    return c.json({ success: false, message: 'Anda tidak memiliki hak akses melihat riwayat poin anggota lain' }, 403);
-  }
+// GET /api/points/history/:userId (Buku Besar/Riwayat Perolehan Poin Per Anggota - SUPER_ADMIN & ADMIN ONLY)
+pointsRouter.get(
+  '/history/:userId',
+  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  async (c) => {
+    const db = c.get('db');
+    const targetUserId = c.req.param('userId');
 
   try {
     const historyRows = await db

@@ -46,6 +46,12 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
   } | null>(null);
 
   const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
+  const canViewHistory = currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN';
+
+  const handleOpenHistory = (user: { id: string; nama: string; prn: string }) => {
+    if (!canViewHistory) return;
+    setSelectedUserForHistory(user);
+  };
 
   const loadLeaderboard = async (isManual = false) => {
     if (isManual) setRefreshing(true);
@@ -148,13 +154,15 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
           {topThree[1] && (
             <div
               onClick={() =>
-                setSelectedUserForHistory({
+                handleOpenHistory({
                   id: topThree[1].userId,
                   nama: topThree[1].namaLengkap,
                   prn: topThree[1].prn,
                 })
               }
-              className="order-2 md:order-1 p-5 rounded-2xl bg-surface border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs hover:shadow-md transition-all cursor-pointer relative overflow-hidden group flex flex-col justify-between"
+              className={`order-2 md:order-1 p-5 rounded-2xl bg-surface border border-slate-200 dark:border-slate-800 ${
+                canViewHistory ? 'hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md cursor-pointer' : ''
+              } shadow-xs transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
               <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700">
                 <Medal className="w-3.5 h-3.5 text-slate-400" />
@@ -190,13 +198,15 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
           {topThree[0] && (
             <div
               onClick={() =>
-                setSelectedUserForHistory({
+                handleOpenHistory({
                   id: topThree[0].userId,
                   nama: topThree[0].namaLengkap,
                   prn: topThree[0].prn,
                 })
               }
-              className="order-1 md:order-2 p-6 rounded-2xl bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-500/15 dark:via-amber-500/5 dark:to-transparent border-2 border-accent dark:border-accent/80 shadow-md hover:shadow-lg transition-all cursor-pointer relative overflow-hidden group flex flex-col justify-between"
+              className={`order-1 md:order-2 p-6 rounded-2xl bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-500/15 dark:via-amber-500/5 dark:to-transparent border-2 border-accent dark:border-accent/80 shadow-md ${
+                canViewHistory ? 'hover:shadow-lg cursor-pointer' : ''
+              } transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
               <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-ink text-xs font-black shadow-xs">
                 <Sparkles className="w-3.5 h-3.5" />
@@ -232,13 +242,15 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
           {topThree[2] && (
             <div
               onClick={() =>
-                setSelectedUserForHistory({
+                handleOpenHistory({
                   id: topThree[2].userId,
                   nama: topThree[2].namaLengkap,
                   prn: topThree[2].prn,
                 })
               }
-              className="order-3 md:order-3 p-5 rounded-2xl bg-surface border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs hover:shadow-md transition-all cursor-pointer relative overflow-hidden group flex flex-col justify-between"
+              className={`order-3 md:order-3 p-5 rounded-2xl bg-surface border border-slate-200 dark:border-slate-800 ${
+                canViewHistory ? 'hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md cursor-pointer' : ''
+              } shadow-xs transition-all relative overflow-hidden group flex flex-col justify-between`}
             >
               <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-900/10 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 text-xs font-bold border border-amber-800/20">
                 <Medal className="w-3.5 h-3.5 text-amber-700" />
@@ -358,13 +370,17 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                     <tr
                       key={row.userId}
                       onClick={() =>
-                        setSelectedUserForHistory({
+                        handleOpenHistory({
                           id: row.userId,
                           nama: row.namaLengkap,
                           prn: row.prn,
                         })
                       }
-                      className={`hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer ${
+                      className={`${
+                        canViewHistory
+                          ? 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                          : 'cursor-default'
+                      } transition-colors ${
                         isCurrent ? 'bg-brand/5 dark:bg-brand/10 font-medium' : ''
                       }`}
                     >
@@ -470,9 +486,9 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                         </span>
                       </td>
 
-                      {/* Action Chevron */}
+                      {/* Action Chevron (Hanya untuk SUPER_ADMIN & ADMIN yang bisa melihat riwayat) */}
                       <td className="px-4 py-3 text-right whitespace-nowrap text-slate-400">
-                        <ChevronRight className="w-4 h-4 ml-auto" />
+                        {canViewHistory && <ChevronRight className="w-4 h-4 ml-auto" />}
                       </td>
                     </tr>
                   );

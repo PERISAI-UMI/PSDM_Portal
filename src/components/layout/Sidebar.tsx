@@ -236,24 +236,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </div>
 
-            {/* Klasemen & Poin: Tersedia untuk seluruh peran pengguna */}
-            <button
-              type="button"
-              onClick={() => handleNavClick('leaderboard')}
-              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                activeSection === 'leaderboard'
-                  ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <Trophy className="w-4 h-4 text-amber-500" />
-                <span>Klasemen & Poin</span>
-              </div>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-accent text-ink">
-                Live
-              </span>
-            </button>
+            {/* Klasemen & Poin: Hanya untuk SUPER_ADMIN, ADMIN, dan INTI (PENGURUS tidak memiliki akses) */}
+            {user.role !== 'PENGURUS' && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('leaderboard')}
+                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                  activeSection === 'leaderboard'
+                    ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Trophy className="w-4 h-4 text-amber-500" />
+                  <span>Klasemen & Poin</span>
+                </div>
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-accent text-ink">
+                  Live
+                </span>
+              </button>
+            )}
 
             {/* Member Directory: For all roles except PENGURUS */}
             {user.role !== 'PENGURUS' && (
