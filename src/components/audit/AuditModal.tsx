@@ -73,6 +73,17 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [completed, setCompleted] = useState(false);
 
+  // Kunci scroll body saat modal terbuka
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const runDiagnostics = async () => {
@@ -260,10 +271,18 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-brand/60 backdrop-blur-xs p-3 sm:p-4">
-      <div className="bg-surface w-full max-w-xl rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-200 max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150">
+      {/* Backdrop layer terpisah dengan akselerasi GPU */}
+      <div
+        className="fixed inset-0 bg-brand-950/60 backdrop-blur-xs transition-opacity transform-gpu"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Modal Card terisolasi */}
+      <div className="relative z-10 bg-surface w-full max-w-xl rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 max-h-[90vh] flex flex-col overflow-hidden isolate transform-gpu animate-in zoom-in-95 duration-150">
         {/* Modal Header */}
-        <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 shrink-0">
           <div>
             <h2 className="text-sm font-bold text-slate-900">Diagnostik Sistem</h2>
             <p className="text-[11px] text-slate-500">Pemeriksaan koneksi layanan cloud.</p>
@@ -278,7 +297,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Quick Stats */}
-        <div className="my-3.5 grid grid-cols-3 gap-2.5">
+        <div className="my-3.5 grid grid-cols-3 gap-2.5 shrink-0">
           <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
             <div className="text-[10px] font-medium text-slate-500">Status</div>
             <div className="text-xs font-bold text-slate-900 mt-0.5">
@@ -312,7 +331,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Trigger Button */}
-        <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-brand text-white mb-3">
+        <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-brand text-white mb-3 shrink-0">
           <span className="text-xs text-slate-300">
             {isRunning
               ? 'Memeriksa koneksi layanan...'
@@ -340,7 +359,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* 4 Cards */}
-        <div className="flex-1 overflow-y-auto space-y-2 pr-0.5">
+        <div className="flex-1 modal-scroll space-y-2 pr-0.5">
           {items.map((item) => (
             <div
               key={item.id}

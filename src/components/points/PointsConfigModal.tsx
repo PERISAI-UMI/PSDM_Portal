@@ -37,6 +37,17 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
     }
   }, [isOpen]);
 
+  // Kunci scroll body saat modal terbuka untuk mencegah double-scrolling / background lag
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   // Listener tombol Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -96,15 +107,20 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 animate-in fade-in duration-200"
-      onClick={(e) => {
-        if (e.target === e.currentTarget && !submitting) onClose();
-      }}
-    >
-      <div className="bg-surface w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200/90 max-h-[92vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150">
+      {/* Backdrop layer terpisah dengan akselerasi GPU */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity transform-gpu"
+        onClick={() => {
+          if (!submitting) onClose();
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Modal Container: Diisolasi total dari backdrop filter */}
+      <div className="relative z-10 bg-surface w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200/90 max-h-[92vh] flex flex-col overflow-hidden isolate transform-gpu animate-in zoom-in-95 duration-150">
         {/* Header Modal */}
-        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/60">
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/60 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-accent text-ink flex items-center justify-center font-bold shadow-xs">
               <Award className="w-5 h-5 text-ink" />
@@ -134,7 +150,7 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
         </div>
 
         {/* Notifikasi Immutability Guardrail */}
-        <div className="mx-6 mt-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+        <div className="mx-6 mt-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 shrink-0">
           <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
           <div className="text-xs text-slate-700 leading-relaxed">
             <span className="font-bold text-slate-900">Catatan Keabadian Riwayat:</span> Perubahan bobot di sini hanya akan berlaku untuk pencatatan presensi berikutnya. Data dan perolehan poin yang telah tercatat di masa lalu tidak akan berubah.
@@ -142,7 +158,7 @@ export const PointsConfigModal: React.FC<PointsConfigModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-6 modal-scroll flex-1">
           {error && (
             <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-700 dark:text-rose-400 text-xs font-semibold">
               {error}

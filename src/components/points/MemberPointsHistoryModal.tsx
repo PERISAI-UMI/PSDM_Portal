@@ -11,6 +11,13 @@ interface MemberPointsHistoryModalProps {
   onClose: () => void;
 }
 
+// Caching Intl.DateTimeFormat agar tidak mengalokasi ulang modul Intl di setiap render item
+const idDateFormatter = new Intl.DateTimeFormat('id-ID', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
 export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> = ({
   userId,
   userName,
@@ -21,6 +28,17 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
   const [data, setData] = useState<MemberPointsHistoryData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Kunci scroll body saat modal terbuka untuk mencegah double-scrolling / background lag
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen && userId) {
@@ -59,37 +77,37 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
     switch (status) {
       case 'HADIR':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 shrink-0">
             <CheckCircle2 className="w-3 h-3 text-emerald-500" /> HADIR
           </span>
         );
       case 'TELAT':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 shrink-0">
             <Clock className="w-3 h-3 text-amber-500" /> TELAT
           </span>
         );
       case 'IZIN':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 shrink-0">
             IZIN
           </span>
         );
       case 'SAKIT':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 shrink-0">
             SAKIT
           </span>
         );
       case 'ALPHA':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20 shrink-0">
             <AlertCircle className="w-3 h-3 text-rose-500" /> ALPHA
           </span>
         );
       default:
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
             {status}
           </span>
         );
@@ -98,12 +116,8 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
 
   const formatDate = (dateVal: string | Date) => {
     try {
-      const d = new Date(dateVal);
-      return d.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
+      const d = typeof dateVal === 'string' ? new Date(dateVal) : dateVal;
+      return idDateFormatter.format(d);
     } catch {
       return '-';
     }
@@ -112,15 +126,18 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 animate-in fade-in duration-200"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="bg-surface w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200/90 max-h-[88vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150">
+      {/* Backdrop layer terpisah dengan akselerasi GPU agar tidak memicu repaint berulang saat scroll */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity transform-gpu"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Modal Card: Terisolasi (isolate) secara mandiri dari layer blur di belakangnya */}
+      <div className="relative z-10 bg-surface w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200/90 max-h-[88vh] flex flex-col overflow-hidden isolate transform-gpu animate-in zoom-in-95 duration-150">
         {/* Header Modal */}
-        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/60">
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/60 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-accent text-ink flex items-center justify-center font-bold shadow-xs">
               <Award className="w-5 h-5 text-ink" />
@@ -143,8 +160,8 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
           </button>
         </div>
 
-        {/* Content Body */}
-        <div className="p-6 overflow-y-auto flex-1">
+        {/* Content Body dengan smooth modal-scroll hardware acceleration */}
+        <div className="p-6 modal-scroll flex-1">
           {error && (
             <div className="p-3 mb-4 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-700 dark:text-rose-400 text-xs font-semibold">
               {error}
@@ -191,7 +208,7 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
                     {data.history.map((item) => (
                       <div
                         key={item.id}
-                        className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/60 transition-colors"
+                        className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/60 transition-colors [content-visibility:auto] [contain-intrinsic-size:auto_54px]"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
@@ -232,7 +249,7 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/60 flex justify-end">
+        <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/60 flex justify-end shrink-0">
           <button
             type="button"
             onClick={onClose}
@@ -245,4 +262,5 @@ export const MemberPointsHistoryModal: React.FC<MemberPointsHistoryModalProps> =
     </div>
   );
 };
+
 

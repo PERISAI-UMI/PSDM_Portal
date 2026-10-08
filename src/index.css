@@ -162,3 +162,30 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ── Hardware-Accelerated Smooth Scrolling Utilities ────────────── */
+.smooth-scroll,
+.modal-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  contain: paint;
+  transform: translateZ(0);
+}
+
+/* Ringan & GPU-composited scrollbar untuk menghilangkan stuttering di Windows */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 150, 165, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 150, 165, 0.45);
+}
+
