@@ -1353,7 +1353,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
 
           {/* Bagian B: Buku Besar Poin (Super Admin Points Log) */}
           {currentUser?.role === 'SUPER_ADMIN' && (
-            <div className="bg-surface rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-5">
+            <div className="bg-surface rounded-2xl border border-slate-200/80 p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
               {/* Header Buku Besar Poin & Tombol Aksi */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-4 border-b border-slate-200/80">
                 <div className="flex items-center gap-3">
@@ -1361,7 +1361,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     <BookMarked className="w-5 h-5 text-accent" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
                         Buku Besar Poin (Points Log)
                       </h2>
@@ -1380,7 +1380,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsPointsLogImportOpen(true)}
-                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-accent hover:bg-accent-600 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer min-h-[38px]"
                     title="Import data mutasi poin dari berkas .xlsx, .xls, atau .csv"
                   >
                     <Upload className="w-3.5 h-3.5 shrink-0" />
@@ -1391,7 +1391,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                     type="button"
                     onClick={handleExportPointsLog}
                     disabled={filteredPointsLog.length === 0}
-                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer disabled:opacity-50"
+                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer disabled:opacity-50 min-h-[38px]"
                     title="Download data buku besar poin ke format Excel (.xlsx)"
                   >
                     <Download className="w-3.5 h-3.5 shrink-0" />
@@ -1401,10 +1401,10 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
               </div>
 
               {/* Filter Rentang Tanggal, Preset & Pencarian */}
-              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 p-3.5 bg-slate-50/70 rounded-xl border border-slate-200/80">
-                {/* Date Range Picker */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-600">
+              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 p-3 sm:p-3.5 bg-slate-50/70 rounded-xl border border-slate-200/80">
+                {/* Date Range Picker & Presets */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full lg:w-auto">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-600 shrink-0">
                     <Calendar className="w-4 h-4 text-slate-400 shrink-0" />
                     <span className="font-semibold text-slate-700">Rentang:</span>
                   </div>
@@ -1414,21 +1414,21 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                       type="date"
                       value={logStartDate}
                       onChange={(e) => setLogStartDate(e.target.value)}
-                      className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-1 focus:ring-brand font-mono"
+                      className="flex-1 sm:w-36 px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-1 focus:ring-brand font-mono min-w-0"
                       title="Tanggal Mulai"
                     />
-                    <span className="text-xs text-slate-400 font-medium">s/d</span>
+                    <span className="text-xs text-slate-400 font-medium shrink-0">s/d</span>
                     <input
                       type="date"
                       value={logEndDate}
                       onChange={(e) => setLogEndDate(e.target.value)}
-                      className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-1 focus:ring-brand font-mono"
+                      className="flex-1 sm:w-36 px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-surface text-slate-900 focus:outline-none focus:ring-1 focus:ring-brand font-mono min-w-0"
                       title="Tanggal Selesai"
                     />
                   </div>
 
                   {/* Preset Pills */}
-                  <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+                  <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 w-full sm:w-auto">
                     {[
                       { id: 'all', label: 'Semua' },
                       { id: 'this_month', label: 'Bulan Ini' },
@@ -1448,7 +1448,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                 </div>
 
                 {/* Filter Search & Jenis Mutasi */}
-                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
                   <div className="relative flex-1 sm:w-64">
                     <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
                     <input
@@ -1463,7 +1463,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   <select
                     value={logJenisFilter}
                     onChange={(e) => setLogJenisFilter(e.target.value as any)}
-                    className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full sm:w-auto px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-surface text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand"
                   >
                     <option value="ALL">Semua Jenis</option>
                     <option value="Reward">Reward (+)</option>
@@ -1473,106 +1473,169 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
               </div>
 
               {/* Ringkasan Metrik Cepat */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <span className="text-[11px] text-slate-500 font-medium block">Total Mutasi</span>
-                  <span className="text-lg font-bold text-slate-900 mt-0.5 block">{filteredPointsLog.length}</span>
+                  <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium block">Total Mutasi</span>
+                  <span className="text-base sm:text-lg font-bold text-slate-900 mt-0.5 block">{filteredPointsLog.length}</span>
                 </div>
                 <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/70">
-                  <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold block">Total Reward</span>
-                  <span className="text-lg font-bold text-emerald-800 dark:text-emerald-300 mt-0.5 block">
+                  <span className="text-[10px] sm:text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold block">Total Reward</span>
+                  <span className="text-base sm:text-lg font-bold text-emerald-800 dark:text-emerald-300 mt-0.5 block">
                     {filteredPointsLog.filter((r) => r.jenis === 'Reward').length} Mutasi
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-rose-50/60 border border-rose-200/70">
-                  <span className="text-[11px] text-rose-700 dark:text-rose-300 font-semibold block">Total Punishment</span>
-                  <span className="text-lg font-bold text-rose-800 dark:text-rose-300 mt-0.5 block">
+                  <span className="text-[10px] sm:text-[11px] text-rose-700 dark:text-rose-300 font-semibold block">Total Punishment</span>
+                  <span className="text-base sm:text-lg font-bold text-rose-800 dark:text-rose-300 mt-0.5 block">
                     {filteredPointsLog.filter((r) => r.jenis === 'Punishment').length} Mutasi
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <span className="text-[11px] text-slate-500 font-medium block">Total Poin Bersih</span>
-                  <span className="text-lg font-bold text-slate-900 mt-0.5 block font-mono">
+                  <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium block">Total Poin Bersih</span>
+                  <span className="text-base sm:text-lg font-bold text-slate-900 mt-0.5 block font-mono">
                     {filteredPointsLog.reduce((acc, r) => acc + (r.awardedPoints || (r.jenis === 'Reward' ? r.nominal : -r.nominal)), 0) > 0 ? '+' : ''}
                     {filteredPointsLog.reduce((acc, r) => acc + (r.awardedPoints || (r.jenis === 'Reward' ? r.nominal : -r.nominal)), 0)} Poin
                   </span>
                 </div>
               </div>
 
-              {/* Data Table: TANGGAL | NAMA | JENIS | NOMINAL | KETERANGAN */}
-              <div className="border border-slate-200/80 rounded-xl overflow-x-auto shadow-2xs">
-                <table className="w-full text-left text-xs min-w-[760px]">
-                  <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold">
-                    <tr>
-                      <th className="py-3 px-4 w-32 whitespace-nowrap">TANGGAL</th>
-                      <th className="py-3 px-4 min-w-[180px]">NAMA</th>
-                      <th className="py-3 px-4 w-36 whitespace-nowrap">JENIS</th>
-                      <th className="py-3 px-4 w-28 text-center whitespace-nowrap">NOMINAL</th>
-                      <th className="py-3 px-4 min-w-[260px]">KETERANGAN</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {loadingLog ? (
-                      <tr>
-                        <td colSpan={5} className="py-8 text-center text-slate-400">
-                          <div className="flex items-center justify-center gap-2">
-                            <RefreshCw className="w-4 h-4 animate-spin text-brand" />
-                            <span>Memuat data buku besar poin...</span>
+              {/* Data Container: Responsive Mobile Cards (< 768px) + Desktop/Tablet Table (>= 768px) */}
+              <div className="border border-slate-200/80 rounded-xl overflow-hidden shadow-2xs bg-surface">
+                {/* 1. Mobile Cards View (< 768px) */}
+                <div className="md:hidden divide-y divide-slate-100">
+                  {loadingLog ? (
+                    <div className="p-8 text-center text-slate-400">
+                      <div className="flex items-center justify-center gap-2">
+                        <RefreshCw className="w-4 h-4 animate-spin text-brand" />
+                        <span className="text-xs">Memuat data buku besar poin...</span>
+                      </div>
+                    </div>
+                  ) : filteredPointsLog.length === 0 ? (
+                    <div className="p-8 text-center text-xs text-slate-400">
+                      Tidak ada data buku besar poin yang sesuai dengan filter atau rentang tanggal.
+                    </div>
+                  ) : (
+                    filteredPointsLog.map((row) => (
+                      <div key={row.id} className="p-3.5 space-y-2 hover:bg-slate-50/60 transition-colors">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono">
+                            <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <span>{row.tanggal}</span>
                           </div>
-                        </td>
-                      </tr>
-                    ) : filteredPointsLog.length === 0 ? (
-                      <tr>
-                        <td colSpan={5} className="py-8 text-center text-slate-400">
-                          Tidak ada data buku besar poin yang sesuai dengan filter atau rentang tanggal.
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredPointsLog.map((row) => (
-                        <tr key={row.id} className="hover:bg-slate-50/70 transition-colors">
-                          <td className="py-3 px-4 font-mono font-medium text-slate-700 whitespace-nowrap">
-                            {row.tanggal}
-                          </td>
-                          <td className="py-3 px-4 font-semibold text-slate-900">
-                            <div className="flex items-center gap-2">
-                              <span>{row.nama}</span>
-                              {row.prn && (
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-normal">
-                                  {row.prn}
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="py-3 px-4 whitespace-nowrap">
+                          <div className="flex items-center gap-1.5">
                             {row.jenis === 'Reward' ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80">
                                 Reward
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200/80">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200/80">
                                 Punishment
                               </span>
                             )}
-                          </td>
-                          <td className="py-3 px-4 text-center whitespace-nowrap">
                             <span
-                              className={`font-mono font-bold text-xs px-2.5 py-0.5 rounded ${
+                              className={`font-mono font-bold text-xs px-2 py-0.5 rounded ${
                                 row.jenis === 'Reward'
                                   ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50/80 border border-emerald-200/60'
                                   : 'text-rose-700 dark:text-rose-300 bg-rose-50/80 border border-rose-200/60'
                               }`}
                             >
-                              {row.nominal}
+                              {row.jenis === 'Reward' ? `+${row.nominal}` : `-${row.nominal}`} Poin
                             </span>
-                          </td>
-                          <td className="py-3 px-4 text-slate-700 font-medium">
-                            {row.keterangan}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold text-xs sm:text-sm text-slate-900">{row.nama}</span>
+                          {row.prn && (
+                            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-normal">
+                              {row.prn}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="p-2 rounded-lg bg-slate-50/80 border border-slate-200/60 text-[11px] text-slate-700 font-medium leading-relaxed">
+                          {row.keterangan}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* 2. Desktop & Tablet Table View (>= 768px) */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-xs min-w-[760px]">
+                    <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold">
+                      <tr>
+                        <th className="py-3 px-4 w-32 whitespace-nowrap">TANGGAL</th>
+                        <th className="py-3 px-4 min-w-[180px]">NAMA</th>
+                        <th className="py-3 px-4 w-36 whitespace-nowrap">JENIS</th>
+                        <th className="py-3 px-4 w-28 text-center whitespace-nowrap">NOMINAL</th>
+                        <th className="py-3 px-4 min-w-[260px]">KETERANGAN</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {loadingLog ? (
+                        <tr>
+                          <td colSpan={5} className="py-8 text-center text-slate-400">
+                            <div className="flex items-center justify-center gap-2">
+                              <RefreshCw className="w-4 h-4 animate-spin text-brand" />
+                              <span>Memuat data buku besar poin...</span>
+                            </div>
                           </td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      ) : filteredPointsLog.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="py-8 text-center text-slate-400">
+                            Tidak ada data buku besar poin yang sesuai dengan filter atau rentang tanggal.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredPointsLog.map((row) => (
+                          <tr key={row.id} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-3 px-4 font-mono font-medium text-slate-700 whitespace-nowrap">
+                              {row.tanggal}
+                            </td>
+                            <td className="py-3 px-4 font-semibold text-slate-900">
+                              <div className="flex items-center gap-2">
+                                <span>{row.nama}</span>
+                                {row.prn && (
+                                  <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-normal">
+                                    {row.prn}
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 whitespace-nowrap">
+                              {row.jenis === 'Reward' ? (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80">
+                                  Reward
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200/80">
+                                  Punishment
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-3 px-4 text-center whitespace-nowrap">
+                              <span
+                                className={`font-mono font-bold text-xs px-2.5 py-0.5 rounded ${
+                                  row.jenis === 'Reward'
+                                    ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50/80 border border-emerald-200/60'
+                                    : 'text-rose-700 dark:text-rose-300 bg-rose-50/80 border border-rose-200/60'
+                                }`}
+                              >
+                                {row.nominal}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 text-slate-700 font-medium">
+                              {row.keterangan}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
