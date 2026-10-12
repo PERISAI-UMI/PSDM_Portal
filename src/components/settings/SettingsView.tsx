@@ -63,7 +63,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
     if (!silent) setIsCheckingStatus(true);
     try {
       const res: WaBotStatusResponse = await api.getBotStatus();
-      setBotStatus(res.status);
+      const rawStatus = ((res.status as unknown as string) || '').toUpperCase();
+      const isReadyOrConnected = ['READY', 'CONNECTED', 'OPEN'].includes(rawStatus);
+      const normalizedStatus: WaBotConnectionStatus = isReadyOrConnected
+        ? 'CONNECTED'
+        : res.status;
+      setBotStatus(normalizedStatus);
       setQrCodeData(res.qr || null);
       setStatusMessage(res.message || '');
       setLastCheckedAt(new Date());
@@ -130,6 +135,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
   // Helper badge warna status
   const renderStatusBadge = () => {
     switch (botStatus) {
+      case 'READY' as any:
       case 'CONNECTED':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80">

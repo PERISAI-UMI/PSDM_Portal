@@ -151,9 +151,17 @@ settingsRouter.get('/bot-status', async (c) => {
       });
     }
 
+    // Normalisasi status dari bot server ke nilai yang dikenal frontend
+    // Bot bisa mengembalikan 'READY', 'CONNECTED', atau nilai lain yang berarti siap
+    const rawStatus: string = data.status || (data.botReady ? 'CONNECTED' : 'DISCONNECTED');
+    const READY_ALIASES = ['READY', 'CONNECTED', 'OPEN'];
+    const normalizedStatus = READY_ALIASES.includes(rawStatus.toUpperCase())
+      ? 'CONNECTED'
+      : rawStatus;
+
     return c.json({
       success: true,
-      status: data.status || (data.botReady ? 'CONNECTED' : 'DISCONNECTED'),
+      status: normalizedStatus,
       qr: data.qr || null,
       message: 'Status bot berhasil diambil.',
     });
