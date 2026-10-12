@@ -77,6 +77,8 @@ async function runMigrateActivityCategories() {
     const defaultCategories = [
       {
         id: 'cat-eksternal-default',
+        nama: 'Lingkup Eksternal',
+        deskripsi: 'Kegiatan di luar lingkup internal organisasi (kolaborasi luar, delegasi, lomba, dll)',
         name: 'Lingkup Eksternal',
         description: 'Kegiatan di luar lingkup internal organisasi (kolaborasi luar, delegasi, lomba, dll)',
         hadirPoints: 5,
@@ -89,6 +91,8 @@ async function runMigrateActivityCategories() {
       },
       {
         id: 'cat-internal-default',
+        nama: 'Lingkup Internal',
+        deskripsi: 'Kegiatan rutin dan agenda internal pengurus PSDM (rapat pleno, evaluasi, dll)',
         name: 'Lingkup Internal',
         description: 'Kegiatan rutin dan agenda internal pengurus PSDM (rapat pleno, evaluasi, dll)',
         hadirPoints: 3,
@@ -101,6 +105,8 @@ async function runMigrateActivityCategories() {
       },
       {
         id: 'cat-kepanitiaan-default',
+        nama: 'Lingkup Kepanitiaan',
+        deskripsi: 'Kegiatan dalam kepanitiaan program kerja ad-hoc atau event organisasi',
         name: 'Lingkup Kepanitiaan',
         description: 'Kegiatan dalam kepanitiaan program kerja ad-hoc atau event organisasi',
         hadirPoints: 2,

@@ -633,7 +633,7 @@ pointsRouter.post(
         }
 
         // Cari atau buat kegiatan
-        let targetAct = allActivities.find(
+        let targetAct: any = allActivities.find(
           (a: any) => a.nama.trim().toLowerCase() === parsedActivityName.toLowerCase()
         );
 

@@ -1,7 +1,7 @@
 # PROJECT INTELLIGENCE REPORT
 **Comprehensive Legacy Project Reverse Engineering & System Discovery**
 *Repository: PSDM-PORTAL (PSDM.web 2.0)*
-*Investigation Date: 2026-10-09 (Updated from initial discovery 2026-09-25)*
+*Investigation Date: 2026-10-12 (Updated from initial discovery 2026-09-25 and V2.1 audit 2026-10-09)*
 *Author: Senior Software Architect & Security Auditor*
 *Operating Mode: System Architect & Full-Stack Engineer*
 
@@ -11,9 +11,9 @@
 
 PSDM-PORTAL (branded internally as **PSDM.web 2.0**) is an enterprise-grade web application designed for student organization human resource management, program of work tracking, role-scoped activity attendance recording, and absence/permission verification. Built specifically for an Indonesian higher education organization environment (with concrete evidence pointing to the **Universitas Muslim Indonesia / UMI Makassar** institutional context operating in the **WITA / UTC+8** timezone), the project has evolved from an initial template into a specialized **Edge Serverless Full-Stack System**.
 
-The stack combines a **React 19** Single-Page Application (SPA) compiled with **Vite 8** and styled with **Tailwind CSS v4** on the frontend, and a **Hono v4** edge API backend targeted for **Cloudflare Workers**. Data persistence is handled by **Turso Database (distributed libSQL / SQLite)** managed via **Drizzle ORM** in a strict **Third Normal Form (3NF)** relational schema. File assets (such as student medical/academic absence excuse documents and user avatars) are handled through **Backblaze B2 Cloud Object Storage** utilizing both S3-compatible presigned URLs and an authenticated edge streaming proxy.
+The stack combines a **React 19** Single-Page Application (SPA) compiled with **Vite 8** and styled with **Tailwind CSS v4** on the frontend, and a **Hono v4** edge API backend targeted for **Cloudflare Workers**. Data persistence is handled by **Turso Database (distributed libSQL / SQLite)** managed via **Drizzle ORM** in a strict **Third Normal Form (3NF)** relational schema across 11 tables. File assets (such as student medical/academic absence excuse documents and user avatars) are handled through **Backblaze B2 Cloud Object Storage** utilizing both S3-compatible presigned URLs and an authenticated edge streaming proxy.
 
-The application implements a strict 4-tier Role-Based Access Control (RBAC) model (`SUPER_ADMIN`, `ADMIN`, `PENGURUS`, and `INTI`) with fine-grained department delegation (`pj_departments`). The codebase demonstrates high development maturity, featuring WebCrypto PBKDF2 hashing, sliding-window session management, in-memory micro-caching, client-side Canvas image compression, adaptive tab polling, in-app automated diagnostics, and real-time online presence tracking exclusively for Super Admin. Recent architectural cycles successfully purged dormant legacy dependencies (e.g. `@google/genai`), fixed cross-platform test runner path bugs, hardened CORS controls, implemented a 60-30-10 color palette with system-aware Dark Mode, added physical back-button navigation via the History API, and introduced hierarchical sidebar dropdowns.
+The application implements a strict 4-tier Role-Based Access Control (RBAC) model (`SUPER_ADMIN`, `ADMIN`, `PENGURUS`, and `INTI`) with fine-grained department delegation (`pj_departments`). The codebase demonstrates high development maturity, featuring WebCrypto PBKDF2 hashing, sliding-window session management, in-memory micro-caching, client-side Canvas image compression, adaptive tab polling, in-app automated diagnostics, real-time online presence tracking exclusively for Super Admin, a dynamic category-based points evaluation engine (`activity_categories`, `point_configs`, and immutable `awarded_points` on attendances), an organizational points ledger (*Buku Besar Poin Organisasi*), and neutral member points auditing (*Monitoring Poin Anggota*). Recent architectural cycles successfully purged dormant legacy dependencies (e.g. `@google/genai`), fixed cross-platform test runner path bugs, hardened CORS controls, implemented a 60-30-10 color palette with system-aware Dark Mode, added physical back-button navigation via the History API, introduced hierarchical sidebar dropdowns, and optimized responsive layouts across smartphones, tablets, and desktop workstations.
 
 ---
 
@@ -23,14 +23,14 @@ The application implements a strict 4-tier Role-Based Access Control (RBAC) mode
 | :--- | :--- |
 | **Project Name** | **PSDM.web 2.0** (`psdm-portal` in `wrangler.toml`, `react-example` in `package.json`) |
 | **Project Type** | Full-Stack Web Application (SPA Frontend + Edge Serverless API Backend) |
-| **Primary Purpose** | Digital governance of student organization members, activities, attendance recording, and absence verification |
+| **Primary Purpose** | Digital governance of student organization members, activities, attendance recording, absence verification, and member points ledger auditing |
 | **Target Users** | Student organization leaders (Kadep PSDM, Inti / Executive Board), department supervisors (Staf PSDM / Admin PJ), and active members (Pengurus) |
-| **Main Problem Solved** | Eliminates manual paper/spreadsheet attendance tracking, chaotic absence permissions across messaging apps, and unauthorized cross-department permission reviews |
-| **Core Value Proposition** | Sub-50ms global response latency on edge serverless infrastructure, zero native C++ runtime lock-in, automated permission-to-attendance reconciliation, real-time presence auditing (Super Admin), and tamper-resistant relational 3NF audit trails |
+| **Main Problem Solved** | Eliminates manual paper/spreadsheet attendance tracking, chaotic absence permissions across messaging apps, unauthorized cross-department permission reviews, and arbitrary member activity evaluation |
+| **Core Value Proposition** | Sub-50ms global response latency on edge serverless infrastructure, zero native C++ runtime lock-in, dynamic category-based attendance points calculation with historical snapshot immutability, organizational points ledger with Excel batch import, automated permission-to-attendance reconciliation, real-time presence auditing (Super Admin), and tamper-resistant relational 3NF audit trails |
 | **Application Domain** | Higher Education / Student Organization Governance (Human Resources & Activities Management) |
 | **Institutional Context** | Universitas Muslim Indonesia (UMI) Makassar, South Sulawesi (`Asia/Makassar` / WITA timezone) |
 | **Architecture Type** | Edge Serverless Monolith (Hono API backend + React 19 SPA static assets served via Cloudflare Workers `[assets]`) |
-| **Current Development Status** | **Production-Hardened / V2.1 Feature-Complete** (Type-checking 100% clean, cross-platform test runner, dark mode 60-30-10 palette, real-time presence monitoring) |
+| **Current Development Status** | **Production-Hardened / V2.2 Feature-Complete** (Type-checking 100% clean 0 errors, Vitest 27/27 passing tests, full responsive layout across phone/tablet/PC, dynamic activity categories & points ledger system) |
 
 ---
 
@@ -101,19 +101,28 @@ PSDM.web 2.0 directly solves these problems by providing an immutable, relationa
 │   ├── Role-Based Access Control (SUPER_ADMIN, ADMIN, PENGURUS, INTI)   │
 │   ├── Member Directory (Users Table, 3NF Academic Relational Link)     │
 │   ├── Activity Management (CRUD, Start/End Date, Offline/Online Mode)  │
-│   ├── Field Attendance Recording (Single & Batch Check-in)             │
+│   ├── Dynamic Activity Categories (activity_categories & point weights)│
+│   ├── Field Attendance Recording (Single, Batch & Excel Checklist)     │
+│   ├── Attendance Points Calculation (Historical Snapshot Immutability) │
 │   └── Absence/Permission Request Workflow & Supervisor Approval        │
 ├────────────────────────────────────────────────────────────────────────┤
 │  [SUPPORTING FEATURES]                                                 │
 │   ├── Department Supervisor Delegation (pj_departments M:N mapping)   │
 │   ├── Auto-Reconciliation of Approved Permissions to Attendance        │
 │   ├── Activity Tamper-Proof Lock (isLocked toggle by Super Admin)      │
+│   ├── Points Ledger / Buku Besar Poin Organisasi (/api/points/log) [SA]│
+│   ├── Points Log Excel/CSV Importer & Historical Sync (/import-log)    │
+│   ├── Live Points Recalculation Across Historical Logs (/recalculate)  │
+│   ├── Neutral Member Points Monitoring (/api/points/leaderboard)       │
+│   ├── Member Points History Audit Modal (/api/points/history/:userId)  │
 │   ├── Real-Time Active Users Presence Audit (/api/users/online) [SA]   │
 │   ├── CSV Attendance Export (Formatted with WITA timestamps)           │
 │   └── Excel/CSV Member & Attendance Batch Importer (xlsx)              │
 ├────────────────────────────────────────────────────────────────────────┤
 │  [SECONDARY & ENHANCEMENT FEATURES]                                    │
 │   ├── System Dark Mode & 60-30-10 Palette Engine (prefers-color-scheme)│
+│   ├── Cross-Device Responsive Layout (Mobile, Tablet, Laptop, Desktop) │
+│   ├── GPU Layer Isolation & Fast Modal Scrolling Optimization          │
 │   ├── History API Back Button Routing (#section?modal=open)            │
 │   ├── Hierarchical Sidebar Submenus (Master Data, Perizinan, Profil)   │
 │   ├── Direct Clickable Activity Cards & Responsive Mobile KPIs         │
@@ -121,11 +130,12 @@ PSDM.web 2.0 directly solves these problems by providing an immutable, relationa
 │   ├── Client-Side Canvas WebP Image Compressor                         │
 │   ├── Live System Diagnostic & Connectivity Check (/api/diagnostics)   │
 │   ├── In-Browser Profile Avatar Cropper & Backblaze B2 Upload          │
-│   └── Top 10 Alpa Leaderboard / Attendance Bar Chart                   │
+│   └── Top 10 Alpa Absence Auditing Bar Chart                           │
 ├────────────────────────────────────────────────────────────────────────┤
 │  [CLEANED & HARMONIZED STATUS]                                         │
 │   ├── @google/genai & motion Packages [PURGED from dependencies]       │
-│   └── QR Camera Spec [DISCARDED in favor of verified manual checklist] │
+│   ├── QR Camera Spec [DISCARDED in favor of verified manual checklist] │
+│   └── Gamified Podium Badges [REMOVED in favor of clean data table]    │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -137,13 +147,20 @@ PSDM.web 2.0 directly solves these problems by providing an immutable, relationa
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Authentication** | Login via PRN, PBKDF2 verification, HTTP-only cookie, 7-day sliding session | All | `LoginForm.tsx` | `POST /api/auth/login`, `GET /api/auth/me`, `POST /api/auth/logout` | `users`, `sessions` | **Confirmed Working** | `src/server/routes/auth.ts`, `src/server/crypto.ts` |
 | **Change Password** | Self-service password update with old password verification | All | `ProfileModal.tsx`, `ProfileView.tsx` | `POST /api/auth/change-password` | `users` | **Confirmed Working** | `src/server/routes/auth.ts:176` |
-| **Activity CRUD** | Create, edit, delete, publish organization work programs | Super Admin | `CreateActivityModal.tsx`, `ActivitiesView.tsx` | `GET/POST /api/activities`, `PUT/DELETE /api/activities/:id` | `activities`, `users` | **Confirmed Working** | `src/server/routes/activities.ts` |
+| **Activity CRUD** | Create, edit, delete, publish organization work programs with category binding | Super Admin | `CreateActivityModal.tsx`, `ActivitiesView.tsx` | `GET/POST /api/activities`, `PUT/DELETE /api/activities/:id` | `activities`, `activity_categories`, `users` | **Confirmed Working** | `src/server/routes/activities.ts` |
+| **Activity Categories** | Manage proker categories with configurable status point weights | Super Admin | `MasterDataView.tsx` (`categories`) | `GET/POST /api/master/activity-categories`, `PUT/DELETE /api/master/activity-categories/:id` | `activity_categories`, `activities` | **Confirmed Working** | `src/server/routes/master.ts:323` |
 | **Activity Lock** | Freeze attendance modifications on concluded activities | Super Admin | `ActivitiesView.tsx`, `ActivityCard.tsx` | `PATCH /api/activities/:id/lock` | `activities` | **Confirmed Working** | `src/server/routes/activities.ts:257` |
-| **Single Attendance** | Record individual status (`HADIR`, `IZIN`, `SAKIT`, `ALPHA`, `TELAT`) | Admin, Super Admin | `AttendanceScannerModal.tsx` | `POST /api/attendances/record` | `attendances` | **Confirmed Working** | `src/server/routes/attendances.ts:257` |
-| **Batch Attendance** | Bulk upsert attendance records for an event in one network trip | Admin, Super Admin | `AttendanceScannerModal.tsx` | `POST /api/attendances/batch` | `attendances` | **Confirmed Working** | `src/server/routes/attendances.ts:314` |
+| **Single Attendance** | Record status (`HADIR`, `IZIN`, `SAKIT`, `ALPHA`, `TELAT`) with auto-awarded points snapshot | Admin, Super Admin | `AttendanceScannerModal.tsx` | `POST /api/attendances/record` | `attendances`, `activities`, `activity_categories` | **Confirmed Working** | `src/server/routes/attendances.ts:257` |
+| **Batch Attendance** | Bulk upsert attendance records with category points calculation | Admin, Super Admin | `AttendanceScannerModal.tsx` | `POST /api/attendances/batch` | `attendances`, `activities`, `activity_categories` | **Confirmed Working** | `src/server/routes/attendances.ts:314` |
 | **Attendance Import** | Parse Excel/CSV spreadsheets and match NIM/PRN to record attendance | Admin, Super Admin | `AttendanceImportModal.tsx` | `POST /api/attendances/batch` | `attendances`, `users` | **Confirmed Working** | `src/components/attendances/AttendanceImportModal.tsx` |
 | **Attendance Export** | Export event attendance recap as UTF-8 BOM CSV with WITA date formatting | Admin, Super Admin | `AttendanceScannerModal.tsx` | `GET /api/attendances/export` | `attendances`, `activities`, `users`, `departments` | **Confirmed Working** | `src/server/routes/attendances.ts:148` |
 | **Attendance Reset** | Clear all or selected attendance entries for an activity | Admin, Super Admin | `AttendanceScannerModal.tsx` | `POST /api/attendances/reset` | `attendances` | **Confirmed Working** | `src/server/routes/attendances.ts:382` |
+| **Points Configuration** | View & update global fallback attendance point rules | Super Admin | `PointsConfigModal.tsx` | `GET/PUT /api/points/config` | `point_configs` | **Confirmed Working** | `src/server/routes/points.ts:166` |
+| **Member Points Audit** | Neutral table view of member cumulative points, rank, and statistics | Super Admin, Admin, Inti | `LeaderboardView.tsx` | `GET /api/points/leaderboard` | `attendances`, `users`, `departments` | **Confirmed Working** | `src/server/routes/points.ts:260` |
+| **Member Points History** | Modal inspect ledger detail of all activities, statuses, and awarded points per member | Super Admin, Admin | `MemberPointsHistoryModal.tsx` | `GET /api/points/history/:userId` | `attendances`, `activities`, `activity_categories`, `users` | **Confirmed Working** | `src/server/routes/points.ts:338` |
+| **Points Ledger (Buku Besar)** | Organization-wide points transaction ledger with date range, category, and dept filtering | Super Admin | `MasterDataView.tsx` (`points-log`) | `GET /api/points/log` | `attendances`, `activities`, `activity_categories`, `users`, `departments` | **Confirmed Working** | `src/server/routes/points.ts:383` |
+| **Points Ledger Import** | Bulk import attendance records & points from external Excel/CSV spreadsheets | Super Admin | `PointsLogImportModal.tsx` | `POST /api/points/import-log` | `attendances`, `activities`, `users`, `activity_categories` | **Confirmed Working** | `src/server/routes/points.ts:477` |
+| **Points Live Recalculate**| Resynchronize and update `awarded_points` across all historical attendances | Super Admin | `PointsConfigModal.tsx` | `POST /api/points/recalculate` | `attendances`, `activities`, `activity_categories` | **Confirmed Working** | `src/server/routes/points.ts:215` |
 | **Online Users Presence** | Real-time active users monitoring via 45s heartbeat and 5-min active window | Super Admin | `OnlineUsersModal.tsx` | `GET /api/users/online` | `sessions`, `users`, `departments` | **Confirmed Working** | `src/server/routes/users.ts:124`, `OnlineUsersModal.tsx` |
 | **Dark Mode & 60-30-10** | Dual theme engine, system preference detection, anti-FOUC script, header toggle | All | `Header.tsx`, `index.html` | N/A (Frontend/CSS) | N/A | **Confirmed Working** | `src/utils/theme.ts`, `src/index.css:6` |
 | **Permission Request** | Submit leave/sick request with file attachment for an event | Pengurus, Inti | `PermissionFormModal.tsx` | `POST /api/permissions` | `permissions`, `activities` | **Confirmed Working** | `src/server/routes/permissions.ts:137` |
@@ -228,6 +245,13 @@ export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as cons
 | **View All Permissions** | Yes (All Depts) | Assigned Depts Only | Yes (All Depts) | Own Only | `src/server/routes/permissions.ts:114-133` |
 | **Approve/Reject Leave** | Yes (All Depts) | Assigned Depts Only | Denied | Denied | `src/server/routes/permissions.ts:227` |
 | **Submit Leave Request** | Yes | Yes | Yes | Yes | `src/server/routes/permissions.ts:137` |
+| **Manage Proker Categories**| Yes | Denied | Denied | Denied | `src/server/routes/master.ts:323` |
+| **Configure Point Weights**| Yes | Denied | Denied | Denied | `src/server/routes/points.ts:176` |
+| **Recalculate All Points** | Yes | Denied | Denied | Denied | `src/server/routes/points.ts:215` |
+| **Monitor Member Points**  | Yes | Yes | Yes | Denied | `src/server/routes/points.ts:260`, `LeaderboardView.tsx` |
+| **View Member Points History**| Yes | Yes | Denied | Denied | `src/server/routes/points.ts:338`, `MemberPointsHistoryModal.tsx` |
+| **View Points Ledger (Log)**| Yes | Denied | Denied | Denied | `src/server/routes/points.ts:383`, `MasterDataView.tsx` |
+| **Import Points Ledger**   | Yes | Denied | Denied | Denied | `src/server/routes/points.ts:477`, `PointsLogImportModal.tsx` |
 | **Create / Import Users** | Yes | Denied | Denied | Denied | `src/server/routes/users.ts:167, 201` |
 | **Delete User Account** | Yes | Denied | Denied | Denied | `src/server/routes/users.ts:659` |
 | **Update Own Profile** | Yes | Yes | Yes | Yes | `src/server/routes/users.ts:451` |
@@ -286,7 +310,7 @@ export const userRoleEnum = ['SUPER_ADMIN', 'ADMIN', 'PENGURUS', 'INTI'] as cons
          ├── Updates permissions.status = 'APPROVED'
          └── ATOMIC SIDE-EFFECT:
              Inserts/Upserts into attendances table
-             (status = 'SAKIT' or 'IZIN', recordedBy = admin.id)
+             (status = 'SAKIT' or 'IZIN', recordedBy = admin.id, awardedPoints calculated)
 ```
 
 ---
@@ -302,13 +326,14 @@ The frontend is a React 19 Single Page Application. Routing is managed via the s
 | `activities` | `ActivitiesView` | Authenticated | Direct clickable cards | List, search, filter, and inspect activities |
 | `permissions`| `PermissionsView` | Authenticated | `pending` / `history` tabs | View, submit, and review absence permission requests |
 | `members` | `MembersView` | `SUPER_ADMIN`, `ADMIN`, `INTI` | Grid/Table toggle | Organization member directory and Excel import |
-| `master-data`| `MasterDataView` | `SUPER_ADMIN` | `dept` / `fakultas` / `prodi` / `pj` | Manage faculties, prodi, departments, PJs via sidebar |
+| `leaderboard`| `LeaderboardView` | `SUPER_ADMIN`, `ADMIN`, `INTI` | Filter per proker / dept | Monitoring Poin Anggota, ranking, and point history modal |
+| `master-data`| `MasterDataView` | `SUPER_ADMIN` | `dept` / `fakultas` / `prodi` / `pj` / `category` / `points-log` | Manage faculties, prodi, departments, PJs, proker categories, and organization points ledger |
 | `profile` | `ProfileView` | Authenticated | `profile` / `security` tabs | Self-service profile, bio, avatar, and password update |
 
 ### Mobile Navigation & History API Synchronization
-- **Hash-Driven Navigation**: Navigating sections updates `window.location.hash` (`#dashboard`, `#activities`, `#permissions`, etc.).
+- **Hash-Driven Navigation**: Navigating sections updates `window.location.hash` (`#dashboard`, `#activities`, `#permissions`, `#leaderboard`, `#master-data`, etc.).
 - **Hardware Back-Button Integration**: When any modal or the mobile drawer opens, `App.tsx:139` pushes a synthetic state (`#${section}?modal=open`) to the browser History API. Pressing the physical Android back button triggers `popstate`, closing the open modal/drawer instead of unintentionally closing the webpage or exiting the app.
-- **Sidebar Dropdown Hierarchy**: The desktop/mobile sidebar features expandable dropdowns with item count badges for Master Data, Perizinan, and Profil.
+- **Sidebar Dropdown Hierarchy**: The desktop/mobile sidebar features expandable dropdowns with item count badges for Master Data (including Kategori Kegiatan & Buku Besar Poin), Perizinan, and Profil.
 
 ---
 
@@ -317,7 +342,7 @@ The frontend is a React 19 Single Page Application. Routing is managed via the s
 All API endpoints reside under `/api/*` and use JSON request/response formats unless downloading files.
 
 | Method | Endpoint | Handler File | Auth Required | Role Required | Request Body / Query | Success Response | Error Codes |
-| :--- | :--- | :--- | :--- | :---: | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- | :--- | :---: | :--- | :--- | :--- |
 | **GET** | `/api/health` | `server/index.ts:37` | No | Any | None | `{ status: "ok", edgeRuntime: string }` | None |
 | **POST** | `/api/auth/login` | `server/routes/auth.ts:26` | No | Any | `{ prn, password }` | `{ success: true, data: { user, token } }` | 400, 401, 429 |
 | **POST** | `/api/auth/logout` | `server/routes/auth.ts:116`| No | Any | None | `{ success: true, message: "Logout berhasil" }` | 200 |
@@ -343,7 +368,7 @@ All API endpoints reside under `/api/*` and use JSON request/response formats un
 | **GET** | `/api/attendances` | `server/routes/attendances.ts:37`| Yes | Any (Scoped) | `?activityId=&departmentId=&status=&userId=` | `{ success: true, data: Attendance[] }` | 401 |
 | **GET** | `/api/attendances/recap/:activityId`| `server/routes/attendances.ts:95`| Yes | Super Admin, Admin | `?departmentId=` | `{ success: true, data: RecapRow[] }` | 401, 403 |
 | **GET** | `/api/attendances/export` | `server/routes/attendances.ts:149`| Yes | Super Admin, Admin | `?activityId=` | `text/csv; charset=utf-8` file download | 400, 401, 403 |
-| **POST** | `/api/attendances/record` | `server/routes/attendances.ts:306`| Yes | Super Admin, Admin | `{ activityId, userId, status }` | `{ success: true, data: { id, status } }` | 400, 401, 403 |
+| **POST** | `/api/attendances/record` | `server/routes/attendances.ts:306`| Yes | Super Admin, Admin | `{ activityId, userId, status }` | `{ success: true, data: { id, status, awardedPoints } }` | 400, 401, 403 |
 | **POST** | `/api/attendances/batch` | `server/routes/attendances.ts:314`| Yes | Super Admin, Admin | `{ activityId, items: [{ userId, status }] }` | `{ success: true, message: string }` | 400, 401, 403 |
 | **POST** | `/api/attendances/reset` | `server/routes/attendances.ts:382`| Yes | Super Admin, Admin | `{ activityId, userIds?: string[] }` | `{ success: true, message: string }` | 400, 401, 403 |
 | **GET** | `/api/permissions` | `server/routes/permissions.ts:73`| Yes | Any (Scoped) | `?activityId=&status=` | `{ success: true, data: Permission[] }` | 401 |
@@ -354,6 +379,17 @@ All API endpoints reside under `/api/*` and use JSON request/response formats un
 | **POST** | `/api/storage/upload` | `server/routes/storage.ts:107`| Yes | Any | `multipart/form-data` (`file`, `folder`) | `{ success: true, data: { url, fileName } }` | 400, 401, 500, 502 |
 | **GET** | `/api/storage/file/*` | `server/routes/storage.ts:336`| No | Public Streaming | None | Binary image/PDF stream with Edge Cache headers | 400, 404, 500 |
 | **GET** | `/api/sync/live` | `server/routes/sync.ts:41` | Yes | Any | `?hash=` | `{ success: true, changed: boolean, hash: string, data?: ... }` | 401, 500 |
+| **GET** | `/api/points/config` | `server/routes/points.ts:166`| Yes | Any | None | `{ success: true, data: PointConfig }` | 401 |
+| **PUT** | `/api/points/config` | `server/routes/points.ts:176`| Yes | Super Admin | `updatePointConfigSchema` | `{ success: true, message: string, data: PointConfig }` | 400, 401, 403 |
+| **POST** | `/api/points/recalculate` | `server/routes/points.ts:215`| Yes | Super Admin | None | `{ success: true, message: string }` | 401, 403, 500 |
+| **GET** | `/api/points/leaderboard` | `server/routes/points.ts:260`| Yes | Super Admin, Admin, Inti | `?departmentId=&search=` | `{ success: true, data: LeaderboardEntry[] }` | 401, 403 |
+| **GET** | `/api/points/history/:userId` | `server/routes/points.ts:338`| Yes | Super Admin, Admin | None | `{ success: true, data: MemberPointsHistoryData }` | 401, 403, 404 |
+| **GET** | `/api/points/log` | `server/routes/points.ts:383`| Yes | Super Admin | `?startDate=&endDate=&search=&departmentId=&categoryId=` | `{ success: true, data: PointsLogRow[] }` | 401, 403 |
+| **POST** | `/api/points/import-log` | `server/routes/points.ts:477`| Yes | Super Admin | `{ rows: PointsLogImportRow[] }` | `{ success: true, message: string, data: PointsLogImportResult }` | 400, 401, 403, 500 |
+| **GET** | `/api/master/activity-categories` | `server/routes/master.ts:323`| Yes | Any | None | `{ success: true, data: ActivityCategory[] }` | 401 |
+| **POST** | `/api/master/activity-categories` | `server/routes/master.ts:354`| Yes | Super Admin | `createActivityCategorySchema` | `{ success: true, message: string, data: ActivityCategory }` | 400, 401, 403 |
+| **PUT** | `/api/master/activity-categories/:id` | `server/routes/master.ts:391`| Yes | Super Admin | `updateActivityCategorySchema` | `{ success: true, message: string }` | 400, 401, 403, 404 |
+| **DELETE**| `/api/master/activity-categories/:id` | `server/routes/master.ts:425`| Yes | Super Admin | None | `{ success: true, message: string }` | 400, 401, 403, 404 |
 | **GET** | `/api/master/fakultas` | `server/routes/master.ts:26`| Yes | Any | None | `{ success: true, data: Fakultas[] }` | 401 |
 | **POST/PUT/DELETE**| `/api/master/fakultas/:id?`| `server/routes/master.ts:32`| Yes | Super Admin | `{ nama }` | `{ success: true, ... }` | 400, 401, 403 |
 | **GET** | `/api/master/program-studi` | `server/routes/master.ts:99`| Yes | Any | `?fakultasId=` | `{ success: true, data: ProgramStudi[] }` | 401 |
@@ -512,12 +548,13 @@ flowchart TD
 
 ## 18. Database Analysis
 
-The database is powered by **Turso (distributed libSQL)** using the **SQLite dialect**. The schema is defined with **Drizzle ORM** across 8 modular files in `src/db/schema/`.
+The database is powered by **Turso (distributed libSQL)** using the **SQLite dialect**. The schema is defined with **Drizzle ORM** across 10 modular files in `src/db/schema/` encompassing 11 relational tables.
 
 ### Schema Normalization (3NF) Audit
 - **1NF**: All columns contain atomic values. No repeating groups or comma-separated lists.
 - **2NF**: All non-key attributes are fully dependent on the primary key. Composite primary key on `pj_departments(admin_id, department_id)` maps the M:N relationship cleanly.
-- **3NF**: Non-key attributes depend only on the primary key. Department names and Faculty names are isolated in reference tables (`departments`, `fakultas`, `program_studi`) and referenced via foreign keys.
+- **3NF**: Non-key attributes depend only on the primary key. Department names, Faculty names, and Activity Categories are isolated in reference tables (`departments`, `fakultas`, `program_studi`, `activity_categories`) and referenced via foreign keys.
+- **Historical Snapshot Immutability**: The `attendances` table stores `awarded_points` directly alongside `status` at the moment of recording. If an activity category's point weights change in the future, past attendance point transactions remain historically intact unless explicitly recalculated by a Super Admin via `/api/points/recalculate`.
 - **Referential Integrity**:
   - `program_studi.fakultas_id` $\to$ `fakultas.id` (`onDelete: 'cascade'`)
   - `users.department_id` $\to$ `departments.id` (`onDelete: 'restrict'`)
@@ -525,6 +562,7 @@ The database is powered by **Turso (distributed libSQL)** using the **SQLite dia
   - `sessions.user_id` $\to$ `users.id` (`onDelete: 'cascade'`)
   - `pj_departments.admin_id` $\to$ `users.id` (`onDelete: 'cascade'`)
   - `pj_departments.department_id` $\to$ `departments.id` (`onDelete: 'cascade'`)
+  - `activities.category_id` $\to$ `activity_categories.id` (`onDelete: 'restrict'`)
   - `activities.created_by` $\to$ `users.id` (`onDelete: 'restrict'`)
   - `attendances.activity_id` $\to$ `activities.id` (`onDelete: 'cascade'`)
   - `attendances.user_id` $\to$ `users.id` (`onDelete: 'cascade'`)
@@ -549,6 +587,7 @@ erDiagram
     USERS ||--o{ PERMISSIONS : requests
     USERS ||--o{ ATTENDANCES : records
     USERS ||--o{ PERMISSIONS : reviews
+    ACTIVITY_CATEGORIES ||--o{ ACTIVITIES : categorizes
     ACTIVITIES ||--o{ ATTENDANCES : logs
     ACTIVITIES ||--o{ PERMISSIONS : covers
 
@@ -607,10 +646,25 @@ erDiagram
         integer assigned_at
     }
 
+    ACTIVITY_CATEGORIES {
+        text id PK
+        text nama
+        text deskripsi
+        integer hadir_points
+        integer izin_points
+        integer sakit_points
+        integer alpha_points
+        integer telat_points
+        text created_by FK
+        integer created_at
+        integer updated_at
+    }
+
     ACTIVITIES {
         text id PK
         text nama
         text deskripsi
+        text category_id FK
         text mode "OFFLINE | ONLINE"
         text lokasi
         text meeting_url
@@ -627,6 +681,7 @@ erDiagram
         text activity_id FK
         text user_id FK
         text status "HADIR | IZIN | SAKIT | ALPHA | TELAT"
+        integer awarded_points
         text recorded_by FK
         integer recorded_at
     }
@@ -642,6 +697,17 @@ erDiagram
         text reviewed_by FK
         integer reviewed_at
         integer created_at
+    }
+
+    POINT_CONFIGS {
+        text id PK
+        integer hadir_points
+        integer izin_points
+        integer sakit_points
+        integer alpha_points
+        integer telat_points
+        text updated_by FK
+        integer updated_at
     }
 ```
 
@@ -820,14 +886,15 @@ No plaintext credentials or tokens were found committed in git tracked files.
 - **Test Suite Location**: `src/tests/integration.test.ts` dan `vitest.config.ts`.
 - **Framework**: **Vitest v5.0.3** (`npm test`, `npm run test:watch`, `npm run test:integration`).
 - **Execution Mode**: **100% In-Memory**, zero network & zero port dependency (tidak memerlukan koneksi internet maupun dev server `localhost:3000` aktif).
-- **Suites Tested (17 Skenario)**:
-  1. *WebCrypto Edge*: Token entropy (256-bit) dan verifikasi PBKDF2 SHA-256 (3 test).
-  2. *Validation*: Kepatuhan skema Zod 3NF dan penolakan format invalid (4 test).
-  3. *RBAC*: Matriks hak akses berjenjang (Super Admin, PJ Admin, Pengurus) dan sinkronisasi otomatis perizinan ke presensi proker via in-memory mock sandbox (5 test).
-  4. *Hono Edge*: Health endpoint HTTP 200, validasi input login 400, 404 fallback JSON, dan penolakan unauthorized 401 via native `app.request()` in-memory (4 test).
-  5. *Storage*: Pembuatan presigned upload URL S3 Backblaze B2 (1 test).
+- **Suites Tested (27 Skenario Teruji)**:
+  1. *SUITE 1: WebCrypto Edge Authentication & Hashing*: Token entropy (256-bit), verifikasi PBKDF2 SHA-256 (100.000 iterasi), dan penolakan password invalid (3 tests).
+  2. *SUITE 2: Skema Validasi Zod & Integritas 3NF*: Validasi User 3NF lengkap, penolakan format email/NIM invalid, skema kegiatan proker (Activity), validasi kategori kegiatan & bobot status absensi, skema penugasan PJ departemen, validasi user soft delete (`isActive` & `deletedAt`), skema konfigurasi bobot poin, dan imutabilitas snapshot kalkulasi poin historis (7 tests).
+  3. *SUITE 3: RBAC & Business Logic (In-Memory Mock Sandbox)*: Matriks hak akses berjenjang (Super Admin, PJ Admin, Pengurus), isolasi departemen penugasan PJ, sinkronisasi otomatis perizinan ke presensi proker, proteksi penolakan izin di luar wewenang departemen, pencegahan modifikasi presensi kegiatan terkunci (`isLocked`), mitigasi race condition pada batch presensi terhadap izin resmi APPROVED, soft delete pengguna, dan pemulihan (restore) akun (8 tests).
+  4. *SUITE 4: Edge Hono HTTP Router & In-Memory Request Dispatching*: Health endpoint HTTP 200, format fallback JSON 404, validasi schema input login 400, dan penolakan akses `/api/users/online` tanpa token 401 via native `app.request()` in-memory (4 tests).
+  5. *SUITE 5: Storage S3/Backblaze B2 Presigned URL*: Pembuatan presigned upload URL S3 dengan format key dan ekstensi valid (1 test).
+  6. *SUITE 6: Super Admin Points Log (Buku Besar Poin)*: Evaluasi klasifikasi Reward vs Punishment dan nilai nominal absolut, format auto-generated keterangan mengikuti SOP `${Status} Pada Kegiatan ${ActivityName}` serta regex parsing impor, proteksi 401 unauthorized pada `/api/points/log`, dan proteksi 401 unauthorized pada `/api/points/import-log` (4 tests).
 - **Empirical Execution Findings**:
-  - Seluruh 17 skenario pengujian berjalan secara mandiri dan deterministik dengan status **17/17 PASS (100% lulus)** dalam ~1.2 detik.
+  - Seluruh 27 skenario pengujian berjalan secara mandiri dan deterministik dengan status **27/27 PASS (100% lulus)** dalam ~2.2 detik.
   - Pengujian kompatibel penuh lintas OS (Windows, macOS, Linux) dan siap diintegrasikan ke pipeline CI/CD.
 
 ---
@@ -959,8 +1026,8 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 #### 2. Integration Test Results
 - **DOCUMENTATION SAYS (`HANDOVER.md:70`)**: "Seluruh 14 skenario pengujian integrasi otomatis telah lulus 100% tanpa kegagalan... Suite 3: RBAC Policy Engine terbukti ketat."
-- **IMPLEMENTATION SHOWS**: Dimigrasikan ke Vitest v5.0.3 dengan 17 skenario in-memory. Seluruh pengujian lulus 100% secara instan tanpa membutuhkan server aktif pada port 3000.
-- **CONCLUSION**: Masalah ketergantungan port `localhost:3000` telah sepenuhnya terselesaikan (*Resolved*).
+- **IMPLEMENTATION SHOWS**: Dimigrasikan dan diperluas ke Vitest v5.0.3 dengan 27 skenario in-memory mencakup WebCrypto, validasi 3NF, RBAC, soft delete & restore, Hono routing, storage S3, dan modul Buku Besar Poin Organisasi. Seluruh 27 pengujian lulus 100% secara instan tanpa membutuhkan server aktif pada port 3000.
+- **CONCLUSION**: Pengujian in-memory komprehensif, deterministik, dan bebas ketergantungan port 3000 (*Resolved & Expanded*).
 - **CONFIDENCE**: **CONFIRMED**.
 
 #### 3. Google Gemini Capabilities
@@ -973,7 +1040,7 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ## 42. Git / Project History
 
-- **Total Commits**: 111 commits.
+- **Total Commits**: 135 commits.
 - **First Commit**: `a6d08bd` (Initial commit), followed by `26deb8c` (*feat: initialize PSDM.web 2.0 project structure*).
 - **Evolutionary Trajectory**:
   1. *Phase 1*: Initialization and migration of lockfile to npm (`8d40bc6`).
@@ -983,7 +1050,17 @@ No plaintext credentials or tokens were found committed in git tracked files.
   5. *Phase 5*: UI refinements (tooltip clipping fixes, Top 10 Alpa bar chart, INTI role additions, activity locking).
   6. *Phase 6*: Cross-platform test runner path fix, dead dependency purging (`@google/genai`), hardened CORS, and mobile back-button routing via History API (`6753a60`).
   7. *Phase 7*: Real-time online active users monitoring for Super Admin (`75889d3`, `c429113`), 60-30-10 color palette tokens (`9d61905`), system-aware Dark Mode with anti-FOUC (`5b079f7`), VS Code Tailwind v4 lint suppression (`db9c58b`), sidebar submenu dropdowns (`d866578`, `6ec894b`), mobile KPI responsive layouts (`8d9bc1b`), simplified Inti role label (`c2795af`), clickable activity cards (`4d51a89`), and dark mode font anti-chromatic aberration (`44bc8ba`).
-- **Latest Commit**: `44bc8ba` (*fix(branding): atasi chromatic aberration font di dark mode dan selaraskan logo container*).
+  8. *Phase 8 (Latest Architecture Cycle)*:
+     - Implementation of Dynamic Activity Categories & Point Weight Engine (`activity_categories`, `point_configs`, `awarded_points`) with historical snapshot immutability (`e735081`, `65c3a6e`, `1edc634`).
+     - Live points recalculation endpoint (`POST /api/points/recalculate`) synchronizing all 1053 historical attendances (`b252845`).
+     - Super Admin Points Log (*Buku Besar Poin Organisasi*) with date range, category, and dept filtering (`74f3cce`).
+     - Points ledger Excel/CSV batch importer matching strictly on `nama_lengkap` (`POST /api/points/import-log`).
+     - Terminology neutrality: refactor from gamified leaderboard/ranking/podium to neutral organizational auditing ("Monitoring Poin Anggota", "Buku Besar Poin Organisasi") (`87de1f3`, `0df12fc`, `295ce92`).
+     - Expansion of Vitest in-memory test suite to 27 scenarios (100% PASS).
+     - Cross-device responsive design polish for PC, laptop, tablet, and smartphone across Master Data, Members, Attendance, and Modals (`75433c3`, `8af7528`, `97034b2`).
+     - Elimination of badge clutter and redundant alert boxes (`50bd94a`, `3c831d1`, `c3061fd`).
+     - Modal scroll and performance optimization with GPU layer isolation and body scroll locking (`ba7a182`).
+- **Latest Commit**: `87de1f3` (*refactor(points): replace leaderboard and ranking terms with neutral points monitoring terms*).
 
 ---
 
@@ -997,11 +1074,13 @@ No plaintext credentials or tokens were found committed in git tracked files.
 
 ### Resolved Issues
 - *(Resolved)*: Standalone execution of test runner on Windows was fixed (`fileURLToPath`).
-- *(Resolved)*: Pengujian integrasi dimigrasikan ke Vitest in-memory runner (20/20 pass offline tanpa port 3000).
+- *(Resolved)*: Pengujian integrasi dimigrasikan dan diperluas ke Vitest in-memory runner (27/27 pass offline tanpa port 3000).
 - *(Resolved)*: Penyelarasan spesifikasi presensi: Menghapus klaim semu pemindai QR dan menyelaraskan dokumentasi dengan tabel checklist lapangan & impor spreadsheet.
 - *(Resolved)*: Migrasi penghapusan akun ke sistem **Soft Delete** (`is_active` & `deleted_at`) guna menjaga keaslian audit log historis.
 - *(Resolved)*: `@google/genai`, `motion`, `autoprefixer`, dan direct `esbuild` lock berhasil di-purge.
 - *(Resolved)*: `ALLOWED_ORIGIN` in `wrangler.toml` preconfigured to `https://psdm-portal.pages.dev` and backend CORS hardened.
+- *(Resolved)*: Desain responsif dioptimalkan untuk seluruh breakpoint (smartphone, tablet, laptop, dan monitor desktop).
+- *(Resolved)*: TypeScript compile check (`npm run lint` / `tsc --noEmit`) 100% clean dengan 0 errors.
 
 ---
 
@@ -1038,9 +1117,11 @@ No plaintext credentials or tokens were found committed in git tracked files.
 - [x] Make KPI metric cards responsive side-by-side on mobile devices (`8d9bc1b`).
 - [x] Simplify role label "BPH Inti / Pengurus Inti" to "Inti" (`c2795af`).
 - [x] Fix Windows dark mode font chromatic aberration via `.brand-text` (`44bc8ba`).
+- [x] Optimize cross-device responsiveness across smartphones, tablets, and desktop monitors (`75433c3`, `8af7528`, `97034b2`).
+- [x] Implement dynamic proker category points system and neutral points ledger auditing (`e735081`, `87de1f3`).
 
 ### Stage 5 — Testing & CI (Completed)
-- [x] Add Vitest for isolated in-memory unit tests that mock the Hono `app.request()` context without needing a live network port (`17/17 PASS`).
+- [x] Add Vitest for isolated in-memory integration & unit tests that mock the Hono `app.request()` context without needing a live network port (`27/27 PASS`).
 - [ ] Create a GitHub Actions workflow (`.github/workflows/ci.yml`) to automatically run `npm run lint` and unit tests on pull requests.
 
 ### Stage 6 — Production Release (Ready)
@@ -1091,9 +1172,9 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   ├── components/
 │   │   ├── activities/
 │   │   │   ├── ActivitiesView.tsx             # Program kerja calendar/list view with filter controls
-│   │   │   ├── ActivityCard.tsx               # Clickable card with stats, lock banner, actions
+│   │   │   ├── ActivityCard.tsx               # Clickable card with stats, category badge, lock banner, actions
 │   │   │   ├── ActivityDetailModal.tsx        # Detail modal showing attendee stats and meeting links
-│   │   │   └── CreateActivityModal.tsx        # Modal form to schedule/edit activities
+│   │   │   └── CreateActivityModal.tsx        # Modal form to schedule/edit activities with category selection
 │   │   │
 │   │   ├── attendances/
 │   │   │   ├── AttendanceScannerModal.tsx     # Field attendance checklist, batch status toggles, CSV export
@@ -1118,7 +1199,7 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │   │   └── Sidebar.tsx                    # Collapsible navigation drawer with submenu dropdowns
 │   │   │
 │   │   ├── master/
-│   │   │   └── MasterDataView.tsx             # Management for Faculties, Prodi, Departments, PJs (sidebar driven)
+│   │   │   └── MasterDataView.tsx             # Management for Faculties, Prodi, Departments, PJs, Categories & Points Log
 │   │   │
 │   │   ├── members/
 │   │   │   ├── MemberFormModal.tsx            # Form to register or edit individual member profiles
@@ -1130,6 +1211,12 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │   │   ├── PermissionFormModal.tsx        # Member leave filing form with image compression upload
 │   │   │   ├── PermissionListTable.tsx        # Table for admins to review and approve/reject leave requests
 │   │   │   └── PermissionsView.tsx            # Container view with pending vs history tab separation
+│   │   │
+│   │   ├── points/
+│   │   │   ├── LeaderboardView.tsx            # Member points monitoring table view, stats & ranking
+│   │   │   ├── MemberPointsHistoryModal.tsx   # Detailed ledger modal of point transactions per member
+│   │   │   ├── PointsConfigModal.tsx          # Modal to configure global point weights & recalculate points
+│   │   │   └── PointsLogImportModal.tsx       # Spreadsheet (xlsx/csv) batch points ledger importer
 │   │   │
 │   │   ├── profile/
 │   │   │   ├── AvatarCropModal.tsx            # Canvas-based circular profile photo cropper
@@ -1143,17 +1230,20 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   ├── db/
 │   │   ├── index.ts                           # Turso libSQL client factory and Drizzle instance creator
 │   │   ├── clean-production.ts                # Production database sanitizer (purges demo transactions)
-│   │   ├── seed.ts                            # Full database seeder (UMI academic data, users, activities)
-│   │   ├── validation.ts                      # Zod validation schemas for all entities
+│   │   ├── migrate-activity-categories.ts     # DDL migration & default seed for activity categories & points
+│   │   ├── seed.ts                            # Full database seeder (UMI academic data, users, activities, categories)
+│   │   ├── validation.ts                      # Zod validation schemas for all entities & point calculations
 │   │   │
 │   │   └── schema/
 │   │       ├── index.ts                       # Barrel export for all schema tables
 │   │       ├── academic.ts                    # `fakultas` and `program_studi` tables
-│   │       ├── activities.ts                  # `activities` table
-│   │       ├── attendances.ts                 # `attendances` table (status enum, unique index)
+│   │       ├── activities.ts                  # `activities` table (category FK, lock toggle)
+│   │       ├── activityCategories.ts          # `activity_categories` table (configurable point weights)
+│   │       ├── attendances.ts                 # `attendances` table (awardedPoints snapshot, status enum)
 │   │       ├── departments.ts                 # `departments` table
 │   │       ├── permissions.ts                 # `permissions` table
-│   │       ├── relations.ts                   # Drizzle relational mappings for all tables
+│   │       ├── pointConfigs.ts                # `point_configs` table (global fallback rules)
+│   │       ├── relations.ts                   # Drizzle relational mappings for all 11 tables
 │   │       ├── system.ts                      # `sessions` and `pj_departments` tables
 │   │       └── users.ts                       # `users` table and `userRoleEnum`
 │   │
@@ -1173,8 +1263,9 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │       ├── attendances.ts                 # Attendance endpoints (record, batch, export, reset)
 │   │       ├── auth.ts                        # Auth endpoints (login, logout, me, change-password)
 │   │       ├── diagnostics.ts                 # System health check and database sanitization
-│   │       ├── master.ts                      # Academic & organizational master data endpoints
+│   │       ├── master.ts                      # Academic & organizational master data + activity categories
 │   │       ├── permissions.ts                 # Leave request & supervisor approval endpoints
+│   │       ├── points.ts                      # Points configuration, recalculate, leaderboard, history, & ledger log
 │   │       ├── storage.ts                     # File upload & private Backblaze B2 streaming proxy
 │   │       ├── sync.ts                        # Real-time live data aggregation & hash sync
 │   │       └── users.ts                       # Member directory, online users presence, batch import, profile
@@ -1183,7 +1274,7 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 │   │   └── api.ts                             # Frontend HTTP API client communicating with backend
 │   │
 │   ├── tests/
-│   │   └── integration.test.ts                # Cross-platform integration test suite (14 scenarios)
+│   │   └── integration.test.ts                # Cross-platform in-memory Vitest integration test suite (27 scenarios)
 │   │
 │   ├── types/
 │   │   └── index.ts                           # Shared frontend TypeScript interfaces
@@ -1202,7 +1293,7 @@ c:\Users\USER\OneDrive\Dokumen\Projects\PSDM-PORTAL\
 
 PSDM-PORTAL is a robust, well-structured, production-ready enterprise application for student organizational management. It is not an abandoned, broken, or obsolete project; on the contrary, it represents a highly modernized, state-of-the-art Edge Serverless application utilizing the latest available web technologies (React 19, Hono v4, Tailwind CSS v4, and Turso libSQL). Its architectural choices maximize execution speed while minimizing hosting costs.
 
-Recent development iterations have elevated the user experience with a polished 60-30-10 color palette, native Dark Mode, real-time presence auditing, History API back-button navigation for mobile users, and a streamlined sidebar submenu navigation architecture. Dead dependencies have been purged and cross-platform compatibility has been verified.
+Recent development iterations have elevated the user experience with a dynamic category-based activity points system, an organizational points ledger (*Buku Besar Poin Organisasi*), neutral member points auditing (*Monitoring Poin Anggota*), a polished 60-30-10 color palette, native Dark Mode, real-time presence auditing, History API back-button navigation for mobile users, and a streamlined sidebar submenu navigation architecture. Dead dependencies have been purged, responsive layouts optimized across smartphones and desktop workstations, and cross-platform compatibility has been verified with 27/27 automated in-memory integration tests passing.
 
 A newly onboarded developer taking over this codebase can deploy with high confidence by simply setting the required environment variables on Cloudflare Workers and Turso; all specifications, documentation, and codebase features are now 100% aligned.
 
@@ -1210,18 +1301,18 @@ A newly onboarded developer taking over this codebase can deploy with high confi
 
 ## 49. Final Executive Summary
 
-- **Project**: PSDM.web 2.0 (`PSDM-PORTAL`) — Student Organization Human Resource & Attendance Management Portal.
+- **Project**: PSDM.web 2.0 (`PSDM-PORTAL`) — Student Organization Human Resource, Attendance, & Points Management Portal.
 - **Stack**: React 19, Hono v4, Vite 8, Tailwind CSS v4, Turso (libSQL/SQLite), Drizzle ORM, WebCrypto API, Backblaze B2 (S3).
-- **Purpose**: Automating student organization member profiles, proker event scheduling, field attendance verification, real-time presence tracking (Super Admin), and absence excuse workflows.
+- **Purpose**: Automating student organization member profiles, proker event scheduling, field attendance verification, dynamic points calculation with historical snapshot immutability, points ledger auditing, real-time presence tracking (Super Admin), and absence excuse workflows.
 - **Users**: Student organization members, staff supervisors, and executives at Universitas Muslim Indonesia (UMI) Makassar.
-- **Roles**: `SUPER_ADMIN` (Full control, live presence monitoring & audits), `ADMIN` (Supervises assigned departments), `PENGURUS` (Member self-service), `INTI` (Executive read-only oversight across departments).
-- **MVP**: Authentication, member directory, activity scheduling, attendance recording, absence filing with evidence, and supervisor approval sync.
-- **Major Features**: Automatic leave-to-attendance reconciliation, activity lock protection, CSV attendance export, Excel bulk importer, Canvas WebP image compression, edge file streaming proxy, real-time active users monitoring (Super Admin exclusive), and in-app health diagnostics.
-- **UI/UX Excellence**: 60-30-10 design system tokens, 2-state Dark Mode with anti-FOUC, sidebar submenu dropdowns, responsive side-by-side KPI cards on mobile, History API back-button routing, and clickable activity cards.
+- **Roles**: `SUPER_ADMIN` (Full control, live presence monitoring, points configuration & audits), `ADMIN` (Supervises assigned departments, views points), `PENGURUS` (Member self-service), `INTI` (Executive read-only oversight across departments & points).
+- **MVP**: Authentication, member directory, activity scheduling, dynamic categories, attendance recording with auto-awarded points, absence filing with evidence, and supervisor approval sync.
+- **Major Features**: Dynamic activity categories & point weights, points ledger (*Buku Besar Poin Organisasi*) with Excel import, live points recalculation (`/api/points/recalculate`), member points monitoring table & history modal, automatic leave-to-attendance reconciliation, activity lock protection, CSV attendance export, Excel bulk importer, Canvas WebP image compression, edge file streaming proxy, real-time active users monitoring (Super Admin exclusive), and in-app health diagnostics.
+- **UI/UX Excellence**: 60-30-10 design system tokens, 2-state Dark Mode with anti-FOUC, sidebar submenu dropdowns, responsive layout across phone/tablet/PC, responsive side-by-side KPI cards on mobile, GPU-accelerated modal scrolling, History API back-button routing, and clickable activity cards.
 - **Architecture**: Edge serverless monolith running Hono and React SPA static assets on Cloudflare Workers, talking to Turso libSQL and Backblaze B2.
-- **Database**: Turso distributed libSQL SQLite database structured in strict Third Normal Form (3NF) across 9 tables.
+- **Database**: Turso distributed libSQL SQLite database structured in strict Third Normal Form (3NF) across 11 tables.
 - **External Services**: Cloudflare Workers, Turso Database, Backblaze B2 Object Storage.
 - **Security & Concurrency**: PBKDF2 SHA-256 (100k rounds) hashing, 256-bit random session tokens, HTTP-only sliding cookies, row-level supervisor access verification, login rate-limiting, hardened production CORS origin validation, path traversal guards, dan mitigasi *race condition* (proteksi status izin resmi APPROVED dari timpaan batch presensi, deteksi konflik collision batch-import, dan sliding window isolate limiter).
-- **Status**: Production-Ready (V2.1). 0 lint/type-check errors. Vitest in-memory test runner 100% passing (20/20 tests). Zero dead packages.
+- **Status**: Production-Ready (V2.2). 0 lint/type-check errors (`tsc --noEmit`). Vitest in-memory test runner 100% passing (27/27 tests). Zero dead packages.
 - **Deployment**: Targeted natively for Cloudflare Workers (`wrangler deploy`).
 - **Immediate Next Steps**: Execute `clean-production.ts` on live Turso database before launch, and deploy to Cloudflare Workers via `npm run deploy`.

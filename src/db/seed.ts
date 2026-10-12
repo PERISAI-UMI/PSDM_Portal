@@ -21,6 +21,7 @@ import {
   departments,
   users,
   pjDepartments,
+  activityCategories,
   activities,
   attendances,
   permissions,
@@ -317,7 +318,66 @@ async function seed() {
   ]);
   console.log('✓  Penugasan PJ Departemen: Admin PRN0002 -> Riset & Teknologi');
 
-  // ── 6. Activities (Program Kerja Nyata) ─────────────────────
+  // ── 6. Activity Categories & Activities (Program Kerja Nyata) ──
+  const now = new Date();
+  const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+  const defaultCats = [
+    {
+      id: 'cat-internal-default',
+      nama: 'Lingkup Internal',
+      deskripsi: 'Kegiatan rutin dan agenda internal pengurus PSDM (rapat pleno, evaluasi, dll)',
+      name: 'Lingkup Internal',
+      description: 'Kegiatan rutin dan agenda internal pengurus PSDM (rapat pleno, evaluasi, dll)',
+      hadirPoints: 3,
+      izinPoints: 0,
+      sakitPoints: 0,
+      alphaPoints: -5,
+      telatPoints: -1,
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: 'cat-eksternal-default',
+      nama: 'Lingkup Eksternal',
+      deskripsi: 'Kegiatan di luar lingkup internal organisasi (kolaborasi luar, delegasi, lomba, dll)',
+      name: 'Lingkup Eksternal',
+      description: 'Kegiatan di luar lingkup internal organisasi (kolaborasi luar, delegasi, lomba, dll)',
+      hadirPoints: 5,
+      izinPoints: 0,
+      sakitPoints: 0,
+      alphaPoints: -7,
+      telatPoints: -2,
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: 'cat-kepanitiaan-default',
+      nama: 'Lingkup Kepanitiaan',
+      deskripsi: 'Kegiatan dalam kepanitiaan program kerja ad-hoc atau event organisasi',
+      name: 'Lingkup Kepanitiaan',
+      description: 'Kegiatan dalam kepanitiaan program kerja ad-hoc atau event organisasi',
+      hadirPoints: 2,
+      izinPoints: 0,
+      sakitPoints: 0,
+      alphaPoints: -3,
+      telatPoints: -1,
+      createdAt: now,
+      updatedAt: now,
+    },
+  ];
+
+  for (const cat of defaultCats) {
+    await db
+      .insert(activityCategories)
+      .values(cat)
+      .onConflictDoUpdate({
+        target: activityCategories.id,
+        set: cat,
+      });
+  }
+
   const act1Id = 'act-seed-001';
   const act2Id = 'act-seed-002';
   const act3Id = 'act-seed-003';
@@ -326,15 +386,12 @@ async function seed() {
   await db.delete(activities).where(eq(activities.id, act2Id));
   await db.delete(activities).where(eq(activities.id, act3Id));
 
-  const now = new Date();
-  const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
-
   await db.insert(activities).values([
     {
       id: act1Id,
       nama: 'Rapat Pleno Koordinasi Awal Periode',
       deskripsi: 'Evaluasi program kerja semester berjalan dan sinkronisasi lintas divisi.',
+      categoryId: 'cat-internal-default',
       mode: 'OFFLINE',
       lokasi: 'Aula Lantai 2 Gedung PKM',
       meetingUrl: null,
@@ -349,6 +406,7 @@ async function seed() {
       id: act2Id,
       nama: 'Upgrading Kepemimpinan & Manajemen Organisasi',
       deskripsi: 'Pelatihan pengembangan soft skill, komunikasi efektif, dan tata kelola kepengurusan.',
+      categoryId: 'cat-internal-default',
       mode: 'ONLINE',
       lokasi: null,
       meetingUrl: 'https://zoom.us/j/987654321',
@@ -363,6 +421,7 @@ async function seed() {
       id: act3Id,
       nama: 'Workshop Riset & Pengembangan Teknologi Cloud',
       deskripsi: 'Pelatihan teknis edge computing, database terdistribusi, dan arsitektur serverless.',
+      categoryId: 'cat-eksternal-default',
       mode: 'OFFLINE',
       lokasi: 'Laboratorium Komputer 3',
       meetingUrl: null,
