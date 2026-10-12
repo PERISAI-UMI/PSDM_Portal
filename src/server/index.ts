@@ -13,6 +13,8 @@ import { pointsRouter } from './routes/points.ts';
 import { diagnosticsRouter } from './routes/diagnostics.ts';
 import { storageRouter } from './routes/storage.ts';
 import { syncRouter } from './routes/sync.ts';
+import { waBroadcastRouter } from './routes/waBroadcast.ts';
+import { settingsRouter } from './routes/settings.ts';
 
 const app = new Hono<AppEnv>();
 
@@ -71,6 +73,9 @@ app.route('/api/points', pointsRouter);
 app.route('/api/storage', storageRouter);
 app.route('/api/sync', syncRouter);
 app.route('/api/diagnostics', diagnosticsRouter);
+app.route('/api/wa-broadcast', waBroadcastRouter);
+app.route('/api/broadcasts', waBroadcastRouter);
+app.route('/api/settings', settingsRouter);
 
 // Global Error Handler
 app.onError((err, c) => {

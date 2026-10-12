@@ -6,9 +6,9 @@ main = "src/server/index.ts"
 compatibility_date = "2024-04-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Build Configuration
-[build]
-command = "npm run build"
+# Build Configuration (dist di-build terpisah dengan npm run build)
+# [build]
+# command = "npm run build"
 
 # Static Assets for React 19 Frontend (Cloudflare Workers Assets)
 # not_found_handling = "single-page-application" ensures SPA routes
@@ -31,3 +31,5 @@ ALLOWED_ORIGIN = "https://psdm-portal.pages.dev"
 # - SESSION_SECRET
 # - B2_APPLICATION_KEY_ID
 # - B2_APPLICATION_KEY
+# - WA_BOT_URL (contoh: https://wa-bot.domain-anda.com atau https://xxxx.trycloudflare.com)
+# - WA_API_KEY (secret token yang sama dengan di microservice Home Server)

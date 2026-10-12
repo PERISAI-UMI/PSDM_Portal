@@ -18,10 +18,12 @@ import {
   Unlock,
   Pencil,
   Layers,
+  MessageCircle,
 } from 'lucide-react';
 import type { ActivityItem, UserRole, AuthUser } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
 import { AttendanceImportModal } from '../attendances/AttendanceImportModal.tsx';
+import { WaBroadcastModal } from './WaBroadcastModal.tsx';
 import { formatWitaDate, formatWitaTime } from '../../utils/date.ts';
 
 interface ActivityDetailModalProps {
@@ -55,6 +57,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
 }) => {
   const [exporting, setExporting] = React.useState(false);
   const [showImportModal, setShowImportModal] = React.useState(false);
+  const [showWaBroadcast, setShowWaBroadcast] = React.useState(false);
 
   if (!isOpen || !activity) return null;
 
@@ -345,6 +348,18 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
               {userRole === 'SUPER_ADMIN' && (
                 <button
                   type="button"
+                  onClick={() => setShowWaBroadcast(true)}
+                  className="px-3 py-1.5 rounded-lg border border-[#25D366]/40 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-xs font-semibold text-[#128C7E] dark:text-[#25D366] transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  title="Broadcast pengumuman kegiatan via WhatsApp"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Broadcast WA</span>
+                </button>
+              )}
+
+              {userRole === 'SUPER_ADMIN' && (
+                <button
+                  type="button"
                   onClick={() => setShowImportModal(true)}
                   className="px-3 py-1.5 rounded-lg border border-brand-200 bg-brand-50/60 hover:bg-brand-100 text-xs font-semibold text-brand-700 dark:text-brand-300 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   title="Import presensi dari berkas Excel / CSV"
@@ -467,6 +482,15 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
           onImportSuccess?.();
         }}
       />
+
+      {/* WA Broadcast Modal */}
+      {showWaBroadcast && (
+        <WaBroadcastModal
+          isOpen={showWaBroadcast}
+          onClose={() => setShowWaBroadcast(false)}
+          activity={activity}
+        />
+      )}
     </div>
   );
 };

@@ -16,6 +16,8 @@ export type HonoBindings = {
   B2_ENDPOINT?: string;
   B2_REGION?: string;
   NODE_ENV?: string;
+  WA_BOT_URL?: string;
+  WA_API_KEY?: string;
 };
 
 export type HonoVariables = {

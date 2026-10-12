@@ -7,4 +7,6 @@ export * from './activities.ts';
 export * from './attendances.ts';
 export * from './permissions.ts';
 export * from './pointConfigs.ts';
+export * from './waBroadcasts.ts';
+export * from './appSettings.ts';
 export * from './relations.ts';

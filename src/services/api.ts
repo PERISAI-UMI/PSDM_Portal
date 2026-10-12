@@ -16,6 +16,10 @@ import type {
   MemberPointsHistoryData,
   PointsLogRow,
   PointsLogImportResult,
+  WaBroadcastResponse,
+  WaBroadcastStatus,
+  AppSettings,
+  WaBotStatusResponse,
 } from '../types/index.ts';
 
 const TOKEN_KEY = 'psdm_auth_token';
@@ -787,5 +791,108 @@ export const api = {
       body: formData,
     });
   },
+
+  // ================= WA BROADCAST =================
+  async getWaBroadcast(activityId: string): Promise<{ success: boolean; data: WaBroadcastResponse }> {
+    return request<{ success: boolean; data: WaBroadcastResponse }>(
+      `/api/wa-broadcast/${encodeURIComponent(activityId)}`
+    );
+  },
+
+  async createWaBroadcast(payload: {
+    activityId: string;
+    messageTemplate?: string;
+    targetFilter?: 'ALL' | 'ALPHA' | 'TELAT' | 'IZIN' | 'SAKIT' | 'HADIR' | 'CUSTOM';
+    customUserIds?: string[];
+  }): Promise<{ success: boolean; message: string; data: { broadcastId: string; totalRecipients: number; invalidPhoneWarnings?: string[] } }> {
+    return request<{ success: boolean; message: string; data: { broadcastId: string; totalRecipients: number; invalidPhoneWarnings?: string[] } }>(
+      '/api/wa-broadcast',
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }
+    );
+  },
+
+  async markWaRecipient(
+    recipientId: string,
+    status: Extract<WaBroadcastStatus, 'SENT' | 'FAILED'>
+  ): Promise<{ success: boolean; message: string; data: { id: string; status: string; sentAt: string } }> {
+    return request<{ success: boolean; message: string; data: { id: string; status: string; sentAt: string } }>(
+      `/api/wa-broadcast/recipients/${encodeURIComponent(recipientId)}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ status }),
+      }
+    );
+  },
+
+  async resetWaRecipient(recipientId: string): Promise<{ success: boolean; message: string }> {
+    return request<{ success: boolean; message: string }>(
+      `/api/wa-broadcast/recipients/${encodeURIComponent(recipientId)}/reset`,
+      { method: 'PATCH' }
+    );
+  },
+
+  async deleteWaBroadcast(activityId: string): Promise<{ success: boolean; message: string }> {
+    return request<{ success: boolean; message: string }>(
+      `/api/wa-broadcast/${encodeURIComponent(activityId)}`,
+      { method: 'DELETE' }
+    );
+  },
+
+  async sendWaBroadcastSingle(
+    broadcastId: string,
+    userId: string
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data?: {
+      recipientId: string;
+      userId: string;
+      phone: string;
+      status: string;
+      sentAt: string;
+      botResponse?: any;
+    };
+    error?: string;
+  }> {
+    return request<{
+      success: boolean;
+      message: string;
+      data?: {
+        recipientId: string;
+        userId: string;
+        phone: string;
+        status: string;
+        sentAt: string;
+        botResponse?: any;
+      };
+      error?: string;
+    }>(`/api/broadcasts/${encodeURIComponent(broadcastId)}/send-single`, {
+      method: 'POST',
+      body: JSON.stringify({ userId }),
+    });
+  },
+
+  // ================= APP SETTINGS & WA BOT =================
+  async getSettings(): Promise<{ success: boolean; data: AppSettings }> {
+    return request<{ success: boolean; data: AppSettings }>('/api/settings');
+  },
+
+  async updateSettings(payload: {
+    wa_bot_url?: string;
+    wa_api_key?: string;
+  }): Promise<{ success: boolean; message: string; data: AppSettings }> {
+    return request<{ success: boolean; message: string; data: AppSettings }>('/api/settings', {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async getBotStatus(): Promise<WaBotStatusResponse> {
+    return request<WaBotStatusResponse>('/api/settings/bot-status');
+  },
 };
+
 

@@ -231,3 +231,74 @@ export interface PointsLogImportResult {
   errors: { row: number; nama?: string; reason: string }[];
 }
 
+// ================= WA BROADCAST =================
+export type WaBroadcastStatus = 'PENDING' | 'SENT' | 'FAILED' | 'SKIPPED';
+
+export interface WaBroadcastRecipient {
+  id: string;
+  broadcastId: string;
+  userId: string;
+  namaLengkap: string;
+  prn: string;
+  departmentNama: string;
+  jabatan: string;
+  phoneNumber: string;
+  renderedMessage: string;
+  status: WaBroadcastStatus;
+  error?: string | null;
+  sentAt?: string | Date | null;
+  sentBy?: string | null;
+}
+
+export interface WaBroadcastSummary {
+  total: number;
+  sent: number;
+  pending: number;
+  failed: number;
+}
+
+export interface WaBroadcastData {
+  id: string;
+  activityId: string;
+  messageTemplate: string;
+  createdAt: string | Date;
+  summary: WaBroadcastSummary;
+}
+
+export interface WaBroadcastResponse {
+  broadcast: WaBroadcastData | null;
+  activity: {
+    id: string;
+    nama: string;
+    startDate: string | Date;
+    lokasi?: string | null;
+    mode: 'OFFLINE' | 'ONLINE';
+    categoryNama?: string | null;
+  };
+  recipients: WaBroadcastRecipient[];
+}
+
+// ================= APP SETTINGS & BOT PROXY =================
+export interface AppSettings {
+  wa_bot_url: string;
+  wa_api_key: string;
+  [key: string]: string;
+}
+
+export type WaBotConnectionStatus =
+  | 'CONNECTED'
+  | 'QR_READY'
+  | 'CONNECTING'
+  | 'DISCONNECTED'
+  | 'NOT_CONFIGURED'
+  | 'OFFLINE'
+  | 'ERROR';
+
+export interface WaBotStatusResponse {
+  success: boolean;
+  status: WaBotConnectionStatus;
+  qr: string | null;
+  message?: string;
+}
+
+

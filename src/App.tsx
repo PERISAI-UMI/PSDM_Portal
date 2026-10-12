@@ -29,15 +29,33 @@ import { MasterDataView, type MasterDataTab } from './components/master/MasterDa
 import { AuditModal } from './components/audit/AuditModal.tsx';
 import { ProfileModal } from './components/profile/ProfileModal.tsx';
 import { ProfileView } from './components/profile/ProfileView.tsx';
+import { SettingsView } from './components/settings/SettingsView.tsx';
 import { ActivityDetailModal } from './components/activities/ActivityDetailModal.tsx';
 import { ConfirmModal } from './components/ui/ConfirmModal.tsx';
 import { OnlineUsersModal } from './components/dashboard/OnlineUsersModal.tsx';
 import { ToastProvider, useToast } from './components/ui/Toast.tsx';
 import type { OnlinePresenceData } from './types/index.ts';
 
-type ActiveSection = 'dashboard' | 'activities' | 'permissions' | 'members' | 'leaderboard' | 'master-data' | 'profile';
+type ActiveSection =
+  | 'dashboard'
+  | 'activities'
+  | 'permissions'
+  | 'members'
+  | 'leaderboard'
+  | 'master-data'
+  | 'profile'
+  | 'settings';
 
-const VALID_SECTIONS: ActiveSection[] = ['dashboard', 'activities', 'permissions', 'members', 'leaderboard', 'master-data', 'profile'];
+const VALID_SECTIONS: ActiveSection[] = [
+  'dashboard',
+  'activities',
+  'permissions',
+  'members',
+  'leaderboard',
+  'master-data',
+  'profile',
+  'settings',
+];
 
 const getSectionFromHash = (): ActiveSection => {
   if (typeof window === 'undefined') return 'dashboard';
@@ -855,6 +873,11 @@ function MainAppContent() {
               onAssignPj={handleAssignPj}
               onRemovePj={handleRemovePj}
             />
+          )}
+
+          {/* 6. Settings Layout (Super Admin only) */}
+          {activeSection === 'settings' && currentUser.role === 'SUPER_ADMIN' && (
+            <SettingsView onShowToast={showToast} />
           )}
 
           {/* 5. Dashboard Layout */}

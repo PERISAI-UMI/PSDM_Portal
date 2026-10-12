@@ -7,6 +7,7 @@ import { activities } from './activities.ts';
 import { activityCategories } from './activityCategories.ts';
 import { attendances } from './attendances.ts';
 import { permissions } from './permissions.ts';
+import { waBroadcasts, waBroadcastRecipients } from './waBroadcasts.ts';
 
 export const fakultasRelations = relations(fakultas, ({ many }) => ({
   programStudi: many(programStudi),
@@ -41,6 +42,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   recordedAttendances: many(attendances, { relationName: 'recordedByAdmin' }),
   permissions: many(permissions, { relationName: 'userPermissions' }),
   reviewedPermissions: many(permissions, { relationName: 'reviewedByAdmin' }),
+  createdBroadcasts: many(waBroadcasts, { relationName: 'broadcastCreator' }),
+  sentBroadcastRecipients: many(waBroadcastRecipients, { relationName: 'broadcastSender' }),
 }));
 
 export const pjDepartmentsRelations = relations(pjDepartments, ({ one }) => ({
@@ -78,6 +81,10 @@ export const activitiesRelations = relations(activities, ({ one, many }) => ({
   }),
   attendances: many(attendances),
   permissions: many(permissions),
+  waBroadcast: one(waBroadcasts, {
+    fields: [activities.id],
+    references: [waBroadcasts.activityId],
+  }),
 }));
 
 export const attendancesRelations = relations(attendances, ({ one }) => ({
@@ -111,5 +118,34 @@ export const permissionsRelations = relations(permissions, ({ one }) => ({
     fields: [permissions.reviewedBy],
     references: [users.id],
     relationName: 'reviewedByAdmin',
+  }),
+}));
+
+export const waBroadcastsRelations = relations(waBroadcasts, ({ one, many }) => ({
+  activity: one(activities, {
+    fields: [waBroadcasts.activityId],
+    references: [activities.id],
+  }),
+  creator: one(users, {
+    fields: [waBroadcasts.createdBy],
+    references: [users.id],
+    relationName: 'broadcastCreator',
+  }),
+  recipients: many(waBroadcastRecipients),
+}));
+
+export const waBroadcastRecipientsRelations = relations(waBroadcastRecipients, ({ one }) => ({
+  broadcast: one(waBroadcasts, {
+    fields: [waBroadcastRecipients.broadcastId],
+    references: [waBroadcasts.id],
+  }),
+  user: one(users, {
+    fields: [waBroadcastRecipients.userId],
+    references: [users.id],
+  }),
+  sender: one(users, {
+    fields: [waBroadcastRecipients.sentBy],
+    references: [users.id],
+    relationName: 'broadcastSender',
   }),
 }));

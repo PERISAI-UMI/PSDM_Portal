@@ -23,6 +23,7 @@ import {
   Award,
   Layers,
   BookMarked,
+  Settings,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
@@ -461,6 +462,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
                 )}
               </div>
+            )}
+
+            {user.role === 'SUPER_ADMIN' && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('settings')}
+                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                  activeSection === 'settings'
+                    ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Settings className="w-4 h-4 text-slate-500" />
+                  <span>Pengaturan Bot WA</span>
+                </div>
+              </button>
             )}
 
             {onOpenAudit && user.role === 'SUPER_ADMIN' && (
