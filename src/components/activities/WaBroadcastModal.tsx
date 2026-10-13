@@ -15,9 +15,23 @@ import {
   Copy,
   ExternalLink,
   ChevronDown,
+  Clipboard,
+  FileText,
+  RotateCcw,
 } from 'lucide-react';
 import type { ActivityItem, WaBroadcastRecipient, WaBroadcastResponse, WaBroadcastStatus } from '../../types/index.ts';
 import { api } from '../../services/api.ts';
+
+const DEFAULT_MESSAGE_TEMPLATE = `Halo, {{nama}} 👋
+
+Berikut informasi mengenai kegiatan PSDM PERISAI:
+
+📌 *Kegiatan:* {{namaKegiatan}}
+📅 *Tanggal:* {{tanggalKegiatan}}
+📍 *Lokasi:* {{lokasi}}
+✅ *Status Kehadiranmu:* {{status}}
+
+Harap konfirmasi kehadiranmu. Terima kasih! 🙏`;
 
 // ─── Tipe & Konstanta ─────────────────────────────────────────────────────────
 type TargetFilter = 'ALL' | 'ALPHA' | 'TELAT' | 'IZIN' | 'SAKIT' | 'HADIR';
@@ -211,6 +225,63 @@ export const WaBroadcastModal: React.FC<WaBroadcastModalProps> = ({ isOpen, onCl
   const [showTemplateEditor, setShowTemplateEditor] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [showFilterMenu, setShowFilterMenu] = React.useState(false);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // Template helpers
+  const insertVariable = (varName: string) => {
+    const el = textareaRef.current;
+    if (!el) {
+      setCustomTemplate((prev) => prev + varName);
+      return;
+    }
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? el.value.length;
+    const currentVal = el.value;
+    const newVal = currentVal.substring(0, start) + varName + currentVal.substring(end);
+    setCustomTemplate(newVal);
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(start + varName.length, start + varName.length);
+    }, 0);
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text) {
+        showToast('Clipboard kosong', 'info');
+        return;
+      }
+      const el = textareaRef.current;
+      if (!el) {
+        setCustomTemplate(text);
+      } else {
+        const start = el.selectionStart ?? el.value.length;
+        const end = el.selectionEnd ?? el.value.length;
+        const currentVal = el.value;
+        const newVal = currentVal.substring(0, start) + text + currentVal.substring(end);
+        setCustomTemplate(newVal);
+        setTimeout(() => {
+          el.focus();
+          el.setSelectionRange(start + text.length, start + text.length);
+        }, 0);
+      }
+      showToast('Template berhasil ditempel', 'success');
+    } catch {
+      showToast('Gunakan shortcut (Ctrl+V) langsung di kotak template', 'info');
+    }
+  };
+
+  const handleLoadDefaultTemplate = () => {
+    setCustomTemplate(DEFAULT_MESSAGE_TEMPLATE);
+    showToast('Template bawaan dimuat ke editor', 'info');
+    setTimeout(() => textareaRef.current?.focus(), 0);
+  };
+
+  const handleClearTemplate = () => {
+    setCustomTemplate('');
+    textareaRef.current?.focus();
+  };
 
   // Filtered recipients
   const recipients = broadcastData?.recipients ?? [];
@@ -242,6 +313,9 @@ export const WaBroadcastModal: React.FC<WaBroadcastModalProps> = ({ isOpen, onCl
       const res = await api.getWaBroadcast(activity.id);
       if (res.success) {
         setBroadcastData(res.data);
+        if (res.data.broadcast?.messageTemplate) {
+          setCustomTemplate(res.data.broadcast.messageTemplate);
+        }
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Gagal memuat data broadcast';
@@ -537,28 +611,76 @@ export const WaBroadcastModal: React.FC<WaBroadcastModalProps> = ({ isOpen, onCl
                   </div>
 
                   {/* Template editor (opsional) */}
-                  <div>
-                    <label className="text-xs font-medium text-slate-600 block mb-1.5">
-                      Template Pesan{' '}
-                      <span className="text-slate-400 font-normal">(opsional — kosongkan untuk default)</span>
-                    </label>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <label htmlFor="wa-custom-template" className="text-xs font-semibold text-slate-700">
+                        Template Pesan{' '}
+                        <span className="text-slate-400 font-normal">(opsional)</span>
+                      </label>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={handlePasteFromClipboard}
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold text-brand hover:text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200/80 transition-colors cursor-pointer"
+                          title="Tempel teks dari clipboard"
+                        >
+                          <Clipboard className="w-3 h-3 text-brand" />
+                          <span>Tempel</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleLoadDefaultTemplate}
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition-colors cursor-pointer"
+                          title="Muat template default untuk diedit"
+                        >
+                          <FileText className="w-3 h-3 text-slate-500" />
+                          <span>Template Default</span>
+                        </button>
+                        {customTemplate && (
+                          <button
+                            type="button"
+                            onClick={handleClearTemplate}
+                            className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors cursor-pointer"
+                            title="Kosongkan kolom template"
+                          >
+                            <RotateCcw className="w-3 h-3 text-rose-500" />
+                            <span>Kosongkan</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
                     <textarea
+                      ref={textareaRef}
+                      id="wa-custom-template"
                       rows={6}
                       value={customTemplate}
                       onChange={(e) => setCustomTemplate(e.target.value)}
-                      placeholder={
-                        'Halo, {{nama}} 👋\n\n📌 *Kegiatan:* {{namaKegiatan}}\n📅 *Tanggal:* {{tanggalKegiatan}}\n📍 *Lokasi:* {{lokasi}}\n✅ *Status:* {{status}}'
-                      }
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-surface text-xs text-slate-800 placeholder-slate-400 font-mono resize-none focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all"
+                      placeholder="Ketik atau tempel (Ctrl+V) template pesan Anda di sini... Biarkan kosong untuk menggunakan template bawaan sistem."
+                      className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-surface text-xs text-slate-800 placeholder:text-slate-400 font-mono resize-y focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all"
                     />
-                    <p className="mt-1.5 text-[11px] text-slate-500 flex flex-wrap items-center gap-1">
-                      <span>Variabel:</span>
-                      <code className="bg-slate-200/70 text-slate-700 px-1.5 py-0.5 rounded text-[10px]">{'{{nama}}'}</code>
-                      <code className="bg-slate-200/70 text-slate-700 px-1.5 py-0.5 rounded text-[10px]">{'{{namaKegiatan}}'}</code>
-                      <code className="bg-slate-200/70 text-slate-700 px-1.5 py-0.5 rounded text-[10px]">{'{{tanggalKegiatan}}'}</code>
-                      <code className="bg-slate-200/70 text-slate-700 px-1.5 py-0.5 rounded text-[10px]">{'{{lokasi}}'}</code>
-                      <code className="bg-slate-200/70 text-slate-700 px-1.5 py-0.5 rounded text-[10px]">{'{{status}}'}</code>
-                    </p>
+
+                    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 pt-0.5">
+                      <span className="font-medium text-slate-600">Sisipkan variabel:</span>
+                      {[
+                        { label: '{{nama}}', title: 'Nama Lengkap Penerima' },
+                        { label: '{{namaKegiatan}}', title: 'Nama Kegiatan' },
+                        { label: '{{tanggalKegiatan}}', title: 'Hari/Tanggal Kegiatan' },
+                        { label: '{{lokasi}}', title: 'Lokasi Kegiatan' },
+                        { label: '{{status}}', title: 'Status Kehadiran' },
+                      ].map((v) => (
+                        <button
+                          key={v.label}
+                          type="button"
+                          onClick={() => insertVariable(v.label)}
+                          title={v.title}
+                          className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand border border-slate-200 hover:border-brand-200/80 text-[10px] font-mono font-medium transition-all cursor-pointer active:scale-95"
+                        >
+                          <span className="text-slate-400 font-bold">+</span>
+                          <span>{v.label}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Aksi */}
