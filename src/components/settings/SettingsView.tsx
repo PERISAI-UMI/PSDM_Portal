@@ -15,7 +15,6 @@ import {
   Server,
   HelpCircle,
   Sparkles,
-  LogOut,
 } from 'lucide-react';
 import { api } from '../../services/api.ts';
 import type { WaBotConnectionStatus, WaBotStatusResponse } from '../../types/index.ts';
@@ -37,7 +36,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
   const [qrCodeData, setQrCodeData] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
-  const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [lastCheckedAt, setLastCheckedAt] = useState<Date | null>(null);
 
   // Ref untuk polling
@@ -110,24 +108,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
     };
   }, [botStatus]);
 
-  // 4. Handle Disconnect Bot
-  const handleDisconnect = async () => {
-    if (!confirm('Yakin ingin memutus sesi WhatsApp bot? Bot harus scan QR ulang untuk reconnect.')) return;
-    setIsDisconnecting(true);
-    try {
-      const res = await api.disconnectBot();
-      onShowToast?.(res.message, res.success ? 'success' : 'error');
-      if (res.success) {
-        setTimeout(() => checkBotStatus(false), 800);
-      }
-    } catch (err: any) {
-      onShowToast?.(err.message || 'Gagal memutus koneksi bot.', 'error');
-    } finally {
-      setIsDisconnecting(false);
-    }
-  };
-
-  // 5. Handle Save Settings
+  // 4. Handle Save Settings
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -367,24 +348,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
 
             {/* Area Tampilan Berdasarkan Status */}
             {botStatus === 'CONNECTED' && (
-              <div className="py-5 px-4 bg-emerald-50/60 border border-emerald-200/80 rounded-xl space-y-3">
+              <div className="py-5 px-4 bg-emerald-50/60 border border-emerald-200/80 rounded-xl space-y-2">
                 <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <p className="text-[11px] text-emerald-700 font-medium">Bot terhubung dan siap mengirim broadcast.</p>
-                <button
-                  type="button"
-                  onClick={handleDisconnect}
-                  disabled={isDisconnecting}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-semibold rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                  {isDisconnecting ? (
-                    <RefreshCw className="w-3 h-3 animate-spin" />
-                  ) : (
-                    <LogOut className="w-3 h-3" />
-                  )}
-                  {isDisconnecting ? 'Memutus...' : 'Disconnect Bot'}
-                </button>
               </div>
             )}
 
