@@ -14,6 +14,7 @@ import {
   FileText,
   AlertCircle,
   Activity,
+  MessageCircle,
 } from 'lucide-react';
 import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus, AttendanceRecord } from '../../types/index.ts';
 import { TopAlphaBarChart, type AlphaMemberStat } from './TopAlphaBarChart.tsx';
@@ -28,13 +29,14 @@ interface SuperAdminViewProps {
   onOpenMasterData: () => void;
   onOpenMemberList: () => void;
   onOpenAttendance: (act: ActivityItem) => void;
+  onOpenBroadcast?: (act: ActivityItem) => void;
   onTogglePublish: (id: string, current: boolean) => void;
   onDeleteActivity: (id: string) => void;
   onReviewPermission: (id: string, status: PermissionStatus) => Promise<void>;
   onOpenAudit?: () => void;
   onOpenProfile?: () => void;
   onViewDetail?: (act: ActivityItem) => void;
-  onNavigateTo?: (section: 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data') => void;
+  onNavigateTo?: (section: 'dashboard' | 'activities' | 'permissions' | 'members' | 'master-data' | 'broadcast') => void;
   onlineCount?: number;
   onOpenOnlineUsers?: () => void;
 }
@@ -49,6 +51,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
   onOpenMasterData,
   onOpenMemberList,
   onOpenAttendance,
+  onOpenBroadcast,
   onReviewPermission,
   onViewDetail,
   onNavigateTo,
@@ -315,29 +318,46 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                         </p>
                       </div>
 
-                      {currentUser.role === 'INTI' ? (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onOpenAttendance(act);
-                          }}
-                          className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0 cursor-pointer"
-                        >
-                          Rekap
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onOpenAttendance(act);
-                          }}
-                          className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0 cursor-pointer"
-                        >
-                          Presensi
-                        </button>
-                      )}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {onOpenBroadcast && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onOpenBroadcast(act);
+                            }}
+                            className="px-2 py-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300/80 rounded-md transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                            title="Kirim broadcast WA kegiatan ini"
+                          >
+                            <MessageCircle className="w-3 h-3 text-emerald-600" />
+                            <span>Broadcast</span>
+                          </button>
+                        )}
+
+                        {currentUser.role === 'INTI' ? (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onOpenAttendance(act);
+                            }}
+                            className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0 cursor-pointer"
+                          >
+                            Rekap
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onOpenAttendance(act);
+                            }}
+                            className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors shrink-0 cursor-pointer"
+                          >
+                            Presensi
+                          </button>
+                        )}
+                      </div>
                     </div>
                   );
                 })

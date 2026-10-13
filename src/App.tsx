@@ -33,6 +33,8 @@ import { SettingsView } from './components/settings/SettingsView.tsx';
 import { ActivityDetailModal } from './components/activities/ActivityDetailModal.tsx';
 import { ConfirmModal } from './components/ui/ConfirmModal.tsx';
 import { OnlineUsersModal } from './components/dashboard/OnlineUsersModal.tsx';
+import { BroadcastView } from './components/broadcast/BroadcastView.tsx';
+import { WaBroadcastModal } from './components/activities/WaBroadcastModal.tsx';
 import { ToastProvider, useToast } from './components/ui/Toast.tsx';
 import type { OnlinePresenceData } from './types/index.ts';
 
@@ -44,7 +46,8 @@ type ActiveSection =
   | 'leaderboard'
   | 'master-data'
   | 'profile'
-  | 'settings';
+  | 'settings'
+  | 'broadcast';
 
 const VALID_SECTIONS: ActiveSection[] = [
   'dashboard',
@@ -55,6 +58,7 @@ const VALID_SECTIONS: ActiveSection[] = [
   'master-data',
   'profile',
   'settings',
+  'broadcast',
 ];
 
 const getSectionFromHash = (): ActiveSection => {
@@ -89,6 +93,7 @@ function MainAppContent() {
   const [selectedActivityDetail, setSelectedActivityDetail] = useState<ActivityItem | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [activeScannerActivity, setActiveScannerActivity] = useState<ActivityItem | null>(null);
+  const [activeBroadcastActivity, setActiveBroadcastActivity] = useState<ActivityItem | null>(null);
   const [activePermissionActivity, setActivePermissionActivity] = useState<ActivityItem | null>(null);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [showOnlineUsersModal, setShowOnlineUsersModal] = useState(false);
@@ -118,6 +123,7 @@ function MainAppContent() {
     setSelectedActivityDetail(null);
     setConfirmDeleteId(null);
     setActiveScannerActivity(null);
+    setActiveBroadcastActivity(null);
     setShowPermissionModal(false);
     setActivePermissionActivity(null);
     setIsMobileSidebarOpen(false);
@@ -132,6 +138,7 @@ function MainAppContent() {
     selectedActivityDetail ||
     confirmDeleteId ||
     activeScannerActivity ||
+    activeBroadcastActivity ||
     showPermissionModal ||
     activePermissionActivity ||
     isMobileSidebarOpen
@@ -880,6 +887,17 @@ function MainAppContent() {
             <SettingsView onShowToast={showToast} />
           )}
 
+          {/* 7. Broadcast Layout (Super Admin and Admin) */}
+          {activeSection === 'broadcast' && (currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') && (
+            <BroadcastView
+              currentUser={currentUser}
+              activities={activities}
+              onOpenBroadcastModal={(act) => setActiveBroadcastActivity(act)}
+              onNavigateToSettings={() => setActiveSection('settings')}
+              onBackToDashboard={() => setActiveSection('dashboard')}
+            />
+          )}
+
           {/* 5. Dashboard Layout */}
           {activeSection === 'dashboard' && (
             <>
@@ -896,6 +914,7 @@ function MainAppContent() {
                   onOpenMasterData={() => setActiveSection('master-data')}
                   onOpenMemberList={() => setActiveSection('members')}
                   onOpenAttendance={(act) => setActiveScannerActivity(act)}
+                  onOpenBroadcast={(act) => setActiveBroadcastActivity(act)}
                   onTogglePublish={handleTogglePublish}
                   onDeleteActivity={handleDeleteActivity}
                   onReviewPermission={handleReviewPermission}
@@ -918,6 +937,7 @@ function MainAppContent() {
                   allUsers={allUsers}
                   onOpenMemberList={() => setActiveSection('members')}
                   onOpenAttendance={(act) => setActiveScannerActivity(act)}
+                  onOpenBroadcast={(act) => setActiveBroadcastActivity(act)}
                   onReviewPermission={handleReviewPermission}
                   onOpenProfile={() => {
                     setActiveSection('profile');
@@ -1050,6 +1070,15 @@ function MainAppContent() {
           onDelete={handleDeleteActivity}
           allUsers={allUsers}
           onImportSuccess={() => syncRealtime(true)}
+        />
+      )}
+
+      {/* WA Broadcast Modal (Direct / Centralized) */}
+      {activeBroadcastActivity && (
+        <WaBroadcastModal
+          isOpen={Boolean(activeBroadcastActivity)}
+          onClose={() => setActiveBroadcastActivity(null)}
+          activity={activeBroadcastActivity}
         />
       )}
 

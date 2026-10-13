@@ -24,6 +24,7 @@ import {
   Layers,
   BookMarked,
   Settings,
+  MessageCircle,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/index.ts';
 
@@ -163,6 +164,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               )}
             </button>
+
+            {/* Broadcast WA: Khusus SUPER_ADMIN dan ADMIN */}
+            {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
+              <button
+                type="button"
+                onClick={() => handleNavClick('broadcast')}
+                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                  activeSection === 'broadcast'
+                    ? 'bg-slate-100 text-slate-900 font-semibold shadow-[inset_3px_0_0_var(--color-accent)]'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <MessageCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-500" />
+                  <span>Broadcast WA</span>
+                </div>
+              </button>
+            )}
 
             {/* Perizinan dengan Sub-menu Dropdown */}
             <div className="space-y-0.5">

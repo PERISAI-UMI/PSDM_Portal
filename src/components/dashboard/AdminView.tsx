@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Check,
   X,
+  MessageCircle,
 } from 'lucide-react';
 import type { ActivityItem, PermissionRecord, AuthUser, PermissionStatus, AttendanceRecord } from '../../types/index.ts';
 import { TopAlphaBarChart, type AlphaMemberStat } from './TopAlphaBarChart.tsx';
@@ -19,10 +20,11 @@ interface AdminViewProps {
   allUsers?: AuthUser[];
   onOpenMemberList: () => void;
   onOpenAttendance: (act: ActivityItem) => void;
+  onOpenBroadcast?: (act: ActivityItem) => void;
   onReviewPermission: (id: string, status: PermissionStatus) => Promise<void>;
   onOpenProfile?: () => void;
   onViewDetail?: (act: ActivityItem) => void;
-  onNavigateTo?: (section: 'dashboard' | 'activities' | 'permissions' | 'members') => void;
+  onNavigateTo?: (section: 'dashboard' | 'activities' | 'permissions' | 'members' | 'broadcast') => void;
 }
 
 export const AdminView: React.FC<AdminViewProps> = ({
@@ -32,6 +34,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
   attendances = [],
   allUsers = [],
   onOpenAttendance,
+  onOpenBroadcast,
   onReviewPermission,
   onViewDetail,
   onNavigateTo,
@@ -122,7 +125,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
         <div
           onClick={() => onNavigateTo?.('activities')}
           className="bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
@@ -187,6 +190,24 @@ export const AdminView: React.FC<AdminViewProps> = ({
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
           </p>
         </div>
+
+        {/* 5. Broadcast WA Card */}
+        <div
+          onClick={() => onNavigateTo?.('broadcast')}
+          className="col-span-2 sm:col-span-1 bg-surface rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:border-emerald-400 hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-medium text-slate-500 truncate">Broadcast WA</span>
+            <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 group-hover:scale-110 transition-transform shrink-0" />
+          </div>
+          <div className="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-1 sm:mt-1.5 truncate">
+            Pusat Pesan
+          </div>
+          <p className="text-[10px] sm:text-[11px] text-emerald-600 font-medium mt-0.5 flex items-center gap-1 group-hover:text-emerald-700 truncate">
+            <span>Kirim broadcast</span>
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 shrink-0" />
+          </p>
+        </div>
       </div>
 
       {/* Two Column Layout: Upcoming Agenda & Pending Permissions */}
@@ -247,20 +268,37 @@ export const AdminView: React.FC<AdminViewProps> = ({
                         </p>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onOpenAttendance(act);
-                        }}
-                        className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors shrink-0 ${
-                          act.isLocked
-                            ? 'text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200'
-                            : 'text-slate-700 bg-slate-100 hover:bg-slate-200'
-                        }`}
-                      >
-                        {act.isLocked ? 'Lihat Presensi' : 'Presensi'}
-                      </button>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {onOpenBroadcast && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onOpenBroadcast(act);
+                            }}
+                            className="px-2 py-1 text-[11px] font-medium rounded-md border border-emerald-300/80 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                            title="Kirim broadcast WA kegiatan ini"
+                          >
+                            <MessageCircle className="w-3 h-3 text-emerald-600" />
+                            <span>Broadcast</span>
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenAttendance(act);
+                          }}
+                          className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors ${
+                            act.isLocked
+                              ? 'text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200'
+                              : 'text-slate-700 bg-slate-100 hover:bg-slate-200'
+                          }`}
+                        >
+                          {act.isLocked ? 'Lihat Presensi' : 'Presensi'}
+                        </button>
+                      </div>
                     </div>
                   );
                 })
