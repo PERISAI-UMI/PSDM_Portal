@@ -345,7 +345,7 @@ export const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({
                 </button>
               )}
 
-              {(userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && (
+              {userRole === 'SUPER_ADMIN' && (
                 <button
                   type="button"
                   onClick={() => setShowWaBroadcast(true)}

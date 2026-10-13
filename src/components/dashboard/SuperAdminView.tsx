@@ -319,7 +319,7 @@ export const SuperAdminView: React.FC<SuperAdminViewProps> = ({
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
-                        {onOpenBroadcast && (
+                        {onOpenBroadcast && currentUser.role === 'SUPER_ADMIN' && (
                           <button
                             type="button"
                             onClick={(e) => {

@@ -95,7 +95,7 @@ const patchRecipientSchema = z.object({
 // Ambil daftar seluruh broadcast aktif
 waBroadcastRouter.get(
   '/',
-  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  requireRole(['SUPER_ADMIN']),
   async (c) => {
     const db = c.get('db');
     const records = await db
@@ -116,7 +116,7 @@ waBroadcastRouter.get(
 // Ambil broadcast beserta daftar penerima untuk satu kegiatan (jika sudah ada)
 waBroadcastRouter.get(
   '/:activityId',
-  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  requireRole(['SUPER_ADMIN']),
   async (c) => {
     const activityId = c.req.param('activityId');
     const db = c.get('db');
@@ -218,7 +218,7 @@ waBroadcastRouter.get(
 // Backend merangkai pesan per penerima berdasarkan data absensi.
 waBroadcastRouter.post(
   '/',
-  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  requireRole(['SUPER_ADMIN']),
   zValidator('json', createBroadcastSchema),
   async (c) => {
     const { activityId, messageTemplate, targetFilter, customUserIds } = c.req.valid('json');
@@ -420,7 +420,7 @@ waBroadcastRouter.post(
 // Mengubah status penerima menjadi SENT atau FAILED.
 waBroadcastRouter.patch(
   '/recipients/:recipientId',
-  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  requireRole(['SUPER_ADMIN']),
   zValidator('json', patchRecipientSchema),
   async (c) => {
     const recipientId = c.req.param('recipientId');
@@ -462,7 +462,7 @@ waBroadcastRouter.patch(
 // Reset status satu penerima kembali ke PENDING (undo kirim)
 waBroadcastRouter.patch(
   '/recipients/:recipientId/reset',
-  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  requireRole(['SUPER_ADMIN']),
   async (c) => {
     const recipientId = c.req.param('recipientId');
     const db = c.get('db');
@@ -490,7 +490,7 @@ waBroadcastRouter.patch(
 // Hapus broadcast beserta seluruh penerimanya untuk suatu kegiatan
 waBroadcastRouter.delete(
   '/:activityId',
-  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  requireRole(['SUPER_ADMIN']),
   async (c) => {
     const activityId = c.req.param('activityId');
     const db = c.get('db');
@@ -520,7 +520,7 @@ const sendSingleSchema = z.object({
 
 waBroadcastRouter.post(
   '/:id/send-single',
-  requireRole(['SUPER_ADMIN', 'ADMIN']),
+  requireRole(['SUPER_ADMIN']),
   zValidator('json', sendSingleSchema),
   async (c) => {
     const broadcastParamId = c.req.param('id');

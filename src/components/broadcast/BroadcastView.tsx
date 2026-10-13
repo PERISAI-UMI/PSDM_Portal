@@ -60,6 +60,18 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
     checkBot();
   }, []);
 
+  if (currentUser.role !== 'SUPER_ADMIN') {
+    return (
+      <div className="bg-surface rounded-xl border border-slate-200/80 p-12 text-center shadow-2xs">
+        <AlertCircle className="w-12 h-12 text-rose-500 mx-auto mb-3" />
+        <h3 className="text-base font-bold text-slate-800">Akses Terbatas</h3>
+        <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+          Fitur Broadcast WhatsApp hanya dapat diakses secara eksklusif oleh Super Administrator.
+        </p>
+      </div>
+    );
+  }
+
   const filteredActivities = activities.filter((act) => {
     if (statusFilter === 'ACTIVE' && act.isLocked) return false;
     if (statusFilter === 'LOCKED' && !act.isLocked) return false;

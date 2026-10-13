@@ -887,8 +887,8 @@ function MainAppContent() {
             <SettingsView onShowToast={showToast} />
           )}
 
-          {/* 7. Broadcast Layout (Super Admin and Admin) */}
-          {activeSection === 'broadcast' && (currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') && (
+          {/* 7. Broadcast Layout (Super Admin only) */}
+          {activeSection === 'broadcast' && currentUser.role === 'SUPER_ADMIN' && (
             <BroadcastView
               currentUser={currentUser}
               activities={activities}
@@ -914,7 +914,7 @@ function MainAppContent() {
                   onOpenMasterData={() => setActiveSection('master-data')}
                   onOpenMemberList={() => setActiveSection('members')}
                   onOpenAttendance={(act) => setActiveScannerActivity(act)}
-                  onOpenBroadcast={(act) => setActiveBroadcastActivity(act)}
+                  onOpenBroadcast={currentUser.role === 'SUPER_ADMIN' ? (act) => setActiveBroadcastActivity(act) : undefined}
                   onTogglePublish={handleTogglePublish}
                   onDeleteActivity={handleDeleteActivity}
                   onReviewPermission={handleReviewPermission}
@@ -937,7 +937,6 @@ function MainAppContent() {
                   allUsers={allUsers}
                   onOpenMemberList={() => setActiveSection('members')}
                   onOpenAttendance={(act) => setActiveScannerActivity(act)}
-                  onOpenBroadcast={(act) => setActiveBroadcastActivity(act)}
                   onReviewPermission={handleReviewPermission}
                   onOpenProfile={() => {
                     setActiveSection('profile');
@@ -1073,8 +1072,8 @@ function MainAppContent() {
         />
       )}
 
-      {/* WA Broadcast Modal (Direct / Centralized) */}
-      {activeBroadcastActivity && (
+      {/* WA Broadcast Modal (Super Admin only) */}
+      {activeBroadcastActivity && currentUser?.role === 'SUPER_ADMIN' && (
         <WaBroadcastModal
           isOpen={Boolean(activeBroadcastActivity)}
           onClose={() => setActiveBroadcastActivity(null)}

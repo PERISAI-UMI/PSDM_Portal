@@ -165,8 +165,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </button>
 
-            {/* Broadcast WA: Khusus SUPER_ADMIN dan ADMIN */}
-            {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
+            {/* Broadcast WA: Khusus SUPER_ADMIN */}
+            {user.role === 'SUPER_ADMIN' && (
               <button
                 type="button"
                 onClick={() => handleNavClick('broadcast')}
