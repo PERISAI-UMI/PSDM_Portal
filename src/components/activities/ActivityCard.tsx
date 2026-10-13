@@ -60,20 +60,20 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           <div className="flex flex-wrap items-center gap-1.5">
             {/* Category Badge */}
             {categoryDisplayName && (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 border border-brand-200/80 flex items-center gap-1">
-                <Layers className="w-3 h-3 text-brand-600 shrink-0" />
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 dark:text-brand-300 border border-brand-200/80 flex items-center gap-1">
+                <Layers className="w-3 h-3 text-brand-600 dark:text-brand-400 shrink-0" />
                 <span>{categoryDisplayName}</span>
               </span>
             )}
 
             {/* Mode Badge */}
             {activity.mode === 'ONLINE' ? (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200 flex items-center gap-1">
-                <Globe className="w-3 h-3 text-sky-600 shrink-0" />
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 dark:text-sky-300 border border-sky-200/80 flex items-center gap-1">
+                <Globe className="w-3 h-3 text-sky-600 dark:text-sky-400 shrink-0" />
                 <span>Online</span>
               </span>
             ) : (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1">
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 dark:text-slate-300 border border-slate-200 flex items-center gap-1">
                 <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
                 <span>Offline</span>
               </span>
@@ -81,8 +81,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
 
             {/* Locked Badge */}
             {activity.isLocked && (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                <Lock className="w-3 h-3 text-amber-600 shrink-0" />
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200/80 flex items-center gap-1">
+                <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>Terkunci</span>
               </span>
             )}
@@ -99,7 +99,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                 }}
                 className={`text-[11px] font-medium px-2 py-0.5 rounded-md border transition-colors cursor-pointer ${
                   activity.isPublished
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                    ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 hover:bg-emerald-100'
                     : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
                 }`}
                 title="Ubah status publikasi"
@@ -110,7 +110,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
               <span
                 className={`text-[11px] font-medium px-2 py-0.5 rounded-md border ${
                   activity.isPublished
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200/80'
                     : 'bg-slate-100 text-slate-600 border-slate-200'
                 }`}
               >

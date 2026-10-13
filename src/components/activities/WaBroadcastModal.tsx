@@ -38,11 +38,11 @@ type TargetFilter = 'ALL' | 'ALPHA' | 'TELAT' | 'IZIN' | 'SAKIT' | 'HADIR';
 
 const FILTER_OPTIONS: { value: TargetFilter; label: string; color: string }[] = [
   { value: 'ALL', label: 'Semua Peserta', color: 'bg-slate-100 text-slate-800' },
-  { value: 'ALPHA', label: 'Alpha Saja', color: 'bg-rose-50 text-rose-700' },
-  { value: 'TELAT', label: 'Telat Saja', color: 'bg-amber-50 text-amber-800' },
-  { value: 'IZIN', label: 'Izin Saja', color: 'bg-sky-50 text-sky-700' },
-  { value: 'SAKIT', label: 'Sakit Saja', color: 'bg-purple-50 text-purple-700' },
-  { value: 'HADIR', label: 'Hadir Saja', color: 'bg-emerald-50 text-emerald-700' },
+  { value: 'ALPHA', label: 'Alpha Saja', color: 'bg-rose-50 text-rose-700 dark:text-rose-300' },
+  { value: 'TELAT', label: 'Telat Saja', color: 'bg-amber-50 text-amber-800 dark:text-amber-300' },
+  { value: 'IZIN', label: 'Izin Saja', color: 'bg-sky-50 text-sky-700 dark:text-sky-300' },
+  { value: 'SAKIT', label: 'Sakit Saja', color: 'bg-purple-50 text-purple-700 dark:text-purple-300' },
+  { value: 'HADIR', label: 'Hadir Saja', color: 'bg-emerald-50 text-emerald-700 dark:text-emerald-300' },
 ];
 
 const STATUS_CONFIG: Record<WaBroadcastStatus, { label: string; icon: React.ReactNode; cls: string }> = {
@@ -53,18 +53,18 @@ const STATUS_CONFIG: Record<WaBroadcastStatus, { label: string; icon: React.Reac
   },
   SENT: {
     label: 'Terkirim',
-    icon: <CheckCircle2 className="w-3 h-3 text-emerald-600" />,
-    cls: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    icon: <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />,
+    cls: 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80',
   },
   FAILED: {
     label: 'Gagal',
-    icon: <XCircle className="w-3 h-3 text-rose-600" />,
-    cls: 'bg-rose-50 text-rose-700 border border-rose-200',
+    icon: <XCircle className="w-3 h-3 text-rose-600 dark:text-rose-400" />,
+    cls: 'bg-rose-50 text-rose-700 dark:text-rose-300 border border-rose-200/80',
   },
   SKIPPED: {
     label: 'Dilewati',
-    icon: <AlertTriangle className="w-3 h-3 text-amber-600" />,
-    cls: 'bg-amber-50 text-amber-700 border border-amber-200',
+    icon: <AlertTriangle className="w-3 h-3 text-amber-600 dark:text-amber-400" />,
+    cls: 'bg-amber-50 text-amber-700 dark:text-amber-300 border border-amber-200/80',
   },
 };
 

@@ -201,20 +201,20 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari kegiatan untuk di-broadcast..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-surface text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all"
           />
         </div>
 
         <div className="flex items-center gap-1.5 w-full sm:w-auto">
           <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <div className="flex rounded-lg border border-slate-200 p-0.5 bg-slate-50 text-xs w-full sm:w-auto">
+          <div className="flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs w-full sm:w-auto">
             <button
               type="button"
               onClick={() => setStatusFilter('ALL')}
-              className={`px-3 py-1 rounded-md text-[11px] font-medium transition-colors ${
+              className={`px-3 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
                 statusFilter === 'ALL'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
-                  : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-surface text-slate-900 shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Semua ({activities.length})
@@ -222,10 +222,10 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
             <button
               type="button"
               onClick={() => setStatusFilter('ACTIVE')}
-              className={`px-3 py-1 rounded-md text-[11px] font-medium transition-colors ${
+              className={`px-3 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
                 statusFilter === 'ACTIVE'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
-                  : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-surface text-slate-900 shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Aktif ({activeCount})
@@ -233,10 +233,10 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
             <button
               type="button"
               onClick={() => setStatusFilter('LOCKED')}
-              className={`px-3 py-1 rounded-md text-[11px] font-medium transition-colors ${
+              className={`px-3 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
                 statusFilter === 'LOCKED'
-                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
-                  : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-surface text-slate-900 shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Terkunci ({lockedCount})
@@ -274,14 +274,14 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
                 <div>
                   {/* Category & Status */}
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200/80 truncate">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-brand-50 text-brand-700 dark:text-brand-300 border border-brand-200/80 truncate">
                       {act.categoryName || 'Kegiatan'}
                     </span>
                     <span
                       className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
                         act.isLocked
-                          ? 'bg-amber-50 text-amber-700 border-amber-200'
-                          : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          ? 'bg-amber-50 text-amber-700 dark:text-amber-300 border-amber-200/80'
+                          : 'bg-emerald-50 text-emerald-700 dark:text-emerald-300 border-emerald-200/80'
                       }`}
                     >
                       {act.isLocked ? 'Terkunci' : 'Aktif'}
@@ -318,15 +318,15 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
                   <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-center gap-1">
                     <div className="flex-1 min-w-0 bg-slate-50 rounded p-1">
                       <div className="text-[9px] text-slate-500 font-medium truncate">Hadir</div>
-                      <div className="text-xs font-bold text-emerald-600">{(summary.HADIR || 0) + (summary.TELAT || 0)}</div>
+                      <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{(summary.HADIR || 0) + (summary.TELAT || 0)}</div>
                     </div>
                     <div className="flex-1 min-w-0 bg-slate-50 rounded p-1">
                       <div className="text-[9px] text-slate-500 font-medium truncate">Izin/Skt</div>
-                      <div className="text-xs font-bold text-blue-600">{(summary.IZIN || 0) + (summary.SAKIT || 0)}</div>
+                      <div className="text-xs font-bold text-blue-600 dark:text-blue-400">{(summary.IZIN || 0) + (summary.SAKIT || 0)}</div>
                     </div>
                     <div className="flex-1 min-w-0 bg-slate-50 rounded p-1">
                       <div className="text-[9px] text-slate-500 font-medium truncate">Alpha</div>
-                      <div className="text-xs font-bold text-rose-600">{summary.ALPHA || 0}</div>
+                      <div className="text-xs font-bold text-rose-600 dark:text-rose-400">{summary.ALPHA || 0}</div>
                     </div>
                   </div>
                 </div>
