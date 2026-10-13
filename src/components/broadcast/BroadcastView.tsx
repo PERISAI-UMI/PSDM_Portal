@@ -95,7 +95,7 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-200 shadow-2xs">
+            <div className="p-2 bg-brand-50 text-brand rounded-xl border border-brand-200/80 shadow-2xs">
               <MessageCircle className="w-5 h-5" />
             </div>
             <div>
@@ -269,7 +269,7 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
             return (
               <div
                 key={act.id}
-                className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-emerald-300 hover:shadow-xs transition-all flex flex-col justify-between group"
+                className="bg-surface rounded-xl border border-slate-200/80 p-4 shadow-2xs hover:border-brand-300 hover:shadow-xs transition-all flex flex-col justify-between group"
               >
                 <div>
                   {/* Category & Status */}
@@ -289,7 +289,7 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
                   </div>
 
                   {/* Activity Name */}
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-2">
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-brand transition-colors line-clamp-2">
                     {act.nama}
                   </h3>
 
@@ -336,7 +336,7 @@ export const BroadcastView: React.FC<BroadcastViewProps> = ({
                   <button
                     type="button"
                     onClick={() => onOpenBroadcastModal(act)}
-                    className="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer group-hover:bg-emerald-700"
+                    className="w-full py-2 px-3 rounded-lg bg-brand hover:bg-brand-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
                     <span>Kelola Broadcast WA</span>
