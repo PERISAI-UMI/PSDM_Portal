@@ -893,6 +893,12 @@ export const api = {
   async getBotStatus(): Promise<WaBotStatusResponse> {
     return request<WaBotStatusResponse>('/api/settings/bot-status');
   },
+
+  async disconnectBot(): Promise<{ success: boolean; message: string }> {
+    return request<{ success: boolean; message: string }>('/api/settings/bot-disconnect', {
+      method: 'POST',
+    });
+  },
 };
 
 

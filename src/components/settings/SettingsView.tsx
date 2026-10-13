@@ -15,6 +15,7 @@ import {
   Server,
   HelpCircle,
   Sparkles,
+  LogOut,
 } from 'lucide-react';
 import { api } from '../../services/api.ts';
 import type { WaBotConnectionStatus, WaBotStatusResponse } from '../../types/index.ts';
@@ -36,6 +37,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
   const [qrCodeData, setQrCodeData] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [lastCheckedAt, setLastCheckedAt] = useState<Date | null>(null);
 
   // Ref untuk polling
@@ -108,7 +110,24 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
     };
   }, [botStatus]);
 
-  // 4. Handle Save Settings
+  // 4. Handle Disconnect Bot
+  const handleDisconnect = async () => {
+    if (!confirm('Yakin ingin memutus sesi WhatsApp bot? Bot harus scan QR ulang untuk reconnect.')) return;
+    setIsDisconnecting(true);
+    try {
+      const res = await api.disconnectBot();
+      onShowToast?.(res.message, res.success ? 'success' : 'error');
+      if (res.success) {
+        setTimeout(() => checkBotStatus(false), 800);
+      }
+    } catch (err: any) {
+      onShowToast?.(err.message || 'Gagal memutus koneksi bot.', 'error');
+    } finally {
+      setIsDisconnecting(false);
+    }
+  };
+
+  // 5. Handle Save Settings
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -261,7 +280,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
                     />
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    Masukkan URL publik HTTPS hasil dari <code className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10.5px] border border-slate-200/60">cloudflared tunnel</code> yang mengarah ke port bot di home server Anda.
+                    URL publik HTTPS dari <code className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10.5px] border border-slate-200/60">cloudflared tunnel</code> yang mengarah ke port bot.
                   </p>
                 </div>
 
@@ -290,19 +309,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
                     </button>
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    Digunakan untuk mengamankan home server agar hanya sistem PSDM PERISAI yang dapat memicu pengiriman pesan.
+                    Secret key yang sama dengan konfigurasi <code className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10.5px] border border-slate-200/60">.env</code> di bot server.
                   </p>
                 </div>
 
-                {/* Panduan Singkat */}
-                <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 text-[11px] text-slate-600 dark:text-slate-300 space-y-1.5">
-                  <div className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    Arsitektur Aman & Fleksibel:
-                  </div>
-                  <p>
-                    Pengaturan ini disimpan di tabel <code className="px-1.5 py-0.5 rounded bg-slate-100/80 text-slate-800 dark:text-slate-200 font-mono text-[10.5px] border border-slate-200/60">app_settings</code> Turso database. Perubahan dapat dilakukan langsung kapan saja tanpa perlu deploy ulang Cloudflare Worker!
-                  </p>
+                {/* Info singkat */}
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200/80 text-[11px] text-slate-500 flex items-start gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                  <span>Pengaturan disimpan di database — bisa diubah kapan saja tanpa redeploy.</span>
                 </div>
 
                 {/* Tombol Simpan */}
@@ -353,16 +367,24 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
 
             {/* Area Tampilan Berdasarkan Status */}
             {botStatus === 'CONNECTED' && (
-              <div className="py-6 px-4 bg-emerald-50/60 border border-emerald-200/80 rounded-xl space-y-3">
-                <div className="w-12 h-12 bg-emerald-100 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-6 h-6" />
+              <div className="py-5 px-4 bg-emerald-50/60 border border-emerald-200/80 rounded-xl space-y-3">
+                <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="w-5 h-5" />
                 </div>
-                <div>
-                  <h3 className="text-xs font-bold text-emerald-900 dark:text-emerald-300">Bot Siap Digunakan!</h3>
-                  <p className="text-[11px] text-emerald-700 dark:text-emerald-400 mt-1">
-                    WhatsApp Bot di Home Server Anda sudah terautentikasi dan siap mengeksekusi pengiriman broadcast kegiatan.
-                  </p>
-                </div>
+                <p className="text-[11px] text-emerald-700 font-medium">Bot terhubung dan siap mengirim broadcast.</p>
+                <button
+                  type="button"
+                  onClick={handleDisconnect}
+                  disabled={isDisconnecting}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-semibold rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  {isDisconnecting ? (
+                    <RefreshCw className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <LogOut className="w-3 h-3" />
+                  )}
+                  {isDisconnecting ? 'Memutus...' : 'Disconnect Bot'}
+                </button>
               </div>
             )}
 
@@ -388,16 +410,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
                   </div>
                 )}
 
-                <div className="text-[11px] text-amber-900 dark:text-amber-300 text-left bg-surface/90 p-3 rounded-lg border border-amber-200/60 space-y-1">
-                  <p className="font-semibold text-slate-900 dark:text-slate-100">Langkah Tautkan Perangkat:</p>
-                  <ol className="list-decimal list-inside space-y-0.5 text-[10.5px] text-slate-700 dark:text-slate-300">
-                    <li>Buka WhatsApp di ponsel Anda</li>
-                    <li>Ketuk <b>Menu / Setelan</b> &gt; <b>Perangkat Tertaut</b></li>
-                    <li>Ketuk <b>Tautkan Perangkat</b> lalu arahkan kamera ke QR di atas</li>
-                  </ol>
-                </div>
-                <p className="text-[10px] text-amber-600 dark:text-amber-400 italic">
-                  * Halaman ini otomatis memeriksa status scan setiap 3 detik.
+                <p className="text-[10px] text-amber-600 italic">
+                  Buka WhatsApp → Perangkat Tertaut → Tautkan Perangkat. Halaman ini auto-refresh tiap 3 detik.
                 </p>
               </div>
             )}
@@ -405,30 +419,26 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
             {botStatus === 'NOT_CONFIGURED' && (
               <div className="py-8 px-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-2">
                 <HelpCircle className="w-8 h-8 text-slate-400 mx-auto" />
-                <h3 className="text-xs font-semibold text-slate-800 dark:text-slate-200">Belum Ada URL Bot</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-                  Silakan isi kolom WhatsApp Bot URL di sebelah kiri dan klik Simpan Pengaturan untuk menghubungkan sistem.
+                <p className="text-[11px] text-slate-500 max-w-xs mx-auto">
+                  Isi Bot URL di sebelah kiri lalu klik Simpan.
                 </p>
               </div>
             )}
 
             {(botStatus === 'ERROR' || botStatus === 'DISCONNECTED') && (
-              <div className="py-6 px-4 bg-rose-50/60 border border-rose-200/80 rounded-xl space-y-2.5">
+              <div className="py-6 px-4 bg-rose-50/60 border border-rose-200/80 rounded-xl space-y-3">
                 <XCircle className="w-8 h-8 text-rose-500 mx-auto" />
-                <h3 className="text-xs font-bold text-rose-900 dark:text-rose-300">Koneksi Terputus / Tidak Dapat Dihubungi</h3>
-                <p className="text-[11px] text-rose-700 dark:text-rose-400 break-words">
-                  {statusMessage || 'Pastikan service Node.js di home server berjalan dan URL Tunnel aktif.'}
+                <p className="text-[11px] text-rose-700 break-words">
+                  {statusMessage || 'Pastikan service bot di home server aktif dan tunnel berjalan.'}
                 </p>
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={() => checkBotStatus(false)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 text-white text-[11px] font-semibold rounded-lg hover:bg-rose-700 transition-colors cursor-pointer"
-                  >
-                    <RefreshCw className="w-3 h-3" />
-                    Coba Hubungkan Kembali
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => checkBotStatus(false)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 text-white text-[11px] font-semibold rounded-lg hover:bg-rose-700 transition-colors cursor-pointer"
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  Coba Lagi
+                </button>
               </div>
             )}
 
